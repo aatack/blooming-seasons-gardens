@@ -66,3 +66,26 @@ class Circle(Renderable):
 
     def scale(self, factor: float) -> Renderable:
         return Circle(self.origin.scale(factor), self.radius * factor, self.colour)
+
+
+class Text(Renderable):
+    text: str
+    top_left: Point = Point(0, 0)
+    size: float = 12.0
+    font: str = "verdana"
+
+    def render(self, surface: pygame.Surface):
+        font = pygame.font.SysFont(self.font, int(self.size))
+        text_surface = font.render(self.text, False, (0, 0, 0))
+        surface.blit(text_surface, self.top_left)
+
+    def translate(self, x: float = 0.0, y: float = 0.0) -> Renderable:
+        return Text(self.text, self.top_left.translate(x, y), self.size, self.font)
+
+    def rotate(self, radians: float) -> Renderable:
+        return Text(self.text, self.top_left.rotate(radians), self.size, self.font)
+
+    def scale(self, factor: float) -> Renderable:
+        return Text(
+            self.text, self.top_left.scale(factor), self.size * factor, self.font
+        )
