@@ -20,6 +20,9 @@ class Group(Renderable):
     def rotate(self, radians: float) -> Renderable:
         return Group(tuple(child.rotate(radians) for child in self.children))
 
+    def scale(self, factor: float) -> Renderable:
+        return Group(tuple(child.scale(factor) for child in self.children))
+
 
 class Point(Renderable):
     x: int
@@ -37,6 +40,9 @@ class Point(Renderable):
         return Point(
             (self.x * cosine) - (self.y * sine), (self.y * cosine) + (self.x * sine)
         )
+
+    def scale(self, factor: float) -> Renderable:
+        return Point(self.x * factor, self.y * factor)
 
 
 class Circle(Renderable):
@@ -57,3 +63,6 @@ class Circle(Renderable):
 
     def rotate(self, radians: float) -> Renderable:
         return Circle(self.origin.rotate(radians), self.radius, self.colour)
+
+    def scale(self, factor: float) -> Renderable:
+        return Circle(self.origin.scale(factor), self.radius * factor, self.colour)
