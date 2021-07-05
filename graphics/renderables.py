@@ -1,5 +1,5 @@
 from typing import NamedTuple, Tuple
-from graphics.colours import Colour, BLACK
+from graphics.colours import Colour
 import pygame
 
 
