@@ -83,7 +83,7 @@ class Text(Renderable):
         return Text(self.text, self.top_left.translate(x, y), self.size, self.font)
 
     def rotate(self, radians: float) -> Renderable:
-        return Text(self.text, self.top_left.rotate(radians), self.size, self.font)
+        raise NotImplementedError("It is not currently possible to rotate text")
 
     def scale(self, factor: float) -> Renderable:
         return Text(
