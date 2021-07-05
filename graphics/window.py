@@ -1,6 +1,5 @@
 import pygame
 from typing import Tuple
-from graphics.atoms import render
 
 
 class Window:
@@ -15,7 +14,7 @@ class Window:
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         self.background_colour = background_colour
 
-    def loop(self, atom: tuple = ()) -> bool:
+    def loop(self, atom: tuple) -> bool:
         for event in pygame.event.get():
             if event.type == pygame.VIDEORESIZE:
                 self.surface = pygame.display.set_mode(
@@ -25,7 +24,6 @@ class Window:
                 return False
 
         self.surface.fill(self.background_colour)
-
-        render(atom, self.surface)
+        atom.render(self.surface)
 
         return True

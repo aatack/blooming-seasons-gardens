@@ -1,27 +1,23 @@
-from typing import NamedTuple
+from typing import NamedTuple, Tuple
+from graphics.colours import Colour, BLACK
 import pygame
 
 
-def render(atom: tuple, surface: pygame.Surface):
-    if isinstance(atom, Circle):
-        pygame.draw.circle(
-            surface, atom.colour, (atom.horizontal, atom.vertical), atom.radius
-        )
-    elif isinstance(atom, tuple):
-        for element in atom:
-            render(element, surface)
-    else:
-        raise ValueError(f"Unrecognised atom: {atom}")
+class Group(NamedTuple):
+    children: tuple
 
-
-class Colour(NamedTuple):
-    red: int = 0
-    blue: int = 0
-    green: int = 0
+    def render(self, surface: pygame.Surface):
+        for child in self.children:
+            child.render(surface)
 
 
 class Circle(NamedTuple):
-    colour: Colour
     horizontal: int
     vertical: int
     radius: int
+    colour: Colour
+
+    def render(self, surface: pygame.Surface):
+        pygame.draw.circle(
+            surface, self.colour, (self.horizontal, self.vertical), self.radius
+        )
