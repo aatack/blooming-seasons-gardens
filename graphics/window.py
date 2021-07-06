@@ -1,5 +1,6 @@
 import pygame
 from typing import Tuple, Optional
+from graphics.interfaces import Renderable
 
 
 class Window:
@@ -20,7 +21,7 @@ class Window:
         if self.title is not None:
             pygame.display.set_caption(self.title)
 
-    def loop(self, renderable: tuple) -> bool:
+    def loop(self, renderable: Renderable) -> bool:
         for event in pygame.event.get():
             if event.type == pygame.VIDEORESIZE:
                 self.surface = pygame.display.set_mode(

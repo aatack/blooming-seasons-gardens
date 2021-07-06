@@ -1,14 +1,13 @@
-from graphics.interfaces import *
+from typing import NamedTuple
 from math import pi, cos, sin
 
 
-class Point(Translatable, Rotatable, Scalable):
-    def __init__(self, x: float, y: float):
-        self.x = x
-        self.y = y
+class Point(NamedTuple):
+    x: float
+    y: float
 
     def translate(self, right: float = 0.0, down: float = 0.0) -> "Point":
-        return Point(self.x + x, self.y + y)
+        return Point(self.x + right, self.y + down)
 
     def rotate(self, turns_anticlockwise: float) -> "Point":
         # TODO: efficient cases for common turns (ie. half turn, quarter turn)
