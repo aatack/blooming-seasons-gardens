@@ -16,17 +16,21 @@ class Renderable(abc.ABC):
 
 class Translatable(abc.ABC):
     @abc.abstractmethod
-    def translate(self, right: float = 0.0, down: float = 0.0):
+    def translate(self, right: float = 0.0, down: float = 0.0) -> "Translatable":
         """Return a representation of the object after it has been translated."""
 
 
 class Rotatable(abc.ABC):
     @abc.abstractmethod
-    def rotate(self, turns_anticlockwise: float):
+    def rotate(self, turns_anticlockwise: float) -> "Rotatable":
         """Rotate the object anticlockwise by the specified number of turns."""
 
 
 class Scalable(abc.ABC):
     @abc.abstractmethod
-    def scale(self, factor: float):
+    def scale(self, factor: float) -> "Scalable":
         """Scale the object by a given factor about the origin."""
+
+
+class Component(Renderable, Translatable, Rotatable, Scalable):
+    """Simple class that bundles all other interfaces into one."""
