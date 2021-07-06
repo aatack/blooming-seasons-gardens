@@ -16,7 +16,7 @@ class Renderable(abc.ABC):
 
 class Translatable(abc.ABC):
     @abc.abstractmethod
-    def translate(self, right: float = 0, down: float = 0) -> "Translatable":
+    def translate(self, right: float = 0.0, down: float = 0.0) -> "Translatable":
         """Return a representation of the object after it has been translated."""
 
 

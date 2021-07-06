@@ -29,6 +29,7 @@ class _DimensionBounds(NamedTuple):
     size: Optional[float]
 
     def compute_bounds(self) -> Tuple[float, float]:
+        # TODO: informative error messages
         lower, upper, centre, size = self.lower, self.upper, self.centre, self.size
         specified_values = [
             value for value in (lower, upper, centre, size) if value is not None
@@ -79,6 +80,7 @@ class BoundingBox:
         width: Optional[float] = None,
         height: Optional[float] = None,
     ):
+        # TODO: informative error messages
         if latent is not None:
             self._latent = (
                 latent if isinstance(latent, LatentBoundingBox) else latent._latent
@@ -105,3 +107,5 @@ class BoundingBox:
             f"BoudningBox(left={self._latent.left}, right={self._latent.right}, "
             + f"top={self._latent.top}, bottom={self._latent.bottom})"
         )
+
+    # TODO: properties
