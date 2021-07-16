@@ -27,7 +27,7 @@ def scrap(actee: str) -> Callable:
         fields = []
         defaults = []
 
-        for field_name, field_type in definition["__annotations__"].items():
+        for field_name, field_type in definition.get("__annotations__", {}).items():
             fields.append(field_name)
             if len(defaults) > 0:
                 assert field_name in definition
@@ -56,6 +56,16 @@ def scrap(actee: str) -> Callable:
     return decorator
 
 
+@scrap("void")
+class Void:
+    pass
+
+
+@scrap("render")
+class Render:
+    pass
+
+
 @scrap("translate")
 class Translate:
     right: float = 0.0
@@ -78,8 +88,8 @@ class Colour:
     blue: int = 0
 
 
-@scrap("render_circle")
-class RenderCircle:
+@scrap("circle")
+class Circle:
     origin: Point
     radius: float
     colour: Colour
