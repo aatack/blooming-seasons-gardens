@@ -1,6 +1,6 @@
 import pygame
 from typing import Tuple, Optional, Any
-from scrap.idea import Render, Colour, Circle, Void
+from scrap.idea import *
 
 
 class Window:
@@ -61,4 +61,16 @@ class Window:
                 scrap.colour,
                 (int(scrap.origin.x), int(scrap.origin.y)),
                 int(scrap.radius),
+            )
+
+        if isinstance(scrap, Rectangle):
+            pygame.draw.rect(
+                self.surface,
+                scrap.colour,
+                pygame.Rect(
+                    int(scrap.top_left.x),
+                    int(scrap.top_left.y),
+                    int(scrap.bottom_right.x - scrap.top_left.x),
+                    int(scrap.bottom_right.y - scrap.top_left.y),
+                ),
             )

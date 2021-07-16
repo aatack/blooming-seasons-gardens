@@ -94,5 +94,17 @@ class Circle:
     radius: float
     colour: Colour
 
-    def translate(self, translate: Translate) -> "RenderCircle":
-        return RenderCircle(translate(self.origin), self.radius, self.colour)
+    def translate(self, translate: Translate) -> "Circle":
+        return Circle(translate(self.origin), self.radius, self.colour)
+
+
+@scrap("rectangle")
+class Rectangle:
+    top_left: Point
+    bottom_right: Point
+    colour: Colour
+
+    def translate(self, translate: Translate) -> "Rectangle":
+        return Rectangle(
+            translate(self.top_left), translate(self.bottom_right), self.colour
+        )
