@@ -32,6 +32,18 @@ class Colour(Scrap):
         )
 
 
+class Box(Scrap):
+    def __init__(self, top_left: Point, bottom_right: Point, colour: Colour):
+        self.top_left = top_left
+        self.bottom_right = bottom_right
+        self.colour = colour
+
+    def cache(self) -> renderable.Renderable:
+        return renderable.Box(
+            self.top_left.cache(), self.bottom_right.cache(), self.colour.cache()
+        )
+
+
 class Circle(Scrap):
     def __init__(self, origin: Point, radius: float, colour: Colour):
         self.origin = origin

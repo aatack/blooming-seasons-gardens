@@ -1,6 +1,6 @@
 import abc
 import pygame
-from typing import Tuple, List
+from typing import List
 
 
 class Renderable(abc.ABC):
@@ -19,11 +19,10 @@ class Point(Renderable):
         self.x = x
         self.y = y
 
+        self.export = (self.x, self.y)
+
     def render(self, surface: pygame.Surface):
         pass
-
-    def export(self) -> Tuple[int, int]:
-        return self.x, self.y
 
 
 class Colour(Renderable):
@@ -32,11 +31,10 @@ class Colour(Renderable):
         self.green = green
         self.blue = blue
 
-    def render(self, surface: pygame.Surface):
-        surface.fill(self.export())
+        self.export = (self.red, self.green, self.blue)
 
-    def export(self) -> Tuple[int, int, int]:
-        return self.red, self.green, self.blue
+    def render(self, surface: pygame.Surface):
+        surface.fill(self.export)
 
 
 class Group(Renderable):
@@ -48,6 +46,23 @@ class Group(Renderable):
             child.render(surface)
 
 
+class Box(Renderable):
+    def __init__(self, top_left: Point, bottom_right: Point, colour: Colour):
+        self.top_left = top_left
+        self.bottom_right = bottom_right
+        self.colour = colour
+
+        self.export = (
+            self.top_left.x,
+            self.top_left.y,
+            (self.bottom_right.x - self.top_left.x),
+            (self.bottom_right.y - self.bottom_right.x),
+        )
+
+    def render(self, surface: pygame.Surface):
+        pygame.draw.rect(surface, self.colour.export, self.export)
+
+
 class Circle(Renderable):
     def __init__(self, origin: Point, radius: int, colour: Colour):
         self.origin = origin
@@ -55,6 +70,4 @@ class Circle(Renderable):
         self.colour = colour
 
     def render(self, surface: pygame.Surface):
-        pygame.draw.circle(
-            surface, self.colour.export(), self.origin.export(), self.radius
-        )
+        pygame.draw.circle(surface, self.colour.export, self.origin.export, self.radius)
