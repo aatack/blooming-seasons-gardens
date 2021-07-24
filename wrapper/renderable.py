@@ -63,11 +63,26 @@ class Box(Renderable):
         pygame.draw.rect(surface, self.colour.export, self.export)
 
 
+class Text(Renderable):
+    def __init__(self, text: str, top_left: Point, size: int, font: str):
+        self.text = text
+        self.top_left = top_left
+        self.size = size
+        self.font = font
+
+        self.export = pygame.font.SysFont(self.font, self.size).render(
+            self.text, False, (0, 0, 0)
+        )
+
+    def render(self, surface: pygame.Surface):
+        surface.blit(self.export, self.top_left.export)
+
+
 class Circle(Renderable):
-    def __init__(self, origin: Point, radius: int, colour: Colour):
-        self.origin = origin
+    def __init__(self, centre: Point, radius: int, colour: Colour):
+        self.centre = centre
         self.radius = radius
         self.colour = colour
 
     def render(self, surface: pygame.Surface):
-        pygame.draw.circle(surface, self.colour.export, self.origin.export, self.radius)
+        pygame.draw.circle(surface, self.colour.export, self.centre.export, self.radius)

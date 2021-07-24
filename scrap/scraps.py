@@ -44,13 +44,34 @@ class Box(Scrap):
         )
 
 
+class Text(Scrap):
+    def __init__(
+        self, text: str, top_left: Point, size: int, font: str = "segoeuisemibold"
+    ):
+        self.text = text
+        self.top_left = top_left
+        self.size = size
+        self.font = font
+
+    def cache(self) -> renderable.Renderable:
+        return renderable.Text(self.text, self.top_left.cache(), self.size, self.font)
+
+    @staticmethod
+    def list_available_fonts() -> List[str]:
+        import pygame
+
+        pygame.init()
+
+        return pygame.font.get_fonts()
+
+
 class Circle(Scrap):
-    def __init__(self, origin: Point, radius: float, colour: Colour):
-        self.origin = origin
+    def __init__(self, centre: Point, radius: float, colour: Colour):
+        self.centre = centre
         self.radius = radius
         self.colour = colour
 
     def cache(self) -> renderable.Renderable:
         return renderable.Circle(
-            self.origin.cache(), int(self.radius), self.colour.cache()
+            self.centre.cache(), int(self.radius), self.colour.cache()
         )
