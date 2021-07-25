@@ -41,6 +41,9 @@ class Window:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
+                self._update_cache(self.scrap.key_down(event.key))
+            if event.type == pygame.KEYUP:
+                self._update_cache(self.scrap.key_up(event.key))
 
         self.background_colour.render(self.surface)
 
@@ -49,3 +52,8 @@ class Window:
 
         pygame.display.flip()
         return True
+
+    def _update_cache(self, scrap: Scrap):
+        if scrap is not self.scrap:
+            self.scrap = scrap
+            self.cache = self.scrap.cache()

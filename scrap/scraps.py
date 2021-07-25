@@ -1,12 +1,25 @@
 from scrap.base import Scrap
 import wrapper.renderable as renderable
 from typing import List
+import pygame
 
 
 class Point(Scrap):
     def __init__(self, x: float = 0.0, y: float = 0.0):
         self.x = x
         self.y = y
+
+    def left(self, change: float) -> "Point":
+        return Point(self.x - change, self.y)
+
+    def right(self, change: float) -> "Point":
+        return Point(self.x + change, self.y)
+
+    def up(self, change: float) -> "Point":
+        return Point(self.x, self.y - change)
+
+    def down(self, change: float) -> "Point":
+        return Point(self.x, self.y + change)
 
     def cache(self) -> renderable.Renderable:
         return renderable.Point(int(self.x), int(self.y))
@@ -58,10 +71,6 @@ class Text(Scrap):
 
     @staticmethod
     def list_available_fonts() -> List[str]:
-        import pygame
-
-        pygame.init()
-
         return pygame.font.get_fonts()
 
 
