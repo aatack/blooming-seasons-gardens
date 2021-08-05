@@ -9,7 +9,7 @@ class Renderable(abc.ABC):
         """Render this object to the given surface."""
 
 
-class Nothing(Renderable):
+class Void(Renderable):
     def render(self, surface: pygame.Surface):
         pass
 

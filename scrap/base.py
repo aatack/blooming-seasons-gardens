@@ -1,4 +1,4 @@
-from wrapper.renderable import Renderable, Nothing
+from wrapper.renderable import Renderable, Void
 import pygame
 
 
@@ -7,7 +7,7 @@ class Scrap:
 
     def cache(self) -> Renderable:
         """Return a cached version of the rendered view of this scrap."""
-        return Nothing()
+        return Void()
 
     def render(self, surface: pygame.Surface):
         """Render the scrap to a pygame surface."""

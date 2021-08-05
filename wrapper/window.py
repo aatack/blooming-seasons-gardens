@@ -1,7 +1,7 @@
 import pygame
 from typing import Tuple, Optional, Any
 from scrap.base import Scrap
-from scrap.scraps import *
+from scrap.data import Point, Colour
 
 
 class Window:
