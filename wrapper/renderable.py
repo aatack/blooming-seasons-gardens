@@ -56,7 +56,7 @@ class Box(Renderable):
             self.top_left.x,
             self.top_left.y,
             (self.bottom_right.x - self.top_left.x),
-            (self.bottom_right.y - self.bottom_right.x),
+            (self.bottom_right.y - self.top_left.y),
         )
 
     def render(self, surface: pygame.Surface):

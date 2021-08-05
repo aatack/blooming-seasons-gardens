@@ -44,6 +44,19 @@ class Window:
                 self._update_cache(self.scrap.key_down(event.key))
             if event.type == pygame.KEYUP:
                 self._update_cache(self.scrap.key_up(event.key))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self._update_cache(
+                    self.scrap.mouse_down(event.button, Point(*event.pos))
+                )
+            if event.type == pygame.MOUSEBUTTONUP:
+                self._update_cache(self.scrap.mouse_up(event.button, Point(*event.pos)))
+            if event.type == pygame.MOUSEMOTION:
+                self._update_cache(
+                    self.scrap.mouse_move(
+                        Point(*event.pos),
+                        Point(event.pos[0] - event.rel[0], event.pos[1] - event.rel[1]),
+                    )
+                )
 
         self.background_colour.render(self.surface)
 

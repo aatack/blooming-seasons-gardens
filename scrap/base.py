@@ -30,3 +30,14 @@ class Scrap:
         response to the key release, it may return itself.
         """
         return self
+
+    def mouse_down(self, button: int, location: "Point") -> "Scrap":
+        """Respond to a mouse button being pressed at the given location."""
+        return self
+
+    def mouse_up(self, button: int, location: "Point") -> "Scrap":
+        """Respond to a mouse button being pressed at the given location."""
+        return self
+
+    def mouse_move(self, before: "Point", after: "Point") -> "Scrap":
+        """Respond to a relative mouse movement."""
