@@ -42,28 +42,30 @@ class Window:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
-                _event = Key(event.key, down=True)
-                self._update_cache(self.scrap.key_down(event.key))
+                self._update_cache(self.scrap.handle(Key(event.key, down=True)))
             if event.type == pygame.KEYUP:
-                _event = Key(event.key, up=True)
-                self._update_cache(self.scrap.key_up(event.key))
+                self._update_cache(self.scrap.handle(Key(event.key, up=True)))
             if event.type == pygame.MOUSEBUTTONDOWN:
-                _event = MouseButton(event.button, Point(*event.pos), down=True)
                 self._update_cache(
-                    self.scrap.mouse_down(event.button, Point(*event.pos))
+                    self.scrap.handle(
+                        MouseButton(event.button, Point(*event.pos), down=True)
+                    )
                 )
             if event.type == pygame.MOUSEBUTTONUP:
-                _event = MouseButton(event.button, Point(*event.pos), up=True)
-                self._update_cache(self.scrap.mouse_up(event.button, Point(*event.pos)))
-            if event.type == pygame.MOUSEMOTION:
-                _event = MouseMovement(
-                    Point(*event.pos),
-                    Point(event.pos[0] - event.rel[0], event.pos[1] - event.rel[1]),
-                )
                 self._update_cache(
-                    self.scrap.mouse_move(
-                        Point(*event.pos),
-                        Point(event.pos[0] - event.rel[0], event.pos[1] - event.rel[1]),
+                    self.scrap.handle(
+                        MouseButton(event.button, Point(*event.pos), up=True)
+                    )
+                )
+            if event.type == pygame.MOUSEMOTION:
+                self._update_cache(
+                    self.scrap.handle(
+                        MouseMovement(
+                            Point(*event.pos),
+                            Point(
+                                event.pos[0] - event.rel[0], event.pos[1] - event.rel[1]
+                            ),
+                        )
                     )
                 )
 
