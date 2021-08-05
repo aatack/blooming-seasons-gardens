@@ -9,6 +9,9 @@ class Point(Scrap):
         self.x = x
         self.y = y
 
+    def cache(self) -> renderable.Renderable:
+        return renderable.Point(int(self.x), int(self.y))
+
     def left(self, change: float) -> "Point":
         return Point(self.x - change, self.y)
 
@@ -20,9 +23,6 @@ class Point(Scrap):
 
     def down(self, change: float) -> "Point":
         return Point(self.x, self.y + change)
-
-    def cache(self) -> renderable.Renderable:
-        return renderable.Point(int(self.x), int(self.y))
 
 
 class Colour(Scrap):

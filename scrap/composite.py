@@ -13,3 +13,15 @@ class Group(Scrap):
 
     def cache(self) -> renderable.Renderable:
         return renderable.Group(self.children)
+
+    def handle(self, event: Scrap) -> Scrap:
+        requires_rebuild = False
+        rebuilt_children = []
+
+        for child in self.children:
+            rebuilt_child = child.handle(event)
+            if rebuilt_child is not child:
+                requires_rebuild = True
+            rebuilt_children.append(rebuilt_child)
+
+        return Group(*rebuilt_children) if requires_rebuild else self
