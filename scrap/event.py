@@ -27,3 +27,7 @@ class MouseMovement(Scrap):
     def __init__(self, before: Point, after: Point):
         self.before = before
         self.after = after
+
+    @property
+    def movement(self) -> Point:
+        return Point(self.after.x - self.before.x, self.after.y - self.before.y)

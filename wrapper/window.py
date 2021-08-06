@@ -63,7 +63,7 @@ class Window:
                         MouseMovement(
                             Point(*event.pos),
                             Point(
-                                event.pos[0] - event.rel[0], event.pos[1] - event.rel[1]
+                                event.pos[0] + event.rel[0], event.pos[1] + event.rel[1]
                             ),
                         )
                     )
