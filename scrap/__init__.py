@@ -163,7 +163,6 @@ def _resolve_arguments(
             assert optional
             arguments[name] = kwargs.get(name, default)
 
-    print(args, kwargs, arguments)
     return arguments
 
 
