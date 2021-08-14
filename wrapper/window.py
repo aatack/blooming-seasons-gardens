@@ -1,7 +1,7 @@
 import pygame
 from typing import Tuple, Optional, Any
 from scrap.base import Scrap
-from scrap.data import Point, Colour
+from scrap.data import Point, Colour, Message
 from scrap.event import Key, Button, Movement
 
 
@@ -48,7 +48,7 @@ class Window:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self._update_cache(
                     self.scrap.handle(
-                        MouseButton(event.button, Point(*event.pos), down=True)
+                        Button(event.button, Point(*event.pos), down=True)
                     )
                 )
             if event.type == pygame.MOUSEBUTTONUP:
@@ -76,6 +76,10 @@ class Window:
         return True
 
     def _update_cache(self, scrap: Scrap):
+        if isinstance(scrap, Message):
+            print(f"Message bubbled up: {scrap.message}")
+            scrap = scrap.scrap
+
         if scrap is not self.scrap:
             self.scrap = scrap
             self.cache = self.scrap.cache()

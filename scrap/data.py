@@ -1,7 +1,24 @@
 from scrap.base import Scrap
 import wrapper.renderable as renderable
-from typing import List
+from typing import List, Any
 import pygame
+
+
+class Literal(Scrap):
+    def __init__(self, value: Any):
+        self.value = value
+
+    def __str__(self) -> str:
+        return f"Literal({self.value})"
+
+
+class Message(Scrap):
+    def __init__(self, scrap: Scrap, message: Scrap):
+        self.scrap = scrap
+        self.message = message
+
+    def __str__(self) -> str:
+        return f"Message(scrap={self.scrap}, message={self.message})"
 
 
 class Point(Scrap):
@@ -24,6 +41,9 @@ class Point(Scrap):
     def down(self, change: float) -> "Point":
         return Point(self.x, self.y + change)
 
+    def __str__(self) -> str:
+        return f"Point(x={self.x}, y={self.y})"
+
 
 class Colour(Scrap):
     def __init__(self, red: float = 0.0, green: float = 0.0, blue: float = 0.0):
@@ -35,3 +55,6 @@ class Colour(Scrap):
         return renderable.Colour(
             int(self.red * 255), int(self.green * 255), int(self.blue * 255)
         )
+
+    def __str__(self) -> str:
+        return f"Colour(red={self.red}, green={self.green}, blue={self.blue})"
