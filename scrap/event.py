@@ -11,7 +11,7 @@ class Key(Scrap):
         assert self.down is (not self.up)
 
 
-class MouseButton(Scrap):
+class Button(Scrap):
     def __init__(
         self, button: int, location: Point, down: bool = False, up: bool = False
     ):
@@ -23,11 +23,11 @@ class MouseButton(Scrap):
         assert self.down is (not self.up)
 
 
-class MouseMovement(Scrap):
-    def __init__(self, before: Point, after: Point):
-        self.before = before
-        self.after = after
+class Movement(Scrap):
+    def __init__(self, beginning: Point, end: Point):
+        self.beginning = beginning
+        self.end = end
 
     @property
-    def movement(self) -> Point:
-        return Point(self.after.x - self.before.x, self.after.y - self.before.y)
+    def displacement(self) -> Point:
+        return Point(self.end.x - self.beginning.x, self.end.y - self.beginning.y)

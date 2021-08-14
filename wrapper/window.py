@@ -2,7 +2,7 @@ import pygame
 from typing import Tuple, Optional, Any
 from scrap.base import Scrap
 from scrap.data import Point, Colour
-from scrap.event import Key, MouseButton, MouseMovement
+from scrap.event import Key, Button, Movement
 
 
 class Window:
@@ -53,14 +53,12 @@ class Window:
                 )
             if event.type == pygame.MOUSEBUTTONUP:
                 self._update_cache(
-                    self.scrap.handle(
-                        MouseButton(event.button, Point(*event.pos), up=True)
-                    )
+                    self.scrap.handle(Button(event.button, Point(*event.pos), up=True))
                 )
             if event.type == pygame.MOUSEMOTION:
                 self._update_cache(
                     self.scrap.handle(
-                        MouseMovement(
+                        Movement(
                             Point(*event.pos),
                             Point(
                                 event.pos[0] + event.rel[0], event.pos[1] + event.rel[1]
