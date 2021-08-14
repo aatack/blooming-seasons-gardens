@@ -6,8 +6,8 @@ import pygame
 class Scrap:
     _DEFINITION: "Definition"
 
-    def __init__(self, **latent: Dict[str, Any]):
-        self._latent = latent
+    def __init__(self, *args, **kwargs):
+        self._latent = _resolve_arguments(args, kwargs, self._DEFINITION.latent)
         self._derived: Dict[str, Any] = {}
 
     def __getattr__(self, attribute: str) -> Any:
@@ -56,7 +56,9 @@ class Scrap:
         return (
             self._DEFINITION.name
             + "("
-            + ", ".join([f"{key}={value}" for key, value in self._latent.items()])
+            + ", ".join(
+                [f"{name}={self._latent[name]}" for name, *_ in self._DEFINITION.latent]
+            )
             + ")"
         )
 
@@ -146,6 +148,23 @@ def definition_from_constructor(constructor: Type) -> Definition:
 
 def constructor_from_definition(definition: Definition) -> Type:
     return type(definition.name, (Scrap,), {"_DEFINITION": definition})
+
+
+def _resolve_arguments(
+    args: tuple, kwargs: dict, latent: List[Latent]
+) -> Dict[str, Any]:
+    arguments = {}
+
+    for i, (name, _, optional, default) in enumerate(latent):
+        if i < len(args):
+            arguments[name] = args[i]
+            assert name not in kwargs
+        else:
+            assert optional
+            arguments[name] = kwargs.get(name, default)
+
+    print(args, kwargs, arguments)
+    return arguments
 
 
 def _identity(
