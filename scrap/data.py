@@ -17,6 +17,15 @@ class Message(Scrap):
         self.scrap = scrap
         self.message = message
 
+        assert not isinstance(self.scrap, Message), "Nested message inside scrap"
+        assert not isinstance(self.message, Message), "Nested message inside message"
+
+    @staticmethod
+    def collapse(scrap: Scrap, message: "Message") -> "Message":
+        return Message(
+            scrap, message.message if isinstance(message, Message) else message
+        )
+
     def __str__(self) -> str:
         return f"Message(scrap={self.scrap}, message={self.message})"
 
