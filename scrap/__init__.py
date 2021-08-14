@@ -54,10 +54,41 @@ class Registry:
 
     @classmethod
     def register(cls, name: str, constructor: Type[Scrap]):
+        # TODO: assert that registrations are allowed
         assert issubclass(constructor, Scrap)
-        assert cls._ALLOW_DEFINITIONS
         assert name not in cls._CONSTRUCTOR_LOOKUP
         cls._CONSTRUCTOR_LOOKUP[name] = constructor
+
+    @classmethod
+    def verify(cls):
+        def assert_valid_name(
+            candidate: str, *, lower: bool = False, upper: bool = False
+        ):
+            assert isinstance(candidate, str)
+            assert len(candidate) > 0
+            character = candidate[0]
+            assert character.isidentifier()
+            assert character != "_"
+            if lower:
+                assert character.islower()
+            if upper:
+                assert character.isupper()
+
+        for name, constructor in cls._CONSTRUCTOR_LOOKUP.items():
+            assert_valid_name(name, upper=True)
+            definition = constructor._DEFINITION
+            assert definition.name == name
+
+            requires_default = False
+            for latent in definition.latent:
+                assert_valid_name(latent.name, lower=True)
+                if requires_default:
+                    assert latent.optional
+                if latent.optional:
+                    requires_default = True
+
+            for handler in definition.handlers.specific.keys():
+                cls.get(handler)  # Throws error if the handler does not exist
 
 
 Handler = Callable[[Scrap, Scrap], Scrap]
@@ -67,6 +98,7 @@ Derived = Callable[[Scrap], Scrap]
 class Latent(NamedTuple):
     name: str
     kind: Type
+    optional: bool
     default: Optional[Any]
 
 
