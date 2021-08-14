@@ -9,7 +9,7 @@ class Literal(Scrap):
         self.value = value
 
     def __str__(self) -> str:
-        return f"Literal({self.value})"
+        return f"`{self.value}"
 
 
 class Message(Scrap):
