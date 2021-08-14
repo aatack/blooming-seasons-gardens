@@ -205,7 +205,7 @@ def constructor_from_definition(definition: Definition) -> Type:
     return type(definition.name, (Scrap,), attributes)
 
 
-def scrap(constructor: Type) -> Type[Scrap]:
+def defscrap(constructor: Type) -> Type[Scrap]:
     definition = definition_from_constructor(constructor)
     Registry.register(definition)
     return Registry.get(definition.name)
