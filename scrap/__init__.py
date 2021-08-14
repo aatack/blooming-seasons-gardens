@@ -145,16 +145,41 @@ class Definition(NamedTuple):
 
 
 def definition_from_constructor(constructor: Type) -> Definition:
-
-    latent = []
     derived = {}
+    specific = {}
+
+    latent = [
+        Latent(
+            name,
+            annotation,
+            name in constructor.__dict__,
+            constructor.__dict__.get(name),
+        )
+        for name, annotation in constructor.__dict__.get("__annotations__", {}).items()
+    ]
+    skip = {name for name, *_ in latent}
+
+    for key, value in constructor.__dict__.items():
+        if key.startswith("__") or key in skip:
+            continue
+
+        if key[0].islower():
+            assert (
+                type(value).__name__ == "function"
+            ), f"Missing type annotation for {key}"
+            derived[key] = value
+
+        if key[0].isupper():
+            assert type(value).__name__ == "function"
+            specific[key] = value
+
     return Definition(
         constructor.__name__,
         latent,
         derived,
         Handlers(
             getattr(constructor, "_preprocessor", None),
-            {},
+            specific,
             getattr(constructor, "_fallback", None),
             getattr(constructor, "_postprocessor", None),
         ),
