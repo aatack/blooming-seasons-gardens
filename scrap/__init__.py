@@ -44,7 +44,14 @@ class Scrap:
         self.cache().render(surface)
 
 
-class Registry:
+class Builder(type):
+    def __getattr__(cls, attribute: str) -> Any:
+        constructor = cls._CONSTRUCTOR_LOOKUP[attribute]
+        return constructor
+
+
+class Registry(metaclass=Builder):
+
     _CONSTRUCTOR_LOOKUP: Dict[str, Type[Scrap]] = {}
     _ALLOW_DEFINITIONS: bool = False
 
