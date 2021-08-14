@@ -142,6 +142,8 @@ class Definition(NamedTuple):
     latent: List[Latent]
     derived: Dict[str, Derived]
     handlers: Handlers
+    cache: Optional[Callable[[], Renderable]]
+    render: Optional[Callable[[pygame.Surface], None]]
 
 
 def definition_from_constructor(constructor: Type) -> Definition:
@@ -185,11 +187,21 @@ def definition_from_constructor(constructor: Type) -> Definition:
             attributes.get("_fallback", None),
             attributes.get("_postprocessor", None),
         ),
+        attributes.get("_cache", None),
+        attributes.get("_render", None),
     )
 
 
 def constructor_from_definition(definition: Definition) -> Type:
-    return type(definition.name, (Scrap,), {"_DEFINITION": definition})
+    attributes = {"_DEFINITION": definition}
+
+    if definition.cache is not None:
+        attributes["_cache"] = definition.cache
+
+    if definition.render is not None:
+        attributes["_render"] = definition.cache
+
+    return type(definition.name, (Scrap,), attributes)
 
 
 def scrap(constructor: Type) -> Type[Scrap]:
