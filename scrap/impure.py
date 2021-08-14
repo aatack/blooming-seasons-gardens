@@ -17,7 +17,7 @@ class Timer(Scrap):
         if isinstance(event, Timer.Start):
             self.start_time = time.time()
 
-        return self
+        return super().handle(event)
 
     @property
     def started(self) -> bool:

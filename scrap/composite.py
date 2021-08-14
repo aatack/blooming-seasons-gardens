@@ -4,7 +4,7 @@ from typing import List
 
 
 class Void(Scrap):
-    pass
+    """Scrap for which any handling scrap must return itself."""
 
 
 class Group(Scrap):
@@ -15,6 +15,9 @@ class Group(Scrap):
         return renderable.Group(self.children)
 
     def handle(self, event: Scrap) -> Scrap:
+        if isinstance(event, Void):
+            return self
+
         requires_rebuild = False
         rebuilt_children = []
 
