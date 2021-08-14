@@ -145,6 +145,8 @@ class Definition(NamedTuple):
 
 
 def definition_from_constructor(constructor: Type) -> Definition:
+    attributes = constructor.__dict__
+
     derived = {}
     specific = {}
 
@@ -155,11 +157,11 @@ def definition_from_constructor(constructor: Type) -> Definition:
             name in constructor.__dict__,
             constructor.__dict__.get(name),
         )
-        for name, annotation in constructor.__dict__.get("__annotations__", {}).items()
+        for name, annotation in attributes.get("__annotations__", {}).items()
     ]
     skip = {name for name, *_ in latent}
 
-    for key, value in constructor.__dict__.items():
+    for key, value in attributes.items():
         if key.startswith("__") or key in skip:
             continue
 
@@ -178,10 +180,10 @@ def definition_from_constructor(constructor: Type) -> Definition:
         latent,
         derived,
         Handlers(
-            getattr(constructor, "_preprocessor", None),
+            attributes.get("_preprocessor", None),
             specific,
-            getattr(constructor, "_fallback", None),
-            getattr(constructor, "_postprocessor", None),
+            attributes.get("_fallback", None),
+            attributes.get("_postprocessor", None),
         ),
     )
 
