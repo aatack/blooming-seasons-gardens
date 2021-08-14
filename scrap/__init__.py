@@ -20,20 +20,29 @@ class Scrap:
             return self._derived[attribute]
 
         if attribute[0].isupper():
-            raise NotImplementedError()
+            return lambda *args, **kwargs: self._handle(
+                getattr(Registry, attribute)(*args, **kwargs)
+            )
 
         raise AttributeError(attribute)
 
     def _handle(self, event: "Scrap") -> "Scrap":
+        assert isinstance(event, Scrap)
         if isinstance(event, Registry.get("Void")):
             return self
 
-        preprocessed_event = self._DEFINITION.handlers.preprocessor(event)
-        return self._DEFINITION.handlers.postprocessor(
-            self._DEFINITION.handlers.specific.get(
-                type(preprocessed_event), self._DEFINITION.handlers.fallback
-            )(preprocessed_event)
+        preprocessed_event = _identity(self._DEFINITION.handlers.preprocessor)(
+            self, event
         )
+        handling_function = self._DEFINITION.handlers.specific.get(
+            preprocessed_event._DEFINITION.name,
+            _identity(self._DEFINITION.handlers.fallback),
+        )
+        result = _identity(self._DEFINITION.handlers.postprocessor)(
+            self, handling_function(self, preprocessed_event),
+        )
+        assert isinstance(result, Scrap)
+        return result
 
     def _cache(self) -> Renderable:
         """Return a cached version of the rendered view of this scrap."""
@@ -42,6 +51,14 @@ class Scrap:
     def _render(self, surface: pygame.Surface):
         """Render the scrap to a pygame surface."""
         self.cache().render(surface)
+
+    def __str__(self) -> str:
+        return (
+            self._DEFINITION.name
+            + "("
+            + ", ".join([f"{key}={value}" for key, value in self._latent.items()])
+            + ")"
+        )
 
 
 class Builder(type):
@@ -129,6 +146,12 @@ def definition_from_constructor(constructor: Type) -> Definition:
 
 def constructor_from_definition(definition: Definition) -> Type:
     return type(definition.name, (Scrap,), {"_DEFINITION": definition})
+
+
+def _identity(
+    function: Optional[Callable[[Any, Any], Any]]
+) -> Callable[[Any, Any], Any]:
+    return function if function is not None else (lambda _, other: other)
 
 
 # from utils.serialisation import deserialise_path as _deserialise
