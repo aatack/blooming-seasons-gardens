@@ -1,10 +1,12 @@
 from typing import Dict, Any, NamedTuple, Type, Optional, Callable, List
+from wrapper.renderable import Renderable, Void
+import pygame
 
 
 class Scrap:
     _DEFINITION: "Definition"
 
-    def __init__(self, latent: Dict[str, Any]):
+    def __init__(self, **latent: Dict[str, Any]):
         self._latent = latent
         self._derived: Dict[str, Any] = {}
 
@@ -14,13 +16,48 @@ class Scrap:
             if attribute in self._latent:
                 return self._latent[attribute]
             if attribute not in self._derived:
-                self._derived[attribute] = self._DEFINITION.derived[attribute]
+                self._derived[attribute] = self._DEFINITION.derived[attribute](self)
             return self._derived[attribute]
 
         if attribute[0].isupper():
             raise NotImplementedError()
 
         raise AttributeError(attribute)
+
+    def _handle(self, event: "Scrap") -> "Scrap":
+        if isinstance(event, Registry.get("Void")):
+            return self
+
+        preprocessed_event = self._DEFINITION.handlers.preprocessor(event)
+        return self._DEFINITION.handlers.postprocessor(
+            self._DEFINITION.handlers.specific.get(
+                type(preprocessed_event), self._DEFINITION.handlers.fallback
+            )(preprocessed_event)
+        )
+
+    def _cache(self) -> Renderable:
+        """Return a cached version of the rendered view of this scrap."""
+        return Void()
+
+    def _render(self, surface: pygame.Surface):
+        """Render the scrap to a pygame surface."""
+        self.cache().render(surface)
+
+
+class Registry:
+    _CONSTRUCTOR_LOOKUP: Dict[str, Type[Scrap]] = {}
+    _ALLOW_DEFINITIONS: bool = False
+
+    @classmethod
+    def get(cls, name: str) -> Type[Scrap]:
+        return cls._CONSTRUCTOR_LOOKUP[name]
+
+    @classmethod
+    def register(cls, name: str, constructor: Type[Scrap]):
+        assert issubclass(constructor, Scrap)
+        assert cls._ALLOW_DEFINITIONS
+        assert name not in cls._CONSTRUCTOR_LOOKUP
+        cls._CONSTRUCTOR_LOOKUP[name] = constructor
 
 
 Handler = Callable[[Scrap, Scrap], Scrap]
@@ -41,9 +78,18 @@ class Handlers(NamedTuple):
 
 
 class Definition(NamedTuple):
+    name: str
     latent: List[Latent]
     derived: Dict[str, Derived]
     handlers: Handlers
+
+
+def definition_from_constructor(constructor: Type) -> Definition:
+    pass
+
+
+def constructor_from_definition(definition: Definition) -> Type:
+    return type(definition.name, (Scrap,), {"_DEFINITION": definition})
 
 
 # from utils.serialisation import deserialise_path as _deserialise
