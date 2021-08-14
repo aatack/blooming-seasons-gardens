@@ -1,6 +1,7 @@
 from typing import Dict, Any, NamedTuple, Type, Optional, Callable, List
 from wrapper.renderable import Renderable, Void
 import pygame
+import inspect
 
 
 class Scrap:
@@ -79,11 +80,12 @@ class Registry(metaclass=Builder):
         return cls._CONSTRUCTOR_LOOKUP[name]
 
     @classmethod
-    def register(cls, name: str, constructor: Type[Scrap]):
+    def register(cls, definition: "Definition"):
+        constructor = constructor_from_definition(definition)
         # TODO: assert that registrations are allowed
         assert issubclass(constructor, Scrap)
-        assert name not in cls._CONSTRUCTOR_LOOKUP
-        cls._CONSTRUCTOR_LOOKUP[name] = constructor
+        assert definition.name not in cls._CONSTRUCTOR_LOOKUP
+        cls._CONSTRUCTOR_LOOKUP[definition.name] = constructor
 
     @classmethod
     def verify(cls):
@@ -143,11 +145,29 @@ class Definition(NamedTuple):
 
 
 def definition_from_constructor(constructor: Type) -> Definition:
-    pass
+
+    latent = []
+    derived = {}
+    return Definition(
+        constructor.__name__,
+        latent,
+        derived,
+        Handlers(
+            getattr(constructor, "_preprocessor", None),
+            {},
+            getattr(constructor, "_fallback", None),
+            getattr(constructor, "_postprocessor", None),
+        ),
+    )
 
 
 def constructor_from_definition(definition: Definition) -> Type:
     return type(definition.name, (Scrap,), {"_DEFINITION": definition})
+
+
+def scrap(constructor: Type) -> Type[Scrap]:
+    definition = definition_from_constructor(constructor)
+    Registry.register(definition)
 
 
 def _resolve_arguments(
