@@ -14,11 +14,14 @@ class Scrap:
     def __getattr__(self, attribute: str) -> Any:
         # Assume attribute has at least one character
         if attribute[0].islower():
-            if attribute in self._latent:
-                return self._latent[attribute]
-            if attribute not in self._derived:
-                self._derived[attribute] = self._DEFINITION.derived[attribute](self)
-            return self._derived[attribute]
+            try:
+                if attribute in self._latent:
+                    return self._latent[attribute]
+                if attribute not in self._derived:
+                    self._derived[attribute] = self._DEFINITION.derived[attribute](self)
+                return self._derived[attribute]
+            except KeyError:
+                raise AttributeError(f"No attribute {attribute} on {self}")
 
         if attribute[0].isupper():
             return lambda *args, **kwargs: self._handle(

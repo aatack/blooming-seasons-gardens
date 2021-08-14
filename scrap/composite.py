@@ -1,4 +1,4 @@
-from scrap.base import Scrap
+from scrap.base import defscrap, Scrap
 from scrap.data import Message, Literal
 from scrap.queries import Contains
 from scrap.impure import Timer
@@ -8,8 +8,9 @@ import pygame
 from typing import List, Optional
 
 
-class Void(Scrap):
-    """Scrap for which any handling scrap must return itself."""
+@defscrap
+class Void:
+    """Scrap for which any handling scrap will return itself."""
 
 
 class Group(Scrap):

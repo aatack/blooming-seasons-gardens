@@ -1,7 +1,6 @@
 from scrap.base import defscrap, Scrap
 import wrapper.renderable as renderable
-from typing import List, Any
-import pygame
+from typing import Any
 
 
 @defscrap
