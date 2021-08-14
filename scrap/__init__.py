@@ -1,6 +1,8 @@
 def _():
     from typing import Dict, Any, NamedTuple, Type, Optional, Callable, List
     from wrapper.renderable import Renderable, Void
+    from utils.serialisation import deserialise_path as _deserialise
+    from os import listdir as _listdir
     import pygame
     import inspect
 
@@ -224,28 +226,15 @@ def _():
     ) -> Callable[[Any, Any], Any]:
         return function if function is not None else (lambda _, other: other)
 
+    scrap_path = "scrap"
+    for _file in _listdir(scrap_path):
+        if not _file.endswith(".py") or _file.startswith("__"):
+            continue
+
+        _loaded_module = _deserialise(scrap_path + "." + _file.rstrip(".py"))
+
     return {"scrap": scrap, "Scrap": scrap, **Registry._CONSTRUCTOR_LOOKUP}
 
 
 for _key, _value in _().items():
     globals()[_key] = _value
-
-
-# from utils.serialisation import deserialise_path as _deserialise
-# from scrap.base import Scrap as _Scrap
-# from os import listdir as _listdir
-
-
-# _SCRAP_PATH = "scrap"
-
-
-# for _file in _listdir(_SCRAP_PATH):
-#     if not _file.endswith(".py") or _file.startswith("__"):
-#         continue
-
-#     _loaded_module = _deserialise(_SCRAP_PATH + "." + _file.rstrip(".py"))
-
-#     for _attribute in dir(_loaded_module):
-#         _constructor = getattr(_loaded_module, _attribute)
-#         if isinstance(_constructor, type) and issubclass(_constructor, _Scrap):
-#             globals()[_attribute] = _constructor
