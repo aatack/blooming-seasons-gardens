@@ -24,9 +24,9 @@ class Scrap:
                 raise AttributeError(f"No attribute {attribute} on {self}")
 
         if attribute[0].isupper():
-            return lambda *args, **kwargs: self._handle(
+            return lambda *args, **kwargs: self[
                 getattr(Registry, attribute)(*args, **kwargs)
-            )
+            ]
 
         raise AttributeError(attribute)
 
@@ -65,6 +65,16 @@ class Scrap:
             )
             + ")"
         )
+
+    def __getitem__(self, event: "Scrap") -> "Scrap":
+        assert isinstance(event, Scrap)
+        return self._handle(event)
+
+    def __call__(self, surface: Optional[pygame.Surface] = None):
+        if surface is not None:
+            return self._render(surface)
+        else:
+            return self._cache()
 
 
 class Builder(type):

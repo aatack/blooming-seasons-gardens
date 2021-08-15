@@ -22,7 +22,7 @@ class Group:
         messages = []
 
         for child in self.children:
-            rebuilt_child = child._handle(event)
+            rebuilt_child = child[event]
             if isinstance(rebuilt_child, Message):
                 messages.append(rebuilt_child.message)
                 rebuilt_child = rebuilt_child.scrap
@@ -40,11 +40,11 @@ class Group:
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
         if isinstance(result, Message):
-            return Message(result.scrap, event._handle(result.message))
+            return Message(result.scrap, event[result.message])
         return result
 
     def _cache(self) -> renderable.Renderable:
-        return renderable.Group([child._cache() for child in self.children])
+        return renderable.Group([child() for child in self.children])
 
 
 @defscrap
@@ -52,7 +52,7 @@ class Wrapper:
     wrap: Scrap
 
     def _fallback(self, event: Scrap) -> Scrap:
-        return self.wrap._handle(event)
+        return self.wrap[event]
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
         scrap = result
@@ -63,6 +63,9 @@ class Wrapper:
 
         wrapped = self if (scrap is self.wrap) else rebuild(self, wrap=scrap)
         return wrapped if message is None else Message(wrapped, message)
+
+    def _cache(self) -> renderable.Renderable:
+        return self.wrap()
 
 
 class CatchClicks(Scrap):

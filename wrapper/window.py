@@ -17,11 +17,11 @@ class Window:
         pygame.init()
 
         self.scrap = scrap
-        self.cache = self.scrap._cache()
+        self.cache = self.scrap()
 
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
-        self.background_colour = background_colour._cache()
+        self.background_colour = background_colour()
 
         self.title = title
         if self.title is not None:
@@ -76,4 +76,4 @@ class Window:
 
         if scrap is not self.scrap:
             self.scrap = scrap
-            self.cache = self.scrap._cache()
+            self.cache = self.scrap()

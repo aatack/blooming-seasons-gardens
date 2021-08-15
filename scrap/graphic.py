@@ -13,9 +13,7 @@ class Box:
     colour: Colour
 
     def _cache(self) -> renderable.Renderable:
-        return renderable.Box(
-            self.top_left._cache(), self.bottom_right._cache(), self.colour._cache()
-        )
+        return renderable.Box(self.top_left(), self.bottom_right(), self.colour())
 
     def Contains(self, point: Point) -> Message:
         return Message(
@@ -35,7 +33,7 @@ class Text:
     font: str = "segoeuisemibold"
 
     def _cache(self) -> renderable.Renderable:
-        return renderable.Text(self.text, self.top_left._cache(), self.size, self.font)
+        return renderable.Text(self.text, self.top_left(), self.size, self.font)
 
 
 def list_available_fonts() -> List[str]:
@@ -49,9 +47,7 @@ class Circle:
     colour: Colour
 
     def _cache(self) -> renderable.Renderable:
-        return renderable.Circle(
-            self.centre._cache(), int(self.radius), self.colour._cache()
-        )
+        return renderable.Circle(self.centre(), int(self.radius), self.colour())
 
     def Contains(self, point: Point) -> Message:
         return Message(
