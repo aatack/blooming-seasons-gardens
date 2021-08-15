@@ -179,7 +179,7 @@ def definition_from_constructor(constructor: Type) -> Definition:
 
         if key[0].isupper():
             assert type(value).__name__ == "function"
-            specific[key] = value
+            specific[key] = _unpack_scrap(value)
 
     return Definition(
         constructor.__name__,
@@ -234,3 +234,40 @@ def _identity(
     function: Optional[Callable[[Any, Any], Any]]
 ) -> Callable[[Any, Any], Any]:
     return function if function is not None else (lambda _, other: other)
+
+
+def _unpack_scrap(function: Callable[..., Scrap]) -> Callable[[Scrap, Scrap], Scrap]:
+    """
+    Decorate a function so that it unpacks any scraps passed to it.
+    
+    More specifically, the input function should be a function that takes a `self` scrap
+    as well as any number of arguments that should be unpacked from another scrap.  A
+    function will be returned which takes a `self` scrap and an `other` scrap; the
+    arguments will be inferred from the `other` scrap and passed to the underlying
+    function, whose result will then be returned unmodified.
+    """
+    spec = inspect.getfullargspec(function)
+
+    assert len(spec.args) > 0 and spec.args[0] == "self"
+    assert spec.varargs is None
+    assert spec.varkw is None
+    assert spec.defaults is None
+    assert spec.kwonlyargs == []
+    assert spec.kwonlydefaults is None
+
+    ellipses_annotations = {
+        key for key, value in spec.annotations.items() if value is ...
+    }
+    required_arguments = {
+        argument for argument in spec.args[1:] if argument not in ellipses_annotations
+    }
+
+    def wrapped_function(self: Scrap, other: Scrap) -> Scrap:
+        arguments = {
+            argument: getattr(other, argument) for argument in required_arguments
+        }
+        for argument in ellipses_annotations:
+            arguments[argument] = other
+        return function(self, **arguments)
+
+    return wrapped_function

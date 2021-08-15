@@ -18,10 +18,6 @@ class Box:
         )
 
     def Contains(self, point: Point) -> Message:
-        print("::")
-        print(self.top_left)
-        print(point)
-        print(self.bottom_right)
         return Message(
             self,
             Literal(
