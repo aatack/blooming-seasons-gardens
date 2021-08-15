@@ -155,11 +155,53 @@ class Handlers(NamedTuple):
 
 class Definition(NamedTuple):
     name: str
+    parent: Optional["Definition"]
     latent: List[Latent]
     derived: Dict[str, Derived]
     handlers: Handlers
     cache: Optional[Callable[[], Renderable]]
     render: Optional[Callable[[pygame.Surface], None]]
+
+
+def _inherit(parent: Definition, child: Definition) -> Definition:
+    latent, derived, specifics, properties = [], {}, {}, set()
+
+    for value in child.latent:
+        properties.add(value.name)
+        latent.append(value)
+    for key, value in child.derived.items():
+        properties.add(key)
+        derived[key] = value
+    for key, value in child.handlers.specific.items():
+        specifics[key] = value
+
+    for value in parent.latent:
+        if value.name in properties:
+            continue
+        latent.append(value)
+    for key, value in parent.derived.items():
+        if key in properties:
+            continue
+        derived[key] = value
+    for key, value in parent.handlers.specific.items():
+        if key in specifics:
+            continue
+        specifics[key] = value
+
+    return Definition(
+        child.name,
+        parent,
+        latent,
+        derived,
+        Handlers(
+            child.handlers.preprocessor or parent.handlers.preprocessor,
+            specifics,
+            child.handlers.fallback or parent.handlers.fallback,
+            child.handlers.postprocessor or parent.handlers.postprocessor,
+        ),
+        child.cache or parent.cache,
+        child.render or parent.render,
+    )
 
 
 def definition_from_constructor(constructor: Type) -> Definition:
@@ -193,8 +235,9 @@ def definition_from_constructor(constructor: Type) -> Definition:
             assert type(value).__name__ == "function"
             specific[key] = _unpack_scrap(value)
 
-    return Definition(
+    child = Definition(
         constructor.__name__,
+        None,
         latent,
         derived,
         Handlers(
@@ -206,6 +249,15 @@ def definition_from_constructor(constructor: Type) -> Definition:
         attributes.get("_cache", None),
         attributes.get("_render", None),
     )
+
+    # TODO: handle any inheritance
+    parents = constructor.__mro__
+    if len(parents) != 2:
+        parent = parents[1]
+        assert (parent is not Scrap) and issubclass(parent, Scrap)
+        return _inherit(parent._DEFINITION, child)
+
+    return child
 
 
 def constructor_from_definition(definition: Definition) -> Type:
@@ -236,7 +288,7 @@ def _resolve_arguments(
             arguments[name] = args[i]
             assert name not in kwargs
         else:
-            if not optional:
+            if (not optional) and (name not in kwargs):
                 raise ValueError(f"Required argument {name} missing")
             arguments[name] = kwargs.get(name, default)
 
