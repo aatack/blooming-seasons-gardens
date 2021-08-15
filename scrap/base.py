@@ -35,15 +35,15 @@ class Scrap:
         if isinstance(event, Registry.get("Void")):
             return self
 
-        preprocessed_event = _identity(self._DEFINITION.handlers.preprocessor)(
+        preprocessed_event = _identity(self._DEFINITION.handlers.preprocessor, 1)(
             self, event
         )
         handling_function = self._DEFINITION.handlers.specific.get(
             preprocessed_event._DEFINITION.name,
-            _identity(self._DEFINITION.handlers.fallback, default_to_self=True),
+            _identity(self._DEFINITION.handlers.fallback, 0),
         )
-        result = _identity(self._DEFINITION.handlers.postprocessor)(
-            self, handling_function(self, preprocessed_event),
+        result = _identity(self._DEFINITION.handlers.postprocessor, 1)(
+            self, handling_function(self, preprocessed_event), preprocessed_event
         )
         assert isinstance(result, Scrap)
         return result
@@ -57,6 +57,7 @@ class Scrap:
         self.cache().render(surface)
 
     def __str__(self) -> str:
+        # TODO: change to __repr__
         return (
             self._DEFINITION.name
             + "("
@@ -123,8 +124,10 @@ class Registry(metaclass=Builder):
                 cls.get(handler)  # Throws error if the handler does not exist
 
 
-Handler = Callable[[Scrap, Scrap], Scrap]
 Derived = Callable[[Scrap], Scrap]
+Preprocessor = Callable[[Scrap, Scrap], Scrap]  # self, other
+Handler = Callable[[Scrap, Scrap], Scrap]  # self, other
+Postprocessor = Callable[[Scrap, Scrap, Scrap], Scrap]  # self, result, event
 
 
 class Latent(NamedTuple):
@@ -135,10 +138,10 @@ class Latent(NamedTuple):
 
 
 class Handlers(NamedTuple):
-    preprocessor: Optional[Handler]
+    preprocessor: Optional[Preprocessor]
     specific: Dict[str, Handler]
     fallback: Optional[Handler]
-    postprocessor: Optional[Handler]
+    postprocessor: Optional[Postprocessor]
 
 
 class Definition(NamedTuple):
@@ -232,13 +235,9 @@ def _resolve_arguments(
 
 
 def _identity(
-    function: Optional[Callable[[Any, Any], Any]], default_to_self: bool = False
+    function: Optional[Callable[[Any, Any], Any]], default_argument: int
 ) -> Callable[[Any, Any], Any]:
-    return (
-        function
-        if function is not None
-        else (lambda self, other: self if default_to_self else other)
-    )
+    return function if function is not None else (lambda *args: args[default_argument])
 
 
 def _unpack_scrap(function: Callable[..., Scrap]) -> Callable[[Scrap, Scrap], Scrap]:
