@@ -40,7 +40,7 @@ class Scrap:
         )
         handling_function = self._DEFINITION.handlers.specific.get(
             preprocessed_event._DEFINITION.name,
-            _identity(self._DEFINITION.handlers.fallback),
+            _identity(self._DEFINITION.handlers.fallback, default_to_self=True),
         )
         result = _identity(self._DEFINITION.handlers.postprocessor)(
             self, handling_function(self, preprocessed_event),
@@ -232,9 +232,13 @@ def _resolve_arguments(
 
 
 def _identity(
-    function: Optional[Callable[[Any, Any], Any]]
+    function: Optional[Callable[[Any, Any], Any]], default_to_self: bool = False
 ) -> Callable[[Any, Any], Any]:
-    return function if function is not None else (lambda self, _: self)
+    return (
+        function
+        if function is not None
+        else (lambda self, other: self if default_to_self else other)
+    )
 
 
 def _unpack_scrap(function: Callable[..., Scrap]) -> Callable[[Scrap, Scrap], Scrap]:
