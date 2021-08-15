@@ -56,8 +56,7 @@ class Scrap:
         """Render the scrap to a pygame surface."""
         self.cache().render(surface)
 
-    def __str__(self) -> str:
-        # TODO: change to __repr__
+    def __repr__(self) -> str:
         return (
             self._DEFINITION.name
             + "("
