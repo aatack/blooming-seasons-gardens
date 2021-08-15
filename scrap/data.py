@@ -20,6 +20,9 @@ class Point:
     x: float = 0.0
     y: float = 0.0
 
+    def _cache(self) -> renderable.Renderable:
+        return renderable.Point(int(self.x), int(self.y))
+
 
 @defscrap
 class Colour:

@@ -17,11 +17,11 @@ class Window:
         pygame.init()
 
         self.scrap = scrap
-        self.cache = self.scrap.cache()
+        self.cache = self.scrap._cache()
 
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
-        self.background_colour = background_colour.cache()
+        self.background_colour = background_colour._cache()
 
         self.title = title
         if self.title is not None:
@@ -42,28 +42,22 @@ class Window:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
-                self._update_cache(self.scrap.handle(Key(event.key, down=True)))
+                self._update_cache(self.scrap.Key(event.key, down=True))
             if event.type == pygame.KEYUP:
-                self._update_cache(self.scrap.handle(Key(event.key, up=True)))
+                self._update_cache(self.scrap.Key(event.key, up=True))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self._update_cache(
-                    self.scrap.handle(
-                        Button(event.button, Point(*event.pos), down=True)
-                    )
+                    self.scrap.Button(event.button, Point(*event.pos), down=True)
                 )
             if event.type == pygame.MOUSEBUTTONUP:
                 self._update_cache(
-                    self.scrap.handle(Button(event.button, Point(*event.pos), up=True))
+                    self.scrap.Button(event.button, Point(*event.pos), up=True)
                 )
             if event.type == pygame.MOUSEMOTION:
                 self._update_cache(
-                    self.scrap.handle(
-                        Movement(
-                            Point(*event.pos),
-                            Point(
-                                event.pos[0] + event.rel[0], event.pos[1] + event.rel[1]
-                            ),
-                        )
+                    self.scrap.Movement(
+                        Point(*event.pos),
+                        Point(event.pos[0] + event.rel[0], event.pos[1] + event.rel[1]),
                     )
                 )
 
@@ -82,4 +76,4 @@ class Window:
 
         if scrap is not self.scrap:
             self.scrap = scrap
-            self.cache = self.scrap.cache()
+            self.cache = self.scrap._cache()

@@ -224,7 +224,8 @@ def _resolve_arguments(
             arguments[name] = args[i]
             assert name not in kwargs
         else:
-            assert optional
+            if not optional:
+                raise ValueError(f"Required argument {name} missing")
             arguments[name] = kwargs.get(name, default)
 
     return arguments
@@ -233,7 +234,7 @@ def _resolve_arguments(
 def _identity(
     function: Optional[Callable[[Any, Any], Any]]
 ) -> Callable[[Any, Any], Any]:
-    return function if function is not None else (lambda _, other: other)
+    return function if function is not None else (lambda self, _: self)
 
 
 def _unpack_scrap(function: Callable[..., Scrap]) -> Callable[[Scrap, Scrap], Scrap]:
