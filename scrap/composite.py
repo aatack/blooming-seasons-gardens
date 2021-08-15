@@ -1,5 +1,6 @@
 from scrap.base import defscrap, Scrap, rebuild
-from scrap.data import Message, Literal
+from scrap.data import Message, Literal, Point
+from scrap.control import UpdateWrapper
 from scrap.impure import Timer
 from scrap.event import Button, Click
 import wrapper.renderable as renderable
@@ -55,100 +56,64 @@ class Wrapper:
         return self.wrap[event]
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
+        wrapper_updates = {}
+        if isinstance(result, UpdateWrapper):
+            wrapper_updates = result.updates
+            result = result.result
+
         scrap = result
         message = None
         if isinstance(result, Message):
             scrap = result.scrap
             message = result.message
 
-        wrapped = self if (scrap is self.wrap) else rebuild(self, wrap=scrap)
+        wrapped = (
+            self
+            if (scrap is self.wrap and len(wrapper_updates) == 0)
+            else rebuild(self, wrap=scrap, **wrapper_updates)
+        )
         return wrapped if message is None else Message(wrapped, message)
 
     def _cache(self) -> renderable.Renderable:
         return self.wrap()
 
 
-class CatchClicks(Scrap):
-    def __init__(
-        self,
-        scrap: Scrap,
-        minimum_time: Optional[int] = None,
-        button: int = 1,
-        timer: Optional[Timer] = None,
-    ):
-        self.scrap = scrap
-        self.minimum_time = minimum_time
-        self.button = button
-        self.timer = timer
+@defscrap
+class CatchClicks(Wrapper):
+    button: int = 1
+    minimum_time: Optional[int] = None
+    timer: Optional[Timer] = None
+    location: Optional[Point] = None
 
-    def cache(self) -> renderable.Renderable:
-        """Return a cached version of the rendered view of this scrap."""
-        return self.scrap.cache()
+    def Button(self, button: int, location: Point, down: bool, event: ...) -> Scrap:
+        fallback = self._DEFINITION.handlers.fallback
+        if button != self.button:
+            return fallback(self, event)
 
-    def render(self, surface: pygame.Surface):
-        """Render the scrap to a pygame surface."""
-        self.scrap.render(surface)
+        contains = self.Contains(location).message.value
 
-    def handle(self, event: Scrap) -> Scrap:
-        timer = self.timer
-
-        if isinstance(event, Button) and event.button == self.button:
-            contains = self.scrap.handle(Contains(event.location))
-            assert isinstance(contains, Message)
-            hit = (
-                True
-                if (
-                    isinstance(contains.message, Literal)
-                    and (contains.message.value is True)
-                )
-                else False
-            )
-
-            if event.down and hit:
+        if down:
+            if contains:
                 if self.minimum_time is None:
-                    scrap = self.scrap.handle(Click(self.button, event.location))
-                else:
-                    return CatchClicks(
-                        self.scrap,
-                        minimum_time=self.minimum_time,
-                        button=self.button,
-                        timer=Timer.new(),
+                    return UpdateWrapper(
+                        self.wrap.Click(self.button, location),
+                        dict(timer=None, location=None),
                     )
-            elif event.up and hit:
-                if self.timer is None or self.timer.time < self.minimum_time:
-                    return self
                 else:
-                    scrap = self.scrap.handle(Click(self.button, event.location))
+                    return UpdateWrapper(
+                        self.wrap, dict(timer=Timer().Start(), location=location)
+                    )
             else:
-                return CatchClicks(
-                    self.scrap, minimum_time=self.minimum_time, button=self.button,
-                )
-        else:
-            scrap = self.scrap.handle(event)
+                return UpdateWrapper(self.wrap, dict(timer=None, location=None))
 
-        if scrap is self.scrap:
-            return self
-
-        if isinstance(scrap, Message):
-            return Message(
-                CatchClicks(
-                    scrap.scrap,
-                    minimum_time=self.minimum_time,
-                    button=self.button,
-                    timer=self.timer,
-                )
-                if scrap.scrap is not self.scrap
-                else self,
-                scrap.message,
-            )
         else:
-            return (
-                CatchClicks(
-                    scrap,
-                    minimum_time=self.minimum_time,
-                    button=self.button,
-                    timer=timer,
+            if (
+                contains
+                and (self.timer is not None)
+                and (self.timer.Read().message.value >= self.minimum_time)
+            ):
+                return UpdateWrapper(
+                    self.wrap.Click(self.button, self.location),
+                    dict(timer=None, location=None),
                 )
-                if scrap is not self.scrap
-                else self
-            )
+            return UpdateWrapper(self.wrap, dict(timer=None, location=None))

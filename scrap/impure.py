@@ -1,29 +1,15 @@
-from scrap.base import Scrap
+from scrap.base import Scrap, defscrap
+from scrap.data import Literal, Message
+from typing import Optional
 import time
 
 
-class Timer(Scrap):
-    class Start(Scrap):
-        """Starts a timer."""
+@defscrap
+class Timer:
+    start_time: Optional[float] = None
 
-    @staticmethod
-    def new() -> "Timer":
-        return Timer().handle(Timer.Start())
+    def Start(self) -> Scrap:
+        return Timer(time.time())
 
-    def __init__(self):
-        self.start_time: Optional[float] = None
-
-    def handle(self, event: Scrap) -> Scrap:
-        if isinstance(event, Timer.Start):
-            self.start_time = time.time()
-
-        return super().handle(event)
-
-    @property
-    def started(self) -> bool:
-        return self.start_time is not None
-
-    @property
-    def time(self) -> float:
-        assert self.started, "Timer has not yet been started"
-        return time.time() - self.start_time
+    def Read(self) -> Scrap:
+        return Message(self, Literal(time.time() - self.start_time))

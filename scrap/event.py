@@ -32,3 +32,13 @@ class Movement:
 class Click:
     button: int
     location: Point
+
+
+@defscrap
+class Start:
+    pass
+
+
+@defscrap
+class Read:
+    pass
