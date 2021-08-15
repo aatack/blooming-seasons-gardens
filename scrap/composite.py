@@ -56,6 +56,7 @@ class Wrapper:
         return self.wrap[event]
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
+        # TODO: clean this up
         wrapper_updates = {}
         if isinstance(result, UpdateWrapper):
             wrapper_updates = result.updates
@@ -86,6 +87,7 @@ class CatchClicks(Wrapper):
     location: Optional[Point] = None
 
     def Button(self, button: int, location: Point, down: bool, event: ...) -> Scrap:
+        # TODO: clean this up
         fallback = self._DEFINITION.handlers.fallback
         if button != self.button:
             return fallback(self, event)
@@ -107,6 +109,7 @@ class CatchClicks(Wrapper):
                 return UpdateWrapper(self.wrap, dict(timer=None, location=None))
 
         else:
+            # TODO: allow button presses to fall through under certain circumstances?
             if (
                 contains
                 and (self.timer is not None)

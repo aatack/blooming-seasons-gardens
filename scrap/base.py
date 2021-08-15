@@ -188,6 +188,8 @@ def _inherit(parent: Definition, child: Definition) -> Definition:
             continue
         specifics[key] = value
 
+    # TODO: reorder latents so that non-optional ones always appear before optional ones
+
     return Definition(
         child.name,
         parent,
@@ -241,6 +243,7 @@ def definition_from_constructor(constructor: Type) -> Definition:
         latent,
         derived,
         Handlers(
+            # TODO: decorators for special functions
             attributes.get("_preprocessor", None),
             specific,
             attributes.get("_fallback", None),
