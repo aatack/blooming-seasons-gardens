@@ -1,4 +1,4 @@
-from scrap.base import defscrap, Scrap
+from scrap.base import defscrap, Scrap, rebuild
 from scrap.data import Message, Literal
 from scrap.impure import Timer
 from scrap.event import Button, Click
@@ -45,6 +45,24 @@ class Group:
 
     def _cache(self) -> renderable.Renderable:
         return renderable.Group([child._cache() for child in self.children])
+
+
+@defscrap
+class Wrapper:
+    wrap: Scrap
+
+    def _fallback(self, event: Scrap) -> Scrap:
+        return self.wrap._handle(event)
+
+    def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
+        scrap = result
+        message = None
+        if isinstance(result, Message):
+            scrap = result.scrap
+            message = result.message
+
+        wrapped = self if (scrap is self.wrap) else rebuild(self, wrap=scrap)
+        return wrapped if message is None else Message(wrapped, message)
 
 
 class CatchClicks(Scrap):

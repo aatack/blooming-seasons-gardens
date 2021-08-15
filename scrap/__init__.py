@@ -1,5 +1,5 @@
 def _():
-    from scrap.base import Registry, defscrap, Scrap
+    from scrap.base import Registry, defscrap, Scrap, rebuild
     from utils.serialisation import deserialise_path as _deserialise
     from os import listdir as _listdir
 
@@ -10,7 +10,12 @@ def _():
 
         _loaded_module = _deserialise(scrap_path + "." + _file.rstrip(".py"))
 
-    return {"defscrap": defscrap, "Scrap": Scrap, **Registry._CONSTRUCTOR_LOOKUP}
+    return {
+        "defscrap": defscrap,
+        "Scrap": Scrap,
+        "rebuild": rebuild,
+        **Registry._CONSTRUCTOR_LOOKUP,
+    }
 
 
 for _key, _value in _().items():
