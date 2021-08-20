@@ -17,3 +17,15 @@ class Contains:
     def _fallback(self, event: Scrap) -> Scrap:
         # Override default behaviour of returning self
         return event
+
+
+@defscrap
+class Inventory:
+    top_left: Point
+    bottom_right: Point
+
+
+@defscrap
+class Inventory:
+    top_left: Point
+    bottom_right: Point
