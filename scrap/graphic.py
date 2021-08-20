@@ -1,6 +1,5 @@
-from scrap.base import defscrap
+from scrap.base import defscrap, rebuild
 from scrap.data import Point, Colour, Message, Literal
-from scrap.queries import Contains
 import wrapper.renderable as renderable
 from typing import List
 import pygame
@@ -24,6 +23,13 @@ class Box:
             ),
         )
 
+    def Translate(self, translation: ...) -> "Box":
+        return rebuild(
+            self,
+            top_left=self.top_left[translation],
+            bottom_right=self.bottom_right[translation],
+        )
+
 
 @defscrap
 class Text:
@@ -34,6 +40,9 @@ class Text:
 
     def _cache(self) -> renderable.Renderable:
         return renderable.Text(self.text, self.top_left(), self.size, self.font)
+
+    def Translate(self, translation: ...) -> "Text":
+        return rebuild(self, top_left=self.top_left[translation])
 
 
 def list_available_fonts() -> List[str]:
@@ -57,3 +66,6 @@ class Circle:
                 <= (self.radius ** 2)
             ),
         )
+
+    def Translate(self, translation: ...) -> "Circle":
+        return rebuild(self, centre=self.centre[translation])

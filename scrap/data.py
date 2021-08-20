@@ -1,4 +1,4 @@
-from scrap.base import defscrap, Scrap
+from scrap.base import defscrap, Scrap, rebuild
 import wrapper.renderable as renderable
 from typing import Any
 
@@ -16,12 +16,24 @@ class Message:
 
 
 @defscrap
-class Point:
+class Vector:
     x: float = 0.0
     y: float = 0.0
 
     def _cache(self) -> renderable.Renderable:
+        return renderable.Void()
+
+    def Scale(self, scale: float) -> Scrap:
+        return rebuild(self, x=self.x * scale, y=self.y * scale)
+
+
+@defscrap
+class Point(Vector):
+    def _cache(self) -> renderable.Renderable:
         return renderable.Point(int(self.x), int(self.y))
+
+    def Translate(self, vector: Vector) -> Scrap:
+        return rebuild(self, x=self.x + vector.x, y=self.y + vector.y)
 
 
 @defscrap

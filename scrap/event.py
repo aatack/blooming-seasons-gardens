@@ -1,5 +1,6 @@
 from scrap.base import defscrap
-from scrap.data import Point
+from scrap.data import Point, Vector
+from scrap.composite import Wrapper
 
 
 @defscrap
@@ -11,12 +12,15 @@ class Key:
 
 
 @defscrap
-class Button:
+class Button(Wrapper):
     # TODO: validation
+    wrap: Point
     button: int
-    location: Point
     down: bool = False
     up: bool = False
+
+    def location(self) -> Point:
+        return self.wrao
 
 
 @defscrap
@@ -24,8 +28,8 @@ class Movement:
     start: Point
     end: Point
 
-    def displacement(self) -> Point:
-        return Point(self.end.x - self.start.x, self.end.y - self.start.y)
+    def displacement(self) -> Vector:
+        return Vector(self.end.x - self.start.x, self.end.y - self.start.y)
 
 
 @defscrap

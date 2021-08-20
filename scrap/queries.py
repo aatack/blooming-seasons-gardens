@@ -20,7 +20,7 @@ class Contains:
 
 
 @defscrap
-class Inventory:
+class Plan:
     top_left: Point
     bottom_right: Point
 
