@@ -1,4 +1,4 @@
-from scrap.base import defscrap
+from scrap.base import defscrap, rebuild
 from scrap.data import Point, Vector
 from scrap.composite import Wrapper
 
@@ -20,7 +20,7 @@ class Button(Wrapper):
     up: bool = False
 
     def location(self) -> Point:
-        return self.wrao
+        return self.wrap
 
 
 @defscrap
@@ -31,11 +31,20 @@ class Movement:
     def displacement(self) -> Vector:
         return Vector(self.end.x - self.start.x, self.end.y - self.start.y)
 
+    def Translate(self, translation: ...) -> "Movement":
+        return rebuild(self, start=self.start[translation], end=self.end[translation])
+
+    def Scale(self, scale: ...) -> "Movement":
+        return rebuild(self, start=self.start[scale], end=self.end[scale])
+
 
 @defscrap
 class Click:
+    wrap: Point
     button: int
-    location: Point
+
+    def location(self) -> Point:
+        return self.wrap
 
 
 @defscrap

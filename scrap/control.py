@@ -10,10 +10,10 @@ class UpdateWrapper:
 
 
 @defscrap
-class Translate:
-    vector: Vector
+class Scale:
+    scale: float
 
 
 @defscrap
-class Scale:
-    scale: float
+class Translate(Vector):
+    pass

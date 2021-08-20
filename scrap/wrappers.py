@@ -26,7 +26,7 @@ class CatchClicks(Wrapper):
             if contains:
                 if self.minimum_time is None:
                     return UpdateWrapper(
-                        self.wrap.Click(self.button, location),
+                        self.wrap.Click(location, self.button),
                         dict(timer=None, location=None),
                     )
                 else:
@@ -44,7 +44,7 @@ class CatchClicks(Wrapper):
                 and (self.timer.Read().message.value >= self.minimum_time)
             ):
                 return UpdateWrapper(
-                    self.wrap.Click(self.button, self.location),
+                    self.wrap.Click(self.location, self.button),
                     dict(timer=None, location=None),
                 )
             return UpdateWrapper(self.wrap, dict(timer=None, location=None))
