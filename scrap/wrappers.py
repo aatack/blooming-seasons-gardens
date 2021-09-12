@@ -48,3 +48,10 @@ class CatchClicks(Wrapper):
                     dict(timer=None, location=None),
                 )
             return UpdateWrapper(self.wrap, dict(timer=None, location=None))
+
+
+@defscrap
+class Middleware(Wrapper):
+    # TODO: work out why `wrap` does not precede the optional parameters here
+    inbound: Optional[Scrap] = None
+    outbound: Optional[Scrap] = None
