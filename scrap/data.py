@@ -32,8 +32,8 @@ class Point(Vector):
     def _cache(self) -> renderable.Renderable:
         return renderable.Point(int(self.x), int(self.y))
 
-    def Translate(self, vector: Vector) -> Scrap:
-        return rebuild(self, x=self.x + vector.x, y=self.y + vector.y)
+    def Translate(self, x: float, y: float) -> Scrap:
+        return rebuild(self, x=self.x + x, y=self.y + y)
 
 
 @defscrap

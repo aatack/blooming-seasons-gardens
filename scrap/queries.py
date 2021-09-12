@@ -5,9 +5,7 @@ from typing import List
 
 
 @defscrap
-class Contains:
-    point: Point
-
+class Contains(Point):
     def Group(self, children: List[Scrap]) -> Scrap:
         for child in children:
             if isinstance(child, Literal) and (child.value is True):

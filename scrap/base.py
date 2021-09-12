@@ -289,7 +289,7 @@ def _resolve_arguments(
     for i, (name, _, optional, default) in enumerate(latent):
         if i < len(args):
             arguments[name] = args[i]
-            assert name not in kwargs
+            assert name not in kwargs, name
         else:
             if (not optional) and (name not in kwargs):
                 raise ValueError(f"Required argument {name} missing")

@@ -14,12 +14,12 @@ class Box:
     def _cache(self) -> renderable.Renderable:
         return renderable.Box(self.top_left(), self.bottom_right(), self.colour())
 
-    def Contains(self, point: Point) -> Message:
+    def Contains(self, x: float, y: float) -> Message:
         return Message(
             self,
             Literal(
-                (self.top_left.x <= point.x <= self.bottom_right.x)
-                and (self.top_left.y <= point.y <= self.bottom_right.y)
+                (self.top_left.x <= x <= self.bottom_right.x)
+                and (self.top_left.y <= y <= self.bottom_right.y)
             ),
         )
 
@@ -28,6 +28,11 @@ class Box:
             self,
             top_left=self.top_left[translation],
             bottom_right=self.bottom_right[translation],
+        )
+
+    def Scale(self, scale: ...) -> "Box":
+        return rebuild(
+            self, top_left=self.top_left[scale], bottom_right=self.bottom_right[scale]
         )
 
 
@@ -44,6 +49,9 @@ class Text:
     def Translate(self, translation: ...) -> "Text":
         return rebuild(self, top_left=self.top_left[translation])
 
+    def Scale(self, scale: float) -> "Text":
+        raise NotImplementedError("Cannot currently scale text")
+
 
 def list_available_fonts() -> List[str]:
     return pygame.font.get_fonts()
@@ -58,14 +66,19 @@ class Circle:
     def _cache(self) -> renderable.Renderable:
         return renderable.Circle(self.centre(), int(self.radius), self.colour())
 
-    def Contains(self, point: Point) -> Message:
+    def Contains(self, x: float, y: float) -> Message:
         return Message(
             self,
             Literal(
-                (((self.centre.x - point.x) ** 2) + ((self.centre.y - point.y) ** 2))
+                (((self.centre.x - x) ** 2) + ((self.centre.y - y) ** 2))
                 <= (self.radius ** 2)
             ),
         )
 
     def Translate(self, translation: ...) -> "Circle":
         return rebuild(self, centre=self.centre[translation])
+
+    def Scale(self, scale: float) -> "Circle":
+        return rebuild(
+            self, centre=self.centre.Scale(scale), radius=self.radius * scale
+        )

@@ -47,12 +47,10 @@ class Window:
                 self._update_cache(self.scrap.Key(event.key, up=True))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self._update_cache(
-                    self.scrap.Button(Point(*event.pos), event.button, down=True)
+                    self.scrap.Button(event.button, *event.pos, down=True)
                 )
             if event.type == pygame.MOUSEBUTTONUP:
-                self._update_cache(
-                    self.scrap.Button(Point(*event.pos), event.button, up=True)
-                )
+                self._update_cache(self.scrap.Button(event.button, *event.pos, up=True))
             if event.type == pygame.MOUSEMOTION:
                 self._update_cache(
                     self.scrap.Movement(

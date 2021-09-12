@@ -12,15 +12,13 @@ class Key:
 
 
 @defscrap
-class Button(Wrapper):
+class Button(Point):
     # TODO: validation
-    wrap: Point
     button: int
+    x: float = 0.0
+    y: float = 0.0
     down: bool = False
     up: bool = False
-
-    def location(self) -> Point:
-        return self.wrap
 
 
 @defscrap
@@ -39,12 +37,10 @@ class Movement:
 
 
 @defscrap
-class Click:
-    wrap: Point
+class Click(Point):
     button: int
-
-    def location(self) -> Point:
-        return self.wrap
+    x: float = 0.0
+    y: float = 0.0
 
 
 @defscrap
