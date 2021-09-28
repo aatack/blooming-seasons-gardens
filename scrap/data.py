@@ -35,6 +35,12 @@ class Point(Vector):
     def Translate(self, x: float, y: float) -> Scrap:
         return rebuild(self, x=self.x + x, y=self.y + y)
 
+    def Render(self, render: ...) -> Scrap:
+        return render
+
+    def export(self) -> tuple:
+        return int(self.x), int(self.y)
+
 
 @defscrap
 class Colour:
@@ -46,3 +52,10 @@ class Colour:
         return renderable.Colour(
             int(self.red * 255), int(self.green * 255), int(self.blue * 255)
         )
+
+    def Render(self, render: ...) -> Scrap:
+        surface.fill(self.export)
+        return render
+
+    def export(self) -> tuple:
+        return int(self.red * 255), int(self.green * 255), int(self.blue * 255)

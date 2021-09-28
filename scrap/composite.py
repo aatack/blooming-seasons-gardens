@@ -45,6 +45,11 @@ class Group:
     def _cache(self) -> renderable.Renderable:
         return renderable.Group([child() for child in self.children])
 
+    def Render(self, render: ...) -> Scrap:
+        for child in self.children:
+            render = child[render]
+        return render
+
 
 @defscrap
 class Wrapper:

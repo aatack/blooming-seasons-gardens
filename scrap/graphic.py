@@ -1,4 +1,4 @@
-from scrap.base import defscrap, rebuild
+from scrap.base import defscrap, rebuild, Scrap
 from scrap.data import Point, Colour, Message, Literal
 import wrapper.renderable as renderable
 from typing import List
@@ -35,6 +35,18 @@ class Box:
             self, top_left=self.top_left[scale], bottom_right=self.bottom_right[scale]
         )
 
+    def export(self) -> tuple:
+        return (
+            int(self.top_left.x),
+            int(self.top_left.y),
+            int(self.bottom_right.x - self.top_left.x),
+            int(self.bottom_right.y - self.top_left.y),
+        )
+
+    def Render(self, render: ...) -> Scrap:
+        pygame.draw.rect(render.surface, self.colour.export, self.export)
+        return render
+
 
 @defscrap
 class Text:
@@ -51,6 +63,15 @@ class Text:
 
     def Scale(self, scale: float) -> "Text":
         raise NotImplementedError("Cannot currently scale text")
+
+    def export(self) -> pygame.Surface:
+        return pygame.font.SysFont(self.font, self.size).render(
+            self.text, False, (0, 0, 0)
+        )
+
+    def Render(self, render: ...) -> Scrap:
+        render.surface.blit(self.export, self.top_left.export)
+        return render
 
 
 def list_available_fonts() -> List[str]:
@@ -82,3 +103,9 @@ class Circle:
         return rebuild(
             self, centre=self.centre.Scale(scale), radius=self.radius * scale
         )
+
+    def Render(self, render: ...) -> Scrap:
+        pyhame.draw.circle(
+            render.surface, self.colour.export, self.centre.export, int(self.radius)
+        )
+        return render
