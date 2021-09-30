@@ -1,4 +1,5 @@
 from scrap.base import defscrap, Scrap, rebuild
+from scrap.composite import Void
 import wrapper.renderable as renderable
 from typing import Any
 
@@ -25,6 +26,9 @@ class Vector:
 
     def Scale(self, scale: float) -> Scrap:
         return rebuild(self, x=self.x * scale, y=self.y * scale)
+
+    def Cache(self) -> Scrap:
+        return Void()
 
 
 @defscrap
@@ -56,6 +60,9 @@ class Colour:
     def Render(self, render: ...) -> Scrap:
         surface.fill(self.export)
         return render
+
+    def Cache(self) -> Scrap:
+        return self
 
     def export(self) -> tuple:
         return int(self.red * 255), int(self.green * 255), int(self.blue * 255)

@@ -83,3 +83,6 @@ class Wrapper:
 
     def _cache(self) -> renderable.Renderable:
         return self.wrap()
+
+    def Cache(self) -> Scrap:
+        return self.wrap.Cache()
