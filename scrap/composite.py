@@ -10,6 +10,9 @@ from typing import List
 class Void:
     """Scrap for which any handling scrap will return itself."""
 
+    def Render(self, render: ...) -> Scrap:
+        return render
+
 
 @defscrap
 class Group:
