@@ -48,10 +48,6 @@ class Scrap:
         assert isinstance(result, Scrap)
         return result
 
-    def _render(self, surface: pygame.Surface):
-        """Render the scrap to a pygame surface."""
-        self.cache().render(surface)
-
     def __repr__(self) -> str:
         return (
             self._DEFINITION.name
@@ -255,15 +251,7 @@ def definition_from_constructor(constructor: Type) -> Definition:
 
 
 def constructor_from_definition(definition: Definition) -> Type:
-    attributes = {"_DEFINITION": definition}
-
-    if definition.cache is not None:
-        attributes["_cache"] = definition.cache
-
-    if definition.render is not None:
-        attributes["_render"] = definition.cache
-
-    return type(definition.name, (Scrap,), attributes)
+    return type(definition.name, (Scrap,), {"_DEFINITION": definition})
 
 
 def defscrap(constructor: Type) -> Type[Scrap]:
