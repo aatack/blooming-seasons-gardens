@@ -1,5 +1,4 @@
 from scrap.base import defscrap, Scrap, rebuild
-from scrap.composite import Void
 import wrapper.renderable as renderable
 from typing import Any
 
@@ -28,6 +27,8 @@ class Vector:
         return rebuild(self, x=self.x * scale, y=self.y * scale)
 
     def Cache(self) -> Scrap:
+        from scrap.composite import Void
+
         return Void()
 
 
@@ -58,7 +59,7 @@ class Colour:
         )
 
     def Render(self, render: ...) -> Scrap:
-        surface.fill(self.export)
+        render.surface.fill(self.export)
         return render
 
     def Cache(self) -> Scrap:

@@ -17,11 +17,11 @@ class Window:
         pygame.init()
 
         self.scrap = scrap
-        self.cache = self.scrap()
+        self.cache = self.scrap.Cache()
 
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
-        self.background_colour = background_colour()
+        self.background_colour = background_colour.Cache()
 
         self.title = title
         if self.title is not None:
@@ -59,10 +59,8 @@ class Window:
                     )
                 )
 
-        self.background_colour.render(self.surface)
-
-        # TODO: respond to any user events
-        self.cache.render(self.surface)
+        self.background_colour.Render(self.surface)
+        self.cache.Render(self.surface)
 
         pygame.display.flip()
         return True
@@ -74,4 +72,4 @@ class Window:
 
         if scrap is not self.scrap:
             self.scrap = scrap
-            self.cache = self.scrap()
+            self.cache = self.scrap.Cache()
