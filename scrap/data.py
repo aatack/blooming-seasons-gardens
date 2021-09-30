@@ -20,9 +20,6 @@ class Vector:
     x: float = 0.0
     y: float = 0.0
 
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Void()
-
     def Scale(self, scale: float) -> Scrap:
         return rebuild(self, x=self.x * scale, y=self.y * scale)
 
@@ -34,9 +31,6 @@ class Vector:
 
 @defscrap
 class Point(Vector):
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Point(int(self.x), int(self.y))
-
     def Translate(self, x: float, y: float) -> Scrap:
         return rebuild(self, x=self.x + x, y=self.y + y)
 
@@ -52,11 +46,6 @@ class Colour:
     red: float = 0.0
     green: float = 0.0
     blue: float = 0.0
-
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Colour(
-            int(self.red * 255), int(self.green * 255), int(self.blue * 255)
-        )
 
     def Render(self, render: ...) -> Scrap:
         render.surface.fill(self.export)

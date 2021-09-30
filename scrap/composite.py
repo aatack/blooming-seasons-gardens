@@ -45,9 +45,6 @@ class Group:
             return Message(result.scrap, event[result.message])
         return result
 
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Group([child() for child in self.children])
-
     def Render(self, render: ...) -> Scrap:
         for child in self.children:
             render = child[render]
@@ -80,9 +77,6 @@ class Wrapper:
             else rebuild(self, wrap=scrap, **wrapper_updates)
         )
         return wrapped if message is None else Message(wrapped, message)
-
-    def _cache(self) -> renderable.Renderable:
-        return self.wrap()
 
     def Cache(self) -> Scrap:
         return self.wrap.Cache()

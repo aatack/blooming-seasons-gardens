@@ -11,9 +11,6 @@ class Box:
     bottom_right: Point
     colour: Colour
 
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Box(self.top_left(), self.bottom_right(), self.colour())
-
     def Contains(self, x: float, y: float) -> Message:
         return Message(
             self,
@@ -55,9 +52,6 @@ class Text:
     size: int
     font: str = "segoeuisemibold"
 
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Text(self.text, self.top_left(), self.size, self.font)
-
     def Translate(self, translation: ...) -> "Text":
         return rebuild(self, top_left=self.top_left[translation])
 
@@ -83,9 +77,6 @@ class Circle:
     centre: Point
     radius: float
     colour: Colour
-
-    def _cache(self) -> renderable.Renderable:
-        return renderable.Circle(self.centre(), int(self.radius), self.colour())
 
     def Contains(self, x: float, y: float) -> Message:
         return Message(

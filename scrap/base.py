@@ -48,10 +48,6 @@ class Scrap:
         assert isinstance(result, Scrap)
         return result
 
-    def _cache(self) -> Renderable:
-        """Return a cached version of the rendered view of this scrap."""
-        return Void()
-
     def _render(self, surface: pygame.Surface):
         """Render the scrap to a pygame surface."""
         self.cache().render(surface)
@@ -69,12 +65,6 @@ class Scrap:
     def __getitem__(self, event: "Scrap") -> "Scrap":
         assert isinstance(event, Scrap)
         return self._handle(event)
-
-    def __call__(self, surface: Optional[pygame.Surface] = None):
-        if surface is not None:
-            return self._render(surface)
-        else:
-            return self._cache()
 
 
 class Builder(type):
@@ -249,6 +239,7 @@ def definition_from_constructor(constructor: Type) -> Definition:
             attributes.get("_fallback", None),
             attributes.get("_postprocessor", None),
         ),
+        # TODO: remove these as they are deprecated
         attributes.get("_cache", None),
         attributes.get("_render", None),
     )
