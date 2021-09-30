@@ -1,5 +1,4 @@
 from scrap.base import defscrap, Scrap, rebuild
-import wrapper.renderable as renderable
 from typing import Any
 
 

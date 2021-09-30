@@ -1,5 +1,4 @@
 from typing import Dict, Any, NamedTuple, Type, Optional, Callable, List
-from wrapper.renderable import Renderable, Void
 import pygame
 import inspect
 
@@ -145,8 +144,6 @@ class Definition(NamedTuple):
     latent: List[Latent]
     derived: Dict[str, Derived]
     handlers: Handlers
-    cache: Optional[Callable[[], Renderable]]
-    render: Optional[Callable[[pygame.Surface], None]]
 
 
 def _inherit(parent: Definition, child: Definition) -> Definition:
@@ -187,8 +184,6 @@ def _inherit(parent: Definition, child: Definition) -> Definition:
             child.handlers.fallback or parent.handlers.fallback,
             child.handlers.postprocessor or parent.handlers.postprocessor,
         ),
-        child.cache or parent.cache,
-        child.render or parent.render,
     )
 
 
@@ -235,9 +230,6 @@ def definition_from_constructor(constructor: Type) -> Definition:
             attributes.get("_fallback", None),
             attributes.get("_postprocessor", None),
         ),
-        # TODO: remove these as they are deprecated
-        attributes.get("_cache", None),
-        attributes.get("_render", None),
     )
 
     # TODO: handle any inheritance

@@ -1,7 +1,6 @@
 from scrap.base import defscrap, Scrap, rebuild
 from scrap.data import Message, Literal
 from scrap.control import UpdateWrapper
-import wrapper.renderable as renderable
 import pygame
 from typing import List
 
