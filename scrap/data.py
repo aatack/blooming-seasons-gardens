@@ -39,6 +39,11 @@ class Point(Vector):
     def export(self) -> tuple:
         return int(self.x), int(self.y)
 
+    def Bounds(self) -> Message:
+        from scrap.graphic import Box
+
+        return Message(self, Box(self, self))
+
 
 @defscrap
 class Colour:

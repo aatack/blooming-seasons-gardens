@@ -65,8 +65,8 @@ class Box:
 @defscrap
 class Text:
     text: str
-    top_left: Point
     size: int
+    top_left: Point = Point()
     font: str = "segoeuisemibold"
 
     def Translate(self, translation: ...) -> "Text":
@@ -87,6 +87,14 @@ class Text:
     def Cache(self) -> Message:
         return Message(self, self)
 
+    def Bounds(self) -> Message:
+        return Message(
+            self, Box(self.top_left, self.top_left.Translate(*self.export.get_size()))
+        )
+
+    def Contains(self, location: ...) -> Message:
+        return self.Bounds().message[location]
+
 
 def list_available_fonts() -> List[str]:
     return pygame.font.get_fonts()
@@ -96,7 +104,7 @@ def list_available_fonts() -> List[str]:
 class Circle:
     centre: Point
     radius: float
-    colour: Colour
+    colour: Colour = Colour()
 
     def Contains(self, x: float, y: float) -> Message:
         return Message(
@@ -116,10 +124,19 @@ class Circle:
         )
 
     def Render(self, render: ...) -> Scrap:
-        pyhame.draw.circle(
+        pygame.draw.circle(
             render.surface, self.colour.export, self.centre.export, int(self.radius)
         )
         return render
 
     def Cache(self) -> Message:
         return Message(self, self)
+
+    def Bounds(self) -> Message:
+        return Message(
+            self,
+            Box(
+                self.centre.Translate(-self.radius, -self.radius),
+                self.centre.Translate(self.radius, self.radius),
+            ),
+        )

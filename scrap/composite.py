@@ -12,6 +12,9 @@ class Void:
     def Render(self, render: ...) -> Scrap:
         return render
 
+    def Cache(self) -> Scrap:
+        return Message(self, self)
+
 
 @defscrap
 class Group:
