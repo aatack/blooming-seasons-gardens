@@ -17,3 +17,8 @@ class Scale:
 @defscrap
 class Translate(Vector):
     pass
+
+
+@defscrap
+class Resize(Vector):
+    """Called whenever the screen is resized, including when it is first loaded."""
