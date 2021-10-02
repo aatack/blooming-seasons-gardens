@@ -1,7 +1,7 @@
 from scrap.base import defscrap, Scrap, rebuild
-from scrap.composite import Wrapper, Void
+from scrap.composite import Wrapper
 from scrap.data import Message, Point
-from scrap.control import UpdateWrapper, Translate
+from scrap.control import UpdateWrapper
 from scrap.impure import Timer
 from scrap.event import Button, Click
 from typing import Optional
@@ -70,15 +70,3 @@ class Middleware(Wrapper):
             modified_result = rebuild(result, message=result.message[self.outbound])
 
         return Wrapper._DEFINITION.handlers.postprocessor(self, modified_result, event)
-
-
-@defscrap
-class Reposition(Middleware):
-    wrap: Scrap
-    position: Point
-
-    def inbound(self) -> Translate:
-        return Translate(-self.position.x, -self.position.y)
-
-    def outbound(self) -> Translate:
-        return Translate(self.position.x, self.position.y)
