@@ -1,5 +1,6 @@
 from scrap.base import defscrap, Scrap
 from scrap.data import Point, Literal
+from scrap.graphic import Box
 from scrap.composite import Group
 from typing import List
 import pygame
@@ -31,6 +32,29 @@ class Contains(Point):
     def _fallback(self, event: Scrap) -> Scrap:
         # Override default behaviour of returning self
         return event
+
+
+@defscrap
+class Bounds:
+    """Ask for an axis-aligned bounding box tightly bounding the rendered scrap."""
+
+    def Group(self, children: List[Scrap]) -> Scrap:
+        if len(children) == 0:
+            return Group([])
+
+        head, *tail = children
+        left = head.left
+        top = head.top
+        right = head.right
+        bottom = head.bottom
+
+        for child in tail:
+            left = min(left, child.left)
+            top = min(top, child.top)
+            right = max(right, child.right)
+            bottom = max(bottom, child.bottom)
+
+        return Box(Point(left, top), Point(right, bottom))
 
 
 @defscrap

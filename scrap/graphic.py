@@ -8,7 +8,19 @@ import pygame
 class Box:
     top_left: Point
     bottom_right: Point
-    colour: Colour
+    colour: Colour = Colour()
+
+    def left(self) -> float:
+        return self.top_left.x
+
+    def top(self) -> float:
+        return self.top_left.y
+
+    def right(self) -> float:
+        return self.bottom_right.x
+
+    def bottom(self) -> float:
+        return self.bottom_right.y
 
     def Contains(self, x: float, y: float) -> Message:
         return Message(
@@ -44,6 +56,9 @@ class Box:
         return render
 
     def Cache(self) -> Message:
+        return Message(self, self)
+
+    def Bounds(self) -> Message:
         return Message(self, self)
 
 
