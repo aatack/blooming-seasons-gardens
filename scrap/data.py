@@ -22,10 +22,10 @@ class Vector:
     def Scale(self, scale: float) -> Scrap:
         return rebuild(self, x=self.x * scale, y=self.y * scale)
 
-    def Cache(self) -> Scrap:
+    def Cache(self) -> Message:
         from scrap.composite import Void
 
-        return Void()
+        return Message(self, Void())
 
 
 @defscrap
@@ -50,8 +50,8 @@ class Colour:
         render.surface.fill(self.export)
         return render
 
-    def Cache(self) -> Scrap:
-        return self
+    def Cache(self) -> Message:
+        return Message(self, self)
 
     def export(self) -> tuple:
         return int(self.red * 255), int(self.green * 255), int(self.blue * 255)

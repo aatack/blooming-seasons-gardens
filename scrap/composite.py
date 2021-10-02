@@ -77,5 +77,5 @@ class Wrapper:
         )
         return wrapped if message is None else Message(wrapped, message)
 
-    def Cache(self) -> Scrap:
-        return self.wrap.Cache()
+    def Cache(self) -> Message:
+        return Message(self, self.wrap.Cache().message)

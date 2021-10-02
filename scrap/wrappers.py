@@ -63,10 +63,10 @@ class Middleware(Wrapper):
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
         modified_result = result
-        if self.outbound is not None and type(event).__name__ == "Cache":
+        if self.outbound is not None and isinstance(result, Message):
             # TODO: return caches as messages and change the condition to work on the
             #       message only
-            modified_result = result[self.outbound]
+            modified_result = rebuild(result, message=result.message[self.outbound])
 
         return self._DEFINITION.parent.handlers.postprocessor(
             self, modified_result, event

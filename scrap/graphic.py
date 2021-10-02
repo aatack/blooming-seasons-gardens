@@ -43,6 +43,9 @@ class Box:
         pygame.draw.rect(render.surface, self.colour.export, self.export)
         return render
 
+    def Cache(self) -> Message:
+        return Message(self, self)
+
 
 @defscrap
 class Text:
@@ -65,6 +68,9 @@ class Text:
     def Render(self, render: ...) -> Scrap:
         render.surface.blit(self.export, self.top_left.export)
         return render
+
+    def Cache(self) -> Message:
+        return Message(self, self)
 
 
 def list_available_fonts() -> List[str]:
@@ -99,3 +105,6 @@ class Circle:
             render.surface, self.colour.export, self.centre.export, int(self.radius)
         )
         return render
+
+    def Cache(self) -> Message:
+        return Message(self, self)
