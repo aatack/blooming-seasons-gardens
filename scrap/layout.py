@@ -37,7 +37,44 @@ class Column(Group):
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
         modified_result = Group._DEFINITION.handlers.postprocessor(self, result, event)
 
-        # TODO: make this more efficient
+        # TODO: make this more efficient - it currently rebuilds everything always
+        return (
+            rebuild(
+                modified_result,
+                scrap=rebuild(
+                    self,
+                    elements=[child.wrap for child in modified_result.scrap.children],
+                ),
+            )
+            if isinstance(modified_result, Message)
+            else rebuild(
+                self, elements=[child.wrap for child in modified_result.children]
+            )
+        )
+
+
+@defscrap
+class Row(Group):
+    elements: List[Scrap]
+    height: Optional[float] = None
+
+    def children(self) -> List[Scrap]:
+        children = []
+        current_size = 0
+
+        for element in self.elements:
+            child = Reposition(
+                element.Resize(height=self.height), Point(x=current_size)
+            )
+            current_size += child.Bounds().message.width
+            children.append(child)
+
+        return children
+
+    def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
+        modified_result = Group._DEFINITION.handlers.postprocessor(self, result, event)
+
+        # TODO: make this more efficient - it currently rebuilds everything always
         return (
             rebuild(
                 modified_result,
