@@ -1,5 +1,5 @@
 from scrap.base import defscrap, Scrap, rebuild
-from scrap.composite import Wrapper
+from scrap.composite import Wrapper, Void
 from scrap.data import Message, Point
 from scrap.control import UpdateWrapper
 from scrap.impure import Timer
@@ -57,14 +57,16 @@ class Middleware(Wrapper):
     outbound: Optional[Scrap] = None
 
     def _preprocessor(self, event: Scrap) -> Scrap:
+        if self.inbound is None:
+            return event
         return event[self.inbound]
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
-        # TODO: return caches as messages and change the condition to work on the
-        #       message only
-        modified_result = (
-            result[self.outbound] if type(event).__name__ == "Cache" else result
-        )
+        modified_result = result
+        if self.outbound is not None and type(event).__name__ == "Cache":
+            # TODO: return caches as messages and change the condition to work on the
+            #       message only
+            modified_result = result[self.outbound]
 
         return self._DEFINITION.parent.handlers.postprocessor(
             self, modified_result, event
