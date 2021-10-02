@@ -9,6 +9,9 @@ import pygame
 class Cache:
     """Used to request a cached version of the scrap for rendering efficiently."""
 
+    def Group(self, group: ...) -> Group:
+        return group
+
 
 @defscrap
 class Render:
