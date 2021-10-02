@@ -1,6 +1,6 @@
 from scrap.base import defscrap, rebuild, Scrap
 from scrap.data import Point, Colour, Message, Literal
-from typing import List
+from typing import List, Optional
 import pygame
 
 
@@ -21,6 +21,12 @@ class Box:
 
     def bottom(self) -> float:
         return self.bottom_right.y
+
+    def width(self) -> float:
+        return self.right - self.left
+
+    def height(self) -> float:
+        return self.bottom - self.top
 
     def Contains(self, x: float, y: float) -> Message:
         return Message(
@@ -60,6 +66,15 @@ class Box:
 
     def Bounds(self) -> Message:
         return Message(self, self)
+
+    def Resize(self, width: Optional[float], height: Optional[float]) -> Scrap:
+        return rebuild(
+            self,
+            bottom_right=Point(
+                self.bottom_right.x if width is None else self.top_left.x + width,
+                self.bottom_right.y if height is None else self.top_left.y + height,
+            ),
+        )
 
 
 @defscrap

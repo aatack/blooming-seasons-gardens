@@ -37,7 +37,7 @@ class Window:
                 self.surface = pygame.display.set_mode(
                     (event.w, event.h), pygame.RESIZABLE
                 )
-                self._update_cache(self.scrap.Resize(event.w, event.h))
+                self._update_cache(self.scrap.ResizeWindow(event.w, event.h))
             if event.type == pygame.QUIT:
                 return False
             if event.type == pygame.KEYDOWN:

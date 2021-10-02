@@ -1,6 +1,6 @@
 from scrap.base import defscrap, Scrap
 from scrap.data import Vector
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 @defscrap
@@ -20,5 +20,11 @@ class Translate(Vector):
 
 
 @defscrap
-class Resize(Vector):
-    """Called whenever the screen is resized, including when it is first loaded."""
+class Resize:
+    width: Optional[float] = None
+    height: Optional[float] = None
+
+
+@defscrap
+class ResizeWindow(Resize):
+    """A resize event that specifically comes from the outermost window."""

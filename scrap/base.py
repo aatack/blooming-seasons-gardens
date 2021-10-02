@@ -312,5 +312,5 @@ def _unpack_scrap(function: Callable[..., Scrap]) -> Callable[[Scrap, Scrap], Sc
     return wrapped_function
 
 
-def rebuild(scrap: Scrap, **kwargs) -> Scrap:
-    return type(scrap)(**{**scrap._latent, **kwargs})
+def rebuild(__scrap__: Scrap, **kwargs) -> Scrap:
+    return type(__scrap__)(**{**__scrap__._latent, **kwargs})
