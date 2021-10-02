@@ -55,3 +55,17 @@ class Middleware(Wrapper):
     # TODO: work out why `wrap` does not precede the optional parameters here
     inbound: Optional[Scrap] = None
     outbound: Optional[Scrap] = None
+
+    def _preprocessor(self, event: Scrap) -> Scrap:
+        return event[self.inbound]
+
+    def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
+        # TODO: return caches as messages and change the condition to work on the
+        #       message only
+        modified_result = (
+            result[self.outbound] if type(event).__name__ == "Cache" else result
+        )
+
+        return self._DEFINITION.parent.handlers.postprocessor(
+            self, modified_result, event
+        )
