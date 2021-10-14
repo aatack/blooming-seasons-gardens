@@ -62,7 +62,8 @@ class Variable(State):
     def modify(self, new: Optional[Any]):
         event = Changed(self._value, new, self)
         self._value = new
-        self.broadcast(event)
+        if event.old != event.new:
+            self.broadcast(event)
 
 
 class Derived(State):
@@ -92,7 +93,8 @@ class Derived(State):
     def respond(self, event: Event):
         event = Changed(self._value, self._compute(), self)
         self._value = event.new
-        self.broadcast(event)
+        if event.old != event.new:
+            self.broadcast(event)
 
 
 class _Log(State):
