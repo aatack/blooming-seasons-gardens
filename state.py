@@ -11,7 +11,7 @@ class State(abc.ABC):
         self._listeners: Set[State] = set()
 
     @abc.abstractmethod
-    def state(self) -> Any:
+    def value(self) -> Any:
         """Return the current value of the state."""
 
     @abc.abstractmethod
@@ -36,3 +36,41 @@ class State(abc.ABC):
         assert event.source is self, "States can only broadcast events about themselves"
         for state in self._listeners:
             state.respond(event)
+
+
+class Variable(State):
+    class Modify(Event, NamedTuple):
+        old: Optional[Any]
+        new: Optional[Any]
+        source: Optional["Event"] = None
+
+    def __init__(self, value: Optional[Any] = None):
+        super().__init__()
+        self._value = value
+
+    def value(self) -> Optional[Any]:
+        return self._value
+
+    def respond(self, event: Event):
+        pass
+
+    def modify(self, new: Optional[Any]):
+        event = self.Modify(self._value, new, self)
+        self._value = new
+        self.broadcast(event)
+
+
+class Log(State):
+    def __init__(self, state: State, message: str = "State changed:"):
+        super().__init__()
+        self._state = state
+        self._message = message
+
+        self.listen(self._state)
+
+    def value(self):
+        return self._state
+
+    def respond(self, _: Event):
+        print(self._message, self._state.value())
+
