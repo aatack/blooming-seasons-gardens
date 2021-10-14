@@ -37,6 +37,10 @@ class State(abc.ABC):
         for state in self._listeners:
             state.respond(event)
 
+    def log(self) -> "State":
+        _ = _Log(self)
+        return self
+
 
 class Variable(State):
     class Modify(Event, NamedTuple):
@@ -60,7 +64,7 @@ class Variable(State):
         self.broadcast(event)
 
 
-class Log(State):
+class _Log(State):
     def __init__(self, state: State, message: str = "State changed:"):
         super().__init__()
         self._state = state
@@ -73,4 +77,3 @@ class Log(State):
 
     def respond(self, _: Event):
         print(self._message, self._state.value())
-
