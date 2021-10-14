@@ -82,9 +82,3 @@ class Wrapper:
 
     def Cache(self) -> Message:
         return Message(self, self.wrap.Cache().message)
-
-
-@defscrap
-class Controller:
-    data: Scrap
-    display: Scrap
