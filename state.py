@@ -1,4 +1,4 @@
-from typing import Any, Optional, NamedTuple, Set
+from typing import Any, Callable, Optional, NamedTuple, Set
 import abc
 
 
@@ -42,12 +42,13 @@ class State(abc.ABC):
         return self
 
 
-class Variable(State):
-    class Modify(Event, NamedTuple):
-        old: Optional[Any]
-        new: Optional[Any]
-        source: Optional["Event"] = None
+class Changed(Event, NamedTuple):
+    old: Optional[Any]
+    new: Optional[Any]
+    source: Optional["Event"] = None
 
+
+class Variable(State):
     def __init__(self, value: Optional[Any] = None):
         super().__init__()
         self._value = value
@@ -59,8 +60,38 @@ class Variable(State):
         pass
 
     def modify(self, new: Optional[Any]):
-        event = self.Modify(self._value, new, self)
+        event = Changed(self._value, new, self)
         self._value = new
+        self.broadcast(event)
+
+
+class Derived(State):
+    def __init__(self, function: Callable, *args: State, **kwargs: State):
+        super().__init__()
+
+        self._function = function
+        self._args = args
+        self._kwargs = kwargs
+
+        self._value = self._compute()
+
+        for arg in self._args:
+            self.listen(arg)
+        for kwarg in self._kwargs.values():
+            self.listen(kwarg)
+
+    def value(self) -> Optional[Any]:
+        return self._value
+
+    def _compute(self) -> Optional[Any]:
+        return self._function(
+            *[state.value() for state in self._args],
+            **{key: state.value() for key, state in self._kwargs.items()}
+        )
+
+    def respond(self, event: Event):
+        event = Changed(self._value, self._compute(), self)
+        self._value = event.new
         self.broadcast(event)
 
 
