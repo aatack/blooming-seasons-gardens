@@ -42,19 +42,25 @@ class State(abc.ABC):
         return self
 
 
-class Changed(Event, NamedTuple):
+class Modified(Event, NamedTuple):
     old: Optional[Any]
     new: Optional[Any]
     source: Optional[State] = None
 
 
-class ElementChanged(Event, NamedTuple):
+class Index(Event, NamedTuple):
     index: int
     event: Event
     source: Optional[State] = None
 
 
-class Appended(Event, NamedTuple):
+class Key(Event, NamedTuple):
+    key: str
+    event: Event
+    source: Optional[State] = None
+
+
+class Added(Event, NamedTuple):
     value: Optional[Any]
     source: Optional[State] = None
 
@@ -77,7 +83,7 @@ class Variable(State):
         pass
 
     def modify(self, new: Optional[Any]):
-        event = Changed(self._value, new, self)
+        event = Modified(self._value, new, self)
         self._value = new
         if event.old != event.new:
             self.broadcast(event)
@@ -108,13 +114,13 @@ class Derived(State):
         )
 
     def respond(self, event: Event):
-        event = Changed(self._value, self._compute(), self)
+        event = Modified(self._value, self._compute(), self)
         self._value = event.new
         if event.old != event.new:
             self.broadcast(event)
 
 
-class Group(State):
+class Ordered(State):
     def __init__(self, *elements: State):
         super().__init__()
 
@@ -128,16 +134,13 @@ class Group(State):
         return [element.value() for element in self._elements]
 
     def respond(self, event: Event):
-        self.broadcast(ElementChanged(self._index[event.source], event, self))
+        self.broadcast(Index(self._index[event.source], event, self))
 
-    def __getitem__(self, index: int) -> State:
-        return self._elements[index]
-
-    def append(self, state: State):
+    def add(self, state: State):
         self._elements.append(state)
         self._index[state] = len(self._elements) - 1
         self.listen(state)
-        self.broadcast(Appended(state.value(), self))
+        self.broadcast(Added(state.value(), self))
 
     def remove(self, index: int):
         state = self._elements[index]
@@ -150,9 +153,39 @@ class Group(State):
         }
         self.broadcast(Removed(index, state.value(), self))
 
+    def __getitem__(self, index: int) -> State:
+        return self._elements[index]
+
+
+class Keyed(State):
+    def __init__(self, **elements: State):
+        super().__init__()
+
+        self._elements = elements
+        self._key = {element: key for key, element in self._elements.items()}
+
+        for element in self._elements.values():
+            self.listen(element)
+
+    def value(self):
+        return {key: element.value() for key, element in self._elements.items()}
+
+    def respond(self, event: Event):
+        self.broadcast(Key(self._key[event.source], event, self))
+
+    # def add(self, key: str, state: State):
+    #     assert key not in self._elements
+    #     self._elements[key] = state
+    #     self._key[state] = key
+    #     self.listen(state)
+    #     self.broadcast(Added(state.value(), self))
+
+    def __getitem__(self, key: str) -> State:
+        return self._elements[key]
+
 
 class _Log(State):
-    def __init__(self, state: State, message: str = "State changed:"):
+    def __init__(self, state: State, message: str = "State updated:"):
         super().__init__()
         self._state = state
         self._message = message
