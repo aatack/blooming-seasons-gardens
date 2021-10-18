@@ -28,7 +28,7 @@ class State(abc.ABC):
 
     def ignore(self, state: "State"):
         """Stop listening for events caused by the given state."""
-        assert self in state._listen, "The given state is not being listened for"
+        assert self in state._listeners, "The given state is not being listened for"
         state._listeners.remove(self)
 
     def broadcast(self, event: Event):
@@ -51,6 +51,17 @@ class Changed(Event, NamedTuple):
 class ElementChanged(Event, NamedTuple):
     index: int
     event: Event
+    source: Optional[State] = None
+
+
+class Appended(Event, NamedTuple):
+    value: Optional[Any]
+    source: Optional[State] = None
+
+
+class Removed(Event, NamedTuple):
+    index: int
+    value: Optional[Any]
     source: Optional[State] = None
 
 
@@ -107,7 +118,7 @@ class Group(State):
     def __init__(self, *elements: State):
         super().__init__()
 
-        self._elements = elements
+        self._elements = list(elements)
         self._index = {element: i for i, element in enumerate(self._elements)}
 
         for element in self._elements:
@@ -122,8 +133,22 @@ class Group(State):
     def __getitem__(self, index: int) -> State:
         return self._elements[index]
 
-    def __setitem__(self, index: int, value: Any):
-        self._elements[index].modify(value)
+    def append(self, state: State):
+        self._elements.append(state)
+        self._index[state] = len(self._elements) - 1
+        self.listen(state)
+        self.broadcast(Appended(state.value(), self))
+
+    def remove(self, index: int):
+        state = self._elements[index]
+        self.ignore(state)
+        self._elements = [
+            element for i, element in enumerate(self._elements) if i != index
+        ]
+        self._index = {
+            element: (i if i < index else i - 1) for element, i in self._index.items()
+        }
+        self.broadcast(Removed(index, state.value(), self))
 
 
 class _Log(State):
