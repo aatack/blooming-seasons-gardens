@@ -45,7 +45,13 @@ class State(abc.ABC):
 class Changed(Event, NamedTuple):
     old: Optional[Any]
     new: Optional[Any]
-    source: Optional["Event"] = None
+    source: Optional[State] = None
+
+
+class ElementChanged(Event, NamedTuple):
+    index: int
+    event: Event
+    source: Optional[State] = None
 
 
 class Variable(State):
@@ -95,6 +101,29 @@ class Derived(State):
         self._value = event.new
         if event.old != event.new:
             self.broadcast(event)
+
+
+class Group(State):
+    def __init__(self, *elements: State):
+        super().__init__()
+
+        self._elements = elements
+        self._index = {element: i for i, element in enumerate(self._elements)}
+
+        for element in self._elements:
+            self.listen(element)
+
+    def value(self):
+        return [element.value() for element in self._elements]
+
+    def respond(self, event: Event):
+        self.broadcast(ElementChanged(self._index[event.source], event, self))
+
+    def __getitem__(self, index: int) -> State:
+        return self._elements[index]
+
+    def __setitem__(self, index: int, value: Any):
+        self._elements[index].modify(value)
 
 
 class _Log(State):
