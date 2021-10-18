@@ -2,11 +2,10 @@ from typing import Any, Callable, Optional, NamedTuple, Set
 import abc
 
 
-class Event(NamedTuple):
-    source: Optional["State"] = None
-
-
 class State(abc.ABC):
+    class Event(NamedTuple):
+        source: "State"
+
     def __init__(self):
         self._listeners: Set[State] = set()
 
@@ -21,6 +20,7 @@ class State(abc.ABC):
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
         # TODO: check for cyclic dependencies
+        # TODO: count elements to allow the same dependency twice
         assert (
             self not in state._listeners
         ), "The given state is already listening for this one"
@@ -28,10 +28,11 @@ class State(abc.ABC):
 
     def ignore(self, state: "State"):
         """Stop listening for events caused by the given state."""
+        # TODO: only remove a value when its reference count drops to zero
         assert self in state._listeners, "The given state is not being listened for"
         state._listeners.remove(self)
 
-    def broadcast(self, event: Event):
+    def broadcast(self, event: "State.Event"):
         """Called whenever an event happens which changes the state's value."""
         assert event.source is self, "States can only broadcast events about themselves"
         for state in self._listeners:
@@ -42,36 +43,12 @@ class State(abc.ABC):
         return self
 
 
-class Modified(Event, NamedTuple):
-    old: Optional[Any]
-    new: Optional[Any]
-    source: Optional[State] = None
-
-
-class Index(Event, NamedTuple):
-    index: int
-    event: Event
-    source: Optional[State] = None
-
-
-class Key(Event, NamedTuple):
-    key: str
-    event: Event
-    source: Optional[State] = None
-
-
-class Added(Event, NamedTuple):
-    value: Optional[Any]
-    source: Optional[State] = None
-
-
-class Removed(Event, NamedTuple):
-    index: int
-    value: Optional[Any]
-    source: Optional[State] = None
-
-
 class Variable(State):
+    class Modified(State.Event, NamedTuple):
+        old: Optional[Any]
+        new: Optional[Any]
+        source: State
+
     def __init__(self, value: Optional[Any] = None):
         super().__init__()
         self._value = value
@@ -79,17 +56,22 @@ class Variable(State):
     def value(self) -> Optional[Any]:
         return self._value
 
-    def respond(self, event: Event):
+    def respond(self, event: State.Event):
         pass
 
     def modify(self, new: Optional[Any]):
-        event = Modified(self._value, new, self)
+        event = self.Modified(self._value, new, self)
         self._value = new
         if event.old != event.new:
             self.broadcast(event)
 
 
 class Derived(State):
+    class Changed(State.Event, NamedTuple):
+        old: Optional[Any]
+        new: Optional[Any]
+        source: State
+
     def __init__(self, function: Callable, *args: State, **kwargs: State):
         super().__init__()
 
@@ -113,14 +95,29 @@ class Derived(State):
             **{key: state.value() for key, state in self._kwargs.items()}
         )
 
-    def respond(self, event: Event):
-        event = Modified(self._value, self._compute(), self)
+    def respond(self, event: State.Event):
+        event = self.Changed(self._value, self._compute(), self)
         self._value = event.new
         if event.old != event.new:
             self.broadcast(event)
 
 
 class Ordered(State):
+    class Index(State.Event, NamedTuple):
+        index: int
+        event: State.Event
+        source: State
+
+    class Added(State.Event, NamedTuple):
+        index: int
+        value: Optional[Any]
+        source: State
+
+    class Removed(State.Event, NamedTuple):
+        index: int
+        value: Optional[Any]
+        source: State
+
     def __init__(self, *elements: State):
         super().__init__()
 
@@ -133,31 +130,48 @@ class Ordered(State):
     def value(self):
         return [element.value() for element in self._elements]
 
-    def respond(self, event: Event):
-        self.broadcast(Index(self._index[event.source], event, self))
+    def respond(self, event: State.Event):
+        self.broadcast(self.Index(self._index[event.source], event, self))
 
     def add(self, state: State):
+        event = self.Added(len(self._elements), state.value(), self)
         self._elements.append(state)
-        self._index[state] = len(self._elements) - 1
+        self._index[state] = event.index
         self.listen(state)
-        self.broadcast(Added(state.value(), self))
+        self.broadcast(event)
 
     def remove(self, index: int):
         state = self._elements[index]
         self.ignore(state)
+        # TODO: use the `del` keyword for both of these
         self._elements = [
             element for i, element in enumerate(self._elements) if i != index
         ]
         self._index = {
             element: (i if i < index else i - 1) for element, i in self._index.items()
         }
-        self.broadcast(Removed(index, state.value(), self))
+        self.broadcast(self.Removed(index, state.value(), self))
 
     def __getitem__(self, index: int) -> State:
         return self._elements[index]
 
 
 class Keyed(State):
+    class Key(State.Event, NamedTuple):
+        key: str
+        event: State.Event
+        source: State
+
+    class Added(State.Event, NamedTuple):
+        key: str
+        value: Optional[Any]
+        source: State
+
+    class Removed(State.Event, NamedTuple):
+        key: str
+        value: Optional[Any]
+        source: State
+
     def __init__(self, **elements: State):
         super().__init__()
 
@@ -170,15 +184,23 @@ class Keyed(State):
     def value(self):
         return {key: element.value() for key, element in self._elements.items()}
 
-    def respond(self, event: Event):
-        self.broadcast(Key(self._key[event.source], event, self))
+    def respond(self, event: State.Event):
+        self.broadcast(self.Key(self._key[event.source], event, self))
 
-    # def add(self, key: str, state: State):
-    #     assert key not in self._elements
-    #     self._elements[key] = state
-    #     self._key[state] = key
-    #     self.listen(state)
-    #     self.broadcast(Added(state.value(), self))
+    def add(self, key: str, state: State):
+        assert key not in self._elements
+        event = self.Added(key, state.value(), self)
+        self._elements[key] = state
+        self._key[state] = key
+        self.listen(state)
+        self.broadcast(event)
+
+    def remove(self, key: str):
+        state = self._elements[key]
+        del self._elements[key]
+        del self._key[state]
+        self.ignore(state)
+        self.broadcast(self.Removed(key, state.value(), self))
 
     def __getitem__(self, key: str) -> State:
         return self._elements[key]
@@ -195,5 +217,5 @@ class _Log(State):
     def value(self):
         return self._state
 
-    def respond(self, _: Event):
+    def respond(self, _: State.Event):
         print(self._message, self._state.value())
