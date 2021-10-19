@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, NamedTuple, Set
+from typing import Any, Callable, Dict, Optional, NamedTuple
 import abc
 
 
@@ -7,7 +7,7 @@ class State(abc.ABC):
         source: "State"
 
     def __init__(self):
-        self._listeners: Set[State] = set()
+        self._listeners: Dict[State, int] = {}
 
     @abc.abstractmethod
     def value(self) -> Any:
@@ -20,22 +20,21 @@ class State(abc.ABC):
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
         # TODO: check for cyclic dependencies
-        # TODO: count elements to allow the same dependency twice
-        assert (
-            self not in state._listeners
-        ), "The given state is already listening for this one"
-        state._listeners.add(self)
+        if self not in state._listeners:
+            state._listeners[self] = 0
+        state._listeners[self] += 1
 
     def ignore(self, state: "State"):
         """Stop listening for events caused by the given state."""
-        # TODO: only remove a value when its reference count drops to zero
         assert self in state._listeners, "The given state is not being listened for"
-        state._listeners.remove(self)
+        state._listeners[self] -= 1
+        if state._listeners[self] == 0:
+            del state._listeners[self]
 
     def broadcast(self, event: "State.Event"):
         """Called whenever an event happens which changes the state's value."""
         assert event.source is self, "States can only broadcast events about themselves"
-        for state in self._listeners:
+        for state in self._listeners.keys():
             state.respond(event)
 
     def log(self) -> "State":
