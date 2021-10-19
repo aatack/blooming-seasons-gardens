@@ -141,14 +141,12 @@ class Ordered(State):
 
     def remove(self, index: int):
         state = self._elements[index]
+        del self._elements[index]
+        del self._index[state]
+        for element, i in self._index.items():
+            if i > index:
+                self._index[element] -= 1
         self.ignore(state)
-        # TODO: use the `del` keyword for both of these
-        self._elements = [
-            element for i, element in enumerate(self._elements) if i != index
-        ]
-        self._index = {
-            element: (i if i < index else i - 1) for element, i in self._index.items()
-        }
         self.broadcast(self.Removed(index, state.value(), self))
 
     def __getitem__(self, index: int) -> State:
