@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, NamedTuple
+from typing import Any, Callable, Dict, Optional, NamedTuple, Type
+from collections import OrderedDict
+from inspect import Signature, Parameter, signature
 import abc
 
 
@@ -40,6 +42,18 @@ class State(abc.ABC):
     def log(self) -> "State":
         _ = _Log(self)
         return self
+
+
+class Constant(State):
+    def __init__(self, value: Any):
+        super().__init__()
+        self._value = value
+
+    def value(self) -> Any:
+        return self._value
+
+    def respond(self):
+        pass
 
 
 class Variable(State):
@@ -216,3 +230,59 @@ class _Log(State):
 
     def respond(self, _: State.Event):
         print(self._message, self._state.value())
+
+
+def struct(constructor: Type) -> Type:
+    attributes = constructor.__dict__
+
+    variables = OrderedDict()
+    derived_variables = OrderedDict()
+
+    for key, value in attributes["__annotations__"].items():
+        variables[key] = Parameter(
+            name=key, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
+        )
+
+    for key, value in attributes.items():
+        if key.startswith("__"):
+            continue
+
+        if type(value).__name__ == "function":
+            arguments = [
+                parameter.name for parameter in signature(value).parameters.values()
+            ]
+
+            for argument in arguments:
+                assert argument in variables or argument in derived_variables
+
+            derived_variables[key] = (value, arguments)
+        else:
+            parameter = variables[key]
+            variables[key] = Parameter(
+                name=key,
+                annotation=parameter.annotation,
+                kind=Parameter.POSITIONAL_OR_KEYWORD,
+                default=value,
+            )
+
+    class_signature = Signature(parameters=list(variables.values()))
+
+    def __init__(self, *args, **kwargs):
+        Keyed.__init__(self)
+
+        binding = class_signature.bind(*args, **kwargs)
+        binding.apply_defaults()
+
+        for attribute, argument in binding.arguments.items():
+            self.add(
+                attribute,
+                argument if isinstance(argument, State) else Constant(argument),
+            )
+
+        for attribute, (function, arguments) in derived_variables.items():
+            self.add(
+                attribute,
+                Derived(function, *[self[argument] for argument in arguments]),
+            )
+
+    return type(constructor.__name__, (Keyed,), dict(__init__=__init__))
