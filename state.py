@@ -248,6 +248,7 @@ def struct(constructor: Type) -> Type:
     leftovers = {}
 
     for key, value in attributes["__annotations__"].items():
+        assert not key.startswith("_")
         variables[key] = Parameter(
             name=key, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
         )
@@ -257,6 +258,7 @@ def struct(constructor: Type) -> Type:
             continue
 
         if isinstance(value, _Decorators.Derived):
+            assert not key.startswith("_")
             arguments = [
                 parameter.name
                 for parameter in signature(value.function).parameters.values()
@@ -269,6 +271,7 @@ def struct(constructor: Type) -> Type:
         elif type(value).__name__ == "function":
             leftovers[key] = value
         else:
+            assert not key.startswith("_")
             parameter = variables[key]
             variables[key] = Parameter(
                 name=key,
@@ -297,4 +300,23 @@ def struct(constructor: Type) -> Type:
                 Derived(function, *[self[argument] for argument in arguments]),
             )
 
-    return type(constructor.__name__, (Keyed,), dict(__init__=__init__, **leftovers))
+    def __getattr__(self, attribute: str) -> Any:
+        return self[attribute].value()
+
+    def __setattr__(self, attribute: str, value: Any):
+        if attribute in variables or attribute in derived_variables:
+            self[attribute].modify(value)
+        else:
+            self.__dict__[attribute] = value
+
+    return type(
+        constructor.__name__,
+        (Keyed,),
+        dict(
+            __init__=__init__,
+            __getattr__=__getattr__,
+            __setattr__=__setattr__,
+            **leftovers
+        ),
+    )
+
