@@ -320,4 +320,3 @@ def struct(constructor: Type) -> Type:
             **leftovers
         ),
     )
-
