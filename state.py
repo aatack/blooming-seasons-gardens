@@ -276,7 +276,7 @@ def struct(constructor: Type) -> Type:
         for attribute, argument in binding.arguments.items():
             self.add(
                 attribute,
-                argument if isinstance(argument, State) else Constant(argument),
+                argument if isinstance(argument, State) else Variable(argument),
             )
 
         for attribute, (function, arguments) in derived_variables.items():
