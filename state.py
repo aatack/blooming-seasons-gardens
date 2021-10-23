@@ -304,6 +304,7 @@ def struct(constructor: Type) -> Type:
         return self[attribute].value()
 
     def __setattr__(self, attribute: str, value: Any):
+        # TODO: also check that the current value is a state
         if attribute in variables or attribute in derived_variables:
             self[attribute].modify(value)
         else:
