@@ -232,11 +232,20 @@ class _Log(State):
         print(self._message, self._state.value())
 
 
+class _Decorators:
+    class Derived(NamedTuple):
+        function: Callable
+
+
+derive = _Decorators.Derived
+
+
 def struct(constructor: Type) -> Type:
     attributes = constructor.__dict__
 
     variables = OrderedDict()
     derived_variables = OrderedDict()
+    leftovers = {}
 
     for key, value in attributes["__annotations__"].items():
         variables[key] = Parameter(
@@ -247,15 +256,18 @@ def struct(constructor: Type) -> Type:
         if key.startswith("__"):
             continue
 
-        if type(value).__name__ == "function":
+        if isinstance(value, _Decorators.Derived):
             arguments = [
-                parameter.name for parameter in signature(value).parameters.values()
+                parameter.name
+                for parameter in signature(value.function).parameters.values()
             ]
 
             for argument in arguments:
                 assert argument in variables or argument in derived_variables
 
-            derived_variables[key] = (value, arguments)
+            derived_variables[key] = (value.function, arguments)
+        elif type(value).__name__ == "function":
+            leftovers[key] = value
         else:
             parameter = variables[key]
             variables[key] = Parameter(
@@ -285,4 +297,4 @@ def struct(constructor: Type) -> Type:
                 Derived(function, *[self[argument] for argument in arguments]),
             )
 
-    return type(constructor.__name__, (Keyed,), dict(__init__=__init__))
+    return type(constructor.__name__, (Keyed,), dict(__init__=__init__, **leftovers))
