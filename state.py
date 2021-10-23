@@ -280,7 +280,12 @@ def struct(constructor: Type) -> Type:
                 default=value,
             )
 
-    class_signature = Signature(parameters=list(variables.values()))
+    # Sort variables such that those with defaults always come last
+    sorted_variables = [
+        p for p in variables.values() if p.default is Parameter.empty
+    ] + [p for p in variables.values() if p.default is not Parameter.empty]
+
+    class_signature = Signature(parameters=sorted_variables)
 
     def __init__(self, *args, **kwargs):
         Keyed.__init__(self)
