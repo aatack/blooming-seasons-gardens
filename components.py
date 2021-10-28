@@ -2,17 +2,62 @@ from state import *
 import pygame
 
 
+"""
+Wishlist:
+-   Have something similar to @derive but which passes the states themselves instead of
+    their values.  It should return a state object which gets stored in the keyed state
+    directly, instead of being wrapped in a derived variable
+-   Robust inheritance.  This should cover attributes, @derived, the construct described
+    above, and then leave the leftovers to be handled by the normal python inheritance.
+    But leave it for now, as most of this can be worked around - it's just a bit more
+    cumbersome.
+"""
+
+
 @struct
 class Colour:
     red: float = 0.0
     green: float = 0.0
     blue: float = 0.0
 
+    @derive
+    def export(red: float, green: float, blue: float) -> tuple:
+        return int(red * 255), int(green * 255), int(blue * 255)
+
     def render(self, surface: pygame.Surface):
-        surface.fill((int(self.red * 255), int(self.green * 255), int(self.blue * 255)))
+        surface.fill(self.export)
 
 
 @struct
 class Point:
     x: float = 0.0
     y: float = 0.0
+
+
+@struct
+class Box:
+    top: float = 0.0
+    left: float = 0.0
+    bottom: float = 0.0
+    right: float = 0.0
+
+    @derive
+    def width(left: float, right: float) -> float:
+        return right - left
+
+    @derive
+    def height(top: float, bottom: float) -> float:
+        return bottom - top
+
+    @derive
+    def export(top: float, left: float, width: float, height: float) -> tuple:
+        return int(left), int(top), int(width), int(height)
+
+
+@struct
+class Rectangle:
+    box: Box
+    colour: Colour
+
+    def render(self, surface: pygame.Surface):
+        pygame.draw.rect(surface, self["colour"].export, self["box"].export)
