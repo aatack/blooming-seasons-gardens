@@ -2,6 +2,7 @@ from typing import Any, Callable, Dict, Optional, NamedTuple, Type
 from collections import OrderedDict
 from inspect import Signature, Parameter, signature
 import abc
+import pygame
 
 
 class State(abc.ABC):
@@ -18,6 +19,9 @@ class State(abc.ABC):
     @abc.abstractmethod
     def respond(self, event: Event):
         """Respond to an event caused by a state to which this state is listening."""
+
+    def render(self, surface: pygame.Surface):
+        """Render the component represented by this state to a pygame surface."""
 
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
@@ -145,6 +149,10 @@ class Ordered(State):
 
     def respond(self, event: State.Event):
         self.broadcast(self.Index(self._index[event.source], event, self))
+
+    def render(self, surface: pygame.Surface):
+        for element in self._elements:
+            element.render(surface)
 
     def add(self, state: State):
         event = self.Added(len(self._elements), state.value(), self)
