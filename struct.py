@@ -1,5 +1,5 @@
 from state import State, Keyed, Variable, Derived
-from typing import NamedTuple, Callable, Type, Any
+from typing import NamedTuple, Callable, Type, Any, Tuple, List
 from collections import OrderedDict
 from inspect import Signature, Parameter, signature
 
@@ -16,67 +16,84 @@ derive = _Decorators.Derived
 prepare = _Decorators.Prepared
 
 
-def struct(constructor: Type) -> Type:
-    attributes = constructor.__dict__
+class _Definition:
+    def __init__(self):
+        self.provided: Dict[str, Parameter] = OrderedDict()
+        self.derived: Dict[str, Tuple[Callable, List[str]]] = OrderedDict()
+        self.prepared: Dict[str, Tuple[Callable, List[str]]] = OrderedDict()
+        self.leftover: Dict[str, Callable] = OrderedDict()
 
-    variables = OrderedDict()
-    derived_variables = OrderedDict()
-    prepared_variables = OrderedDict()
-    leftovers = {}
+    def defines(self, attribute: str) -> bool:
+        return (attribute in self.provided) or (attribute in self.derived) or (attribute in self.prepared)
 
-    for key, value in attributes["__annotations__"].items():
-        assert not key.startswith("_")
-        variables[key] = Parameter(
-            name=key, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
-        )
+    def _argument_names(self, function: Callable) -> List[str]:
+        """
+        Get the names of the arguments in a function and check that they all exist.
+        """
+        arguments = [
+            parameter.name
+            for parameter in signature(function).parameters.values()
+        ]
 
-    for key, value in attributes.items():
-        if key.startswith("__"):
-            continue
+        for argument in arguments:
+            assert self.defines(argument)
 
-        if isinstance(value, _Decorators.Derived):
-            assert not key.startswith("_")
-            arguments = [
-                parameter.name
-                for parameter in signature(value.function).parameters.values()
-            ]
+        return arguments
 
-            for argument in arguments:
-                assert argument in variables or argument in derived_variables
+    def _attribute(self, attribute: str) -> str:
+        """Validate an attribute and check that it does not exist."""
+        assert len(attribute) > 0 and attribute[0] != "_"
+        assert not self.defines(attribute)
+        return attribute
 
-            derived_variables[key] = (value.function, arguments)
+    def parse_constructor(self, constructor: Type):
+        attributes = constructor.__dict__
 
-        elif isinstance(value, _Decorators.Prepared):
-            assert not key.startswith("_")
-            arguments = [
-                parameter.name
-                for parameter in signature(value.function).parameters.values()
-            ]
-
-            for argument in arguments:
-                assert argument in variables or argument in derived_variables
-
-            prepared_variables[key] = (value.function, arguments)
-
-        elif type(value).__name__ == "function":
-            leftovers[key] = value
-
-        else:
-            assert not key.startswith("_")
-            parameter = variables[key]
-            variables[key] = Parameter(
-                name=key,
-                annotation=parameter.annotation,
-                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                default=value,
+        for key, value in attributes["__annotations__"].items():
+            self.provided[self._attribute(key)] = Parameter(
+                name=key, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
             )
 
-    # Sort variables such that those with defaults always come last
-    sorted_variables = [
-        p for p in variables.values() if p.default is Parameter.empty
-    ] + [p for p in variables.values() if p.default is not Parameter.empty]
+        for key, value in attributes.items():
+            if key.startswith("__"):
+                continue
 
-    class_signature = Signature(parameters=sorted_variables)
+            if isinstance(value, _Decorators.Derived):
+                self.derived[self._attribute(key)] = (value.function, self._argument_names(value.function))
+
+            elif isinstance(value, _Decorators.Prepared):
+                self.prepared[self._attribute(key)] = (value.function, self._argument_names(value.function))
+
+            elif type(value).__name__ == "function":
+                self.leftover[key] = value
+
+            else:
+                assert not key.startswith("_")
+                parameter = self.provided[key]
+                self.provided[key] = Parameter(
+                    name=key,
+                    annotation=parameter.annotation,
+                    kind=Parameter.POSITIONAL_OR_KEYWORD,
+                    default=value,
+                )
+
+    @property
+    def sorted_provided(self) -> List[Parameter]:
+        """Sort provided variables such that those with default values come last."""
+        return [
+            p for p in self.provided.values() if p.default is Parameter.empty
+        ] + [p for p in self.provided.values() if p.default is not Parameter.empty]
+
+    @property
+    def constructor_signature(self) -> Signature:
+        return Signature(parameters=self.sorted_provided)
+
+
+def struct(constructor: Type) -> Type:
+    definition = _Definition()
+    definition.parse_constructor(constructor)
+
+    class_signature = definition.constructor_signature
 
     def __init__(self, *args, **kwargs):
         Keyed.__init__(self)
@@ -90,13 +107,13 @@ def struct(constructor: Type) -> Type:
                 argument if isinstance(argument, State) else Variable(argument),
             )
 
-        for attribute, (function, arguments) in derived_variables.items():
+        for attribute, (function, arguments) in definition.derived.items():
             self.add(
                 attribute,
                 Derived(function, *[self[argument] for argument in arguments]),
             )
 
-        for attribute, (function, arguments) in prepared_variables.items():
+        for attribute, (function, arguments) in definition.prepared.items():
             self.add(attribute, function(*[self[argument] for argument in arguments]))
 
     def __getattr__(self, attribute: str) -> Any:
@@ -104,7 +121,7 @@ def struct(constructor: Type) -> Type:
 
     def __setattr__(self, attribute: str, value: Any):
         # TODO: also check that the current value is a state
-        if attribute in variables or attribute in derived_variables:
+        if definition.defines(attribute):
             self[attribute].modify(value)
         else:
             self.__dict__[attribute] = value
@@ -116,6 +133,6 @@ def struct(constructor: Type) -> Type:
             __init__=__init__,
             __getattr__=__getattr__,
             __setattr__=__setattr__,
-            **leftovers
+            **definition.leftover
         ),
     )
