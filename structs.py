@@ -24,15 +24,18 @@ class _Definition:
         self.leftover: Dict[str, Callable] = OrderedDict()
 
     def defines(self, attribute: str) -> bool:
-        return (attribute in self.provided) or (attribute in self.derived) or (attribute in self.prepared)
+        return (
+            (attribute in self.provided)
+            or (attribute in self.derived)
+            or (attribute in self.prepared)
+        )
 
     def _argument_names(self, function: Callable) -> List[str]:
         """
         Get the names of the arguments in a function and check that they all exist.
         """
         arguments = [
-            parameter.name
-            for parameter in signature(function).parameters.values()
+            parameter.name for parameter in signature(function).parameters.values()
         ]
 
         for argument in arguments:
@@ -59,10 +62,16 @@ class _Definition:
                 continue
 
             if isinstance(value, _Decorators.Derived):
-                self.derived[self._attribute(key)] = (value.function, self._argument_names(value.function))
+                self.derived[self._attribute(key)] = (
+                    value.function,
+                    self._argument_names(value.function),
+                )
 
             elif isinstance(value, _Decorators.Prepared):
-                self.prepared[self._attribute(key)] = (value.function, self._argument_names(value.function))
+                self.prepared[self._attribute(key)] = (
+                    value.function,
+                    self._argument_names(value.function),
+                )
 
             elif type(value).__name__ == "function":
                 self.leftover[key] = value
@@ -80,9 +89,9 @@ class _Definition:
     @property
     def sorted_provided(self) -> List[Parameter]:
         """Sort provided variables such that those with default values come last."""
-        return [
-            p for p in self.provided.values() if p.default is Parameter.empty
-        ] + [p for p in self.provided.values() if p.default is not Parameter.empty]
+        return [p for p in self.provided.values() if p.default is Parameter.empty] + [
+            p for p in self.provided.values() if p.default is not Parameter.empty
+        ]
 
     @property
     def constructor_signature(self) -> Signature:

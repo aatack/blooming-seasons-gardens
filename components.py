@@ -1,5 +1,5 @@
 from state import *
-from struct import *
+from structs import *
 import pygame
 
 
