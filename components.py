@@ -3,15 +3,6 @@ from structs import *
 import pygame
 
 
-"""
-Wishlist:
--   Robust inheritance.  This should cover attributes, @derived, the construct described
-    above, and then leave the leftovers to be handled by the normal python inheritance.
-    But leave it for now, as most of this can be worked around - it's just a bit more
-    cumbersome.
-"""
-
-
 @struct
 class Colour:
     red: float = 0.0
