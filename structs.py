@@ -56,7 +56,7 @@ class _Definition:
     def parse_constructor(self, constructor: Type):
         attributes = constructor.__dict__
 
-        for attribute, value in attributes["__annotations__"].items():
+        for attribute, value in attributes.get("__annotations__", {}).items():
             self.provided[self._attribute(attribute)] = Parameter(
                 name=attribute, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
             )
@@ -127,6 +127,10 @@ def struct(constructor: Type) -> Type:
 
     def __init__(self, *args, **kwargs):
         _Struct.__init__(self)
+
+        # TODO: add a private variable that creates an instance of each struct from
+        #       which this struct inherits, to allow for casting (and to solve any
+        #       ambiguity that might arise)
 
         binding = class_signature.bind(*args, **kwargs)
         binding.apply_defaults()
