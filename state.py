@@ -244,8 +244,12 @@ class _Decorators:
     class Derived(NamedTuple):
         function: Callable
 
+    class Prepared(NamedTuple):
+        function: Callable
+
 
 derive = _Decorators.Derived
+prepare = _Decorators.Prepared
 
 
 def struct(constructor: Type) -> Type:
@@ -253,6 +257,7 @@ def struct(constructor: Type) -> Type:
 
     variables = OrderedDict()
     derived_variables = OrderedDict()
+    prepared_variables = OrderedDict()
     leftovers = {}
 
     for key, value in attributes["__annotations__"].items():
@@ -276,8 +281,22 @@ def struct(constructor: Type) -> Type:
                 assert argument in variables or argument in derived_variables
 
             derived_variables[key] = (value.function, arguments)
+
+        elif isinstance(value, _Decorators.Prepared):
+            assert not key.startswith("_")
+            arguments = [
+                parameter.name
+                for parameter in signature(value.function).parameters.values()
+            ]
+
+            for argument in arguments:
+                assert argument in variables or argument in derived_variables
+
+            prepared_variables[key] = (value.function, arguments)
+
         elif type(value).__name__ == "function":
             leftovers[key] = value
+
         else:
             assert not key.startswith("_")
             parameter = variables[key]
@@ -312,6 +331,9 @@ def struct(constructor: Type) -> Type:
                 attribute,
                 Derived(function, *[self[argument] for argument in arguments]),
             )
+
+        for attribute, (function, arguments) in prepared_variables.items():
+            self.add(attribute, function(*[self[argument] for argument in arguments]))
 
     def __getattr__(self, attribute: str) -> Any:
         return self[attribute].value()

@@ -4,9 +4,6 @@ import pygame
 
 """
 Wishlist:
--   Have something similar to @derive but which passes the states themselves instead of
-    their values.  It should return a state object which gets stored in the keyed state
-    directly, instead of being wrapped in a derived variable
 -   Robust inheritance.  This should cover attributes, @derived, the construct described
     above, and then leave the leftovers to be handled by the normal python inheritance.
     But leave it for now, as most of this can be worked around - it's just a bit more
@@ -52,6 +49,14 @@ class Box:
     @derive
     def export(top: float, left: float, width: float, height: float) -> tuple:
         return int(left), int(top), int(width), int(height)
+
+    @prepare
+    def top_left(top: float, left: float) -> Point:
+        return Point(top, left)
+
+    @prepare
+    def bottom_right(bottom: float, right: float) -> Point:
+        return Point(bottom, right)
 
 
 @struct
