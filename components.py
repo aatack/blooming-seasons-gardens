@@ -18,11 +18,11 @@ class Colour:
     blue: float = 0.0
 
     @derive
-    def export(red: float, green: float, blue: float) -> tuple:
+    def cache(red: float, green: float, blue: float) -> tuple:
         return int(red * 255), int(green * 255), int(blue * 255)
 
     def render(self, surface: pygame.Surface):
-        surface.fill(self.export)
+        surface.fill(self.cache)
 
 
 @struct
@@ -47,7 +47,7 @@ class Box:
         return bottom - top
 
     @derive
-    def export(top: float, left: float, width: float, height: float) -> tuple:
+    def cache(top: float, left: float, width: float, height: float) -> tuple:
         return int(left), int(top), int(width), int(height)
 
     @prepare
@@ -65,4 +65,4 @@ class Rectangle:
     colour: Colour
 
     def render(self, surface: pygame.Surface):
-        pygame.draw.rect(surface, self["colour"].export, self["box"].export)
+        pygame.draw.rect(surface, self["colour"].cache, self["box"].cache)
