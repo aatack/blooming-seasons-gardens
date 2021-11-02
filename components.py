@@ -1,4 +1,5 @@
 from state import *
+from struct import *
 import pygame
 
 
