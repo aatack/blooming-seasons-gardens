@@ -4,6 +4,10 @@ from collections import OrderedDict
 from inspect import Signature, Parameter, signature
 
 
+class _Struct(Keyed):
+    """Empty class for `issubclass` checks."""
+
+
 class _Decorators:
     class Derived(NamedTuple):
         function: Callable
@@ -58,7 +62,7 @@ class _Definition:
             )
 
         for attribute, value in attributes.items():
-            if attribute.startswith("__"):
+            if attribute.startswith("__") or attribute == "_abc_impl":
                 continue
 
             if isinstance(value, _Decorators.Derived):
@@ -85,6 +89,19 @@ class _Definition:
                     default=value,
                 )
 
+    def parse_parent(self, parent: "_Definition"):
+        for attribute, value in parent.provided.items():
+            if not self.defines(attribute):
+                self.provided[attribute] = value
+
+        for attribute, value in parent.derived.items():
+            if not self.defines(attribute):
+                self.derived[attribute] = value
+
+        for attribute, value in parent.prepared.items():
+            if not self.defines(attribute):
+                self.prepared[attribute] = value
+
     @property
     def sorted_provided(self) -> List[Parameter]:
         """Sort provided variables such that those with default values come last."""
@@ -98,13 +115,18 @@ class _Definition:
 
 
 def struct(constructor: Type) -> Type:
+    bases = [base for base in constructor.__bases__ if base is not object]
+
     definition = _Definition()
     definition.parse_constructor(constructor)
+    for base in bases:
+        assert issubclass(base, _Struct)
+        definition.parse_parent(base._definition)
 
     class_signature = definition.constructor_signature
 
     def __init__(self, *args, **kwargs):
-        Keyed.__init__(self)
+        _Struct.__init__(self)
 
         binding = class_signature.bind(*args, **kwargs)
         binding.apply_defaults()
@@ -134,13 +156,15 @@ def struct(constructor: Type) -> Type:
         else:
             self.__dict__[attribute] = value
 
-    return type(
+    struct_constructor = type(
         constructor.__name__,
-        (Keyed,),
+        (_Struct if len(bases) == 0 else bases[0],),
         dict(
             __init__=__init__,
             __getattr__=__getattr__,
             __setattr__=__setattr__,
-            **definition.leftover
+            **definition.leftover,
         ),
     )
+    struct_constructor._definition = definition
+    return struct_constructor

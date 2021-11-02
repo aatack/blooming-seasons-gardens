@@ -61,9 +61,8 @@ class Box:
 
 
 @struct
-class Rectangle:
-    box: Box
+class Rectangle(Box):
     colour: Colour
 
     def render(self, surface: pygame.Surface):
-        pygame.draw.rect(surface, self["colour"].cache, self["box"].cache)
+        pygame.draw.rect(surface, self["colour"].cache, self.cache)
