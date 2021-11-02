@@ -52,35 +52,34 @@ class _Definition:
     def parse_constructor(self, constructor: Type):
         attributes = constructor.__dict__
 
-        for key, value in attributes["__annotations__"].items():
-            self.provided[self._attribute(key)] = Parameter(
-                name=key, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
+        for attribute, value in attributes["__annotations__"].items():
+            self.provided[self._attribute(attribute)] = Parameter(
+                name=attribute, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
             )
 
-        for key, value in attributes.items():
-            if key.startswith("__"):
+        for attribute, value in attributes.items():
+            if attribute.startswith("__"):
                 continue
 
             if isinstance(value, _Decorators.Derived):
-                self.derived[self._attribute(key)] = (
+                self.derived[self._attribute(attribute)] = (
                     value.function,
                     self._argument_names(value.function),
                 )
 
             elif isinstance(value, _Decorators.Prepared):
-                self.prepared[self._attribute(key)] = (
+                self.prepared[self._attribute(attribute)] = (
                     value.function,
                     self._argument_names(value.function),
                 )
 
             elif type(value).__name__ == "function":
-                self.leftover[key] = value
+                self.leftover[attribute] = value
 
             else:
-                assert not key.startswith("_")
-                parameter = self.provided[key]
-                self.provided[key] = Parameter(
-                    name=key,
+                parameter = self.provided[attribute]
+                self.provided[attribute] = Parameter(
+                    name=attribute,
                     annotation=parameter.annotation,
                     kind=Parameter.POSITIONAL_OR_KEYWORD,
                     default=value,
