@@ -4,6 +4,9 @@ from state import State
 from components import Colour
 
 
+pygame.init()
+
+
 class Window:
     def __init__(
         self,

@@ -22,6 +22,10 @@ class Point:
     x: float = 0.0
     y: float = 0.0
 
+    @derive
+    def point_cache(x: float, y: float) -> tuple:
+        return int(x), int(y)
+
 
 @struct
 class Box:
@@ -55,3 +59,28 @@ class Box:
 class Rectangle(Box, Colour):
     def render(self, surface: pygame.Surface):
         pygame.draw.rect(surface, self.colour_cache, self.box_cache)
+
+
+@struct
+class Circle(Point, Colour):
+    radius: float = 0.0
+
+    def render(self, surface: pygame.Surface):
+        pygame.draw.circle(
+            surface, self.colour_cache, self.point_cache, int(self.radius)
+        )
+
+
+@struct
+class Text:
+    text: str
+    size: int
+    position: Point
+    font: str = "segoeuisemibold"
+
+    @derive
+    def text_cache(text: str, size: int, font: str, position: dict) -> pygame.Surface:
+        return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
+
+    def render(self, surface: pygame.Surface):
+        surface.blit(self.text_cache, self["position"].point_cache)
