@@ -129,3 +129,23 @@ class Plant:
         self["outer"].render(surface)
         self["inner"].render(surface)
         self["text"].render(surface)
+
+
+@struct
+class Wrap:
+    wrap: State
+
+    def render(self, surface: pygame.Surface):
+        self["wrap"].render(surface)
+
+
+@struct
+class Offset(Wrap):
+    x: float = 0.0
+    y: float = 0.0
+
+    def render(self, surface: pygame.Surface):
+        canvas = pygame.Surface(surface.get_size(), pygame.SRCALPHA, 32)
+        canvas = canvas.convert_alpha()
+        self["wrap"].render(canvas)
+        surface.blit(canvas, (self.x, self.y))
