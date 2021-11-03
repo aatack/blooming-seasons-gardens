@@ -84,3 +84,48 @@ class Text:
 
     def render(self, surface: pygame.Surface):
         surface.blit(self.text_cache, self["position"].point_cache)
+
+
+@struct
+class Plant:
+    name: str
+    position: Point
+    colour: Colour
+    radius: float
+    border: float
+
+    @prepare
+    def outer(radius: float, border: float, position: dict) -> Circle:
+        return Circle(
+            radius=Derived(lambda r, b: r + b, radius, border),
+            x=position["x"],
+            y=position["y"],
+        )
+
+    @prepare
+    def inner(radius: float, position: dict, colour: dict) -> Circle:
+        return Circle(
+            radius=radius,
+            x=position["x"],
+            y=position["y"],
+            red=colour["red"],
+            green=colour["green"],
+            blue=colour["blue"],
+        )
+
+    @derive
+    def text_x(position: dict, radius: float, border: float) -> float:
+        return position["x"] + ((radius + border) * 0.8)
+
+    @derive
+    def text_y(position: dict, radius: float, border: float) -> float:
+        return position["y"] + ((radius + border) * 0.8)
+
+    @prepare
+    def text(text_x: float, text_y: float, name: str) -> Text:
+        return Text(text=name, size=12, position=Point(text_x, text_y,))
+
+    def render(self, surface: pygame.Surface):
+        self["outer"].render(surface)
+        self["inner"].render(surface)
+        self["text"].render(surface)
