@@ -89,15 +89,11 @@ class Circle(Colour):
 class Text:
     text: str
     size: int
-    position: Point
     font: str = "segoeuisemibold"
 
     @derive
-    def text_cache(text: str, size: int, font: str, position: dict) -> pygame.Surface:
+    def view(text: str, size: int, font: str) -> pygame.Surface:
         return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
-
-    def render(self, surface: pygame.Surface):
-        surface.blit(self.text_cache, self["position"].point_cache)
 
 
 @struct
