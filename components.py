@@ -62,7 +62,7 @@ class Rectangle(Colour):
         return Box(top=0.0, left=0.0, bottom=height, right=width)
 
     @derive
-    def view(box: dict, colour_cache: tuple):
+    def view(box: dict, colour_cache: tuple) -> pygame.Surface:
         box_cache = box["box_cache"]
         surface = pygame.Surface(box_cache[2:])
         pygame.draw.rect(surface, colour_cache, box_cache)
@@ -70,13 +70,19 @@ class Rectangle(Colour):
 
 
 @struct
-class Circle(Point, Colour):
+class Circle(Colour):
     radius: float = 0.0
 
-    def render(self, surface: pygame.Surface):
-        pygame.draw.circle(
-            surface, self.colour_cache, self.point_cache, int(self.radius)
+    @derive
+    def view(radius: float, colour_cache: tuple) -> pygame.Surface:
+        draw_radius = int(radius)
+        surface = pygame.Surface(
+            (draw_radius * 2, draw_radius * 2), pygame.SRCALPHA, 32
         )
+        pygame.draw.circle(
+            surface, colour_cache, (draw_radius, draw_radius), draw_radius
+        )
+        return surface
 
 
 @struct
