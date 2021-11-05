@@ -97,41 +97,53 @@ class Text:
 @struct
 class Plant:
     name: str
-    position: Point
     colour: Colour
     radius: float
     border: float
 
     @prepare
-    def outer(radius: float, border: float, position: dict) -> Circle:
-        return Circle(
-            radius=Derived(lambda r, b: r + b, radius, border),
-            x=position["x"],
-            y=position["y"],
-        )
+    def outer(radius: float, border: float) -> Circle:
+        return Circle(radius=Derived(lambda r, b: r + b, radius, border),)
 
     @prepare
-    def inner(radius: float, position: dict, colour: dict) -> Circle:
-        return Circle(
-            radius=radius,
-            x=position["x"],
-            y=position["y"],
-            red=colour["red"],
-            green=colour["green"],
-            blue=colour["blue"],
+    def inner(radius: float, colour: dict, border: float) -> Circle:
+        return Offset(
+            Circle(
+                radius=radius,
+                red=colour["red"],
+                green=colour["green"],
+                blue=colour["blue"],
+            ),
+            x=border,
+            y=border,
         )
 
     @derive
-    def text_x(position: dict, radius: float, border: float) -> float:
-        return position["x"] + ((radius + border) * 0.8)
+    def text_x(radius: float, border: float) -> float:
+        return (radius + border) * 1.8
 
     @derive
-    def text_y(position: dict, radius: float, border: float) -> float:
-        return position["y"] + ((radius + border) * 0.8)
+    def text_y(radius: float, border: float) -> float:
+        return (radius + border) * 1.8
 
     @prepare
     def text(text_x: float, text_y: float, name: str) -> Text:
-        return Text(text=name, size=12, position=Point(text_x, text_y,))
+        return Offset(Text(text=name, size=12), x=text_x, y=text_y,)
+
+    @prepare
+    def view(outer, inner, text) -> State:
+        surfaces = [outer.view(), inner.view(), text.view()]
+
+        def render(*_surfaces) -> pygame.Surface:
+            bounds = [_surface.get_size() for _surface in _surfaces]
+            width, height = map(max, zip(*bounds))
+            surface = pygame.Surface((width, height), pygame.SRCALPHA)
+            for _surface in _surfaces:
+                print(surface, _surface)
+                surface.blit(_surface, (0, 0))
+            return surface
+
+        return Derived(render, *surfaces)
 
     def render(self, surface: pygame.Surface):
         self["outer"].render(surface)
