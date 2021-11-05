@@ -1,4 +1,4 @@
-from state import State, Keyed, Variable, Derived
+from state import State, Keyed, Variable, Derived, Dict
 from typing import NamedTuple, Callable, Type, Any, Tuple, List
 from collections import OrderedDict
 from inspect import Signature, Parameter, signature
@@ -22,6 +22,7 @@ prepare = _Decorators.Prepared
 
 class _Definition:
     def __init__(self):
+        self.order: List[str] = []
         self.provided: Dict[str, Parameter] = OrderedDict()
         self.derived: Dict[str, Tuple[Callable, List[str]]] = OrderedDict()
         self.prepared: Dict[str, Tuple[Callable, List[str]]] = OrderedDict()
@@ -35,47 +36,44 @@ class _Definition:
         )
 
     def _argument_names(self, function: Callable) -> List[str]:
-        """
-        Get the names of the arguments in a function and check that they all exist.
-        """
-        arguments = [
-            parameter.name for parameter in signature(function).parameters.values()
-        ]
-
-        for argument in arguments:
-            assert self.defines(argument)
-
-        return arguments
+        """Get the names of the arguments in a function."""
+        return [parameter.name for parameter in signature(function).parameters.values()]
 
     def _attribute(self, attribute: str) -> str:
         """Validate an attribute and check that it does not exist."""
         assert len(attribute) > 0 and attribute[0] != "_"
-        assert not self.defines(attribute)
+        assert not self.defines(attribute), f"{attribute} is defined twice"
         return attribute
 
     def parse_constructor(self, constructor: Type):
         attributes = constructor.__dict__
 
         for attribute, value in attributes.get("__annotations__", {}).items():
-            self.provided[self._attribute(attribute)] = Parameter(
+            _attribute = self._attribute(attribute)
+            self.provided[_attribute] = Parameter(
                 name=attribute, annotation=value, kind=Parameter.POSITIONAL_OR_KEYWORD
             )
+            # self.order.append(_attribute)
 
         for attribute, value in attributes.items():
             if attribute.startswith("__") or attribute == "_abc_impl":
                 continue
 
             if isinstance(value, _Decorators.Derived):
-                self.derived[self._attribute(attribute)] = (
+                _attribute = self._attribute(attribute)
+                self.derived[_attribute] = (
                     value.function,
                     self._argument_names(value.function),
                 )
+                self.order.append(_attribute)
 
             elif isinstance(value, _Decorators.Prepared):
-                self.prepared[self._attribute(attribute)] = (
+                _attribute = self._attribute(attribute)
+                self.prepared[_attribute] = (
                     value.function,
                     self._argument_names(value.function),
                 )
+                self.order.append(_attribute)
 
             elif type(value).__name__ == "function":
                 self.leftover[attribute] = value
@@ -101,6 +99,9 @@ class _Definition:
         for attribute, value in parent.prepared.items():
             if not self.defines(attribute):
                 self.prepared[attribute] = value
+
+        for attribute in parent.order:
+            self.order.append(attribute)
 
     @property
     def sorted_provided(self) -> List[Parameter]:
@@ -141,14 +142,34 @@ def struct(constructor: Type) -> Type:
                 argument if isinstance(argument, State) else Variable(argument),
             )
 
-        for attribute, (function, arguments) in definition.derived.items():
-            self.add(
-                attribute,
-                Derived(function, *[self[argument] for argument in arguments]),
-            )
+        order = set(definition.order)
+        while len(order) > 0:
+            current = list(order)
+            current_length = len(current)
 
-        for attribute, (function, arguments) in definition.prepared.items():
-            self.add(attribute, function(*[self[argument] for argument in arguments]))
+            for attribute in current:
+                try:
+                    if attribute in definition.derived:
+                        function, arguments = definition.derived[attribute]
+                        self.add(
+                            attribute,
+                            Derived(
+                                function, *[self[argument] for argument in arguments]
+                            ),
+                        )
+
+                    if attribute in definition.prepared:
+                        function, arguments = definition.prepared[attribute]
+                        self.add(
+                            attribute,
+                            function(*[self[argument] for argument in arguments]),
+                        )
+
+                    order.remove(attribute)
+                except KeyError:
+                    pass
+
+            assert len(order) < current_length
 
     def __getattr__(self, attribute: str) -> Any:
         return self[attribute].value()
