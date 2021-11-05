@@ -1,6 +1,6 @@
 import pygame
-from typing import Tuple, Optional, Any
-from state import State, view
+from typing import Optional
+from state import State
 from components import Colour
 
 
@@ -19,7 +19,7 @@ class Window:
         pygame.init()
 
         self.state = state
-        self.view = view(state)
+        self.view = self.state.view()
         self.background_colour = background_colour
 
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -62,10 +62,9 @@ class Window:
             #     )
 
         self.surface.fill(self.background_colour.colour_cache)
-        if self.view is not None:
-            view = self.view.value()
-            if view is not None:
-                self.surface.blit(view, (0, 0))
+        view = self.view.value()
+        if view is not None:
+            self.surface.blit(view, (0, 0))
 
         pygame.display.flip()
         return True

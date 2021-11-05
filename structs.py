@@ -181,6 +181,11 @@ def struct(constructor: Type) -> Type:
         else:
             self.__dict__[attribute] = value
 
+    if definition.defines("view") and "view" not in definition.leftover:
+        # This allows the view to be defined as a derived or prepared state, but also
+        # does not prevent it from being overridden by subclasses as a leftover
+        definition.leftover["view"] = lambda self: self["view"]
+
     struct_constructor = type(
         constructor.__name__,
         (_Struct if len(bases) == 0 else bases[0],),

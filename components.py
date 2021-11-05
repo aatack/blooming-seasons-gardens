@@ -76,9 +76,7 @@ class Circle(Colour):
     @derive
     def view(radius: float, colour_cache: tuple) -> pygame.Surface:
         draw_radius = int(radius)
-        surface = pygame.Surface(
-            (draw_radius * 2, draw_radius * 2), pygame.SRCALPHA, 32
-        )
+        surface = pygame.Surface((draw_radius * 2, draw_radius * 2), pygame.SRCALPHA)
         pygame.draw.circle(
             surface, colour_cache, (draw_radius, draw_radius), draw_radius
         )
@@ -145,8 +143,9 @@ class Plant:
 class Wrap:
     wrap: State
 
-    def render(self, surface: pygame.Surface):
-        self["wrap"].render(surface)
+    @prepare
+    def view(wrap: State) -> State:
+        return wrap["view"]
 
 
 @struct
@@ -154,8 +153,21 @@ class Offset(Wrap):
     x: float = 0.0
     y: float = 0.0
 
-    def render(self, surface: pygame.Surface):
-        canvas = pygame.Surface(surface.get_size(), pygame.SRCALPHA, 32)
-        canvas = canvas.convert_alpha()
-        self["wrap"].render(canvas)
-        surface.blit(canvas, (self.x, self.y))
+    @prepare
+    def view(x: float, y: float, wrap: State) -> State:
+        view = wrap.view()
+
+        def render(_x, _y, _view) -> Optional[pygame.Surface]:
+            assert _x >= 0 and _y >= 0, "Cannot offset by a negative quantity"
+
+            if _view is None:
+                return None
+            render_x, render_y = int(_x), int(_y)
+            width, height = _view.get_size()
+            surface = pygame.Surface(
+                (max(width + render_x, 0), max(height + render_y, 0)), pygame.SRCALPHA
+            )
+            surface.blit(_view, (render_x, render_y))
+            return surface
+
+        return Derived(render, x, y, view)
