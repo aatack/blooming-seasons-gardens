@@ -18,8 +18,9 @@ class State(abc.ABC):
     def respond(self, event: Event):
         """Respond to an event caused by a state to which this state is listening."""
 
-    def render(self, surface: pygame.Surface):
-        """Render the component represented by this state to a pygame surface."""
+    def view(self) -> Optional["State"]:
+        """Optionally, return a state containing a pygame surface for rendering."""
+        return None
 
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
@@ -148,9 +149,8 @@ class Ordered(State):
     def respond(self, event: State.Event):
         self.broadcast(self.Index(self._index[event.source], event, self))
 
-    def render(self, surface: pygame.Surface):
-        for element in self._elements:
-            element.render(surface)
+    def view(self) -> Optional[State]:
+        raise NotImplementedError()
 
     def add(self, state: State):
         event = self.Added(len(self._elements), state.value(), self)
@@ -236,3 +236,12 @@ class _Log(State):
 
     def respond(self, _: State.Event):
         print(self._message, self._state.value())
+
+
+def view(state: State) -> Optional[State]:
+    _view = state.view()
+    if _view is not None:
+        return _view
+    if isinstance(state, Keyed) and "view" in state._elements:
+        return state["view"]
+    return None
