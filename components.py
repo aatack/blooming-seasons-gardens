@@ -1,6 +1,7 @@
 from state import *
 from structs import *
 import pygame
+import view
 
 
 @struct
@@ -62,9 +63,9 @@ class Rectangle(Colour):
         return Box(top=0.0, left=0.0, bottom=height, right=width)
 
     @derive
-    def view(box: dict, colour_cache: tuple) -> pygame.Surface:
+    def view(box: dict, colour_cache: tuple) -> view.View:
         box_cache = box["box_cache"]
-        surface = pygame.Surface(box_cache[2:])
+        surface = view.empty(*box_cache[2:])
         pygame.draw.rect(surface, colour_cache, box_cache)
         return surface
 
@@ -74,9 +75,9 @@ class Circle(Colour):
     radius: float = 0.0
 
     @derive
-    def view(radius: float, colour_cache: tuple) -> pygame.Surface:
+    def view(radius: float, colour_cache: tuple) -> view.View:
         draw_radius = int(radius)
-        surface = pygame.Surface((draw_radius * 2, draw_radius * 2), pygame.SRCALPHA)
+        surface = view.empty(draw_radius * 2, draw_radius * 2, transparent=True)
         pygame.draw.circle(
             surface, colour_cache, (draw_radius, draw_radius), draw_radius
         )
@@ -90,7 +91,7 @@ class Text:
     font: str = "segoeuisemibold"
 
     @derive
-    def view(text: str, size: int, font: str) -> pygame.Surface:
+    def view(text: str, size: int, font: str) -> view.View:
         return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
 
 
@@ -131,23 +132,19 @@ class Plant:
         return Offset(Text(text=name, size=12), x=text_x, y=text_y,)
 
     @prepare
-    def view(outer, inner, text) -> State:
-        surfaces = [outer.view(), inner.view(), text.view()]
+    def view(outer: State, inner: State, text: State) -> State:
+        raise NotImplementedError()
+        # surfaces = [outer.view(), inner.view(), text.view()]
 
-        def render(*_surfaces) -> pygame.Surface:
-            bounds = [_surface.get_size() for _surface in _surfaces]
-            width, height = map(max, zip(*bounds))
-            surface = pygame.Surface((width, height), pygame.SRCALPHA)
-            for _surface in _surfaces:
-                surface.blit(_surface, (0, 0))
-            return surface
+        # def render(*_surfaces) -> pygame.Surface:
+        #     bounds = [_surface.get_size() for _surface in _surfaces]
+        #     width, height = map(max, zip(*bounds))
+        #     surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        #     for _surface in _surfaces:
+        #         surface.blit(_surface, (0, 0))
+        #     return surface
 
-        return Derived(render, *surfaces)
-
-    def render(self, surface: pygame.Surface):
-        self["outer"].render(surface)
-        self["inner"].render(surface)
-        self["text"].render(surface)
+        # return Derived(render, *surfaces)
 
 
 @struct
@@ -166,19 +163,20 @@ class Offset(Wrap):
 
     @prepare
     def view(x: float, y: float, wrap: State) -> State:
-        view = wrap.view()
+        raise NotImplementedError()
+        # view = wrap.view()
 
-        def render(_x, _y, _view) -> Optional[pygame.Surface]:
-            assert _x >= 0 and _y >= 0, "Cannot offset by a negative quantity"
+        # def render(_x, _y, _view) -> Optional[pygame.Surface]:
+        #     assert _x >= 0 and _y >= 0, "Cannot offset by a negative quantity"
 
-            if _view is None:
-                return None
-            render_x, render_y = int(_x), int(_y)
-            width, height = _view.get_size()
-            surface = pygame.Surface(
-                (max(width + render_x, 0), max(height + render_y, 0)), pygame.SRCALPHA
-            )
-            surface.blit(_view, (render_x, render_y))
-            return surface
+        #     if _view is None:
+        #         return None
+        #     render_x, render_y = int(_x), int(_y)
+        #     width, height = _view.get_size()
+        #     surface = pygame.Surface(
+        #         (max(width + render_x, 0), max(height + render_y, 0)), pygame.SRCALPHA
+        #     )
+        #     surface.blit(_view, (render_x, render_y))
+        #     return surface
 
-        return Derived(render, x, y, view)
+        # return Derived(render, x, y, view)

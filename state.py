@@ -18,7 +18,7 @@ class State(abc.ABC):
         """Respond to an event caused by a state to which this state is listening."""
 
     def view(self) -> "State":
-        """Optionally, return a state containing a pygame surface for rendering."""
+        """Optionally, return a state containing a view for rendering."""
         return Constant(None)  # TODO: ensure this can be properly cached
 
     def listen(self, state: "State"):
