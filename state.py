@@ -1,6 +1,5 @@
 from typing import Any, Callable, Dict, Optional, NamedTuple
 import abc
-import pygame
 
 
 class State(abc.ABC):
