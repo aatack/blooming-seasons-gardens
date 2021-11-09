@@ -139,7 +139,6 @@ class Plant:
             width, height = map(max, zip(*bounds))
             surface = pygame.Surface((width, height), pygame.SRCALPHA)
             for _surface in _surfaces:
-                print(surface, _surface)
                 surface.blit(_surface, (0, 0))
             return surface
 

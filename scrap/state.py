@@ -21,7 +21,6 @@ class Controller(Wrapper):
         return self.view.View(self.model)
 
     def _postprocessor(self, result: Scrap, event: Scrap) -> Scrap:
-        print(result, event)
         return Wrapper._DEFINITION.handlers.postprocessor(self, result, event)
 
 
