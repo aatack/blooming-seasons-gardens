@@ -33,6 +33,7 @@ class State(abc.ABC):
         assert self in state._listeners, "The given state is not being listened for"
         state._listeners[self] -= 1
         if state._listeners[self] == 0:
+            # TODO: is this sufficient garbage collection?
             del state._listeners[self]
 
     def broadcast(self, event: "State.Event"):
@@ -107,7 +108,7 @@ class Derived(State):
     def _compute(self) -> Optional[Any]:
         return self._function(
             *[state.value() for state in self._args],
-            **{key: state.value() for key, state in self._kwargs.items()}
+            **{key: state.value() for key, state in self._kwargs.items()},
         )
 
     def respond(self, event: State.Event):
@@ -126,6 +127,7 @@ class Ordered(State):
     class Added(State.Event, NamedTuple):
         index: int
         value: Optional[Any]
+        element: State
         source: State
 
     class Removed(State.Event, NamedTuple):
@@ -152,7 +154,7 @@ class Ordered(State):
         raise NotImplementedError()
 
     def add(self, state: State):
-        event = self.Added(len(self._elements), state.value(), self)
+        event = self.Added(len(self._elements), state.value(), state, self)
         self._elements.append(state)
         self._index[state] = event.index
         self.listen(state)
@@ -170,6 +172,47 @@ class Ordered(State):
 
     def __getitem__(self, index: int) -> State:
         return self._elements[index]
+
+
+class Mapped(Ordered):
+    def __init__(self, source: Ordered, function: Callable[[State], State]):
+        self._source = source
+        self._function = function
+
+        self.listen(self._source)
+
+        super().__init__(*self._source._elements)
+
+    def respond(self, event: State.Event):
+        if event.source is self._source:
+            if isinstance(event, Ordered.Index):
+                pass  # This can be ignored as it will be handled by the child
+            elif isinstance(event, Ordered.Added):
+                self.add(event.element)
+            elif isinstance(event, Ordered.Removed):
+                self.remove(event.index)
+            else:
+                raise ValueError(f"Unknown ordered event: {event}")
+        else:
+            super().respond(event)  # Handle events for individual children
+
+    def add(self, state: State):
+        state = self._function(state)
+        self.listen(state)
+        event = self.Added(len(self._elements), state.value(), state, self)
+        self._elements.append(state)
+        self._index[state] = event.index
+        self.broadcast(event)
+
+    def remove(self, index: int):
+        state = self._elements[index]
+        del self._elements[index]
+        del self._index[state]
+        for element, i in self._index.items():
+            if i > index:
+                self._index[element] -= 1
+        self.ignore(state)  # TODO: this may leave hanging references
+        self.broadcast(self.Removed(index, state.value(), self))
 
 
 class Keyed(State):
