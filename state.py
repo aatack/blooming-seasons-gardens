@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, NamedTuple
+from typing import Any, Callable, Dict, List, Optional, NamedTuple
 import abc
 
 
@@ -136,11 +136,11 @@ class Ordered(State):
     def __init__(self, *elements: State):
         super().__init__()
 
-        self._elements = list(elements)
-        self._index = {element: i for i, element in enumerate(self._elements)}
+        self._elements: List[State] = []
+        self._index: Dict[State, int] = {}
 
-        for element in self._elements:
-            self.listen(element)
+        for element in elements:
+            self.add(element)
 
     def value(self):
         return [element.value() for element in self._elements]
