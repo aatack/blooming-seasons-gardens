@@ -134,18 +134,12 @@ class Plant:
 
     @prepare
     def view(outer: State, inner: State, text: State) -> State:
-        raise NotImplementedError()
-        # surfaces = [outer.view(), inner.view(), text.view()]
-
-        # def render(*_surfaces) -> pygame.Surface:
-        #     bounds = [_surface.get_size() for _surface in _surfaces]
-        #     width, height = map(max, zip(*bounds))
-        #     surface = pygame.Surface((width, height), pygame.SRCALPHA)
-        #     for _surface in _surfaces:
-        #         surface.blit(_surface, (0, 0))
-        #     return surface
-
-        # return Derived(render, *surfaces)
+        return Derived(
+            lambda _outer, _inner, _text: [_outer, _inner, _text],
+            outer.view(),
+            inner.view(),
+            text.view(),
+        )
 
 
 @struct
