@@ -164,20 +164,4 @@ class Offset(Wrap):
 
     @prepare
     def view(x: float, y: float, wrap: State) -> State:
-        raise NotImplementedError()
-        # view = wrap.view()
-
-        # def render(_x, _y, _view) -> Optional[pygame.Surface]:
-        #     assert _x >= 0 and _y >= 0, "Cannot offset by a negative quantity"
-
-        #     if _view is None:
-        #         return None
-        #     render_x, render_y = int(_x), int(_y)
-        #     width, height = _view.get_size()
-        #     surface = pygame.Surface(
-        #         (max(width + render_x, 0), max(height + render_y, 0)), pygame.SRCALPHA
-        #     )
-        #     surface.blit(_view, (render_x, render_y))
-        #     return surface
-
-        # return Derived(render, x, y, view)
+        return Derived(lambda _x, _y, _view: (_x, _y, _view), x, y, wrap.view())
