@@ -22,3 +22,18 @@ def simplify(view: View) -> List[Tuple[float, float, View]]:
         return result
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
+
+
+def render(view: View, surface: pygame.Surface, simplified: bool = False):
+    if not simplified:
+        view = simplify(view)
+
+    for x, y, inner_surface in view:
+        surface.blit(inner_surface, (int(x), (int(y))))
+
+
+def empty(width: int, height: int, transparent: bool = False) -> pygame.Surface:
+    if transparent:
+        return pygame.Surface((width, height), pygame.SRCALPHA)
+    else:
+        return pygame.Surface((width, height))
