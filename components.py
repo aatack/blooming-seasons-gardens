@@ -76,6 +76,7 @@ class Circle(Colour):
 
     @derive
     def view(radius: float, colour_cache: tuple) -> view.View:
+        # TODO: offset by (-radius, -radius)
         draw_radius = int(radius)
         surface = view.empty(draw_radius * 2, draw_radius * 2, transparent=True)
         pygame.draw.circle(

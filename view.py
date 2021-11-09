@@ -1,13 +1,15 @@
 import pygame
-from typing import Tuple, Union, List
+from typing import Tuple, Union, List, Optional
 
 
 View = Union[pygame.Surface, Tuple[float, float, "View"], List["View"]]
 
 
-def simplify(view: View) -> List[Tuple[float, float, View]]:
+def simplify(view: Optional[View]) -> List[Tuple[float, float, View]]:
     """Simplify any nested hierarchy of views into a list of translated literals."""
-    if isinstance(view, pygame.Surface):
+    if view is None:
+        return []
+    elif isinstance(view, pygame.Surface):
         return [(0.0, 0.0, view)]
     elif isinstance(view, tuple):
         outer_x, outer_y, inner_view = view
@@ -24,10 +26,11 @@ def simplify(view: View) -> List[Tuple[float, float, View]]:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
 
 
-def render(view: View, surface: pygame.Surface, simplified: bool = False):
+def render(view: Optional[View], surface: pygame.Surface, simplified: bool = False):
     if not simplified:
         view = simplify(view)
 
+    assert isinstance(view, list)
     for x, y, inner_surface in view:
         surface.blit(inner_surface, (int(x), (int(y))))
 

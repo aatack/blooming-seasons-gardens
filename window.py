@@ -1,7 +1,8 @@
 import pygame
 from typing import Optional
-from state import State
+from state import State, Derived
 from components import Colour
+from view import simplify, render
 
 
 pygame.init()
@@ -19,7 +20,7 @@ class Window:
         pygame.init()
 
         self.state = state
-        self.view = self.state.view()
+        self.view = Derived(simplify, self.state.view())
         self.background_colour = background_colour
 
         self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -64,7 +65,7 @@ class Window:
         self.surface.fill(self.background_colour.colour_cache)
         view = self.view.value()
         if view is not None:
-            self.surface.blit(view, (0, 0))
+            render(view, self.surface, simplified=True)
 
         pygame.display.flip()
         return True
