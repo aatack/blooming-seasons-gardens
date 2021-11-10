@@ -151,7 +151,7 @@ class Ordered(State):
         self.broadcast(self.Index(self._index[event.source], event, self))
 
     def view(self) -> Optional[State]:
-        raise NotImplementedError()
+        return Mapped(self, lambda e: e.view())
 
     def add(self, state: State):
         event = self.Added(len(self._elements), state.value(), state, self)
