@@ -1,9 +1,28 @@
 from components import *
 from structs import *
+from window import Window
+import settings
+
+
+def app(window: Window, garden: State) -> State:
+    editor_width = window.width * settings.EDITOR_WIDTH
+    return Ordered(
+        # Editor
+        Rectangle(
+            width=editor_width,
+            height=window.height,
+            red=settings.EDITOR_BACKGROUND_BRIGHTNESS,
+            blue=settings.EDITOR_BACKGROUND_BRIGHTNESS,
+            green=settings.EDITOR_BACKGROUND_BRIGHTNESS,
+        ),
+        garden.editor(editor_width),
+        # Planner
+        Offset(garden.planner(), x=editor_width),
+    )
 
 
 @struct
-class Plant:
+class Plant(Point):
     name: str
     colour: Colour
     radius: float
@@ -45,4 +64,16 @@ class Plant:
             outer.view(),
             inner.view(),
             text.view(),
+        )
+
+    def editor(self, width: State) -> State:
+        return Text(self["name"], 24)
+
+    def planner(self) -> State:
+        colour = self["colour"]
+        return Circle(
+            self["radius"],
+            red=colour["red"],
+            green=colour["green"],
+            blue=colour["blue"],
         )
