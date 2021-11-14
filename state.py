@@ -181,6 +181,14 @@ class Ordered(State):
     def __getitem__(self, index: int) -> State:
         return self._elements[index]
 
+    def key(self, key: int, down: bool):
+        for element in self._elements:
+            element.key(key, down)
+
+    def mouse(self, button: int, position: Tuple[int, int], down: bool):
+        for element in self._elements:
+            element.mouse(button, position, down)
+
 
 class Mapped(Ordered):
     def __init__(self, source: Ordered, function: Callable[[State], State]):
