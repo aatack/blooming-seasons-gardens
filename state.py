@@ -54,6 +54,30 @@ class State(abc.ABC):
         _ = _Log(self)
         return self
 
+    def __add__(self, other: Any) -> "State":
+        return Derived(lambda left, right: left + right, self, other)
+
+    def __radd__(self, other: Any) -> "State":
+        return type(self).__add__(other, self)
+
+    def __mul__(self, other: Any) -> "State":
+        return Derived(lambda left, right: left * right, self, other)
+
+    def __rmul__(self, other: Any) -> "State":
+        return type(self).__mul__(other, self)
+
+    def __sub__(self, other: Any) -> "State":
+        return Derived(lambda left, right: left - right, self, other)
+
+    def __rsub__(self, other: Any) -> "State":
+        return type(self).__sub__(other, self)
+
+    def __truediv__(self, other: Any) -> "State":
+        return Derived(lambda left, right: left / right, self, other)
+
+    def __rtruediv__(self, other: Any) -> "State":
+        return type(self).__truediv__(other, self)
+
 
 class Constant(State):
     def __init__(self, value: Any):
@@ -100,8 +124,13 @@ class Derived(State):
         super().__init__()
 
         self._function = function
-        self._args = args
-        self._kwargs = kwargs
+        self._args = tuple(
+            arg if isinstance(arg, State) else Variable(arg) for arg in args
+        )
+        self._kwargs = {
+            key: arg if isinstance(arg, State) else Variable(arg)
+            for key, arg in kwargs.items()
+        }
 
         self._value = self._compute()
 
