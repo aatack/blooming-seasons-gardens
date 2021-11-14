@@ -1,7 +1,7 @@
 import pygame
 from typing import Optional
-from state import State, Derived
-from components import Colour
+from state import State, Variable, Derived
+from components import Colour, Point
 from view import simplify, render
 
 
@@ -23,7 +23,13 @@ class Window:
         self.view = Derived(simplify, self.state.view())
         self.background_colour = background_colour
 
-        self.surface = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+        self.width = Variable(width)
+        self.height = Variable(height)
+        self.mouse = Point(0, 0)
+
+        self.surface = pygame.display.set_mode(
+            (self.width.value(), self.height.value()), pygame.RESIZABLE
+        )
 
         self.title = title
         if self.title is not None:
@@ -39,28 +45,26 @@ class Window:
                 self.surface = pygame.display.set_mode(
                     (event.w, event.h), pygame.RESIZABLE
                 )
-                # self._update_cache(self.scrap.ResizeWindow(event.w, event.h))
+                self.width.modify(event.w)
+                self.height.modify(event.h)
             if event.type == pygame.QUIT:
                 return False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
-            #     self._update_cache(self.scrap.Key(event.key, down=True))
-            # if event.type == pygame.KEYUP:
-            #     self._update_cache(self.scrap.Key(event.key, up=True))
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #     self._update_cache(
-            #         self.scrap.Button(event.button, *event.pos, down=True)
-            #     )
-            # if event.type == pygame.MOUSEBUTTONUP:
-            #     self._update_cache(self.scrap.Button(event.button, *event.pos, up=True))
-            # if event.type == pygame.MOUSEMOTION:
-            #     self._update_cache(
-            #         self.scrap.Movement(
-            #             Point(*event.pos),
-            #             Point(event.pos[0] + event.rel[0], event.pos[1] + event.rel[1]),
-            #         )
-            #     )
+                self.state.key(event.key, True)
+            if event.type == pygame.KEYUP:
+                self.state.key(event.key, False)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # TODO: work out why the position in the event does not match the
+                #       position in the stored state if the mouse is clicked while it is
+                #       moving
+                self.state.mouse(event.button, event.pos, True)
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.state.mouse(event.button, event.pos, False)
+            if event.type == pygame.MOUSEMOTION:
+                self.mouse.x = event.pos[0]
+                self.mouse.y = event.pos[1]
 
         self.surface.fill(self.background_colour.colour_cache)
         view = self.view.value()
