@@ -127,7 +127,7 @@ class Offset(Wrap):
 
 
 class VerticalStack(Folded):
-    def __init__(self, children: Ordered):
+    def __init__(self, *children: Ordered):
         initial = Constant(0)
 
         def fold(current, child):
@@ -136,11 +136,11 @@ class VerticalStack(Folded):
                 Offset(child, y=current),
             )
 
-        super().__init__(initial, children, fold)
+        super().__init__(initial, Ordered(*children), fold)
 
 
 class HorizontalStack(Folded):
-    def __init__(self, children: Ordered):
+    def __init__(self, *children: Ordered):
         initial = Constant(0)
 
         def fold(current, child):
@@ -149,4 +149,4 @@ class HorizontalStack(Folded):
                 Offset(child, x=current),
             )
 
-        super().__init__(initial, children, fold)
+        super().__init__(initial, Ordered(*children), fold)

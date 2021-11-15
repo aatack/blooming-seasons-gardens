@@ -67,7 +67,11 @@ class Plant(Point):
         )
 
     def editor(self, width: State) -> State:
-        return Text(self["name"], 24)
+        return VerticalStack(
+            Text("Plant", 24),
+            Text("Name: " + Derived(str, self["name"]), 12),
+            Text("Radius: " + Derived(str, self["radius"]), 12),
+        )
 
     def planner(self) -> State:
         colour = self["colour"]
