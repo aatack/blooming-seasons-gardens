@@ -124,3 +124,13 @@ class Offset(Wrap):
         self["wrap"].mouse(
             button, (position[0] - self.x, position[1] - self.y), down,
         )
+
+
+class VerticalStack(Folded):
+    def __init__(self, children: List[State]):
+        initial = Constant(0)
+
+        def fold(current, child):
+            return current + Derived(view.height, child.view()), child
+
+        super().__init__(initial, children, fold)

@@ -260,6 +260,23 @@ class Mapped(Ordered):
         self.broadcast(self.Removed(index, state.value(), self))
 
 
+class Folded(Ordered):
+    def __init__(
+        self,
+        initial: State,
+        source: Ordered,
+        fold: Callable[[State, State], Tuple[State, State]],
+    ):
+        """
+        Perform a fold operation over an ordered group of states.
+
+        The folding function should take in the current state and the next element, and
+        should output the updated state as well as the transformed element for that
+        index.  An initial state must also be given.
+        """
+        raise NotImplementedError()
+
+
 class Keyed(State):
     class Key(State.Event, NamedTuple):
         key: str
