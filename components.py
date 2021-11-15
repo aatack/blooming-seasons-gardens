@@ -82,7 +82,7 @@ class Circle(Colour):
         pygame.draw.circle(
             surface, colour_cache, (draw_radius, draw_radius), draw_radius
         )
-        return surface
+        return (-draw_radius, -draw_radius, surface)
 
 
 @struct

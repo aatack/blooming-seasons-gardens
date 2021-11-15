@@ -30,7 +30,7 @@ class Plant(Point):
 
     @prepare
     def outer(radius: float, border: float) -> Circle:
-        return Circle(radius=Derived(lambda r, b: r + b, radius, border),)
+        return Circle(radius=Derived(lambda r, b: r + b, radius, border))
 
     @prepare
     def inner(radius: float, colour: dict, border: float) -> Circle:
