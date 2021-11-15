@@ -17,7 +17,7 @@ class Peek(NamedTuple):
     view: View
 
 
-def simplify(view: View) -> View:
+def simplify(view: View) -> Union[list, "Peek"]:
     """Simplify any nested hierarchy of views into a list of translated literals."""
     if view is None:
         return []
@@ -29,11 +29,18 @@ def simplify(view: View) -> View:
             result.extend(simplify(inner_view))
         return result
     elif isinstance(view, Position):
-        outer_x, outer_y, inner_view = view
-        return [
-            Position(outer_x + inner_x, outer_y + inner_y, surface)
-            for inner_x, inner_y, surface in simplify(inner_view)
-        ]
+        simplified = simplify(view.view)
+        if isinstance(simplified, list):
+            return [
+                Position(
+                    view.x + simplified_child.x,
+                    view.y + simplified_child.y,
+                    simplified_child.view,
+                )
+                for simplified_child in simplified
+            ]
+        elif isinstance(simplified, Peek):
+            return [Position(view.x, view.y, simplified)]
     elif isinstance(view, Peek):
         return Peek(view.width, view.height, simplify(view.view))
     else:
@@ -58,8 +65,8 @@ def render(view: View, surface: pygame.Surface):
         if isinstance(child, pygame.Surface):
             surface.blit(child, (int(x), (int(y))))
         elif isinstance(child, Peek):
-            peek = empty(int(view.width), int(view.height), transparent=True)
-            render(view.view, peek)
+            peek = empty(int(child.width), int(child.height), transparent=True)
+            render(child.view, peek)
             surface.blit(peek, (0, 0))
         else:
             raise ValueError(

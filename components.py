@@ -135,12 +135,6 @@ class Peek(Wrap):
 
     @prepare
     def view(width: float, height: float, wrap: State) -> State:
-        # return Derived(
-        #     lambda _x, _y, _view: view.Position(_x, _y, _view),
-        #     width,
-        #     height,
-        #     wrap.view(),
-        # )
         return Derived(
             lambda _width, _height, _view: view.Peek(_width, _height, _view),
             width,

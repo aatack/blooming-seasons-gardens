@@ -17,7 +17,10 @@ def app(window: Window, garden: State) -> State:
         ),
         garden.editor(editor_width),
         # Planner
-        Offset(garden.planner(), x=editor_width),
+        Offset(
+            Peek(window.width - editor_width, window.height, garden.planner()),
+            x=editor_width,
+        ),
     )
 
 
