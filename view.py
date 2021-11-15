@@ -11,6 +11,12 @@ class Position(NamedTuple):
     view: View
 
 
+class Window(NamedTuple):
+    width: float
+    height: float
+    view: View
+
+
 def simplify(view: View) -> View:
     """Simplify any nested hierarchy of views into a list of translated literals."""
     if view is None:
@@ -28,6 +34,8 @@ def simplify(view: View) -> View:
             Position(outer_x + inner_x, outer_y + inner_y, surface)
             for inner_x, inner_y, surface in simplify(inner_view)
         ]
+    elif isinstance(view, Window):
+        return Window(view.width, view.height, simplify(view.view))
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
 
@@ -46,9 +54,21 @@ def render(view: View, surface: pygame.Surface):
         for view_element in view:
             render(view_element, surface)
     elif isinstance(view, Position):
-        x, y, inner_surface = view
-        assert isinstance(inner_surface, pygame.Surface)
-        surface.blit(inner_surface, (int(x), (int(y))))
+        x, y, child = view
+        if isinstance(child, pygame.Surface):
+            surface.blit(child, (int(x), (int(y))))
+        elif isinstance(child, Window):
+            window = pygame.Surface((int(view.width), int(view.height)))
+            render(view.view, window)
+            surface.blit(window, (0, 0))
+        else:
+            raise ValueError(
+                f"Unexpected position child: {child} of type {type(child)}"
+            )
+    elif isinstance(view, Window):
+        window = pygame.Surface((int(view.width), int(view.height)))
+        render(view.view, window)
+        surface.blit(window, (0, 0))
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
 
@@ -69,6 +89,8 @@ def height(view: List[Tuple[float, float, pygame.Surface]]) -> float:
         return max([height(view_element) for view_element in view])
     elif isinstance(view, Position):
         return view.y + height(view.view)
+    elif isinstance(view, Window):
+        return view.height
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
 
@@ -82,5 +104,7 @@ def width(view: List[Tuple[float, float, pygame.Surface]]) -> float:
         return max([width(view_element) for view_element in view])
     elif isinstance(view, Position):
         return view.x + width(view.view)
+    elif isinstance(view, Window):
+        return view.width
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
