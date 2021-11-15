@@ -128,6 +128,27 @@ class Offset(Wrap):
         )
 
 
+@struct
+class Peek(Wrap):
+    width: float
+    height: float
+
+    @prepare
+    def view(width: float, height: float, wrap: State) -> State:
+        # return Derived(
+        #     lambda _x, _y, _view: view.Position(_x, _y, _view),
+        #     width,
+        #     height,
+        #     wrap.view(),
+        # )
+        return Derived(
+            lambda _width, _height, _view: view.Peek(_width, _height, _view),
+            width,
+            height,
+            wrap.view(),
+        )
+
+
 class Column(Folded):
     def __init__(self, *children: Ordered):
         initial = Constant(0)
