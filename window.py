@@ -65,7 +65,7 @@ class Window:
         self.surface.fill(self.background_colour.colour_cache)
         view_value = view.value()
         if view_value is not None:
-            render(view_value, self.surface, simplified=True)
+            render(view_value, self.surface)
 
         pygame.display.flip()
         return True

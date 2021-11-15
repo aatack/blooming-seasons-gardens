@@ -82,7 +82,7 @@ class Circle(Colour):
         pygame.draw.circle(
             surface, colour_cache, (draw_radius, draw_radius), draw_radius
         )
-        return (-draw_radius, -draw_radius, surface)
+        return view.Position(-draw_radius, -draw_radius, surface)
 
 
 @struct
@@ -118,7 +118,9 @@ class Offset(Wrap):
 
     @prepare
     def view(x: float, y: float, wrap: State) -> State:
-        return Derived(lambda _x, _y, _view: (_x, _y, _view), x, y, wrap.view())
+        return Derived(
+            lambda _x, _y, _view: view.Position(_x, _y, _view), x, y, wrap.view()
+        )
 
     def mouse(self, button: int, position: Tuple[int, int], down: bool):
         self["wrap"].mouse(
