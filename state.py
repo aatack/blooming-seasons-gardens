@@ -274,7 +274,27 @@ class Folded(Ordered):
         should output the updated state as well as the transformed element for that
         index.  An initial state must also be given.
         """
-        raise NotImplementedError()
+        self._initial = initial
+        self._source = source
+        self._fold = fold
+
+        super().__init__()
+
+        self._steps = []
+
+        for state in source._elements:
+            self.add(state)
+
+    def add(self, state: State):
+        step, state = self._fold(
+            self._steps[-1] if len(self._steps) > 0 else self._initial, state
+        )
+        self.listen(state)  # TODO: why does it need to listen to this?
+        event = self.Added(len(self._elements), state.value(), state, self)
+        self._elements.append(state)
+        self._index[state] = event.index
+        self._steps.append(step)
+        self.broadcast(event)
 
 
 class Keyed(State):
