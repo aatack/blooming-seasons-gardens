@@ -67,7 +67,7 @@ class Plant(Point):
         )
 
     def editor(self, width: State) -> State:
-        return VerticalStack(
+        return Column(
             Text("Plant", 24),
             Text("Name: " + Derived(str, self["name"]), 12),
             Text("Radius: " + Derived(str, self["radius"]), 12),
