@@ -282,8 +282,22 @@ class Folded(Ordered):
 
         self._steps = []
 
-        for state in source._elements:
+        self.listen(self._source)
+        for state in self._source._elements:
             self.add(state)
+
+    def respond(self, event: State.Event):
+        if event.source is self._source:
+            if isinstance(event, Ordered.Index):
+                pass  # This can be ignored as it will be handled by the child
+            elif isinstance(event, Ordered.Added):
+                self.add(event.element)
+            elif isinstance(event, Ordered.Removed):
+                self.remove(event.index)
+            else:
+                raise ValueError(f"Unknown ordered event: {event}")
+        else:
+            super().respond(event)  # Handle events for individual children
 
     def add(self, state: State):
         step, state = self._fold(
@@ -295,6 +309,15 @@ class Folded(Ordered):
         self._index[state] = event.index
         self._steps.append(step)
         self.broadcast(event)
+
+    def remove(self, index: int):
+        # TODO: this is terribly slow and should be rewritten more efficiently; it will
+        #       likely leave a bunch of dangling states that don't get garbage collected
+        while len(self._elements) > index:
+            super().remove(index)
+            del self._steps[index]
+        for state in self._source._elements[index:]:
+            self.add(state)
 
 
 class Keyed(State):
