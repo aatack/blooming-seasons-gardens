@@ -137,3 +137,16 @@ class VerticalStack(Folded):
             )
 
         super().__init__(initial, children, fold)
+
+
+class HorizontalStack(Folded):
+    def __init__(self, children: Ordered):
+        initial = Constant(0)
+
+        def fold(current, child):
+            return (
+                current + Derived(view.width, Derived(view.simplify, child.view())),
+                Offset(child, x=current),
+            )
+
+        super().__init__(initial, children, fold)

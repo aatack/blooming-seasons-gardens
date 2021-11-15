@@ -45,3 +45,8 @@ def empty(width: int, height: int, transparent: bool = False) -> pygame.Surface:
 def height(view: List[Tuple[float, float, pygame.Surface]]) -> float:
     assert isinstance(view, list), "View must be in simplified form"
     return max([h + s.get_size()[1] for _, h, s in view])
+
+
+def width(view: List[Tuple[float, float, pygame.Surface]]) -> float:
+    assert isinstance(view, list), "View must be in simplified form"
+    return max([w + s.get_size()[0] for w, _, s in view])
