@@ -41,8 +41,20 @@ def simplify(view: View) -> Union[list, "Peek"]:
             ]
         elif isinstance(simplified, Peek):
             return [Position(view.x, view.y, simplified)]
+        else:
+            raise ValueError("Invalid simplified inner view")
     elif isinstance(view, Peek):
-        return Peek(view.width, view.height, simplify(view.view))
+        simplified = simplify(view.view)
+        if isinstance(simplified, list):
+            return Peek(view.width, view.height, simplified)
+        elif isinstance(simplified, Peek):
+            return Peek(
+                min(view.width, simplified.width),
+                min(view.width, simplified.width),
+                simplified.view,
+            )
+        else:
+            raise ValueError("Invalid simplified inner view")
     else:
         raise ValueError(f"Unexpected view: {view} of type {type(view)}")
 
@@ -67,7 +79,7 @@ def render(view: View, surface: pygame.Surface):
         elif isinstance(child, Peek):
             peek = empty(int(child.width), int(child.height), transparent=True)
             render(child.view, peek)
-            surface.blit(peek, (0, 0))
+            surface.blit(peek, (int(x), int(y)))
         else:
             raise ValueError(
                 f"Unexpected position child: {child} of type {type(child)}"
