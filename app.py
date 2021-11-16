@@ -2,6 +2,23 @@ from components import *
 from structs import *
 from window import Window
 import settings
+import pygame
+
+
+@struct
+class PlannerPosition(Point):
+    def key(self, key: int, down: bool = True):
+        if not down:
+            return
+
+        if key == pygame.K_a:
+            self.x = self.x - 10
+        elif key == pygame.K_d:
+            self.x = self.x + 10
+        elif key == pygame.K_w:
+            self.y = self.y - 10
+        elif key == pygame.K_s:
+            self.y = self.y + 10
 
 
 def app(window: Window, garden: State) -> State:
@@ -28,7 +45,19 @@ def _editor(garden: State, width: State, height: State) -> State:
 
 
 def _planner(garden: State, width: State, height: State) -> State:
-    return Peek(width, height, garden.planner())
+    position = PlannerPosition(100, 100)
+
+    planner = Peek(
+        width,
+        height,
+        Offset(
+            Offset(garden.planner(), x=-1 * position["x"], y=-1 * position["y"]),
+            x=width * 0.5,
+            y=height * 0.5,
+        ),
+    )
+    planner.key = lambda *args, **kwargs: position.key(*args, **kwargs)
+    return planner
 
 
 @struct
