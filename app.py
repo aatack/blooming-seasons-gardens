@@ -7,21 +7,28 @@ import settings
 def app(window: Window, garden: State) -> State:
     editor_width = window.width * settings.EDITOR_WIDTH
     return Ordered(
-        # Editor
+        _editor(garden, editor_width, window.height),
+        Offset(
+            _planner(garden, window.width - editor_width, window.height), x=editor_width
+        ),
+    )
+
+
+def _editor(garden: State, width: State, height: State) -> State:
+    return Ordered(
         Rectangle(
-            width=editor_width,
-            height=window.height,
+            width=width,
+            height=height,
             red=settings.EDITOR_BACKGROUND_BRIGHTNESS,
             blue=settings.EDITOR_BACKGROUND_BRIGHTNESS,
             green=settings.EDITOR_BACKGROUND_BRIGHTNESS,
         ),
-        garden.editor(editor_width),
-        # Planner
-        Offset(
-            Peek(window.width - editor_width, window.height, garden.planner()),
-            x=editor_width,
-        ),
+        garden.editor(width),
     )
+
+
+def _planner(garden: State, width: State, height: State) -> State:
+    return Peek(width, height, garden.planner())
 
 
 @struct
