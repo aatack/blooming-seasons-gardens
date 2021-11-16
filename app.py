@@ -41,7 +41,7 @@ def _editor(garden: State, width: State, height: State) -> State:
 
 
 def _planner(garden: State, width: State, height: State) -> State:
-    position = PlannerPosition(100, 100)
+    position = PlannerPosition()
 
     planner = Peek(
         width,
@@ -110,9 +110,12 @@ class Plant(Point):
 
     def planner(self) -> State:
         colour = self["colour"]
-        return Circle(
-            self["radius"],
-            red=colour["red"],
-            green=colour["green"],
-            blue=colour["blue"],
+        return Ordered(
+            Circle(self["radius"]),
+            Circle(
+                self["radius"] - self["border"],
+                red=colour["red"],
+                green=colour["green"],
+                blue=colour["blue"],
+            ),
         )
