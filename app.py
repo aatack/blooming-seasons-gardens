@@ -7,17 +7,13 @@ import pygame
 
 @struct
 class PlannerPosition(Point):
-    def key(self, key: int, down: bool = True):
-        if not down:
+    def mouse(self, button: int, position: tuple, down: bool = True):
+        if (button not in (4, 5)) or (not down):
             return
 
-        if key == pygame.K_a:
-            self.x = self.x - 10
-        elif key == pygame.K_d:
-            self.x = self.x + 10
-        elif key == pygame.K_w:
+        if button == 4:
             self.y = self.y - 10
-        elif key == pygame.K_s:
+        elif button == 5:
             self.y = self.y + 10
 
 
@@ -56,7 +52,7 @@ def _planner(garden: State, width: State, height: State) -> State:
             y=height * 0.5,
         ),
     )
-    planner.key = lambda *args, **kwargs: position.key(*args, **kwargs)
+    planner.mouse = lambda *args, **kwargs: position.mouse(*args, **kwargs)
     return planner
 
 
