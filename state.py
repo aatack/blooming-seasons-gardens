@@ -24,7 +24,7 @@ class State(abc.ABC):
     def key(self, key: int, down: bool):
         """Respond to a key being pressed or lifted."""
 
-    def mouse(self, button: int, position: Tuple[int, int], down: bool):
+    def click(self, button: int, position: Tuple[int, int], down: bool):
         # TODO: should the position be included or should it just be grabbed from a
         #       global state?  Should probably be included in here
         """Respond to a mouse button being pressed or lifted."""
@@ -214,9 +214,9 @@ class Ordered(State):
         for element in self._elements:
             element.key(key, down)
 
-    def mouse(self, button: int, position: Tuple[int, int], down: bool):
+    def click(self, button: int, position: Tuple[int, int], down: bool):
         for element in self._elements:
-            element.mouse(button, position, down)
+            element.click(button, position, down)
 
 
 class Mapped(Ordered):

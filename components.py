@@ -107,8 +107,8 @@ class Wrap:
     def key(self, key: int, down: bool):
         self["wrap"].key(key, down)
 
-    def mouse(self, button: int, position: Tuple[int, int], down: bool):
-        self["wrap"].mouse(button, position, down)
+    def click(self, button: int, position: Tuple[int, int], down: bool):
+        self["wrap"].click(button, position, down)
 
 
 @struct
@@ -122,8 +122,8 @@ class Offset(Wrap):
             lambda _x, _y, _view: view.Position(_x, _y, _view), x, y, wrap.view()
         )
 
-    def mouse(self, button: int, position: Tuple[int, int], down: bool):
-        self["wrap"].mouse(
+    def click(self, button: int, position: Tuple[int, int], down: bool):
+        self["wrap"].click(
             button, (position[0] - self.x, position[1] - self.y), down,
         )
 

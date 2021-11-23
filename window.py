@@ -55,9 +55,9 @@ class Window:
                 # TODO: work out why the position in the event does not match the
                 #       position in the stored state if the mouse is clicked while it is
                 #       moving
-                state.mouse(event.button, event.pos, True)
+                state.click(event.button, event.pos, True)
             if event.type == pygame.MOUSEBUTTONUP:
-                state.mouse(event.button, event.pos, False)
+                state.click(event.button, event.pos, False)
             if event.type == pygame.MOUSEMOTION:
                 self.mouse.x = event.pos[0]
                 self.mouse.y = event.pos[1]

@@ -7,7 +7,7 @@ import pygame
 
 @struct
 class PlannerPosition(Point):
-    def mouse(self, button: int, position: tuple, down: bool = True):
+    def click(self, button: int, position: tuple, down: bool = True):
         if (button not in (4, 5)) or (not down):
             return
 
@@ -52,7 +52,7 @@ def _planner(garden: State, width: State, height: State) -> State:
             y=height * 0.5,
         ),
     )
-    planner.mouse = lambda *args, **kwargs: position.mouse(*args, **kwargs)
+    planner.click = lambda *args, **kwargs: position.click(*args, **kwargs)
     return planner
 
 
