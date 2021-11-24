@@ -29,6 +29,11 @@ class State(abc.ABC):
         #       global state?  Should probably be included in here
         """Respond to a mouse button being pressed or lifted."""
 
+    def mouse(
+        self, current: Tuple[int, int], previous: Tuple[int, int], move: Tuple[int, int]
+    ):
+        """Respond to a movement of the mouse."""
+
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
         # TODO: check for cyclic dependencies
@@ -217,6 +222,12 @@ class Ordered(State):
     def click(self, button: int, position: Tuple[int, int], down: bool):
         for element in self._elements:
             element.click(button, position, down)
+
+    def mouse(
+        self, current: Tuple[int, int], previous: Tuple[int, int], move: Tuple[int, int]
+    ):
+        for element in self._elements:
+            element.mouse(current, previous, move)
 
 
 class Mapped(Ordered):

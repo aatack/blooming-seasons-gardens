@@ -24,7 +24,6 @@ class Window:
 
         self.width = Variable(500)
         self.height = Variable(500)
-        self.mouse = Point(0, 0)
 
         self.surface = pygame.display.set_mode(
             (self.width.value(), self.height.value()), pygame.RESIZABLE
@@ -59,8 +58,9 @@ class Window:
             if event.type == pygame.MOUSEBUTTONUP:
                 state.click(event.button, event.pos, False)
             if event.type == pygame.MOUSEMOTION:
-                self.mouse.x = event.pos[0]
-                self.mouse.y = event.pos[1]
+                x, y = event.pos
+                dx, dy = event.rel
+                state.mouse(current=(x, y), previous=(x - dx, y - dy), move=(dx, dy))
 
         self.surface.fill(self.background_colour.colour_cache)
         view_value = view.value()
