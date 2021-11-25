@@ -396,27 +396,47 @@ class _Log(State):
         print(self._message, self._state.value())
 
 
-class Mouse(State):
+class Mouse(Ordered):
     class Click(State.Event, NamedTuple):
+        source: "Mouse"
         button: int
         position: Tuple[int, int]
         down: bool
 
     def __init__(self, x: State, y: State):
-        super().__init__()
+        super().__init__(x, y)
         self.x = x
         self.y = y
 
     def click(self, button: int, position: Tuple[int, int], down: bool):
         """Broadcast a click event from the mouse."""
-        self.broadcast(Mouse.Click(button, position, down))
+        self.broadcast(Mouse.Click(self, button, position, down))
 
 
-class Keyboard(State):
+class Keyboard(Constant):
     class Key(State.Event, NamedTuple):
+        source: "Keyboard"
         key: int
         down: bool
 
+    def __init__(self):
+        super().__init__(None)
+
     def key(self, key: int, down: bool):
         """Broadcast a key event for the keyboard."""
-        self.broadcast(Keyboard.Key(key, down))
+        self.broadcast(Keyboard.Key(self, key, down))
+
+
+class Screen(Ordered):
+    def __init__(self, width: State, height: State):
+        super().__init__(width, height)
+        self.width = width
+        self.height = height
+
+    def resize(self, width: int, height: int):
+        """Resize the screen to a particular width and height."""
+        assert isinstance(self.width, Variable)
+        self.width.modify(width)
+
+        assert isinstance(self.height, Variable)
+        self.height.modify(height)
