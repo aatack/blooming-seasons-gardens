@@ -1,8 +1,7 @@
+import settings
 from components import *
 from structs import *
 from window import Window
-import settings
-import pygame
 
 
 @struct

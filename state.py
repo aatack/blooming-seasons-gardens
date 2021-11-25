@@ -1,5 +1,5 @@
-from typing import Any, Callable, Dict, List, Optional, NamedTuple, Tuple
 import abc
+from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple
 
 
 class State(abc.ABC):

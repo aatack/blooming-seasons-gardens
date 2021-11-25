@@ -1,7 +1,8 @@
-from state import State, Keyed, Variable, Derived, Dict
-from typing import NamedTuple, Callable, Type, Any, Tuple, List
 from collections import OrderedDict
-from inspect import Signature, Parameter, signature
+from inspect import Parameter, Signature, signature
+from typing import Any, Callable, List, NamedTuple, Tuple, Type
+
+from state import Derived, Dict, Keyed, State, Variable
 
 
 class _Struct(Keyed):

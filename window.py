@@ -1,9 +1,10 @@
-import pygame
 from typing import Optional
-from state import State, Variable, Derived
-from components import Colour, Point
-from view import simplify, render
 
+import pygame
+
+from components import Colour, Point
+from state import Derived, State, Variable
+from view import render, simplify
 
 pygame.init()
 

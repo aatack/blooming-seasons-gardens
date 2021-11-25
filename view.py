@@ -1,6 +1,6 @@
-import pygame
-from typing import Tuple, Union, List, Optional, NamedTuple
+from typing import List, NamedTuple, Optional, Tuple, Union
 
+import pygame
 
 View = Optional[Union[pygame.Surface, List["View"], "Position"]]
 

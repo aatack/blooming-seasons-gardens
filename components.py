@@ -1,7 +1,8 @@
+import pygame
+
+import view
 from state import *
 from structs import *
-import pygame
-import view
 
 
 @struct
