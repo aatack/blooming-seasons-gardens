@@ -394,3 +394,29 @@ class _Log(State):
 
     def respond(self, _: State.Event):
         print(self._message, self._state.value())
+
+
+class Mouse(State):
+    class Click(State.Event, NamedTuple):
+        button: int
+        position: Tuple[int, int]
+        down: bool
+
+    def __init__(self, x: State, y: State):
+        super().__init__()
+        self.x = x
+        self.y = y
+
+    def click(self, button: int, position: Tuple[int, int], down: bool):
+        """Broadcast a click event from the mouse."""
+        self.broadcast(Mouse.Click(button, position, down))
+
+
+class Keyboard(State):
+    class Key(State.Event, NamedTuple):
+        key: int
+        down: bool
+
+    def key(self, key: int, down: bool):
+        """Broadcast a key event for the keyboard."""
+        self.broadcast(Keyboard.Key(key, down))
