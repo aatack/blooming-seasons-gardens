@@ -17,11 +17,12 @@ class PlannerPosition(Point):
 
 
 def app(window: Window, garden: State) -> State:
-    editor_width = window.width * settings.EDITOR_WIDTH
+    editor_width = window.screen.width * settings.EDITOR_WIDTH
     return Ordered(
-        _editor(garden, editor_width, window.height),
+        _editor(garden, editor_width, window.screen.height),
         Offset(
-            _planner(garden, window.width - editor_width, window.height), x=editor_width
+            _planner(garden, window.screen.width - editor_width, window.screen.height),
+            x=editor_width,
         ),
     )
 

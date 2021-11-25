@@ -5,8 +5,21 @@ from typing import Any, Callable, List, NamedTuple, Tuple, Type
 from state import Derived, Dict, Keyed, State, Variable
 
 
-class _Struct(Keyed):
+class _Struct:
+    """Empty class for setting attributes in struct values."""
+
+
+class Struct(Keyed):
     """Empty class for `issubclass` checks."""
+
+    def value(self):
+        value_disctionary = super().value()
+        value_object = _Struct()
+
+        for key, value in value_disctionary.items():
+            setattr(value_object, key, value)
+
+        return value_object
 
 
 class _Decorators:
@@ -122,13 +135,13 @@ def struct(constructor: Type) -> Type:
     definition = _Definition()
     definition.parse_constructor(constructor)
     for base in bases:
-        assert issubclass(base, _Struct)
+        assert issubclass(base, Struct)
         definition.parse_parent(base._definition)
 
     class_signature = definition.constructor_signature
 
     def __init__(self, *args, **kwargs):
-        _Struct.__init__(self)
+        Struct.__init__(self)
 
         # TODO: add a private variable that creates an instance of each struct from
         #       which this struct inherits, to allow for casting (and to solve any
@@ -189,7 +202,9 @@ def struct(constructor: Type) -> Type:
 
     struct_constructor = type(
         constructor.__name__,
-        (_Struct if len(bases) == 0 else bases[0],),
+        # TODO: this should probably use all bases instead of just the first one, since
+        #       they are all parsed into the descriptor
+        (Struct if len(bases) == 0 else bases[0],),
         dict(
             __init__=__init__,
             __getattr__=__getattr__,

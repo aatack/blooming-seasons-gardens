@@ -65,7 +65,7 @@ class Rectangle(Colour):
 
     @derive
     def view(box: dict, colour_cache: tuple) -> view.View:
-        box_cache = box["box_cache"]
+        box_cache = box.box_cache
         surface = view.empty(*box_cache[2:])
         pygame.draw.rect(surface, colour_cache, box_cache)
         return surface
