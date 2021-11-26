@@ -10,8 +10,6 @@ class _Struct:
 
 
 class Struct(Keyed):
-    """Empty class for `issubclass` checks."""
-
     def value(self):
         value_disctionary = super().value()
         value_object = _Struct()
