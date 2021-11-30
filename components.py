@@ -63,14 +63,19 @@ class Rectangle(Colour):
     def box(width: float, height: float) -> Box:
         return Box(top=0.0, left=0.0, bottom=height, right=width)
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         def _view(box: object, colour_cache: dict) -> view.View:
             box_cache = box.box_cache
             surface = view.empty(*box_cache[2:])
             pygame.draw.rect(surface, colour_cache, box_cache)
             return surface
 
-        return Derived(_view, self["box"], self["colour_cache"])
+        return Rendered(
+            Derived(_view, self["box"], self["colour_cache"]),
+            self,
+            self["width"],
+            self["height"],
+        )
 
 
 @struct

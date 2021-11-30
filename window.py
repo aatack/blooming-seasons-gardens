@@ -3,8 +3,8 @@ from typing import Optional
 import pygame
 
 from components import Colour
-from state import Derived, Keyboard, Mouse, Screen, State, Variable
-from view import render, simplify
+from state import Keyboard, Mouse, Rendered, Screen, State, Variable
+from view import render
 
 pygame.init()
 
@@ -32,11 +32,11 @@ class Window:
         )
 
     def run(self, state: State):
-        view = Derived(simplify, state.view(self.screen, self.mouse, self.keyboard))
-        while self.loop(view):
+        state_render = state.render(self.screen, self.mouse, self.keyboard).simplify()
+        while self.loop(state_render):
             pass
 
-    def loop(self, view: State) -> bool:
+    def loop(self, state_render: Rendered) -> bool:
         for event in pygame.event.get():
             if event.type == pygame.VIDEORESIZE:
                 self.surface = pygame.display.set_mode(
@@ -64,9 +64,9 @@ class Window:
                 self.mouse.y.modify(y)
 
         self.surface.fill(self.background_colour.colour_cache)
-        view_value = view.value()
-        if view_value is not None:
-            render(view_value, self.surface)
+        view = state_render.value()
+        if view is not None:
+            render(view, self.surface)
 
         pygame.display.flip()
         return True

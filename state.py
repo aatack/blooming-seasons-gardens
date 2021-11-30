@@ -112,6 +112,16 @@ class Rendered(State):
         # TODO: this could potentially just call self.source.render(...) again
         raise NotImplementedError("Rendered states cannot be rendered again")
 
+    def simplify(self) -> "Rendered":
+        from view import simplify
+
+        return Rendered(
+            Derived(simplify, self.view),
+            self.source,
+            width=self.width,
+            height=self.height,
+        )
+
 
 class Constant(State):
     def __init__(self, value: Any):
