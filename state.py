@@ -21,19 +21,6 @@ class State(abc.ABC):
         """Optionally, return a state containing a view for rendering."""
         return Constant(None)  # TODO: ensure this can be properly cached
 
-    def key(self, key: int, down: bool):
-        """Respond to a key being pressed or lifted."""
-
-    def click(self, button: int, position: Tuple[int, int], down: bool):
-        # TODO: should the position be included or should it just be grabbed from a
-        #       global state?  Should probably be included in here
-        """Respond to a mouse button being pressed or lifted."""
-
-    def mouse(
-        self, current: Tuple[int, int], previous: Tuple[int, int], move: Tuple[int, int]
-    ):
-        """Respond to a movement of the mouse."""
-
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
         # TODO: check for cyclic dependencies
