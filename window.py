@@ -32,7 +32,7 @@ class Window:
         )
 
     def run(self, state: State):
-        view = Derived(simplify, state.view())
+        view = Derived(simplify, state.view(self.screen, self.mouse, self.keyboard))
         while self.loop(view):
             pass
 

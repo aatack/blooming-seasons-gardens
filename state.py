@@ -17,7 +17,7 @@ class State(abc.ABC):
     def respond(self, event: Event):
         """Respond to an event caused by a state to which this state is listening."""
 
-    def view(self) -> "State":
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> "State":
         """Optionally, return a state containing a view for rendering."""
         return Constant(None)  # TODO: ensure this can be properly cached
 
@@ -192,8 +192,10 @@ class Ordered(State):
     def respond(self, event: State.Event):
         self.broadcast(self.Index(self._index[event.source], event, self))
 
-    def view(self) -> Optional[State]:
-        return Mapped(self, lambda e: e.view())
+    def view(
+        self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard"
+    ) -> Optional[State]:
+        return Mapped(self, lambda e: e.view(screen, mouse, keyboard))
 
     def add(self, state: State):
         event = self.Added(len(self._elements), state.value(), state, self)
