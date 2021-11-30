@@ -14,12 +14,16 @@ class State(abc.ABC):
         """Return the current value of the state."""
 
     @abc.abstractmethod
-    def respond(self, event: Event):
+    def respond(self, event: "State.Event"):
         """Respond to an event caused by a state to which this state is listening."""
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> "State":
-        """Optionally, return a state containing a view for rendering."""
-        return Constant(None)  # TODO: ensure this can be properly cached
+    def render(
+        self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard"
+    ) -> "Rendered":
+        """Return a state containing a view for rendering."""
+        raise NotImplementedError(
+            f"States of type {type(self).__name__} cannot be rendered"
+        )
 
     def listen(self, state: "State"):
         """Denote that this state should receive broadcasts from another one."""
@@ -69,6 +73,44 @@ class State(abc.ABC):
 
     def __rtruediv__(self, other: Any) -> "State":
         return type(self).__truediv__(other, self)
+
+
+class Rendered(State):
+    def __init__(
+        self,
+        view: State,
+        source: State,
+        width: Optional[State] = None,
+        height: Optional[State] = None,
+    ):
+        super().__init__()
+
+        self.view = view
+        self.source = source
+
+        self.width = width
+        self.height = height
+
+        if self.width is None:
+            import view as _view
+
+            self.width = Derived(_view.width, self.view)
+
+        if self.height is None:
+            import view as _view
+
+            self.height = Derived(_view.height, self.height)
+
+    def value(self) -> Any:
+        # TODO: possibly assert that the value is an instance of view.View
+        return self.view.value()
+
+    def respond(self, _: State.Event):
+        """Do nothing, as the view should react of its own accord."""
+
+    def render(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> "State":
+        # TODO: this could potentially just call self.source.render(...) again
+        raise NotImplementedError("Rendered states cannot be rendered again")
 
 
 class Constant(State):
@@ -178,11 +220,6 @@ class Ordered(State):
 
     def respond(self, event: State.Event):
         self.broadcast(self.Index(self._index[event.source], event, self))
-
-    def view(
-        self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard"
-    ) -> Optional[State]:
-        return Mapped(self, lambda e: e.view(screen, mouse, keyboard))
 
     def add(self, state: State):
         event = self.Added(len(self._elements), state.value(), state, self)
