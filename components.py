@@ -135,7 +135,8 @@ class Offset(Wrap):
     y: float = 0.0
 
     def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
-        render = self["wrap"].render(screen, mouse, keyboard)
+        offset_mouse = OffsetMouse(mouse, -1 * self["x"], -1 * self["y"])
+        render = self["wrap"].render(screen, offset_mouse, keyboard)
         return Rendered(
             Derived(
                 lambda _x, _y, _view: view.Position(_x, _y, _view),

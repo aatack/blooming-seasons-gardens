@@ -257,20 +257,6 @@ class Ordered(State):
     def __getitem__(self, index: int) -> State:
         return self._elements[index]
 
-    def key(self, key: int, down: bool):
-        for element in self._elements:
-            element.key(key, down)
-
-    def click(self, button: int, position: Tuple[int, int], down: bool):
-        for element in self._elements:
-            element.click(button, position, down)
-
-    def mouse(
-        self, current: Tuple[int, int], previous: Tuple[int, int], move: Tuple[int, int]
-    ):
-        for element in self._elements:
-            element.mouse(current, previous, move)
-
 
 class Mapped(Ordered):
     def __init__(self, source: Ordered, function: Callable[[State], State]):
@@ -453,6 +439,24 @@ class Mouse(Ordered):
     def click(self, button: int, position: Tuple[int, int], down: bool):
         """Broadcast a click event from the mouse."""
         self.broadcast(Mouse.Click(self, button, position, down))
+
+
+class OffsetMouse(Mouse):
+    def __init__(self, mouse: Mouse, x: State, y: State):
+        self._offset_x = x
+        self._offset_y = y
+
+        super().__init__(mouse.x + self._offset_x, mouse.y + self._offset_y)
+
+    def respond(self, event: State.Event):
+        if isinstance(event, Mouse.Click):
+            x, y = event.position
+            self.click(
+                event.button,
+                (x + self._offset_x.value(), y + self._offset_y.value(), event.down),
+            )
+        else:
+            super().respond(event)
 
 
 class Keyboard(Constant):
