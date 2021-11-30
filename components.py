@@ -77,15 +77,17 @@ class Rectangle(Colour):
 class Circle(Colour):
     radius: float = 0.0
 
-    @derive
-    def view(radius: float, colour_cache: tuple) -> view.View:
-        # TODO: offset by (-radius, -radius)
-        draw_radius = int(radius)
-        surface = view.empty(draw_radius * 2, draw_radius * 2, transparent=True)
-        pygame.draw.circle(
-            surface, colour_cache, (draw_radius, draw_radius), draw_radius
-        )
-        return view.Position(-draw_radius, -draw_radius, surface)
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> view.View:
+        def _view(radius: float, colour_cache: tuple) -> view.View:
+            # TODO: offset by (-radius, -radius)
+            draw_radius = int(radius)
+            surface = view.empty(draw_radius * 2, draw_radius * 2, transparent=True)
+            pygame.draw.circle(
+                surface, colour_cache, (draw_radius, draw_radius), draw_radius
+            )
+            return view.Position(-draw_radius, -draw_radius, surface)
+
+        return Derived(_view, self["radius"], self["colour_cache"])
 
 
 @struct
@@ -94,18 +96,23 @@ class Text:
     size: int
     font: str = "segoeuisemibold"
 
-    @derive
-    def view(text: str, size: int, font: str) -> view.View:
-        return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+        return Derived(
+            lambda text, size, font: pygame.font.SysFont(font, size).render(
+                text, False, (0, 0, 0)
+            ),
+            self["text"],
+            self["size"],
+            self["font"],
+        )
 
 
 @struct
 class Wrap:
     wrap: State
 
-    @prepare
-    def view(wrap: State) -> State:
-        return wrap["view"]
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+        return self["wrap"].view(screen, mouse, keyboard)
 
     def key(self, key: int, down: bool):
         self["wrap"].key(key, down)
@@ -119,10 +126,12 @@ class Offset(Wrap):
     x: float = 0.0
     y: float = 0.0
 
-    @prepare
-    def view(x: float, y: float, wrap: State) -> State:
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
         return Derived(
-            lambda _x, _y, _view: view.Position(_x, _y, _view), x, y, wrap.view()
+            lambda _x, _y, _view: view.Position(_x, _y, _view),
+            self["x"],
+            self["y"],
+            self["wrap"].view(screen, mouse, keyboard),
         )
 
     def click(self, button: int, position: Tuple[int, int], down: bool):
@@ -136,13 +145,12 @@ class Peek(Wrap):
     width: float
     height: float
 
-    @prepare
-    def view(width: float, height: float, wrap: State) -> State:
+    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
         return Derived(
             lambda _width, _height, _view: view.Peek(_width, _height, _view),
-            width,
-            height,
-            wrap.view(),
+            self["width"],
+            self["height"],
+            self["wrap"].view(screen, mouse, keyboard),
         )
 
 
