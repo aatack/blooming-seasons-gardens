@@ -90,6 +90,10 @@ class Rendered(State):
         self.view = view
         self.source = source
 
+        # NOTE: currently the width and height are the width and height within the
+        #       screen.  For example, if a circle is rendered with a requested width and
+        #       height of 50, but its radius is 25 and its origin is at the top left of
+        #       the screen, its tracked width and height will both be 25
         self.width = width
         self.height = height
 
@@ -101,7 +105,7 @@ class Rendered(State):
         if self.height is None:
             import view as _view
 
-            self.height = Derived(_view.height, self.height)
+            self.height = Derived(_view.height, self.view)
 
     def value(self) -> Any:
         # TODO: possibly assert that the value is an instance of view.View

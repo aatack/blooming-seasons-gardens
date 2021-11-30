@@ -95,8 +95,8 @@ class Circle(Colour):
         return Rendered(
             Derived(_view, self["radius"], self["colour_cache"]),
             self,
-            width=self.radius,
-            height=self.radius,
+            width=self["radius"],
+            height=self["radius"],
         )
 
 
@@ -107,7 +107,7 @@ class Text:
     font: str = "segoeuisemibold"
 
     def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
-        Rendered(
+        return Rendered(
             Derived(
                 lambda text, size, font: pygame.font.SysFont(font, size).render(
                     text, False, (0, 0, 0)
