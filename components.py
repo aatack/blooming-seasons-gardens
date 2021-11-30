@@ -63,7 +63,7 @@ class Rectangle(Colour):
     def box(width: float, height: float) -> Box:
         return Box(top=0.0, left=0.0, bottom=height, right=width)
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> view.View:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         def _view(box: object, colour_cache: dict) -> view.View:
             box_cache = box.box_cache
             surface = view.empty(*box_cache[2:])
@@ -77,7 +77,7 @@ class Rectangle(Colour):
 class Circle(Colour):
     radius: float = 0.0
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> view.View:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         def _view(radius: float, colour_cache: tuple) -> view.View:
             # TODO: offset by (-radius, -radius)
             draw_radius = int(radius)
@@ -96,7 +96,7 @@ class Text:
     size: int
     font: str = "segoeuisemibold"
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         return Derived(
             lambda text, size, font: pygame.font.SysFont(font, size).render(
                 text, False, (0, 0, 0)
@@ -111,7 +111,7 @@ class Text:
 class Wrap:
     wrap: State
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         return self["wrap"].view(screen, mouse, keyboard)
 
     def key(self, key: int, down: bool):
@@ -126,7 +126,7 @@ class Offset(Wrap):
     x: float = 0.0
     y: float = 0.0
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         return Derived(
             lambda _x, _y, _view: view.Position(_x, _y, _view),
             self["x"],
@@ -145,7 +145,7 @@ class Peek(Wrap):
     width: float
     height: float
 
-    def view(self, screen: "Screen", mouse: "Mouse", keyboard: "Keyboard") -> State:
+    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
         return Derived(
             lambda _width, _height, _view: view.Peek(_width, _height, _view),
             self["width"],
