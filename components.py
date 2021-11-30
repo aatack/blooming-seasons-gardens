@@ -128,12 +128,6 @@ class Wrap:
         render = self["wrap"].render(screen, mouse, keyboard)
         return Rendered(render, self, width=render.width, height=render.height)
 
-    def key(self, key: int, down: bool):
-        self["wrap"].key(key, down)
-
-    def click(self, button: int, position: Tuple[int, int], down: bool):
-        self["wrap"].click(button, position, down)
-
 
 @struct
 class Offset(Wrap):
@@ -150,11 +144,6 @@ class Offset(Wrap):
                 render,
             ),
             self,
-        )
-
-    def click(self, button: int, position: Tuple[int, int], down: bool):
-        self["wrap"].click(
-            button, (position[0] - self.x, position[1] - self.y), down,
         )
 
 
