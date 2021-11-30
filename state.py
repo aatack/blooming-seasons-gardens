@@ -83,6 +83,8 @@ class Rendered(State):
         width: Optional[State] = None,
         height: Optional[State] = None,
     ):
+        # TODO: allow a screen to be passed and infer width and height from there; or
+        #       just let a box be passed in place of a width and height
         super().__init__()
 
         self.view = view

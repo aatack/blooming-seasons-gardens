@@ -63,7 +63,7 @@ class Rectangle(Colour):
     def box(width: float, height: float) -> Box:
         return Box(top=0.0, left=0.0, bottom=height, right=width)
 
-    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
         def _view(box: object, colour_cache: dict) -> view.View:
             box_cache = box.box_cache
             surface = view.empty(*box_cache[2:])
@@ -82,9 +82,9 @@ class Rectangle(Colour):
 class Circle(Colour):
     radius: float = 0.0
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
         def _view(radius: float, colour_cache: tuple) -> view.View:
-            # TODO: offset by (-radius, -radius)
+            # TODO: make the circle appear central again
             draw_radius = int(radius)
             surface = view.empty(draw_radius * 2, draw_radius * 2, transparent=True)
             pygame.draw.circle(
@@ -92,7 +92,12 @@ class Circle(Colour):
             )
             return view.Position(-draw_radius, -draw_radius, surface)
 
-        return Derived(_view, self["radius"], self["colour_cache"])
+        return Rendered(
+            Derived(_view, self["radius"], self["colour_cache"]),
+            self,
+            width=self.radius,
+            height=self.radius,
+        )
 
 
 @struct
@@ -101,14 +106,17 @@ class Text:
     size: int
     font: str = "segoeuisemibold"
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
-        return Derived(
-            lambda text, size, font: pygame.font.SysFont(font, size).render(
-                text, False, (0, 0, 0)
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
+        Rendered(
+            Derived(
+                lambda text, size, font: pygame.font.SysFont(font, size).render(
+                    text, False, (0, 0, 0)
+                ),
+                self["text"],
+                self["size"],
+                self["font"],
             ),
-            self["text"],
-            self["size"],
-            self["font"],
+            self,
         )
 
 
@@ -116,8 +124,9 @@ class Text:
 class Wrap:
     wrap: State
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
-        return self["wrap"].view(screen, mouse, keyboard)
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
+        render = self["wrap"].render(screen, mouse, keyboard)
+        return Rendered(render, self, width=render.width, height=render.height)
 
     def key(self, key: int, down: bool):
         self["wrap"].key(key, down)
@@ -131,12 +140,16 @@ class Offset(Wrap):
     x: float = 0.0
     y: float = 0.0
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
-        return Derived(
-            lambda _x, _y, _view: view.Position(_x, _y, _view),
-            self["x"],
-            self["y"],
-            self["wrap"].view(screen, mouse, keyboard),
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
+        render = self["wrap"].render(screen, mouse, keyboard)
+        return Rendered(
+            Derived(
+                lambda _x, _y, _view: view.Position(_x, _y, _view),
+                self["x"],
+                self["y"],
+                render,
+            ),
+            self,
         )
 
     def click(self, button: int, position: Tuple[int, int], down: bool):
@@ -150,12 +163,16 @@ class Peek(Wrap):
     width: float
     height: float
 
-    def view(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> State:
-        return Derived(
-            lambda _width, _height, _view: view.Peek(_width, _height, _view),
-            self["width"],
-            self["height"],
-            self["wrap"].view(screen, mouse, keyboard),
+    def render(self, screen: Screen, mouse: Mouse, keyboard: Keyboard) -> Rendered:
+        render = self["wrap"].render(screen, mouse, keyboard)
+        return Rendered(
+            Derived(
+                lambda _width, _height, _view: view.Peek(_width, _height, _view),
+                self["width"],
+                self["height"],
+                render,
+            ),
+            self,
         )
 
 
