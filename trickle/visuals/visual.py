@@ -18,8 +18,8 @@ class Visual(abc.ABC):
         """
         Simplify the structure of the visual where possible.
         
-        The simplified visual must either be a Peek, or an Overlay containing only
-        Reposition visuals.
+        The simplified visual must be an overlay containing repositions, each of which
+        contains a surface.
         """
 
     @abc.abstractmethod
@@ -39,25 +39,22 @@ class Visual(abc.ABC):
         """Get the visual's maximum extent in the negative y-direction."""
 
     @staticmethod
-    def is_valid_simplified(visual: "Visual") -> bool:
+    def assert_simplified(visual: "Visual"):
         from trickle.visuals.overlay import Overlay
-        from trickle.visuals.peek import Peek
+
+        assert isinstance(
+            visual, Overlay
+        ), "Simplified visuals must have an overlay at their top level"
+
         from trickle.visuals.reposition import Reposition
+        from trickle.visuals.surface import Surface
 
-        if isinstance(visual, Overlay):
-            return all(
-                isinstance(child, Reposition)
-                # TODO: also check that we do not have stacked reposition visuals
-                and Visual.is_valid_simplified(child.visual)
-                for child in visual.visuals
+        for child in visual.visuals:
+            assert isinstance(child, Reposition), (
+                "Each child of the outer overlay in a simplified visual must be a "
+                "reposition"
             )
+            assert isinstance(
+                child.visual, Surface
+            ), "Each leaf in a simplified visual must be a surface"
 
-        if isinstance(visual, Peek):
-            return True
-
-        return False
-
-    @staticmethod
-    def invalid_simplified(visual: "Visual") -> Exception:
-        """Return an error denoting that a simplified visual is invalid."""
-        return ValueError(f"Invalid simplified visual: {visual}")

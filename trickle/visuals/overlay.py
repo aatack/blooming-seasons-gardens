@@ -7,21 +7,12 @@ class Overlay(Visual):
         self.visuals = visuals
 
     def simplify(self) -> "Visual":
-        from trickle.visuals.peek import Peek
-
         visuals = []
 
         for visual in self.visuals:
             simplified_visual = visual.simplify()
-            # TODO: handle peeks
-            if isinstance(simplified_visual, Overlay):
-                visuals.extend(simplified_visual.visuals)
-            elif isinstance(simplified_visual, Peek):
-                from trickle.visuals.reposition import Reposition
-
-                visuals.extend(Reposition(simplified_visual))
-            else:
-                raise Visual.invalid_simplified(simplified_visual)
+            assert isinstance(simplified_visual, Overlay)
+            visuals.extend(simplified_visual.visuals)
 
         return Overlay(*visuals)
 
