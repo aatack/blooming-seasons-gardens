@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Callable, Optional
 
 import pygame
 from trickle.visuals.overlay import Overlay
@@ -10,12 +10,12 @@ class Reposition(Visual):
         self,
         visual: Visual,
         *,
-        crop_bottom: Optional[float] = None,
-        crop_right: Optional[float] = None,
-        crop_top: float = 0.0,
-        crop_left: float = 0.0,
         horizontal_offset: float = 0.0,
         vertical_offset: float = 0.0,
+        crop_left: Optional[float] = None,
+        crop_top: Optional[float] = None,
+        crop_right: Optional[float] = None,
+        crop_bottom: Optional[float] = None,
     ):
         """
         Represents a repositioned visual.
@@ -25,22 +25,13 @@ class Reposition(Visual):
         """
         self.visual = visual
 
-        self.crop_bottom = crop_bottom
-        self.crop_right = crop_right
-        self.crop_top = crop_top
-        self.crop_left = crop_left
-
         self.horizontal_offset = horizontal_offset
         self.vertical_offset = vertical_offset
 
-        assert self.crop_top >= 0.0
-        assert self.crop_left >= 0.0
-
-        # Under certain circumstances the crops will overlap, which will result in no
-        # visual being rendered at all
-        self.empty = (
-            (self.crop_bottom is not None) and self.crop_bottom <= self.crop_top
-        ) or ((self.crop_right is not None) and self.crop_right <= self.crop_left)
+        self.crop_left = crop_left
+        self.crop_top = crop_top
+        self.crop_right = crop_right
+        self.crop_bottom = crop_bottom
 
     def simplify(self) -> "Visual":
         simplified_visual = self.visual.simplify()
@@ -50,58 +41,117 @@ class Reposition(Visual):
         for visual in simplified_visual.visuals:
             assert isinstance(visual, Reposition)
 
-            raise NotImplementedError()
+            visuals.append(
+                Reposition(
+                    visual.visual,
+                    horizontal_offset=self.horizontal_offset + visual.horizontal_offset,
+                    vertical_offset=self.vertical_offset + visual.vertical_offset,
+                    crop_left=_merge(
+                        self._effective_crop_left(),
+                        visual._effective_crop_left(after_offset=True),
+                    ),
+                    crop_top=_merge(
+                        self._effective_crop_top(),
+                        visual._effective_crop_top(after_offset=True),
+                    ),
+                    crop_right=_merge(
+                        self._effective_crop_right(),
+                        visual._effective_crop_right(after_offset=True),
+                    ),
+                    crop_bottom=_merge(
+                        self._effective_crop_bottom(),
+                        visual._effective_crop_bottom(after_offset=True),
+                    ),
+                )
+            )
 
         return Overlay(*visuals)
 
     def render(self, surface: pygame.Surface):
         from trickle.visuals.surface import Surface
 
-        # TODO: this could be accelerated by checking whether `self.visual` is an
-        #       instance of `Surface(Visual)`.  If it is, we can skip the additional
-        #       rendering step and just use its inner surface directly
-
-        base_surface = Surface.empty(
-            self.visual.horizontal_extent()
+        # TODO: this could be accelerated by accounting for the different possible modes
+        # TODO: these can be cached on construction if needed
+        realised_visual_offset = (self.horizontal_offset, self.vertical_offset)
+        realised_crop_offset = (
+            0.0 if self.crop_left is None else self.crop_left,
+            0.0 if self.crop_top is None else self.crop_top,
+        )
+        realised_crop_size = (
+            self.visual.horizontal_extent() - realised_crop_offset[0]
             if self.crop_right is None
-            else self.crop_right,
-            self.visual.vertical_extent()
+            else self.crop_right - realised_crop_offset[0],
+            self.visual.vertical_extent() - realised_crop_offset[1]
             if self.crop_bottom is None
-            else self.crop_bottom,
-            transparent=True,
+            else self.crop_bottom - realised_crop_offset[1],
         )
-        self.visual.render(base_surface)
 
-        crop_position = (int(self.crop_left), int(self.crop_top))
-        crop_size = tuple(
-            base - crop for base, crop in zip(base_surface.get_size(), crop_position)
-        )
+        # NOTE: here we make some assumptions about how blit works with cropping.  It is
+        #       assumed that the crop is applied before the offset, and that the cropped
+        #       section of the image is not recentred.  So if the left were cropped by
+        #       10 pixels, and the horizontal offset were 20, we expect there to be at
+        #       least 30 empty pixels between the origin and the start of the visual
+        #       along the relevant axis.  If this is not the case, a small wrapper
+        #       around `surface.blit` may need to be implemented
+
+        def to_ints(floats: tuple) -> tuple:
+            return tuple(int(f) for f in floats)
 
         surface.blit(
-            base_surface,
-            (int(self.horizontal_offset), int(self.vertical_offset)),
-            crop_position + crop_size,
+            self.visual.render_from_scratch(transparent=True),
+            to_ints(realised_visual_offset),
+            to_ints(realised_crop_offset + realised_crop_size),
         )
 
     def horizontal_extent(self) -> float:
         extent = self.visual.horizontal_extent()
         if self.crop_right is not None:
             extent = min(extent, self.crop_right)
-        extent -= self.crop_left
         return extent + self.horizontal_offset
 
     def vertical_extent(self) -> float:
         extent = self.visual.vertical_extent()
         if self.crop_bottom is not None:
             extent = min(extent, self.crop_bottom)
-        extent -= self.crop_top
         return extent + self.vertical_offset
 
+    def _effective_crop_left(self, after_offset: bool = False) -> Optional[float]:
+        if self.crop_left is None:
+            return None
+        else:
+            horizontal_offset = self.horizontal_offset if after_offset else 0.0
+            return horizontal_offset + self.crop_left
 
-def _compound_crops(left: Optional[float], right: Optional[float]) -> Optional[float]:
+    def _effective_crop_top(self, after_offset: bool = False) -> Optional[float]:
+        if self.crop_top is None:
+            return None
+        else:
+            vertical_offset = self.vertical_offset if after_offset else 0.0
+            return vertical_offset + self.crop_top
+
+    def _effective_crop_right(self, after_offset: bool = False) -> Optional[float]:
+        if self.crop_right is None:
+            return None
+        else:
+            horizontal_offset = self.horizontal_offset if after_offset else 0.0
+            return horizontal_offset + self.crop_right
+
+    def _effective_crop_bottom(self, after_offset: bool = False) -> Optional[float]:
+        if self.crop_bottom is None:
+            return None
+        else:
+            vertical_offset = self.vertical_offset if after_offset else 0.0
+            return vertical_offset + self.crop_bottom
+
+
+def _merge(
+    left: Optional[float],
+    right: Optional[float],
+    criterion: Callable[[float, float], float],
+) -> Optional[float]:
     if left is None:
         return right
     elif right is None:
         return left
     else:
-        return min(left, right)
+        return criterion(left, right)

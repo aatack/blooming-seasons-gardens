@@ -58,3 +58,13 @@ class Visual(abc.ABC):
                 child.visual, Surface
             ), "Each leaf in a simplified visual must be a surface"
 
+    def render_from_scratch(self, transparent: bool = False) -> pygame.Surface:
+        from trickle.visuals.surface import Surface
+
+        surface = Surface.empty(
+            self.horizontal_extent(), self.vertical_extent(), transparent=transparent
+        )
+        self.render(surface)
+
+        return surface
+
