@@ -15,7 +15,12 @@ class Visual(abc.ABC):
 
     @abc.abstractmethod
     def simplify(self) -> "Visual":
-        """Simplify the structure of the visual where possible."""
+        """
+        Simplify the structure of the visual where possible.
+        
+        The simplified visual must either be a Peek, or an Overlay containing only
+        Reposition visuals.
+        """
 
     @abc.abstractmethod
     def render(self, surface: pygame.Surface):
@@ -36,3 +41,12 @@ class Visual(abc.ABC):
         """
         Get the visual's maximum extent from the origin in the negative y-direction.
         """
+
+    @staticmethod
+    def is_valid_simplified(visual: "Visual") -> bool:
+        raise NotImplementedError()
+
+    @staticmethod
+    def invalid_simplified(visual: "Visual") -> Exception:
+        """Return an error denoting that a simplified visual is invalid."""
+        return ValueError(f"Invalid simplified visual: {visual}")
