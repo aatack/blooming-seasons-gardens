@@ -14,8 +14,8 @@ class Surface(Visual):
     def render(self, surface: pygame.Surface):
         surface.blit(self.surface)
 
-    def width(self) -> float:
+    def horizontal_extent(self) -> float:
         return float(self.surface.get_size()[0])
 
-    def height(self) -> float:
+    def vertical_extent(self) -> float:
         return float(self.surface.get_size()[1])

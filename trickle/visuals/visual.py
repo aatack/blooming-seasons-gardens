@@ -31,16 +31,12 @@ class Visual(abc.ABC):
         """
 
     @abc.abstractmethod
-    def width(self) -> float:
-        """
-        Get the visual's maximum extent from the origin in the positive x-direction.
-        """
+    def horizontal_extent(self) -> float:
+        """Get the visual's maximum extent in the positive x-direction."""
 
     @abc.abstractmethod
-    def height(self) -> float:
-        """
-        Get the visual's maximum extent from the origin in the negative y-direction.
-        """
+    def vertical_extent(self) -> float:
+        """Get the visual's maximum extent in the negative y-direction."""
 
     @staticmethod
     def is_valid_simplified(visual: "Visual") -> bool:

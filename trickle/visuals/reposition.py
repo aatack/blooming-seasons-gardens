@@ -20,8 +20,8 @@ class Reposition(Visual):
         else:
             raise Visual.invalid_simplified(simplified_visual)
 
-    def width(self) -> float:
-        return self.x + self.visual.width()
+    def horizontal_extent(self) -> float:
+        return self.x + self.visual.horizontal_extent()
 
-    def height(self) -> float:
-        return self.y + self.visual.height()
+    def vertical_extent(self) -> float:
+        return self.y + self.visual.vertical_extent()

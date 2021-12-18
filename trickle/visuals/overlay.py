@@ -23,8 +23,8 @@ class Overlay(Visual):
         for visual in self.visuals:
             visual.render(surface)
 
-    def width(self) -> float:
-        return max(visual.width() for visual in self.visuals)
+    def horizontal_extent(self) -> float:
+        return max(visual.horizontal_extent() for visual in self.visuals)
 
-    def height(self) -> float:
-        return max(visual.height() for visual in self.visuals)
+    def vertical_extent(self) -> float:
+        return max(visual.vertical_extent() for visual in self.visuals)
