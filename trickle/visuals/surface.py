@@ -5,6 +5,14 @@ from trickle.visuals.visual import Visual
 
 
 class Surface(Visual):
+    @staticmethod
+    def empty(width: float, height: float, transparent: bool = False) -> "Surface":
+        if transparent:
+            surface = pygame.Surface((int(width), int(height)), pygame.SRCALPHA)
+        else:
+            surface = pygame.Surface((int(width), int(height)))
+        return Surface(surface)
+
     def __init__(self, surface: pygame.Surface):
         self.surface = surface
 

@@ -41,6 +41,7 @@ class Visual(abc.ABC):
     @staticmethod
     def is_valid_simplified(visual: "Visual") -> bool:
         from trickle.visuals.overlay import Overlay
+        from trickle.visuals.peek import Peek
         from trickle.visuals.reposition import Reposition
 
         if isinstance(visual, Overlay):
@@ -51,7 +52,8 @@ class Visual(abc.ABC):
                 for child in visual.visuals
             )
 
-        # TODO: account for peek visuals
+        if isinstance(visual, Peek):
+            return True
 
         return False
 

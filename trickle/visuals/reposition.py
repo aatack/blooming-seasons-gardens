@@ -9,6 +9,8 @@ class Reposition(Visual):
         self.y = y
 
     def simplify(self) -> "Visual":
+        from trickle.visuals.peek import Peek
+
         simplified_visual = self.visual.simplify()
         if isinstance(simplified_visual, Overlay):
             return Overlay(
@@ -17,6 +19,8 @@ class Reposition(Visual):
                     for child in simplified_visual.visuals
                 )
             )
+        elif isinstance(simplified_visual, Peek):
+            return Reposition(self.x, self.y, simplified_visual)
         else:
             raise Visual.invalid_simplified(simplified_visual)
 
