@@ -40,7 +40,20 @@ class Visual(abc.ABC):
 
     @staticmethod
     def is_valid_simplified(visual: "Visual") -> bool:
-        raise NotImplementedError()
+        from trickle.visuals.overlay import Overlay
+        from trickle.visuals.reposition import Reposition
+
+        if isinstance(visual, Overlay):
+            return all(
+                isinstance(child, Reposition)
+                # TODO: also check that we do not have stacked reposition visuals
+                and Visual.is_valid_simplified(child.visual)
+                for child in visual.visuals
+            )
+
+        # TODO: account for peek visuals
+
+        return False
 
     @staticmethod
     def invalid_simplified(visual: "Visual") -> Exception:
