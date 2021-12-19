@@ -38,18 +38,17 @@ class Visual(abc.ABC):
     def vertical_extent(self) -> float:
         """Get the visual's maximum extent in the negative y-direction."""
 
-    @staticmethod
-    def assert_simplified(visual: "Visual"):
+    def assert_simplified(self: "Visual"):
         from trickle.visuals.overlay import Overlay
 
         assert isinstance(
-            visual, Overlay
+            self, Overlay
         ), "Simplified visuals must have an overlay at their top level"
 
         from trickle.visuals.reposition import Reposition
         from trickle.visuals.surface import Surface
 
-        for child in visual.visuals:
+        for child in self.visuals:
             assert isinstance(child, Reposition), (
                 "Each child of the outer overlay in a simplified visual must be a "
                 "reposition"
@@ -63,7 +62,7 @@ class Visual(abc.ABC):
 
         surface = Surface.empty(
             self.horizontal_extent(), self.vertical_extent(), transparent=transparent
-        )
+        ).surface
         self.render(surface)
 
         return surface

@@ -21,9 +21,10 @@ class Surface(Visual):
         green: float = 0.0,
         blue: float = 0.0,
     ) -> "Surface":
+        surface = Surface.empty(width, height).surface
+
         rectangle = (0, 0, int(width), int(height))
         colour = (int(red * 255), int(green * 255), int(blue * 255))
-        surface = pygame.surface(rectangle[2:])
 
         pygame.draw.rect(surface, colour, rectangle)
         return Surface(surface)
@@ -32,9 +33,10 @@ class Surface(Visual):
     def circle(
         radius: float, red: float = 0.0, green: float = 0.0, blue: float = 0.0
     ) -> "Surface":
+        surface = Surface.empty(2 * radius, 2 * radius, transparent=True).surface
+
         radius = int(radius)
         colour = (int(red * 255), int(green * 255), int(blue * 255))
-        surface = pygame.Surface((2 * radius, 2 * radius))
 
         pygame.draw.circle(surface, colour, (radius, radius), radius)
 
@@ -42,7 +44,7 @@ class Surface(Visual):
 
     @staticmethod
     def text(text: str, size: int, font: str = "segoeuisemibold") -> "Surface":
-        return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
+        return Surface(pygame.font.SysFont(font, size).render(text, False, (0, 0, 0)))
 
     def __init__(self, surface: pygame.Surface):
         self.surface = surface
@@ -51,7 +53,7 @@ class Surface(Visual):
         return Overlay(Reposition(self))
 
     def render(self, surface: pygame.Surface):
-        surface.blit(self.surface)
+        surface.blit(self.surface, (0, 0))
 
     def horizontal_extent(self) -> float:
         return float(self.surface.get_size()[0])
