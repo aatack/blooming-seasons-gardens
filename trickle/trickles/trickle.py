@@ -25,7 +25,7 @@ class Trickle(abc.ABC):
         self.input_map[path] = trickle
 
         if self not in trickle.output_map:
-            trickle.output_map[self] = []
+            trickle.output_map[self] = set()
         trickle.output_map[self].add(path)
 
     def ignore(self, path: Path):
@@ -35,4 +35,3 @@ class Trickle(abc.ABC):
         trickle.output_map[self].remove(path)
         if len(trickle.output_map[self]) == 0:
             del trickle.output_map[self]
-
