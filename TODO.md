@@ -23,10 +23,10 @@ List of things that still need to be done in the project.
     -   Labels take a font size, offset.
     -   Arrows take a start and an end position.
         The idea is that later on these will be able to be attached to things like plants and labels.
--   Nothing will have a view method yet.
+-   ~~Nothing will have a view method yet.
     View methods shall be built out individually for each of the four elements, and for the basic UI components individually.
-    The existing view framework will be used: ideally, any view object will simply be a state that returns a view.
-    -   This may at some point be refactored into classes.
+    The existing view framework will be used: ideally, any view object will simply be a state that returns a view.~~
+    -   ~~This may at some point be refactored into classes.~~
 -   Structs will be removed and **everything** will be done in terms of keyed state objects.
     Subclasses can be made where appropriate.
 -   State objects will be renamed to trickle objects and put into a new package.
