@@ -49,18 +49,22 @@ class Reposition(Visual):
                     crop_left=_merge(
                         self._effective_crop_left(),
                         visual._effective_crop_left(after_offset=True),
+                        min,
                     ),
                     crop_top=_merge(
                         self._effective_crop_top(),
                         visual._effective_crop_top(after_offset=True),
+                        min,
                     ),
                     crop_right=_merge(
                         self._effective_crop_right(),
                         visual._effective_crop_right(after_offset=True),
+                        max,
                     ),
                     crop_bottom=_merge(
                         self._effective_crop_bottom(),
                         visual._effective_crop_bottom(after_offset=True),
+                        max,
                     ),
                 )
             )
@@ -85,6 +89,9 @@ class Reposition(Visual):
             if self.crop_bottom is None
             else self.crop_bottom - realised_crop_offset[1],
         )
+        actual_offset = tuple(
+            map(sum, zip(realised_visual_offset, realised_crop_offset))
+        )
 
         # NOTE: here we make some assumptions about how blit works with cropping.  It is
         #       assumed that the crop is applied before the offset, and that the cropped
@@ -99,7 +106,7 @@ class Reposition(Visual):
 
         surface.blit(
             self.visual.render_from_scratch(transparent=True),
-            to_ints(realised_visual_offset),
+            to_ints(actual_offset),
             to_ints(realised_crop_offset + realised_crop_size),
         )
 
