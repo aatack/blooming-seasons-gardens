@@ -1,11 +1,10 @@
 import abc
-from typing import Any, Dict, Generic, List, Set, TypeVar
+from typing import Any, Dict, Set
 
-T = TypeVar("T")
 Path = tuple
 
 
-class Trickle(abc.ABC, Generic[T]):
+class Trickle(abc.ABC):
     def __init__(self):
         self.input_map: Dict[Path, Trickle] = {}
         self.output_map: Dict[Trickle, Set[Path]] = {}
