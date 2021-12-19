@@ -47,24 +47,32 @@ class Reposition(Visual):
                     horizontal_offset=self.horizontal_offset + visual.horizontal_offset,
                     vertical_offset=self.vertical_offset + visual.vertical_offset,
                     crop_left=_merge(
-                        self._effective_crop_left(),
-                        visual._effective_crop_left(after_offset=True),
-                        min,
+                        self.crop_left - visual.horizontal_offset
+                        if self.crop_left is not None
+                        else None,
+                        visual.crop_left,
+                        max,
                     ),
                     crop_top=_merge(
-                        self._effective_crop_top(),
-                        visual._effective_crop_top(after_offset=True),
-                        min,
+                        self.crop_top - visual.vertical_offset
+                        if self.crop_top is not None
+                        else None,
+                        visual.crop_top,
+                        max,
                     ),
                     crop_right=_merge(
-                        self._effective_crop_right(),
-                        visual._effective_crop_right(after_offset=True),
-                        max,
+                        self.crop_right - visual.horizontal_offset
+                        if self.crop_right is not None
+                        else None,
+                        visual.crop_right,
+                        min,
                     ),
                     crop_bottom=_merge(
-                        self._effective_crop_bottom(),
-                        visual._effective_crop_bottom(after_offset=True),
-                        max,
+                        self.crop_bottom - visual.vertical_offset
+                        if self.crop_bottom is not None
+                        else None,
+                        visual.crop_bottom,
+                        min,
                     ),
                 )
             )
@@ -82,12 +90,18 @@ class Reposition(Visual):
             0.0 if self.crop_top is None else self.crop_top,
         )
         realised_crop_size = (
-            self.visual.horizontal_extent() - realised_crop_offset[0]
-            if self.crop_right is None
-            else self.crop_right - realised_crop_offset[0],
-            self.visual.vertical_extent() - realised_crop_offset[1]
-            if self.crop_bottom is None
-            else self.crop_bottom - realised_crop_offset[1],
+            max(
+                0,
+                self.visual.horizontal_extent() - realised_crop_offset[0]
+                if self.crop_right is None
+                else self.crop_right - realised_crop_offset[0],
+            ),
+            max(
+                0,
+                self.visual.vertical_extent() - realised_crop_offset[1]
+                if self.crop_bottom is None
+                else self.crop_bottom - realised_crop_offset[1],
+            ),
         )
         actual_offset = tuple(
             map(sum, zip(realised_visual_offset, realised_crop_offset))
@@ -121,34 +135,6 @@ class Reposition(Visual):
         if self.crop_bottom is not None:
             extent = min(extent, self.crop_bottom)
         return extent + self.vertical_offset
-
-    def _effective_crop_left(self, after_offset: bool = False) -> Optional[float]:
-        if self.crop_left is None:
-            return None
-        else:
-            horizontal_offset = self.horizontal_offset if after_offset else 0.0
-            return horizontal_offset + self.crop_left
-
-    def _effective_crop_top(self, after_offset: bool = False) -> Optional[float]:
-        if self.crop_top is None:
-            return None
-        else:
-            vertical_offset = self.vertical_offset if after_offset else 0.0
-            return vertical_offset + self.crop_top
-
-    def _effective_crop_right(self, after_offset: bool = False) -> Optional[float]:
-        if self.crop_right is None:
-            return None
-        else:
-            horizontal_offset = self.horizontal_offset if after_offset else 0.0
-            return horizontal_offset + self.crop_right
-
-    def _effective_crop_bottom(self, after_offset: bool = False) -> Optional[float]:
-        if self.crop_bottom is None:
-            return None
-        else:
-            vertical_offset = self.vertical_offset if after_offset else 0.0
-            return vertical_offset + self.crop_bottom
 
 
 def _merge(
