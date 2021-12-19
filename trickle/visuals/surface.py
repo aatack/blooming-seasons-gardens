@@ -13,6 +13,37 @@ class Surface(Visual):
             surface = pygame.Surface((int(width), int(height)))
         return Surface(surface)
 
+    @staticmethod
+    def rectangle(
+        width: float,
+        height: float,
+        red: float = 0.0,
+        green: float = 0.0,
+        blue: float = 0.0,
+    ) -> "Surface":
+        rectangle = (0, 0, int(width), int(height))
+        colour = (int(red * 255), int(green * 255), int(blue * 255))
+        surface = pygame.surface(rectangle[2:])
+
+        pygame.draw.rect(surface, colour, rectangle)
+        return Surface(surface)
+
+    @staticmethod
+    def circle(
+        radius: float, red: float = 0.0, green: float = 0.0, blue: float = 0.0
+    ) -> "Surface":
+        radius = int(radius)
+        colour = (int(red * 255), int(green * 255), int(blue * 255))
+        surface = pygame.Surface((2 * radius, 2 * radius))
+
+        pygame.draw.circle(surface, colour, (radius, radius), radius)
+
+        return Surface(surface)
+
+    @staticmethod
+    def text(text: str, size: int, font: str = "segoeuisemibold") -> "Surface":
+        return pygame.font.SysFont(font, size).render(text, False, (0, 0, 0))
+
     def __init__(self, surface: pygame.Surface):
         self.surface = surface
 
