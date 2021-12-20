@@ -22,8 +22,7 @@ class Constant(Puddle):
 
 class Variable(Puddle):
     class Changed(NamedTuple):
-        old_value: T
-        new_value: T
+        pass
 
     def __init__(self, initial_value: T):
         super().__init__()
@@ -40,16 +39,13 @@ class Variable(Puddle):
         return self.current_value
 
     def change(self, new_value: T):
-        old_value = self.current_value
         self.current_value = new_value
-
-        self.broadcast(Variable.Changed(old_value, new_value))
+        self.broadcast(Variable.Changed())
 
 
 class Derived(Puddle):
     class Changed(NamedTuple):
-        old_value: T
-        new_value: T
+        pass
 
     def __init__(self, function: Callable, *ordered: Puddle, **keyed: Puddle):
         super().__init__()
@@ -66,10 +62,8 @@ class Derived(Puddle):
             self.listen((key,), puddle)
 
     def respond(self, path: Path, event: Any):
-        old_value = self.current_value
-
         self.current_value = self.compute()
-        self.broadcast(Derived.Changed(old_value, self.current_value))
+        self.broadcast(Derived.Changed())
 
     def value(self) -> T:
         return self.current_value
