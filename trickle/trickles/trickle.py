@@ -21,6 +21,8 @@ class Trickle(abc.ABC):
 
     def listen(self, path: Path, trickle: "Trickle"):
         """Listen for events broadcast from a particular trickle."""
+        assert isinstance(path, Path)
+
         assert path not in self.input_map
         self.input_map[path] = trickle
 
@@ -30,6 +32,8 @@ class Trickle(abc.ABC):
 
     def ignore(self, path: Path):
         """Ignore events broadcast from a currently listened trickle."""
+        assert isinstance(path, Path)
+
         trickle = self.input_map.pop(path)
 
         trickle.output_map[self].remove(path)
