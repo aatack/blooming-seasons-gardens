@@ -1,6 +1,7 @@
-from typing import Any, List, NamedTuple
+from typing import Any, Callable, List, NamedTuple
 
 from trickle.trickles.puddle import Puddle, T
+from trickle.trickles.singular import Derived
 from trickle.trickles.trickle import Path
 
 
@@ -13,7 +14,7 @@ class Indexed(Puddle[List[T]]):
         event: Any
 
     class Added(NamedTuple):
-        pass
+        puddle: Puddle
 
     class Removed(NamedTuple):
         index: int
@@ -40,9 +41,42 @@ class Indexed(Puddle[List[T]]):
     def add(self, puddle: Puddle):
         self.listen((len(self.puddles),), puddle)
         self.puddles.append(puddle)
-        self.broadcast(Indexed.Added())
+        self.broadcast(Indexed.Added(puddle))
 
     def remove(self, index: int):
         self.ignore((index,))
         del self.puddles[index]
         self.broadcast(Indexed.Removed(index))
+
+
+class Mapped(Indexed):
+    def __init__(
+        self, function: Callable, indexed: Indexed, function_of_puddle: bool = False,
+    ):
+        self.function = function
+        self.indexed = indexed
+        self.function_of_puddle = function_of_puddle
+
+        super().__init__(*self.indexed.puddles)
+
+        self.listen((), self.indexed)
+
+        # NOTE: problems may be caused if the add or remove functions are ever called
+        #       manually; would be good to investigate a way to avoid this from
+        #       happening while also allowing the inherited methods to be used in the
+        #       constructor
+
+    def respond(self, path: Path, event: Any):
+        if path == ():
+            if isinstance(event, Indexed.Added):
+                self.add(event.puddle)
+            if isinstance(event, Indexed.Removed):
+                self.remove(event.index)
+        else:
+            super().respond(path, event)
+
+    def add(self, puddle: Puddle):
+        if self.function_of_puddle:
+            super().add(self.function(puddle))
+        else:
+            super().add(Derived(self.function, puddle))
