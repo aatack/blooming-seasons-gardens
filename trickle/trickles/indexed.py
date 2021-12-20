@@ -4,7 +4,7 @@ from trickle.trickles.puddle import Puddle, T
 from trickle.trickles.trickle import Path
 
 
-class Ordered(Puddle[List[T]]):
+class Indexed(Puddle[List[T]]):
     # TODO: a lot of this class is highly inefficient and could be sped up with some
     #       smart caching and passing of values in events
 
@@ -24,7 +24,7 @@ class Ordered(Puddle[List[T]]):
         self.puddles = []
 
         for puddle in puddles:
-            # Any events broadcast during this stage will be ignored as the ordered
+            # Any events broadcast during this stage will be ignored as the indexed
             # puddle does not yet have any outputs
             self.add(puddle)
 
@@ -32,7 +32,7 @@ class Ordered(Puddle[List[T]]):
         (index,) = path
         assert isinstance(index, int)
 
-        self.broadcast(Ordered.Index(index, event))
+        self.broadcast(Indexed.Index(index, event))
 
     def value(self) -> T:
         return [puddle.value() for puddle in self.puddles]
@@ -40,9 +40,9 @@ class Ordered(Puddle[List[T]]):
     def add(self, puddle: Puddle):
         self.listen((len(self.puddles),), puddle)
         self.puddles.append(puddle)
-        self.broadcast(Ordered.Added())
+        self.broadcast(Indexed.Added())
 
     def remove(self, index: int):
         self.ignore((index,))
         del self.puddles[index]
-        self.broadcast(Ordered.Removed(index))
+        self.broadcast(Indexed.Removed(index))

@@ -47,16 +47,16 @@ class Derived(Puddle):
     class Changed(NamedTuple):
         pass
 
-    def __init__(self, function: Callable, *ordered: Puddle, **keyed: Puddle):
+    def __init__(self, function: Callable, *indexed: Puddle, **keyed: Puddle):
         super().__init__()
 
         self.function = function
-        self.ordered = ordered
+        self.indexed = indexed
         self.keyed = keyed
 
         self.current_value = self.compute()
 
-        for index, puddle in enumerate(self.ordered):
+        for index, puddle in enumerate(self.indexed):
             self.listen((index,), puddle)
         for key, puddle in self.keyed.items():
             self.listen((key,), puddle)
@@ -70,6 +70,6 @@ class Derived(Puddle):
 
     def compute(self) -> T:
         return self.function(
-            *[puddle.value() for puddle in self.ordered],
+            *[puddle.value() for puddle in self.indexed],
             **{key: puddle.value() for key, puddle in self.keyed.items()},
         )
