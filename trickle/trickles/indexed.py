@@ -1,4 +1,4 @@
-from typing import Any, Callable, List, NamedTuple
+from typing import Any, Callable, List, NamedTuple, Tuple
 
 from trickle.trickles.puddle import Puddle, T
 from trickle.trickles.singular import Derived
@@ -45,6 +45,9 @@ class Indexed(Puddle[List[T]]):
 
     def remove(self, index: int):
         self.ignore((index,))
+        for i in range(index + 1, len(self.puddles)):
+            self.reassign((i,), (i - 1,))
+
         del self.puddles[index]
         self.broadcast(Indexed.Removed(index))
 
@@ -80,3 +83,66 @@ class Mapped(Indexed):
             super().add(self.function(puddle))
         else:
             super().add(Derived(self.function, puddle))
+
+
+class Folded(Indexed):
+    def __init__(
+        self,
+        initial: Puddle,
+        function: Callable[[Puddle, Puddle], Tuple[Puddle, Puddle]],
+        indexed: Indexed,
+    ):
+        """
+        Perform a fold operation over an ordered group of puddles.
+
+        The folding function should take in the current state and the next puddle, and
+        should output the updated state as well as the transformed puddle for that
+        index.  An initial state must also be given.
+        """
+        self.initial = initial
+        self.function = function
+        self.indexed = indexed
+
+        # List of intermediate states at each step
+        self.intermediate: List[Puddle] = []
+
+        super().__init__(*self.indexed.puddles)
+
+        self.listen((), self.indexed)
+
+    def respond(self, path: Path, event: Any):
+        if path == ():
+            if isinstance(event, Indexed.Added):
+                self.add(event.puddle)
+            if isinstance(event, Indexed.Removed):
+                self.remove(event.index)
+        else:
+            super().respond(path, event)
+
+    def add(self, puddle: Puddle, broadcast: bool = True):
+        next_step, next_puddle = self.function(
+            self.intermediate[-1] if len(self.intermediate) > 0 else self.initial,
+            puddle,
+        )
+
+        # This needs to be listened to so we can pass accurate index events to
+        # downstream puddles
+        self.listen((len(self.puddles),), next_puddle)
+
+        self.intermediate.append(next_step)
+        self.puddles.append(next_puddle)
+
+        if broadcast:
+            self.broadcast(Indexed.Added(next_puddle))
+
+    def remove(self, index: int):
+        for i in range(index, len(self.puddles)):
+            self.ignore((i,))
+
+        self.puddles = self.puddles[:index]
+        self.intermediate = self.intermediate[:index]
+
+        for puddle in self.indexed.puddles[index:]:
+            self.add(puddle, broadcast=False)
+
+        self.broadcast(Indexed.Removed(index))

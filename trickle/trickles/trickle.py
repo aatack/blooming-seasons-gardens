@@ -39,3 +39,15 @@ class Trickle(abc.ABC):
         trickle.output_map[self].remove(path)
         if len(trickle.output_map[self]) == 0:
             del trickle.output_map[self]
+
+    def reassign(self, old_path: Path, new_path: Path):
+        """Change the path by which one trickle listens to another."""
+        assert new_path not in self.input_map
+        trickle = self.input_map.pop(old_path)
+
+        self.input_map[new_path] = trickle
+
+        # Note that because the same trickle can be passed by multiple paths, there is
+        # no need for reference counting (or rather, there is, but it's done implicitly)
+        trickle.output_map[self].remove(old_path)
+        trickle.output_map[self].add(new_path)
