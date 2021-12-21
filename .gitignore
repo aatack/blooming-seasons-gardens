@@ -134,3 +134,4 @@ dmypy.json
 # Entry point
 main.py
 main.bat
+main.sh

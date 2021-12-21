@@ -27,8 +27,8 @@ List of things that still need to be done in the project.
     View methods shall be built out individually for each of the four elements, and for the basic UI components individually.
     The existing view framework will be used: ideally, any view object will simply be a state that returns a view.~~
     -   ~~This may at some point be refactored into classes.~~
--   Structs will be removed and **everything** will be done in terms of keyed state objects.
-    Subclasses can be made where appropriate.
+-   ~~Structs will be removed and **everything** will be done in terms of keyed state objects.
+    Subclasses can be made where appropriate.~~
 -   ~~State objects will be renamed to trickle objects and put into a new package.~~
     -   ~~By default they will only fire and receive events.~~
     -   ~~Stateful trickle objects, known as puddles, will be a subclass of trickle objects and will contain the existing `value()` method.~~
