@@ -46,3 +46,6 @@ class Keyed(Puddle[Dict[str, Any]]):
         self.ignore((key,))
         del self.puddles[key]
         self.broadcast(Keyed.Removed(key))
+
+    def __getitem__(self, key: str) -> Puddle:
+        return self.puddles[key]

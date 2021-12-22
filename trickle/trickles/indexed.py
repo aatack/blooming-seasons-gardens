@@ -51,6 +51,9 @@ class Indexed(Puddle[List[T]]):
         del self.puddles[index]
         self.broadcast(Indexed.Removed(index))
 
+    def __getitem__(self, index: int) -> Puddle:
+        return self.puddles[index]
+
 
 class Mapped(Indexed):
     def __init__(
