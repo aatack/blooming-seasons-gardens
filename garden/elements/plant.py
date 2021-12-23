@@ -1,8 +1,8 @@
 from typing import Union
 
 from garden.element import Element
-from trickle.environment import Environment
-from trickle.trickles.puddle import Puddle
+from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
+from trickle.visuals.overlay import Overlay
 
 
 class Plant(Element):
@@ -32,4 +32,25 @@ class Plant(Element):
         return self["vertical"]
 
     def plan(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        def plan(outer: float, x: float, y: float) -> Visual:
+            inner = max(0, outer - 0.01)  # 1 cm border
+            return Reposition(
+                Overlay(
+                    Reposition(
+                        Surface.circle(radius=outer * 200),
+                        horizontal_offset=-outer * 200,
+                        vertical_offset=-outer * 200,
+                    ),
+                    Reposition(
+                        Surface.circle(
+                            radius=inner * 200, red=0.7, blue=0.4, green=0.1
+                        ),
+                        horizontal_offset=-inner * 200,
+                        vertical_offset=-inner * 200,
+                    ),
+                ),
+                horizontal_offset=x * 200,
+                vertical_offset=y * 200,
+            )
+
+        return Derived(plan, self.size, self.horizontal, self.vertical)

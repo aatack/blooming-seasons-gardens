@@ -1,5 +1,6 @@
 from typing import Any as _Any
 
+from trickle.environment import Environment
 from trickle.trickles.indexed import Folded, Indexed, Mapped
 from trickle.trickles.interaction import Keyboard, Mouse, Screen
 from trickle.trickles.keyed import Keyed
