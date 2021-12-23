@@ -1,6 +1,7 @@
 from typing import Union
 
 from garden.element import Element
+from garden.environment import Environment
 from trickle.trickles.puddle import Puddle
 
 
@@ -29,3 +30,6 @@ class Plant(Element):
     @property
     def vertical(self) -> Puddle:
         return self["vertical"]
+
+    def plan(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

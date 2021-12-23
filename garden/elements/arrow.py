@@ -1,6 +1,7 @@
 from typing import Union
 
 from garden.element import Element
+from garden.environment import Environment
 from trickle.trickles.puddle import Puddle
 
 
@@ -34,3 +35,6 @@ class Arrow(Element):
     @property
     def end_vertical(self) -> Puddle:
         return self["end_vertical"]
+
+    def plan(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

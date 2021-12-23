@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from garden.element import Element
+from garden.environment import Environment
 from trickle import Indexed
 from trickle.trickles.puddle import Puddle
 
@@ -25,3 +26,6 @@ class Bed(Element):
         elements = self["elements"]
         assert isinstance(elements, Indexed)
         return elements
+
+    def plan(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

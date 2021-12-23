@@ -32,3 +32,12 @@ List of things that still need to be done in the project.
 -   ~~State objects will be renamed to trickle objects and put into a new package.~~
     -   ~~By default they will only fire and receive events.~~
     -   ~~Stateful trickle objects, known as puddles, will be a subclass of trickle objects and will contain the existing `value()` method.~~
+
+## Features
+
+-   Allow the basic elements to be drawn.
+    Each one will have two drawing modes:
+    -   **plan view**: a top-down view of the element as it will appear in the final plan.
+    -   **editor view**: a UI box that will appear on the left hand side of the screen, and allow minutiae to be edited in fine detail.
+
+    The plan view is likely to be the easier of the two, so we will start there, and initially will not have the elements respond to any user inputs.
