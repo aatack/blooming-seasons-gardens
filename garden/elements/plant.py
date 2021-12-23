@@ -2,8 +2,7 @@ from typing import Union
 
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
-from trickle.visuals.overlay import Overlay
+from trickle import Derived, Environment, Overlay, Puddle, Reposition, Surface, Visual
 
 
 class Plant(Element):

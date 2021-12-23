@@ -1,8 +1,8 @@
 from typing import Union
 
 from garden.element import Element
-from trickle.environment import Environment
-from trickle.trickles.puddle import Puddle
+from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
+from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
 
 
 class Label(Element):
@@ -32,4 +32,11 @@ class Label(Element):
         return self["vertical"]
 
     def plan(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        def plan(text: str, size: int, x: float, y: float) -> Visual:
+            return Reposition(
+                Surface.text(text, size),
+                horizontal_offset=x * SCALE,
+                vertical_offset=y * SCALE,
+            )
+
+        return Derived(plan, self.text, self.size, self.horizontal, self.vertical)
