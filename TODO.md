@@ -13,9 +13,9 @@ List of things that still need to be done in the project.
 
 ## Rework
 
--   Start with the core data structure and build everything up from there.
--   Core data structure is a garden.
-    For now it will just contain one element, but in the future it will have additional metadata added to it.
+-   ~~Start with the core data structure and build everything up from there.~~
+-   ~~Core data structure is a garden.
+    For now it will just contain one element, but in the future it will have additional metadata added to it.~~
 -   Elements are currently either beds, flowers, labels, or arrows.
     -   Beds are simply groups of other elements with an offset (position) that defaults to zero.
     -   Flowers take a name, size, colour, and offset (to their centres).
