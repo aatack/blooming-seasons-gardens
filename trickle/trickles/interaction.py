@@ -1,9 +1,9 @@
-from typing import NamedTuple, Optional
+from typing import Any, NamedTuple, Optional
 
 from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Variable
-from trickle.trickles.trickle import Trickle
+from trickle.trickles.trickle import Path, Trickle
 
 
 class Screen(Keyed):
@@ -24,7 +24,7 @@ class Screen(Keyed):
         assert isinstance(self.width, Variable)
         self.width.change(width)
 
-        assert isinstance(self, height, Variable)
+        assert isinstance(self.height, Variable)
         self.height.change(height)
 
 
@@ -64,3 +64,6 @@ class Keyboard(Trickle):
 
     def key(self, key: int, down: bool):
         self.broadcast(Keyboard.Key(key, down))
+
+    def respond(self, path: Path, event: Any):
+        """Keyboards are sources of events, so have no responses."""

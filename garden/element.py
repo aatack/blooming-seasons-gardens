@@ -2,9 +2,8 @@ import abc
 from typing import Any, Union
 
 from trickle import Keyed, puddle
+from trickle.environment import Environment
 from trickle.trickles.puddle import Puddle
-
-from garden.environment import Environment
 
 
 class Element(Keyed, abc.ABC):

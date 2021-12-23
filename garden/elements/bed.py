@@ -1,8 +1,8 @@
 from typing import List, Union
 
 from garden.element import Element
-from garden.environment import Environment
 from trickle import Indexed
+from trickle.environment import Environment
 from trickle.trickles.puddle import Puddle
 
 
