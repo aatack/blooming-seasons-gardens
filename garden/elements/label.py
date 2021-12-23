@@ -8,9 +8,9 @@ class Label(Element):
     def __init__(
         self,
         text: Union[str, Puddle],
-        size: Union[int, Puddle],
-        horizontal: Union[float, Puddle],
-        vertical: Union[float, Puddle],
+        size: Union[int, Puddle] = 24,
+        horizontal: Union[float, Puddle] = 0.0,
+        vertical: Union[float, Puddle] = 0.0,
     ):
         super().__init__(text=text, size=size, horizontal=horizontal, vertical=vertical)
 

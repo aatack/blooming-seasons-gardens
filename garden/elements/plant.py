@@ -9,8 +9,8 @@ class Plant(Element):
         self,
         name: Union[Puddle, str],
         size: Union[Puddle, float],
-        horizontal: Union[Puddle, float],
-        vertical: Union[Puddle, float],
+        horizontal: Union[Puddle, float] = 0.0,
+        vertical: Union[Puddle, float] = 0.0,
     ):
         super().__init__(name=name, size=size, horizontal=horizontal, vertical=vertical)
 
