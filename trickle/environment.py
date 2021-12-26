@@ -26,3 +26,11 @@ class Environment:
             log.listen(("keyboard",), self.keyboard)
 
         return log
+
+    def offset_mouse(self, *args, **kwargs) -> "Environment":
+        """Return a copy of the environment but with the mouse offset."""
+        return Environment(
+            screen=self.screen,
+            mouse=self.mouse.offset(*args, **kwargs),
+            keyboard=self.keyboard,
+        )

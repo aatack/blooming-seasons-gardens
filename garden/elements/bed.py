@@ -7,7 +7,7 @@ from trickle import Indexed
 from trickle.environment import Environment
 from trickle.trickles.indexed import Mapped
 from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Derived
+from trickle.trickles.singular import Constant, Derived
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.reposition import Reposition
 from trickle.visuals.visual import Visual
@@ -45,10 +45,14 @@ class Bed(Element):
         return self["vertical"]
 
     def plan(self, environment: Environment) -> Puddle:
-        # TODO: offset mouse
+        offset_environment = environment.offset_mouse(
+            Derived(lambda h: h * SCALE, self.horizontal),
+            Derived(lambda v: v * SCALE, self.vertical),
+            Constant(SCALE),
+        )
 
         mapped = Mapped(
-            lambda e: e.plan(environment), self.elements, function_of_puddle=True
+            lambda e: e.plan(offset_environment), self.elements, function_of_puddle=True
         )
 
         def plan(visuals: List[Visual], horizontal: float, vertical: float) -> Visual:

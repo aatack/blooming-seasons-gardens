@@ -2,7 +2,7 @@ from typing import Any, NamedTuple, Optional
 
 from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Variable
+from trickle.trickles.singular import Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
 
 
@@ -32,19 +32,19 @@ class Mouse(Keyed):
     # TODO: handle modifiers and utils for things like click to drag/offsetting
 
     class Click(NamedTuple):
-        x: int
-        y: int
+        x: float
+        y: float
         button: int
         down: bool
 
-    def __init__(self, x: Puddle[int], y: Puddle[int]):
+    def __init__(self, x: Puddle[float], y: Puddle[float]):
         """Denotes the position of the mouse."""
         super().__init__(x=x, y=y)
 
         self.x = x
         self.y = y
 
-    def move(self, x: int, y: int):
+    def move(self, x: float, y: float):
         assert isinstance(self.x, Variable)
         self.x.change(x)
 
@@ -53,6 +53,28 @@ class Mouse(Keyed):
 
     def click(self, button: int, down: bool):
         self.broadcast(Mouse.Click(self.x.value(), self.y.value(), button, down))
+
+    def respond(self, path: Path, event: Any):
+        if path == ():
+            if isinstance(event, Mouse.Click):
+                # Rebroadcast click events; for offsetting mouse trickles (see below)
+                self.click(event.button, event.down)
+        else:
+            super().respond(path, event)
+
+    def offset(
+        self, horizontal: Puddle[float], vertical: Puddle[float], scale: Puddle[float]
+    ):
+        def transform(_position: float, _offset: float, _scale: float) -> float:
+            return (_position - _offset) / _scale
+
+        mouse = Mouse(
+            Derived(transform, self.x, horizontal, scale),
+            Derived(transform, self.y, vertical, scale),
+        )
+
+        mouse.listen((), self)
+        return mouse
 
 
 class Keyboard(Trickle):
