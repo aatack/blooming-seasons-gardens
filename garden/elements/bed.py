@@ -1,7 +1,6 @@
 from typing import List, Union
 
 from garden.element import Element
-from pygame.version import ver
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Indexed
 from trickle.environment import Environment
