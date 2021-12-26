@@ -3,7 +3,11 @@ from typing import List, Union
 from garden.element import Element
 from trickle import Indexed
 from trickle.environment import Environment
+from trickle.trickles.indexed import Mapped
 from trickle.trickles.puddle import Puddle
+from trickle.trickles.singular import Derived
+from trickle.visuals.overlay import Overlay
+from trickle.visuals.visual import Visual
 
 
 class Bed(Element):
@@ -18,7 +22,9 @@ class Bed(Element):
             assert isinstance(element, Element)
 
         super().__init__(
-            elements=Indexed(*elements), horizontal=horizontal, vertical=vertical,
+            elements=Indexed(*elements),
+            horizontal=horizontal,
+            vertical=vertical,
         )
 
     @property
@@ -27,5 +33,20 @@ class Bed(Element):
         assert isinstance(elements, Indexed)
         return elements
 
+    @property
+    def horizontal(self) -> Puddle:
+        return self["horizontal"]
+
+    @property
+    def vertical(self) -> Puddle:
+        return self["vertical"]
+
     def plan(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        mapped = Mapped(
+            lambda e: e.plan(environment), self.elements, function_of_puddle=True
+        )
+
+        def plan(visuals: List[Visual], horizontal: float, vertical: float) -> Visual:
+            return Overlay(*visuals)
+
+        return Derived(plan, mapped, self.horizontal, self.vertical)
