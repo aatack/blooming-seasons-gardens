@@ -46,6 +46,11 @@ class Window:
             pass
 
     def loop(self, view: Puddle) -> bool:
+        self.surface.fill(tuple(int(colour * 255) for colour in self.background_colour))
+        view.value().render(self.surface)
+
+        pygame.display.flip()
+
         for event in pygame.event.get():
             if event.type == pygame.VIDEORESIZE:
                 self.surface = pygame.display.set_mode(
@@ -83,8 +88,4 @@ class Window:
 
                 self.environment.mouse.click(event.button, False)
 
-        self.surface.fill(tuple(int(colour * 255) for colour in self.background_colour))
-        view.value().render(self.surface)
-
-        pygame.display.flip()
         return True
