@@ -1,12 +1,15 @@
 from typing import List, Union
 
 from garden.element import Element
+from pygame.version import ver
+from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Indexed
 from trickle.environment import Environment
 from trickle.trickles.indexed import Mapped
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Derived
 from trickle.visuals.overlay import Overlay
+from trickle.visuals.reposition import Reposition
 from trickle.visuals.visual import Visual
 
 
@@ -42,11 +45,17 @@ class Bed(Element):
         return self["vertical"]
 
     def plan(self, environment: Environment) -> Puddle:
+        # TODO: offset mouse
+
         mapped = Mapped(
             lambda e: e.plan(environment), self.elements, function_of_puddle=True
         )
 
         def plan(visuals: List[Visual], horizontal: float, vertical: float) -> Visual:
-            return Overlay(*visuals)
+            return Reposition(
+                Overlay(*visuals),
+                horizontal_offset=horizontal * SCALE,
+                vertical_offset=vertical * SCALE,
+            )
 
         return Derived(plan, mapped, self.horizontal, self.vertical)
