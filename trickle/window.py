@@ -65,11 +65,22 @@ class Window:
                 #       responding to mouse button events, otherwise their x and y
                 #       coordinates do not match up
                 x, y = event.pos
+
                 self.environment.mouse.x.change(x)
                 self.environment.mouse.y.change(y)
             if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+
+                assert x == self.environment.mouse.x.value()
+                assert y == self.environment.mouse.y.value()
+
                 self.environment.mouse.click(event.button, True)
             if event.type == pygame.MOUSEBUTTONUP:
+                x, y = event.pos
+
+                assert x == self.environment.mouse.x.value()
+                assert y == self.environment.mouse.y.value()
+
                 self.environment.mouse.click(event.button, False)
 
         self.surface.fill(tuple(int(colour * 255) for colour in self.background_colour))
