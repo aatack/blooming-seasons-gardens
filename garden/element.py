@@ -19,7 +19,11 @@ class Element(Keyed, abc.ABC):
     def plan(self, environment: Environment) -> Puddle:
         """
         Return a puddle containing a visual representation of the garden element.
-        
+
         The visual representation should be from a top-down (plan) view, as the plant
         will appear in the final plan.  It may also respond to user inputs.
         """
+
+    @abc.abstractmethod
+    def editor(self, environment: Environment) -> Puddle:
+        """Return a puddle containing an editor for the garden element."""

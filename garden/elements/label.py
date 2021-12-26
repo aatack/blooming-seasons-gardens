@@ -40,3 +40,6 @@ class Label(Element):
             )
 
         return Derived(plan, self.text, self.size, self.horizontal, self.vertical)
+
+    def editor(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

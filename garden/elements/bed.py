@@ -62,3 +62,6 @@ class Bed(Element):
             )
 
         return Derived(plan, mapped, self.horizontal, self.vertical)
+
+    def editor(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

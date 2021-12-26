@@ -87,3 +87,6 @@ class Plant(Element):
             self.green,
             self.blue,
         )
+
+    def editor(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()

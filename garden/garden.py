@@ -4,9 +4,9 @@ from garden.element import Element
 
 
 class Garden(Keyed):
-    def __init__(self, garden: Element):
-        super().__init__(garden=garden)
+    def __init__(self, element: Element):
+        super().__init__(element=element)
 
     @property
-    def garden(self) -> Element:
-        return self["garden"]
+    def element(self) -> Element:
+        return self["element"]

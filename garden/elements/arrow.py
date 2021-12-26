@@ -77,3 +77,6 @@ class Arrow(Element):
             self.end_vertical,
             self.width,
         )
+
+    def editor(self, environment: Environment) -> Puddle:
+        raise NotImplementedError()
