@@ -3,6 +3,7 @@ from typing import Union
 import pygame
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
+from trickle.components.card import card
 from trickle.components.column import text_column
 from trickle.environment import Environment
 from trickle.trickles.indexed import Indexed
@@ -81,7 +82,7 @@ class Arrow(Element):
         )
 
     def editor(self, environment: Environment) -> Puddle:
-        return text_column(
+        return card(text_column, (0.5, 0.5, 0.5), 5, Constant(16), padding=Constant(5))(
             environment,
             Indexed(
                 Constant("Arrow"),
@@ -96,6 +97,4 @@ class Arrow(Element):
                 + Derived(str, self.end_vertical)
                 + ")",
             ),
-            Constant(16),
-            padding=Constant(5),
         )

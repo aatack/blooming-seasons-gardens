@@ -3,6 +3,7 @@ from typing import Union
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
+from trickle.components.card import card
 from trickle.components.column import text_column
 from trickle.trickles.indexed import Indexed
 from trickle.trickles.singular import Constant
@@ -45,7 +46,7 @@ class Label(Element):
         return Derived(plan, self.text, self.size, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        return text_column(
+        return card(text_column, (0.5, 0.5, 0.5), 5, Constant(16), padding=Constant(5))(
             environment,
             Indexed(
                 Constant("Label"),
@@ -57,6 +58,4 @@ class Label(Element):
                 + Derived(str, self.vertical)
                 + ")",
             ),
-            Constant(16),
-            padding=Constant(5),
         )

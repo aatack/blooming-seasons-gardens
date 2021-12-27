@@ -127,13 +127,13 @@ class Reposition(Visual):
     def horizontal_extent(self) -> float:
         extent = self.visual.horizontal_extent()
         if self.crop_right is not None:
-            extent = min(extent, self.crop_right)
+            extent = self.crop_right
         return extent + self.horizontal_offset
 
     def vertical_extent(self) -> float:
         extent = self.visual.vertical_extent()
         if self.crop_bottom is not None:
-            extent = min(extent, self.crop_bottom)
+            extent = self.crop_bottom
         return extent + self.vertical_offset
 
 
