@@ -31,7 +31,9 @@ class Environment:
         """Return a copy of the environment but with the mouse offset."""
         return Environment(
             screen=self.screen,
-            mouse=self.mouse.offset(*args, **kwargs),
+            mouse=self.mouse.offset(*args, **kwargs)
+            if self.mouse is not None
+            else None,
             keyboard=self.keyboard,
         )
 

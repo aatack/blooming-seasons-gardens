@@ -1,14 +1,26 @@
-from typing import Tuple
+from typing import Tuple, Union
 
-from trickle.environment import Environment
-from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Derived
-from trickle.visuals.overlay import Overlay
-from trickle.visuals.reposition import Reposition
-from trickle.visuals.surface import Surface
-from trickle.visuals.visual import Visual
+from trickle import (
+    Derived,
+    Environment,
+    Overlay,
+    Puddle,
+    Reposition,
+    Surface,
+    Visual,
+    puddle,
+)
 
 from components.component import Component
+
+
+class Pad(Component):
+    def __init__(self, component: Component, padding: Union[Puddle, float]):
+        self._component = component
+        self._padding = puddle(padding)
+
+    def __call__(self, environment: Environment) -> Puddle[Visual]:
+        raise NotImplementedError()
 
 
 class Card(Component):

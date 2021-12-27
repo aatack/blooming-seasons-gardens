@@ -1,13 +1,17 @@
 from typing import Callable, Optional, Tuple
 
-from trickle.environment import Environment
-from trickle.trickles.indexed import Folded, Indexed
-from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Constant, Derived
-from trickle.visuals.overlay import Overlay
-from trickle.visuals.reposition import Reposition
-from trickle.visuals.surface import Surface
-from trickle.visuals.visual import Visual
+from trickle import (
+    Constant,
+    Derived,
+    Environment,
+    Folded,
+    Indexed,
+    Overlay,
+    Puddle,
+    Reposition,
+    Surface,
+    Visual,
+)
 
 from components.component import Component
 
@@ -30,9 +34,7 @@ class Column(Component):
             function will be called on the puddle, and then an appropriately modified
             environment passed, to build a visual from the puddle.
             """
-            modified_environment = environment.offset_mouse(
-                vertical=current_state, horizontal=Constant(0.0), scale=Constant(1.0)
-            )
+            modified_environment = environment.offset_mouse(vertical=current_state)
 
             visual = self._get_component(next_puddle)(modified_environment)
 

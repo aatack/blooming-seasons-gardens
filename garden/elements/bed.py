@@ -96,11 +96,7 @@ class Bed(Element):
                 lambda _environment: Derived(
                     lambda e: Reposition(e, horizontal_offset=30),
                     _element.editor(
-                        _environment.offset_mouse(
-                            horizontal=Constant(30.0),
-                            vertical=Constant(0.0),
-                            scale=Constant(1.0),
-                        )
+                        _environment.offset_mouse(horizontal=Constant(30.0))
                     ),
                 )
             )

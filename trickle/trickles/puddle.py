@@ -48,3 +48,12 @@ def _derived(function: Callable, left: Any, right: Any) -> Puddle:
         left if isinstance(left, Puddle) else Constant(left),
         right if isinstance(right, Puddle) else Constant(right),
     )
+
+
+def puddle(value: Any) -> Puddle:
+    if isinstance(value, Puddle):
+        return value
+    else:
+        from trickle.trickles.singular import Variable
+
+        return Variable(value)

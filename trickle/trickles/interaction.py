@@ -1,7 +1,7 @@
-from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple
+from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple, Union
 
 from trickle.trickles.keyed import Keyed
-from trickle.trickles.puddle import Puddle
+from trickle.trickles.puddle import Puddle, puddle
 from trickle.trickles.singular import Constant, Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
 
@@ -69,8 +69,15 @@ class Mouse(Keyed):
             super().respond(path, event)
 
     def offset(
-        self, horizontal: Puddle[float], vertical: Puddle[float], scale: Puddle[float]
+        self,
+        horizontal: Union[Puddle, float] = 0.0,
+        vertical: Union[Puddle, float] = 0.0,
+        scale: Union[Puddle, float] = 1.0,
     ):
+        horizontal = puddle(horizontal)
+        vertical = puddle(vertical)
+        scale = puddle(scale)
+
         def transform(_position: float, _offset: float, _scale: float) -> float:
             return (_position - _offset) / _scale
 

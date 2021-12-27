@@ -1,9 +1,9 @@
 from typing import Union
 
 import pygame
-from components.card import Card
 from components.column import TextColumn
 from components.component import Component
+from components.presentation import Card
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Constant, Derived, Environment, Indexed, Puddle, Surface, Visual

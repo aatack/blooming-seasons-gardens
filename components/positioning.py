@@ -1,0 +1,29 @@
+from typing import Union
+
+from trickle import Derived, Environment, Puddle, Reposition, Visual, puddle
+
+from components.component import Component
+
+
+class Move(Component):
+    def __init__(
+        self,
+        component: Component,
+        horizontal: Union[Puddle, float],
+        vertical: Union[Puddle, float],
+    ):
+        self._component = component
+        self._horizontal = puddle(horizontal)
+        self._vertical = puddle(vertical)
+
+    def __call__(self, environment: Environment) -> Puddle[Visual]:
+        return Derived(
+            lambda v, x, y: Reposition(v, horizontal_offset=x, vertical_offset=y),
+            self._component(
+                environment.offset_mouse(
+                    horizontal=self._horizontal, vertical=self._vertical
+                )
+            ),
+            self._horizontal,
+            self._vertical,
+        )
