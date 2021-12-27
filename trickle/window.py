@@ -24,7 +24,6 @@ class Window:
             mouse=Mouse(Variable(0), Variable(0)),
             keyboard=Keyboard(),
         )
-        self.environment.log()
 
         self.background_colour = background_colour
 
