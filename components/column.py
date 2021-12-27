@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Tuple
+from typing import Callable, Tuple, Union
 
 from trickle import (
     Constant,
@@ -8,12 +8,13 @@ from trickle import (
     Indexed,
     Overlay,
     Puddle,
-    Reposition,
     Surface,
     Visual,
 )
+from trickle import puddle as to_puddle
 
 from components.component import Component
+from components.positioning import Move
 
 
 class Column(Component):
@@ -34,17 +35,10 @@ class Column(Component):
             function will be called on the puddle, and then an appropriately modified
             environment passed, to build a visual from the puddle.
             """
-            modified_environment = environment.offset_mouse(vertical=current_state)
-
-            visual = self._get_component(next_puddle)(modified_environment)
-
-            updated_state = Derived(
-                lambda c, v: c + v.vertical_extent(), current_state, visual
-            )
-            repositioned_visual = Derived(
-                lambda c, v: Reposition(v, vertical_offset=c), current_state, visual
-            )
-
+            repositioned_visual = Move(
+                self._get_component(next_puddle), vertical=current_state
+            )(environment)
+            updated_state = Derived(lambda v: v.vertical_extent(), repositioned_visual)
             return updated_state, repositioned_visual
 
         return Derived(
@@ -55,10 +49,10 @@ class Column(Component):
 
 class TextColumn(Column):
     def __init__(
-        self, puddles: Indexed, size: Puddle[int], padding: Optional[Puddle[int]] = None
+        self, puddles: Indexed, size: Puddle[int], padding: Union[Puddle, int] = 0.0
     ):
-        if padding is None:
-            padding = Constant(0)
+        size = to_puddle(size)
+        padding = to_puddle(padding)
 
         def get_component(puddle: Puddle) -> Component:
             return lambda _: Derived(

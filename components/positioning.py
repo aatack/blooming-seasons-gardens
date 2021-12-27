@@ -9,8 +9,8 @@ class Move(Component):
     def __init__(
         self,
         component: Component,
-        horizontal: Union[Puddle, float],
-        vertical: Union[Puddle, float],
+        horizontal: Union[Puddle, float] = 0.0,
+        vertical: Union[Puddle, float] = 0.0,
     ):
         self._component = component
         self._horizontal = puddle(horizontal)

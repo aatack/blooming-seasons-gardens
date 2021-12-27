@@ -39,6 +39,13 @@ class Puddle(Trickle, Generic[T]):
     def __rtruediv__(self, other: Any) -> "Puddle":
         return type(self).__truediv__(other, self)
 
+    def log(self, message: str) -> "Puddle":
+        from trickle.trickles.log import Log
+
+        log = Log(message)
+        log.listen((message,), self)
+        return self
+
 
 def _derived(function: Callable, left: Any, right: Any) -> Puddle:
     from trickle.trickles.singular import Constant, Derived

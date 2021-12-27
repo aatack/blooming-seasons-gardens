@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from trickle.environment import Environment
 from trickle.trickles.indexed import Folded, Indexed, Mapped
 from trickle.trickles.interaction import Keyboard, Mouse, Screen
