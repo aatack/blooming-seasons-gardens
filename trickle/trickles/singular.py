@@ -42,6 +42,9 @@ class Variable(Puddle):
         self.current_value = new_value
         self.broadcast(Variable.Changed())
 
+    def change_as_function(self, function: Callable[[T], T]):
+        self.change(function(self.value()))
+
 
 class Derived(Puddle):
     class Changed(NamedTuple):

@@ -90,9 +90,13 @@ class Plant(Element):
         )
 
     def editor(self, environment: Environment) -> Puddle:
-        def editor(width: Optional[float], height: Optional[float]) -> Visual:
+        def editor(
+            width: Optional[float], height: Optional[float], size: float
+        ) -> Visual:
             assert width is not None
             assert height is None
-            return Surface.rectangle(width, 100, red=0.5, blue=0.5)
+            return Surface.rectangle(width, size * 1000, red=0.5, blue=0.5)
 
-        return Derived(editor, environment.screen.width, environment.screen.height)
+        return Derived(
+            editor, environment.screen.width, environment.screen.height, self.size
+        )

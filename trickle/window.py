@@ -1,3 +1,4 @@
+from time import time
 from typing import Any, Optional
 
 import pygame
@@ -6,6 +7,7 @@ from trickle.environment import Environment
 from trickle.trickles.interaction import Keyboard, Mouse, Screen
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Derived, Variable
+from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
 pygame.init()
@@ -37,17 +39,27 @@ class Window:
             pygame.RESIZABLE,
         )
 
+        self.time = 0.0
+        self.time_since_last_fps = 1.0
+        self.last_fps = ""
+
     def run(self, view: Puddle):
         def simplify_view(v: Any) -> Visual:
             assert isinstance(v, Visual)
             return v.simplify()
 
-        while self.loop(Derived(simplify_view, view)):
+        self.time = time()
+        derived = Derived(simplify_view, view)
+        while self.loop(derived):
             pass
 
     def loop(self, view: Puddle) -> bool:
+        step = self.get_step()
+
         self.surface.fill(tuple(int(colour * 255) for colour in self.background_colour))
         view.value().render(self.surface)
+
+        self.draw_fps(step)
 
         pygame.display.flip()
 
@@ -89,3 +101,17 @@ class Window:
                 self.environment.mouse.click(event.button, False)
 
         return True
+
+    def get_step(self) -> float:
+        _time = time()
+        step = _time - self.time
+        self.time = _time
+        return step
+
+    def draw_fps(self, step: float):
+        if self.time_since_last_fps > 0.1 and step > 0:
+            self.time_since_last_fps = 0.0
+            self.last_fps = f"{1 / step:.2f}"
+        else:
+            self.time_since_last_fps += step
+        self.surface.blit(Surface.text(self.last_fps, 24).surface, (0, 0))
