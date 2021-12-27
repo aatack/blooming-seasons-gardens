@@ -24,6 +24,7 @@ class Window:
             mouse=Mouse(Variable(0), Variable(0)),
             keyboard=Keyboard(),
         )
+        self.environment.log()
 
         self.background_colour = background_colour
 
@@ -69,7 +70,8 @@ class Window:
                 self.surface = pygame.display.set_mode(
                     (event.w, event.h), pygame.RESIZABLE
                 )
-                self.environment.screen.resize(width=event.w, height=event.h)
+                self.environment.screen.width.change(event.w)
+                self.environment.screen.height.change(event.h)
             if event.type == pygame.QUIT:
                 return False
             if event.type == pygame.KEYDOWN:

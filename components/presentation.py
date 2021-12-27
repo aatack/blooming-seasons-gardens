@@ -48,7 +48,10 @@ class Pad(Component):
         self._padding = puddle(padding)
 
     def __call__(self, environment: Environment) -> Puddle[Visual]:
-        shrunk_environment = environment.shrink_screen(self._padding * 2)
+        shrunk_environment = environment.where(
+            screen=environment.screen.shrink(self._padding * 2)
+        )
+
         return Derived(
             lambda v, p, w, h: Reposition(
                 v,

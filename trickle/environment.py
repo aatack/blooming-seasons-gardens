@@ -27,47 +27,10 @@ class Environment:
 
         return log
 
-    def offset_mouse(self, *args, **kwargs) -> "Environment":
-        """Return a copy of the environment but with the mouse offset."""
+    def where(self, **kwargs) -> "Environment":
+        """Return a copy of the environment with some of its values changed."""
         return Environment(
-            screen=self.screen,
-            mouse=self.mouse.offset(*args, **kwargs)
-            if self.mouse is not None
-            else None,
-            keyboard=self.keyboard,
-        )
-
-    def unspecify_screen_width(self) -> "Environment":
-        return Environment(
-            screen=self.screen.unspecify_width(),
-            mouse=self.mouse,
-            keyboard=self.keyboard,
-        )
-
-    def unspecify_screen_height(self) -> "Environment":
-        return Environment(
-            screen=self.screen.unspecify_height(),
-            mouse=self.mouse,
-            keyboard=self.keyboard,
-        )
-
-    def shrink_screen(self, *args, **kwargs) -> "Environment":
-        return Environment(
-            self.screen.shrink(*args, **kwargs),
-            mouse=self.mouse,
-            keyboard=self.keyboard,
-        )
-
-    def set_screen_width(self, *args, **kwargs) -> "Environment":
-        return Environment(
-            self.screen.set_width(*args, **kwargs),
-            mouse=self.mouse,
-            keyboard=self.keyboard,
-        )
-
-    def set_screen_height(self, *args, **kwargs) -> "Environment":
-        return Environment(
-            self.screen.set_height(*args, **kwargs),
-            mouse=self.mouse,
-            keyboard=self.keyboard,
+            screen=kwargs.get("screen", self.screen),
+            mouse=kwargs.get("mouse", self.mouse),
+            keyboard=kwargs.get("keyboard", self.keyboard),
         )

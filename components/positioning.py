@@ -20,8 +20,10 @@ class Move(Component):
         return Derived(
             lambda v, x, y: Reposition(v, horizontal_offset=x, vertical_offset=y),
             self._component(
-                environment.offset_mouse(
-                    horizontal=self._horizontal, vertical=self._vertical
+                environment.where(
+                    mouse=environment.mouse.offset(
+                        horizontal=self._horizontal, vertical=self._vertical
+                    )
                 )
             ),
             self._horizontal,

@@ -5,6 +5,8 @@ from trickle.trickles.puddle import Puddle, puddle
 from trickle.trickles.singular import Constant, Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
 
+_UNSPECIFIED = object()
+
 
 class Screen(Keyed):
     def __init__(
@@ -24,18 +26,15 @@ class Screen(Keyed):
 
         super().__init__(width=self.width, height=self.height)
 
-    def resize(self, width: Optional[float] = None, height: Optional[float] = None):
-        assert isinstance(self.width, Variable)
-        self.width.change(width)
-
-        assert isinstance(self.height, Variable)
-        self.height.change(height)
-
-    def unspecify_width(self) -> "Screen":
-        return Screen(Constant(None), self.height)
-
-    def unspecify_height(self) -> "Screen":
-        return Screen(self.width, Constant(None))
+    def resize(
+        self,
+        width: Union[Puddle, Optional[float]] = _UNSPECIFIED,
+        height: Union[Puddle, Optional[float]] = _UNSPECIFIED,
+    ) -> "Screen":
+        return Screen(
+            width=self.width if width is _UNSPECIFIED else puddle(width),
+            height=self.height if height is _UNSPECIFIED else puddle(height),
+        )
 
     def shrink(self, amount: Union[Puddle, float]) -> "Screen":
         amount = puddle(amount)
@@ -45,16 +44,10 @@ class Screen(Keyed):
                 return None
             return max(0, _original - _amount)
 
-        return Screen(
+        return self.resize(
             width=Derived(shrink, self.width, amount),
             height=Derived(shrink, self.height, amount),
         )
-
-    def set_width(self, width: Union[Puddle, float]) -> "Screen":
-        return Screen(puddle(width), self.height)
-
-    def set_height(self, height: Union[Puddle, float]) -> "Screen":
-        return Screen(self.width, puddle(height))
 
 
 class Mouse(Keyed):

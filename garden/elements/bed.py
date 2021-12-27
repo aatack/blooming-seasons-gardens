@@ -64,10 +64,12 @@ class Bed(Element):
             self._bed = bed
 
         def __call__(self, environment: Environment) -> Puddle[Visual]:
-            offset_environment = environment.offset_mouse(
-                Derived(lambda h: h * SCALE, self._bed.horizontal),
-                Derived(lambda v: v * SCALE, self._bed.vertical),
-                Constant(SCALE),
+            offset_environment = environment.where(
+                mouse=environment.mouse.offset(
+                    Derived(lambda h: h * SCALE, self._bed.horizontal),
+                    Derived(lambda v: v * SCALE, self._bed.vertical),
+                    Constant(SCALE),
+                )
             )
 
             mapped = Mapped(
