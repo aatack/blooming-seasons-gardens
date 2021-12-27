@@ -3,6 +3,7 @@ from typing import Union
 import pygame
 from components.card import Card
 from components.column import TextColumn
+from components.component import Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle.environment import Environment
@@ -50,7 +51,19 @@ class Arrow(Element):
     def width(self) -> Puddle:
         return self["width"]
 
-    def plan(self, environment: Environment) -> Puddle:
+    @property
+    def plan(self) -> Component:
+        return Arrow.Plan(self)
+
+    @property
+    def editor(self) -> Component:
+        return Arrow.Editor(self)
+
+    class Plan(Component):
+        def __init__(self, arrow: "Arrow"):
+            self._arrow = arrow
+
+        @staticmethod
         def plan(
             start_horizontal: float,
             start_vertical: float,
@@ -72,29 +85,36 @@ class Arrow(Element):
             )
             return surface
 
-        return Derived(
-            plan,
-            self.start_horizontal,
-            self.start_vertical,
-            self.end_horizontal,
-            self.end_vertical,
-            self.width,
-        )
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            return Derived(
+                self.plan,
+                self._arrow.start_horizontal,
+                self._arrow.start_vertical,
+                self._arrow.end_horizontal,
+                self._arrow.end_vertical,
+                self._arrow.width,
+            )
 
-    def editor(self, environment: Environment) -> Puddle:
-        puddles = Indexed(
-            Constant("Arrow"),
-            "Start: ("
-            + Derived(str, self.start_horizontal)
-            + ", "
-            + Derived(str, self.start_vertical)
-            + ")",
-            "End: ("
-            + Derived(str, self.end_horizontal)
-            + ", "
-            + Derived(str, self.end_vertical)
-            + ")",
-        )
-        return Card(
-            TextColumn(puddles, Constant(16), padding=Constant(5)), (0.5, 0.5, 0.5), 5
-        )(environment)
+    class Editor(Component):
+        def __init__(self, arrow: "Arrow"):
+            self._arrow = arrow
+
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            puddles = Indexed(
+                Constant("Arrow"),
+                "Start: ("
+                + Derived(str, self._arrow.start_horizontal)
+                + ", "
+                + Derived(str, self._arrow.start_vertical)
+                + ")",
+                "End: ("
+                + Derived(str, self._arrow.end_horizontal)
+                + ", "
+                + Derived(str, self._arrow.end_vertical)
+                + ")",
+            )
+            return Card(
+                TextColumn(puddles, Constant(16), padding=Constant(5)),
+                (0.5, 0.5, 0.5),
+                5,
+            )(environment)

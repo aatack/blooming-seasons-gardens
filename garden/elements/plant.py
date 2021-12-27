@@ -2,6 +2,7 @@ from typing import Union
 
 from components.card import Card
 from components.column import TextColumn
+from components.component import Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Derived, Environment, Overlay, Puddle, Reposition, Surface, Visual
@@ -58,7 +59,19 @@ class Plant(Element):
     def blue(self) -> Puddle:
         return self["blue"]
 
-    def plan(self, environment: Environment) -> Puddle:
+    @property
+    def plan(self) -> Component:
+        return Plant.Plan(self)
+
+    @property
+    def editor(self) -> Component:
+        return Plant.Editor(self)
+
+    class Plan(Component):
+        def __init__(self, plant: "Plant"):
+            self._plant = plant
+
+        @staticmethod
         def plan(
             outer: float, x: float, y: float, red: float, green: float, blue: float
         ) -> Visual:
@@ -82,27 +95,34 @@ class Plant(Element):
                 vertical_offset=y * SCALE,
             )
 
-        return Derived(
-            plan,
-            self.size,
-            self.horizontal,
-            self.vertical,
-            self.red,
-            self.green,
-            self.blue,
-        )
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            return Derived(
+                self.plan,
+                self._plant.size,
+                self._plant.horizontal,
+                self._plant.vertical,
+                self._plant.red,
+                self._plant.green,
+                self._plant.blue,
+            )
 
-    def editor(self, environment: Environment) -> Puddle:
-        puddles = Indexed(
-            Constant("Plant"),
-            "Name: " + self.name,
-            "Size: " + Derived(str, self.size),
-            "Position: ("
-            + Derived(str, self.horizontal)
-            + ", "
-            + Derived(str, self.vertical)
-            + ")",
-        )
-        return Card(
-            TextColumn(puddles, Constant(16), padding=Constant(5)), (0.5, 0.5, 0.5), 5
-        )(environment)
+    class Editor(Component):
+        def __init__(self, plant: "Plant"):
+            self._plant = plant
+
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            puddles = Indexed(
+                Constant("Plant"),
+                "Name: " + self._plant.name,
+                "Size: " + Derived(str, self._plant.size),
+                "Position: ("
+                + Derived(str, self._plant.horizontal)
+                + ", "
+                + Derived(str, self._plant.vertical)
+                + ")",
+            )
+            return Card(
+                TextColumn(puddles, Constant(16), padding=Constant(5)),
+                (0.5, 0.5, 0.5),
+                5,
+            )(environment)

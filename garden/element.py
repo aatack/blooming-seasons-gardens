@@ -1,6 +1,7 @@
 import abc
 from typing import Any, Union
 
+from components.component import Component
 from trickle import Keyed, puddle
 from trickle.environment import Environment
 from trickle.trickles.puddle import Puddle
@@ -15,10 +16,10 @@ class Element(Keyed, abc.ABC):
             **{attribute: puddle(value) for attribute, value in attributes.items()}
         )
 
-    @abc.abstractmethod
-    def plan(self, environment: Environment) -> Puddle:
+    @abc.abstractproperty
+    def plan(self) -> Component:
         """
-        Return a puddle containing a visual representation of the garden element.
+        Return a component defining a visual representation of the garden element.
 
         The visual representation should be from a top-down (plan) view, as the plant
         will appear in the final plan.  It may also respond to user inputs.
@@ -28,9 +29,9 @@ class Element(Keyed, abc.ABC):
         #       mouse environment) are cleared when `isolate()` is called on the
         #       resulting puddle
 
-    @abc.abstractmethod
-    def editor(self, environment: Environment) -> Puddle:
-        """Return a puddle containing an editor for the garden element."""
+    @abc.abstractproperty
+    def editor(self) -> Component:
+        """Return a component defining an editor for the garden element."""
         # TODO: we will need a way to ensure that any side effects (ie. any way in which
         #       this function makes the underlying element respond to events from the
         #       mouse environment) are cleared when `isolate()` is called on the
