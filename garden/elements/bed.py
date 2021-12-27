@@ -1,9 +1,10 @@
 from typing import List, Union
 
+from components.column import column
+from components.component import Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Indexed
-from trickle.components.column import column
 from trickle.environment import Environment
 from trickle.trickles.indexed import Mapped
 from trickle.trickles.puddle import Puddle
@@ -66,10 +67,11 @@ class Bed(Element):
         return Derived(plan, mapped, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        def build_inner_visual(
-            _element: Puddle, _environment: Environment
-        ) -> Puddle[Visual]:
-            return Derived(
+        # TODO: refactor for new Column class
+
+        def get_inner_component(_element: Puddle) -> Component:
+            """Take one of the bed's elements and reposition it."""
+            return lambda _environment: Derived(
                 lambda e: Reposition(e, horizontal_offset=30),
                 _element.editor(
                     _environment.offset_mouse(
@@ -80,13 +82,15 @@ class Bed(Element):
                 ),
             )
 
-        def build_outer_visual(
-            _element: Puddle, _environment: Environment
-        ) -> Puddle[Visual]:
+        def get_outer_component(_element: Puddle) -> Puddle[Visual]:
             if _element is self.elements:
-                return column(_environment, _element, build_inner_visual)
+                return lambda _environment: column(
+                    _environment, _element, get_inner_component
+                )
             else:
-                return Derived(lambda v: Surface.text(str(v), 16, padding=5), _element)
+                return lambda _: Derived(
+                    lambda v: Surface.text(str(v), 16, padding=5), _element
+                )
 
         elements = Indexed(
             Constant("Bed"),
@@ -98,4 +102,4 @@ class Bed(Element):
             self.elements,
         )
 
-        return column(environment, elements, build_outer_visual)
+        return column(environment, elements, get_outer_component)

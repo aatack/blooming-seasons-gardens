@@ -1,10 +1,10 @@
 from typing import Union
 
+from components.card import card
+from components.column import text_column
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
-from trickle.components.card import card
-from trickle.components.column import text_column
 from trickle.trickles.indexed import Indexed
 from trickle.trickles.singular import Constant
 
