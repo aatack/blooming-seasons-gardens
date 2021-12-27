@@ -40,6 +40,15 @@ class Trickle(abc.ABC):
         if len(trickle.output_map[self]) == 0:
             del trickle.output_map[self]
 
+    def isolate(self):
+        """Remove all inputs and outputs."""
+        for path in self.input_map.keys():
+            self.ignore(path)
+        # TODO: do we need to isolate the outputs as well?  In theory a trickle should
+        #       only ever disconnect itself, but will the GC still be able to get rid of
+        #       trickles that do not have their outputs disconnected?  Should be
+        #       possible in theory
+
     def reassign(self, old_path: Path, new_path: Path):
         """Change the path by which one trickle listens to another."""
         assert new_path not in self.input_map

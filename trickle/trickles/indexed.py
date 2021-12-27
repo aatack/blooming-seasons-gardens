@@ -57,7 +57,10 @@ class Indexed(Puddle[List[T]]):
 
 class Mapped(Indexed):
     def __init__(
-        self, function: Callable, indexed: Indexed, function_of_puddle: bool = False,
+        self,
+        function: Callable,
+        indexed: Indexed,
+        function_of_puddle: bool = False,
     ):
         self.function = function
         self.indexed = indexed
@@ -77,6 +80,10 @@ class Mapped(Indexed):
             if isinstance(event, Indexed.Added):
                 self.add(event.puddle)
             if isinstance(event, Indexed.Removed):
+                # The puddle can safely be isolated here since it was created during the
+                # course of the map operation
+                self.puddles[event.index].isolate()
+
                 self.remove(event.index)
         else:
             super().respond(path, event)
@@ -141,6 +148,12 @@ class Folded(Indexed):
     def remove(self, index: int):
         for i in range(index, len(self.puddles)):
             self.ignore((i,))
+
+        # This step is required to prevent the no-longer-active puddles from having any
+        # impact.  In theory they can safely be isolated here because they were all
+        # created during the course of the fold operation
+        for puddle in self.puddles[index:] + self.intermediate[index:]:
+            puddle.isolate()
 
         self.puddles = self.puddles[:index]
         self.intermediate = self.intermediate[:index]
