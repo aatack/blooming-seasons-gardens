@@ -1,5 +1,4 @@
-from os import environ
-from typing import Optional, Union
+from typing import Union
 
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE

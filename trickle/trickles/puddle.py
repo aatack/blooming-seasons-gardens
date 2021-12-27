@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar
 
 from trickle.trickles.trickle import Trickle
 
@@ -16,13 +16,35 @@ class Puddle(Trickle, Generic[T]):
         """Return the current value being stored in the puddle."""
 
     def __add__(self, other: Any) -> "Puddle":
-        from trickle.trickles.singular import Constant, Derived
-
-        other = other if isinstance(other, Puddle) else Constant(other)
-        return Derived(lambda a, b: a + b, self, other)
+        return _derived(lambda left, right: left + right, self, other)
 
     def __radd__(self, other: Any) -> "Puddle":
-        from trickle.trickles.singular import Constant, Derived
+        return type(self).__add__(other, self)
 
-        other = other if isinstance(other, Puddle) else Constant(other)
-        return Derived(lambda a, b: b + a, self, other)
+    def __mul__(self, other: Any) -> "Puddle":
+        return _derived(lambda left, right: left * right, self, other)
+
+    def __rmul__(self, other: Any) -> "Puddle":
+        return type(self).__mul__(other, self)
+
+    def __sub__(self, other: Any) -> "Puddle":
+        return _derived(lambda left, right: left - right, self, other)
+
+    def __rsub__(self, other: Any) -> "Puddle":
+        return type(self).__sub__(other, self)
+
+    def __truediv__(self, other: Any) -> "Puddle":
+        return _derived(lambda left, right: left / right, self, other)
+
+    def __rtruediv__(self, other: Any) -> "Puddle":
+        return type(self).__truediv__(other, self)
+
+
+def _derived(function: Callable, left: Any, right: Any) -> Puddle:
+    from trickle.trickles.singular import Constant, Derived
+
+    return Derived(
+        function,
+        left if isinstance(left, Puddle) else Constant(left),
+        right if isinstance(right, Puddle) else Constant(right),
+    )
