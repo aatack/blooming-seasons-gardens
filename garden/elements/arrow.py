@@ -6,12 +6,7 @@ from components.column import TextColumn
 from components.component import Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle.environment import Environment
-from trickle.trickles.indexed import Indexed
-from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Constant, Derived
-from trickle.visuals.surface import Surface
-from trickle.visuals.visual import Visual
+from trickle import Constant, Derived, Environment, Indexed, Puddle, Surface, Visual
 
 
 class Arrow(Element):

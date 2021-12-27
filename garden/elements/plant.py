@@ -5,9 +5,17 @@ from components.column import TextColumn
 from components.component import Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Derived, Environment, Overlay, Puddle, Reposition, Surface, Visual
-from trickle.trickles.indexed import Indexed
-from trickle.trickles.singular import Constant
+from trickle import (
+    Constant,
+    Derived,
+    Environment,
+    Indexed,
+    Overlay,
+    Puddle,
+    Reposition,
+    Surface,
+    Visual,
+)
 
 
 class Plant(Element):

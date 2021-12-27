@@ -4,15 +4,18 @@ from components.column import Column
 from components.component import Anonymous, Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Indexed
-from trickle.environment import Environment
-from trickle.trickles.indexed import Mapped
-from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Constant, Derived
-from trickle.visuals.overlay import Overlay
-from trickle.visuals.reposition import Reposition
-from trickle.visuals.surface import Surface
-from trickle.visuals.visual import Visual
+from trickle import (
+    Constant,
+    Derived,
+    Environment,
+    Indexed,
+    Mapped,
+    Overlay,
+    Puddle,
+    Reposition,
+    Surface,
+    Visual,
+)
 
 
 class Bed(Element):
@@ -46,27 +49,47 @@ class Bed(Element):
     def vertical(self) -> Puddle:
         return self["vertical"]
 
-    def plan(self, environment: Environment) -> Puddle:
-        offset_environment = environment.offset_mouse(
-            Derived(lambda h: h * SCALE, self.horizontal),
-            Derived(lambda v: v * SCALE, self.vertical),
-            Constant(SCALE),
-        )
+    @property
+    def plan(self) -> Component:
+        return Bed.Plan(self)
 
-        mapped = Mapped(
-            lambda e: e.plan(offset_environment), self.elements, function_of_puddle=True
-        )
+    @property
+    def editor(self) -> Component:
+        return Bed.Editor(self)
 
-        def plan(visuals: List[Visual], horizontal: float, vertical: float) -> Visual:
-            return Reposition(
-                Overlay(*visuals),
-                horizontal_offset=horizontal * SCALE,
-                vertical_offset=vertical * SCALE,
+    class Plan(Component):
+        def __init__(self, bed: "Bed"):
+            self._bed = bed
+
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            offset_environment = environment.offset_mouse(
+                Derived(lambda h: h * SCALE, self._bed.horizontal),
+                Derived(lambda v: v * SCALE, self._bed.vertical),
+                Constant(SCALE),
             )
 
-        return Derived(plan, mapped, self.horizontal, self.vertical)
+            mapped = Mapped(
+                lambda e: e.plan(offset_environment),
+                self._bed.elements,
+                function_of_puddle=True,
+            )
 
-    def editor(self, environment: Environment) -> Puddle:
+            def plan(
+                visuals: List[Visual], horizontal: float, vertical: float
+            ) -> Visual:
+                return Reposition(
+                    Overlay(*visuals),
+                    horizontal_offset=horizontal * SCALE,
+                    vertical_offset=vertical * SCALE,
+                )
+
+            return Derived(plan, mapped, self._bed.horizontal, self._bed.vertical)
+
+    class Editor(Component):
+        def __init__(self, bed: "Bed"):
+            self._bed = bed
+
+        @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
             return Anonymous(
@@ -82,9 +105,9 @@ class Bed(Element):
                 )
             )
 
-        def get_outer_component(_element: Puddle) -> Component:
-            if _element is self.elements:
-                return lambda _environment: Column(_element, get_inner_component)(
+        def get_outer_component(self, _element: Puddle) -> Component:
+            if _element is self._bed.elements:
+                return lambda _environment: Column(_element, self.get_inner_component)(
                     _environment
                 )
             else:
@@ -94,14 +117,15 @@ class Bed(Element):
                     )
                 )
 
-        puddles = Indexed(
-            Constant("Bed"),
-            "Position: ("
-            + Derived(str, self.horizontal)
-            + ", "
-            + Derived(str, self.vertical)
-            + ")",
-            self.elements,
-        )
+        def __call__(self, environment: Environment) -> Puddle[Visual]:
+            puddles = Indexed(
+                Constant("Bed"),
+                "Position: ("
+                + Derived(str, self._bed.horizontal)
+                + ", "
+                + Derived(str, self._bed.vertical)
+                + ")",
+                self._bed.elements,
+            )
 
-        return Column(puddles, get_outer_component)(environment)
+            return Column(puddles, self.get_outer_component)(environment)
