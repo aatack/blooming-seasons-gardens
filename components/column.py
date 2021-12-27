@@ -51,27 +51,19 @@ class Column(Component):
         )
 
 
-def column(
-    environment: Environment,
-    puddles: Indexed,
-    get_component: Callable[[Puddle], Component],
-) -> Puddle[Visual]:
-    # TODO: deprecate and remove this
-    return Column(puddles, get_component)(environment)
+class TextColumn(Column):
+    def __init__(
+        self, puddles: Indexed, size: Puddle[int], padding: Optional[Puddle[int]] = None
+    ):
+        if padding is None:
+            padding = Constant(0)
 
+        def get_component(puddle: Puddle) -> Component:
+            return lambda _: Derived(
+                lambda v, s, p: Surface.text(str(v), s, padding=p),
+                puddle,
+                size,
+                padding,
+            )
 
-def text_column(
-    environment: Environment,
-    puddles: Indexed,
-    size: Puddle[int],
-    padding: Optional[Puddle[int]] = None,
-) -> Puddle[Visual]:
-    if padding is None:
-        padding = Constant(0)
-
-    def build_visual(puddle: Puddle) -> Puddle[Visual]:
-        return lambda _: Derived(
-            lambda v, s, p: Surface.text(str(v), s, padding=p), puddle, size, padding
-        )
-
-    return column(environment, puddles, build_visual)
+        super().__init__(puddles, get_component)

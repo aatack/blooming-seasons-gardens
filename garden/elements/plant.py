@@ -1,7 +1,7 @@
 from typing import Union
 
-from components.card import card
-from components.column import text_column
+from components.card import Card
+from components.column import TextColumn
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Derived, Environment, Overlay, Puddle, Reposition, Surface, Visual
@@ -93,16 +93,16 @@ class Plant(Element):
         )
 
     def editor(self, environment: Environment) -> Puddle:
-        return card(text_column, (0.5, 0.5, 0.5), 5, Constant(16), padding=Constant(5))(
-            environment,
-            Indexed(
-                Constant("Plant"),
-                "Name: " + self.name,
-                "Size: " + Derived(str, self.size),
-                "Position: ("
-                + Derived(str, self.horizontal)
-                + ", "
-                + Derived(str, self.vertical)
-                + ")",
-            ),
+        puddles = Indexed(
+            Constant("Plant"),
+            "Name: " + self.name,
+            "Size: " + Derived(str, self.size),
+            "Position: ("
+            + Derived(str, self.horizontal)
+            + ", "
+            + Derived(str, self.vertical)
+            + ")",
         )
+        return Card(
+            TextColumn(puddles, Constant(16), padding=Constant(5)), (0.5, 0.5, 0.5), 5
+        )(environment)

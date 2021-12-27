@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Tuple
 
 from trickle.environment import Environment
 from trickle.trickles.puddle import Puddle
@@ -8,15 +8,18 @@ from trickle.visuals.reposition import Reposition
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
+from components.component import Component
 
-def card(
-    build_visual: Callable[[Puddle, Environment], Puddle[Visual]],
-    colour: tuple,
-    border: int,
-    *args,
-    **kwargs
-) -> Callable[[Puddle, Environment], Puddle[Visual]]:
-    def _card(puddle: Puddle, environment: Environment) -> Puddle[Visual]:
+
+class Card(Component):
+    def __init__(
+        self, component: Component, colour: Tuple[float, float, float], border: int
+    ):
+        self._component = component
+        self._colour = colour
+        self._border = border
+
+    def __call__(self, environment: Environment) -> Puddle[Visual]:
         return Derived(
             lambda v: Reposition(
                 Overlay(
@@ -24,21 +27,19 @@ def card(
                         Surface.rectangle(
                             v.horizontal_extent(),
                             v.vertical_extent(),
-                            red=colour[0],
-                            green=colour[1],
-                            blue=colour[2],
+                            red=self._colour[0],
+                            green=self._colour[1],
+                            blue=self._colour[2],
                         ),
-                        crop_left=-border,
-                        crop_right=v.horizontal_extent() + border,
-                        crop_top=-border,
-                        crop_bottom=v.vertical_extent() + border,
+                        crop_left=-self._border,
+                        crop_right=v.horizontal_extent() + self._border,
+                        crop_top=-self._border,
+                        crop_bottom=v.vertical_extent() + self._border,
                     ),
                     v,
                 ),
-                horizontal_offset=border,
-                vertical_offset=border,
+                horizontal_offset=self._border,
+                vertical_offset=self._border,
             ),
-            build_visual(puddle, environment, *args, **kwargs),
+            self._component(environment),
         )
-
-    return _card

@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from components.column import column
-from components.component import Component
+from components.column import Column
+from components.component import Anonymous, Component
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Indexed
@@ -67,32 +67,34 @@ class Bed(Element):
         return Derived(plan, mapped, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        # TODO: refactor for new Column class
-
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
-            return lambda _environment: Derived(
-                lambda e: Reposition(e, horizontal_offset=30),
-                _element.editor(
-                    _environment.offset_mouse(
-                        horizontal=Constant(30.0),
-                        vertical=Constant(0.0),
-                        scale=Constant(1.0),
-                    )
-                ),
+            return Anonymous(
+                lambda _environment: Derived(
+                    lambda e: Reposition(e, horizontal_offset=30),
+                    _element.editor(
+                        _environment.offset_mouse(
+                            horizontal=Constant(30.0),
+                            vertical=Constant(0.0),
+                            scale=Constant(1.0),
+                        )
+                    ),
+                )
             )
 
-        def get_outer_component(_element: Puddle) -> Puddle[Visual]:
+        def get_outer_component(_element: Puddle) -> Component:
             if _element is self.elements:
-                return lambda _environment: column(
-                    _environment, _element, get_inner_component
+                return lambda _environment: Column(_element, get_inner_component)(
+                    _environment
                 )
             else:
-                return lambda _: Derived(
-                    lambda v: Surface.text(str(v), 16, padding=5), _element
+                return Anonymous(
+                    lambda _: Derived(
+                        lambda v: Surface.text(str(v), 16, padding=5), _element
+                    )
                 )
 
-        elements = Indexed(
+        puddles = Indexed(
             Constant("Bed"),
             "Position: ("
             + Derived(str, self.horizontal)
@@ -102,4 +104,4 @@ class Bed(Element):
             self.elements,
         )
 
-        return column(environment, elements, get_outer_component)
+        return Column(puddles, get_outer_component)(environment)
