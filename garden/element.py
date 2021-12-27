@@ -2,9 +2,7 @@ import abc
 from typing import Any, Union
 
 from components.component import Component
-from trickle import Keyed, puddle
-from trickle.environment import Environment
-from trickle.trickles.puddle import Puddle
+from trickle import Keyed, Puddle, puddle
 
 
 class Element(Keyed, abc.ABC):

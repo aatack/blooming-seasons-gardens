@@ -80,8 +80,6 @@ class Reposition(Visual):
         return Overlay(*visuals)
 
     def render(self, surface: pygame.Surface):
-        from trickle.visuals.surface import Surface
-
         # TODO: this could be accelerated by accounting for the different possible modes
         # TODO: these can be cached on construction if needed
         realised_visual_offset = (self.horizontal_offset, self.vertical_offset)
