@@ -23,6 +23,10 @@ class Column(Component):
         self._get_component = get_component
 
     def __call__(self, environment: Environment) -> Puddle[Visual]:
+        resized_environment = environment.where(
+            screen=environment.screen.resize(height=None)
+        )
+
         def function(
             current_state: Puddle[float], next_puddle: Puddle
         ) -> Tuple[Puddle, Puddle]:
@@ -37,7 +41,7 @@ class Column(Component):
             """
             repositioned_visual = Move(
                 self._get_component(next_puddle), vertical=current_state
-            )(environment)
+            )(resized_environment)
             updated_state = Derived(lambda v: v.vertical_extent(), repositioned_visual)
             return updated_state, repositioned_visual
 

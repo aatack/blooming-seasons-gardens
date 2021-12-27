@@ -2,7 +2,7 @@ from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple, Union
 
 from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle, puddle
-from trickle.trickles.singular import Constant, Derived, Variable
+from trickle.trickles.singular import Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
 
 _UNSPECIFIED = object()

@@ -96,7 +96,16 @@ class Bed(Element):
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
-            return Move(_element.editor, horizontal=30)
+            indent = 30
+            return Anonymous(
+                lambda e: Move(_element.editor, horizontal=30)(
+                    e.where(
+                        screen=e.screen.resize(
+                            width=e.screen.width - indent, height=None
+                        )
+                    )
+                )
+            )
 
         def get_outer_component(self, _element: Puddle) -> Component:
             if _element is self._bed.elements:
