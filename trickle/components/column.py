@@ -4,6 +4,7 @@ from trickle.environment import Environment
 from trickle.trickles.indexed import Folded, Indexed
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived
+from trickle.visuals.overlay import Overlay
 from trickle.visuals.reposition import Reposition
 from trickle.visuals.visual import Visual
 
@@ -40,4 +41,7 @@ def column(
 
         return updated_state, repositioned_visual
 
-    return Folded(initial=Constant(0.0), function=function, indexed=puddles)
+    return Derived(
+        lambda visuals: Overlay(*visuals),
+        Folded(initial=Constant(0.0), function=function, indexed=puddles),
+    )

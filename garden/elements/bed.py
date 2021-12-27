@@ -3,6 +3,7 @@ from typing import List, Union
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Indexed
+from trickle.components.column import column
 from trickle.environment import Environment
 from trickle.trickles.indexed import Mapped
 from trickle.trickles.puddle import Puddle
@@ -64,4 +65,8 @@ class Bed(Element):
         return Derived(plan, mapped, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        return column(
+            environment,
+            self.elements,
+            lambda _element, _environment: _element.editor(_environment),
+        )
