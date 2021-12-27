@@ -5,6 +5,12 @@ from components.component import Anonymous, Component
 from components.positioning import Move
 from components.presentation import Background
 from garden.element import Element
+from settings import (
+    EDITOR_BACKGROUND_COLOUR,
+    EDITOR_BED_INDENT,
+    EDITOR_TEXT_PADDING,
+    EDITOR_TEXT_SIZE,
+)
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
     Constant,
@@ -96,12 +102,11 @@ class Bed(Element):
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
-            indent = 30
             return Anonymous(
-                lambda e: Move(_element.editor, horizontal=30)(
+                lambda e: Move(_element.editor, horizontal=EDITOR_BED_INDENT)(
                     e.where(
                         screen=e.screen.resize(
-                            width=e.screen.width - indent, height=None
+                            width=e.screen.width - EDITOR_BED_INDENT, height=None
                         )
                     )
                 )
@@ -117,7 +122,10 @@ class Bed(Element):
             else:
                 return Anonymous(
                     lambda _: Derived(
-                        lambda v: Surface.text(str(v), 16, padding=5), _element
+                        lambda v: Surface.text(
+                            str(v), EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING
+                        ),
+                        _element,
                     )
                 )
 
@@ -133,5 +141,5 @@ class Bed(Element):
             )
 
             return Background(
-                Column(puddles, self.get_outer_component), (0.8, 0.8, 0.8)
+                Column(puddles, self.get_outer_component), EDITOR_BACKGROUND_COLOUR
             )(environment)

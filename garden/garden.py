@@ -1,6 +1,6 @@
 from components.component import Anonymous, Component
 from components.positioning import Move, Scroll
-from settings import EDITOR_WIDTH
+from settings import EDITOR_SCROLL_SPEED, EDITOR_WIDTH
 from trickle import Derived, Keyed, Overlay
 
 from garden.element import Element
@@ -23,7 +23,7 @@ class Garden(Keyed):
                     self.element.plan,
                     horizontal=environment.screen.width * EDITOR_WIDTH,
                 )(environment),
-                Scroll(self.element.editor)(
+                Scroll(self.element.editor, scroll_speed=EDITOR_SCROLL_SPEED)(
                     environment.where(
                         screen=environment.screen.resize(
                             width=environment.screen.width * EDITOR_WIDTH

@@ -4,6 +4,12 @@ from components.column import TextColumn
 from components.component import Component
 from components.presentation import Card
 from garden.element import Element
+from settings import (
+    EDITOR_BLOCK_COLOUR,
+    EDITOR_PADDING,
+    EDITOR_TEXT_PADDING,
+    EDITOR_TEXT_SIZE,
+)
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
     Constant,
@@ -89,7 +95,11 @@ class Label(Element):
             )
 
             return Card(
-                TextColumn(puddles, Constant(16), padding=Constant(5)),
-                (0.5, 0.5, 0.5),
-                5,
+                TextColumn(
+                    puddles,
+                    Constant(EDITOR_TEXT_SIZE),
+                    padding=Constant(EDITOR_TEXT_PADDING),
+                ),
+                EDITOR_BLOCK_COLOUR,
+                EDITOR_PADDING,
             )(environment)

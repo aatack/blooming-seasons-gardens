@@ -8,3 +8,16 @@ PIXELS_PER_DISTANCE_UNIT = 200
 EDITOR_WIDTH = 0.33
 # How light the grey background of the editor should be
 EDITOR_BACKGROUND_BRIGHTNESS = 0.85
+
+# Pixels of padding between elements displayed in the editor
+EDITOR_PADDING = 2
+EDITOR_TEXT_PADDING = 4
+EDITOR_TEXT_SIZE = 15
+EDITOR_BED_INDENT = 25
+
+# Colours
+EDITOR_BLOCK_COLOUR = (0.7,) * 3
+EDITOR_BACKGROUND_COLOUR = (0.9,) * 3
+
+# Navigation
+EDITOR_SCROLL_SPEED = 25.0

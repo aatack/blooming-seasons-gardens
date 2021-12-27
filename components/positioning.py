@@ -1,6 +1,5 @@
 from typing import Union
 
-import pygame
 from trickle import Derived, Environment, Puddle, Reposition, Visual, puddle
 from trickle.trickles.singular import Variable
 
