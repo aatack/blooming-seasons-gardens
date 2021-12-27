@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 import pygame
 from garden.element import Element
@@ -79,4 +79,9 @@ class Arrow(Element):
         )
 
     def editor(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        def editor(width: Optional[float], height: Optional[float]) -> Visual:
+            assert width is not None
+            assert height is None
+            return Surface.rectangle(width, 100, red=0.5, green=0.5)
+
+        return Derived(editor, environment.screen.width, environment.screen.height)

@@ -2,7 +2,7 @@ from typing import Any, NamedTuple, Optional
 
 from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Derived, Variable
+from trickle.trickles.singular import Constant, Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
 
 
@@ -26,6 +26,12 @@ class Screen(Keyed):
 
         assert isinstance(self.height, Variable)
         self.height.change(height)
+
+    def unspecify_width(self) -> "Screen":
+        return Screen(Constant(None), self.height)
+
+    def unspecify_height(self) -> "Screen":
+        return Screen(self.width, Constant(None))
 
 
 class Mouse(Keyed):

@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
@@ -42,4 +42,9 @@ class Label(Element):
         return Derived(plan, self.text, self.size, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        raise NotImplementedError()
+        def editor(width: Optional[float], height: Optional[float]) -> Visual:
+            assert width is not None
+            assert height is None
+            return Surface.rectangle(width, 100, green=0.5, blue=0.5)
+
+        return Derived(editor, environment.screen.width, environment.screen.height)

@@ -34,3 +34,17 @@ class Environment:
             mouse=self.mouse.offset(*args, **kwargs),
             keyboard=self.keyboard,
         )
+
+    def unspecify_screen_width(self) -> "Environment":
+        return Environment(
+            screen=self.screen.unspecify_width(),
+            mouse=self.mouse,
+            keyboard=self.keyboard,
+        )
+
+    def unspecify_screen_height(self) -> "Environment":
+        return Environment(
+            screen=self.screen.unspecify_height(),
+            mouse=self.mouse,
+            keyboard=self.keyboard,
+        )
