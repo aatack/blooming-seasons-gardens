@@ -50,3 +50,24 @@ class Environment:
             mouse=self.mouse,
             keyboard=self.keyboard,
         )
+
+    def shrink_screen(self, *args, **kwargs) -> "Environment":
+        return Environment(
+            self.screen.shrink(*args, **kwargs),
+            mouse=self.mouse,
+            keyboard=self.keyboard,
+        )
+
+    def set_screen_width(self, *args, **kwargs) -> "Environment":
+        return Environment(
+            self.screen.set_width(*args, **kwargs),
+            mouse=self.mouse,
+            keyboard=self.keyboard,
+        )
+
+    def set_screen_height(self, *args, **kwargs) -> "Environment":
+        return Environment(
+            self.screen.set_height(*args, **kwargs),
+            mouse=self.mouse,
+            keyboard=self.keyboard,
+        )

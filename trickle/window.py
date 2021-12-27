@@ -46,13 +46,17 @@ class Window:
 
         self.last_fps = ""
 
-    def run(self, view: Puddle):
+    def run(self, component: Any):
+        from components.component import Component
+
+        assert isinstance(component, Component)
+
         def simplify_view(v: Any) -> Visual:
             assert isinstance(v, Visual)
             return v.simplify()
 
         self.time = time()
-        derived = Derived(simplify_view, view)
+        derived = Derived(simplify_view, component(self.environment))
         while self.loop(derived):
             pass
 

@@ -7,7 +7,11 @@ from trickle.trickles.trickle import Path, Trickle
 
 
 class Screen(Keyed):
-    def __init__(self, width: Puddle[Optional[int]], height: Puddle[Optional[int]]):
+    def __init__(
+        self,
+        width: Union[Puddle[Optional[float]], Optional[float]],
+        height: Union[Puddle[Optional[float]], Optional[float]],
+    ):
         """
         Denotes the size of a screen.
 
@@ -15,12 +19,12 @@ class Screen(Keyed):
         they should be determined by the content.  This is useful for things like a
         list of visual components whose widths are fixed but whose heights may vary.
         """
-        super().__init__(width=width, height=height)
+        self.width = puddle(width)
+        self.height = puddle(height)
 
-        self.width = width
-        self.height = height
+        super().__init__(width=self.width, height=self.height)
 
-    def resize(self, width: Optional[int] = None, height: Optional[int] = None):
+    def resize(self, width: Optional[float] = None, height: Optional[float] = None):
         assert isinstance(self.width, Variable)
         self.width.change(width)
 
@@ -32,6 +36,25 @@ class Screen(Keyed):
 
     def unspecify_height(self) -> "Screen":
         return Screen(self.width, Constant(None))
+
+    def shrink(self, amount: Union[Puddle, float]) -> "Screen":
+        amount = puddle(amount)
+
+        def shrink(_original: Optional[float], _amount: float) -> Optional[float]:
+            if _original is None:
+                return None
+            return max(0, _original - _amount)
+
+        return Screen(
+            width=Derived(shrink, self.width, amount),
+            height=Derived(shrink, self.height, amount),
+        )
+
+    def set_width(self, width: Union[Puddle, float]) -> "Screen":
+        return Screen(puddle(width), self.height)
+
+    def set_height(self, height: Union[Puddle, float]) -> "Screen":
+        return Screen(self.width, puddle(height))
 
 
 class Mouse(Keyed):

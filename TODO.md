@@ -42,3 +42,9 @@ List of things that still need to be done in the project.
 
     The plan view is likely to be the easier of the two, so we will start there, and initially will not have the elements respond to any user inputs.
 -   Look into using pyglet for hardware acceleration (currently quite CPU-intensive).
+
+## Notes
+
+-   The current functions `horizontal_extent` and `vertical_extent` could be build into
+    a `View` class, which is a subclass of `Puddle[Visual]` and also supplied `with` and
+    `height` parameters (both of which are instances of `Puddle[float]`).

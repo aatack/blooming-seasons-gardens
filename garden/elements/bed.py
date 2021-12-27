@@ -2,6 +2,8 @@ from typing import List, Union
 
 from components.column import Column
 from components.component import Anonymous, Component
+from components.positioning import Move
+from components.presentation import Background
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
@@ -92,19 +94,14 @@ class Bed(Element):
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
-            return Anonymous(
-                lambda _environment: Derived(
-                    lambda e: Reposition(e, horizontal_offset=30),
-                    _element.editor(
-                        _environment.offset_mouse(horizontal=Constant(30.0))
-                    ),
-                )
-            )
+            return Move(_element.editor, horizontal=30)
 
         def get_outer_component(self, _element: Puddle) -> Component:
             if _element is self._bed.elements:
-                return lambda _environment: Column(_element, self.get_inner_component)(
-                    _environment
+                return Anonymous(
+                    lambda _environment: Column(_element, self.get_inner_component)(
+                        _environment
+                    )
                 )
             else:
                 return Anonymous(
@@ -124,4 +121,6 @@ class Bed(Element):
                 self._bed.elements,
             )
 
-            return Column(puddles, self.get_outer_component)(environment)
+            return Background(
+                Column(puddles, self.get_outer_component), (0.8, 0.8, 0.8)
+            )(environment)
