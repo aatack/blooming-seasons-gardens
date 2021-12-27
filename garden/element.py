@@ -23,7 +23,15 @@ class Element(Keyed, abc.ABC):
         The visual representation should be from a top-down (plan) view, as the plant
         will appear in the final plan.  It may also respond to user inputs.
         """
+        # TODO: we will need a way to ensure that any side effects (ie. any way in which
+        #       this function makes the underlying element respond to events from the
+        #       mouse environment) are cleared when `isolate()` is called on the
+        #       resulting puddle
 
     @abc.abstractmethod
     def editor(self, environment: Environment) -> Puddle:
         """Return a puddle containing an editor for the garden element."""
+        # TODO: we will need a way to ensure that any side effects (ie. any way in which
+        #       this function makes the underlying element respond to events from the
+        #       mouse environment) are cleared when `isolate()` is called on the
+        #       resulting puddle

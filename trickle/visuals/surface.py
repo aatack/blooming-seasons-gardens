@@ -1,4 +1,5 @@
 import pygame
+import pygame.freetype
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.reposition import Reposition
 from trickle.visuals.visual import Visual
@@ -33,6 +34,8 @@ class Surface(Visual):
     def circle(
         radius: float, red: float = 0.0, green: float = 0.0, blue: float = 0.0
     ) -> "Surface":
+        # TODO: fix the harshness of circles (and, actually, all other primitives)
+
         surface = Surface.empty(2 * radius, 2 * radius, transparent=True).surface
 
         radius = int(radius)
@@ -44,7 +47,8 @@ class Surface(Visual):
 
     @staticmethod
     def text(text: str, size: int, font: str = "segoeuisemibold") -> "Surface":
-        return Surface(pygame.font.SysFont(font, size).render(text, False, (0, 0, 0)))
+        surface, *_ = pygame.freetype.SysFont(font, size).render(text)
+        return Surface(surface)
 
     def __init__(self, surface: pygame.Surface):
         self.surface = surface

@@ -1,4 +1,3 @@
-from os import environ
 from typing import Optional, Union
 
 from garden.element import Element

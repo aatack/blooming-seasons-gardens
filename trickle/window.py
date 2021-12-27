@@ -114,4 +114,4 @@ class Window:
             self.last_fps = f"{1 / step:.2f}"
         else:
             self.time_since_last_fps += step
-        self.surface.blit(Surface.text(self.last_fps, 24).surface, (0, 0))
+        self.surface.blit(Surface.text(self.last_fps, 12).surface, (5, 5))
