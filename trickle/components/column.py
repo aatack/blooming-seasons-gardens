@@ -1,4 +1,4 @@
-from typing import Callable, Tuple
+from typing import Callable, Optional, Tuple
 
 from trickle.environment import Environment
 from trickle.trickles.indexed import Folded, Indexed
@@ -6,6 +6,7 @@ from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.reposition import Reposition
+from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
 
@@ -45,3 +46,20 @@ def column(
         lambda visuals: Overlay(*visuals),
         Folded(initial=Constant(0.0), function=function, indexed=puddles),
     )
+
+
+def text_column(
+    environment: Environment,
+    puddles: Indexed,
+    size: Puddle[int],
+    padding: Optional[Puddle[int]] = None,
+) -> Puddle[Visual]:
+    if padding is None:
+        padding = Constant(0)
+
+    def build_visual(puddle: Puddle, _: Environment) -> Puddle[Visual]:
+        return Derived(
+            lambda v, s, p: Surface.text(str(v), s, padding=p), puddle, size, padding
+        )
+
+    return column(environment, puddles, build_visual)

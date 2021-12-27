@@ -46,8 +46,18 @@ class Surface(Visual):
         return Surface(surface)
 
     @staticmethod
-    def text(text: str, size: int, font: str = "segoeuisemibold") -> "Surface":
-        surface, *_ = pygame.freetype.SysFont(font, size).render(text)
+    def text(
+        text: str, size: int, font: str = "segoeuisemibold", padding: int = 0
+    ) -> "Surface":
+        text_surface, *_ = pygame.freetype.SysFont(font, size).render(text)
+        if padding != 0:
+            width, height = text_surface.get_size()
+            surface = Surface.empty(
+                (2 * padding) + width, (2 * padding) + height, transparent=True
+            ).surface
+            surface.blit(text_surface, (padding, padding))
+        else:
+            surface = text_surface
         return Surface(surface)
 
     def __init__(self, surface: pygame.Surface):
