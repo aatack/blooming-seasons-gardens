@@ -10,6 +10,7 @@ from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.reposition import Reposition
+from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
 
@@ -65,8 +66,36 @@ class Bed(Element):
         return Derived(plan, mapped, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        return column(
-            environment,
+        def build_inner_visual(
+            _element: Puddle, _environment: Environment
+        ) -> Puddle[Visual]:
+            return Derived(
+                lambda e: Reposition(e, horizontal_offset=30),
+                _element.editor(
+                    _environment.offset_mouse(
+                        horizontal=Constant(30.0),
+                        vertical=Constant(0.0),
+                        scale=Constant(1.0),
+                    )
+                ),
+            )
+
+        def build_outer_visual(
+            _element: Puddle, _environment: Environment
+        ) -> Puddle[Visual]:
+            if _element is self.elements:
+                return column(_environment, _element, build_inner_visual)
+            else:
+                return Derived(lambda v: Surface.text(str(v), 16, padding=5), _element)
+
+        elements = Indexed(
+            Constant("Bed"),
+            "Position: ("
+            + Derived(str, self.horizontal)
+            + ", "
+            + Derived(str, self.vertical)
+            + ")",
             self.elements,
-            lambda _element, _environment: _element.editor(_environment),
         )
+
+        return column(environment, elements, build_outer_visual)

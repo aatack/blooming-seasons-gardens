@@ -95,6 +95,7 @@ class Plant(Element):
         return text_column(
             environment,
             Indexed(
+                Constant("Plant"),
                 "Name: " + self.name,
                 "Size: " + Derived(str, self.size),
                 "Position: ("

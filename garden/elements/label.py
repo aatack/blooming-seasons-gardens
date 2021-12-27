@@ -1,8 +1,11 @@
-from typing import Optional, Union
+from typing import Union
 
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import Derived, Environment, Puddle, Reposition, Surface, Visual
+from trickle.components.column import text_column
+from trickle.trickles.indexed import Indexed
+from trickle.trickles.singular import Constant
 
 
 class Label(Element):
@@ -42,9 +45,18 @@ class Label(Element):
         return Derived(plan, self.text, self.size, self.horizontal, self.vertical)
 
     def editor(self, environment: Environment) -> Puddle:
-        def editor(width: Optional[float], height: Optional[float]) -> Visual:
-            assert width is not None
-            assert height is None
-            return Surface.rectangle(width, 100, green=0.5, blue=0.5)
-
-        return Derived(editor, environment.screen.width, environment.screen.height)
+        return text_column(
+            environment,
+            Indexed(
+                Constant("Label"),
+                "Text: " + Derived(str, self.text),
+                "Size: " + Derived(str, self.size),
+                "Position: ("
+                + Derived(str, self.horizontal)
+                + ", "
+                + Derived(str, self.vertical)
+                + ")",
+            ),
+            Constant(16),
+            padding=Constant(5),
+        )

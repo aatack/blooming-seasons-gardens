@@ -1,11 +1,13 @@
-from typing import Optional, Union
+from typing import Union
 
 import pygame
 from garden.element import Element
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
+from trickle.components.column import text_column
 from trickle.environment import Environment
+from trickle.trickles.indexed import Indexed
 from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Derived
+from trickle.trickles.singular import Constant, Derived
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
@@ -79,9 +81,21 @@ class Arrow(Element):
         )
 
     def editor(self, environment: Environment) -> Puddle:
-        def editor(width: Optional[float], height: Optional[float]) -> Visual:
-            assert width is not None
-            assert height is None
-            return Surface.rectangle(width, 100, red=0.5, green=0.5)
-
-        return Derived(editor, environment.screen.width, environment.screen.height)
+        return text_column(
+            environment,
+            Indexed(
+                Constant("Arrow"),
+                "Start: ("
+                + Derived(str, self.start_horizontal)
+                + ", "
+                + Derived(str, self.start_vertical)
+                + ")",
+                "End: ("
+                + Derived(str, self.end_horizontal)
+                + ", "
+                + Derived(str, self.end_vertical)
+                + ")",
+            ),
+            Constant(16),
+            padding=Constant(5),
+        )
