@@ -6,7 +6,7 @@ import pygame
 class Visual(abc.ABC):
     """
     Describes a purely visual component of an app.
-    
+
     Development note: although objects with this general interface were originally
     conceived for speed/efficiency, the rework has not been done with that in mind.  See
     the tag `the-culling`, file `view.py` for an outline as to how this interface was
@@ -17,7 +17,7 @@ class Visual(abc.ABC):
     def simplify(self) -> "Visual":
         """
         Simplify the structure of the visual where possible.
-        
+
         The simplified visual must be an overlay containing repositions, each of which
         contains a surface.
         """
@@ -26,7 +26,7 @@ class Visual(abc.ABC):
     def render(self, surface: pygame.Surface):
         """
         Render the visual to a surface.
-        
+
         This is allowed to not work properly if the view has not first been simplified.
         """
 
@@ -66,4 +66,3 @@ class Visual(abc.ABC):
         self.render(surface)
 
         return surface
-
