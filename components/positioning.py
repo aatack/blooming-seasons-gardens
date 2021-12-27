@@ -54,7 +54,7 @@ class Scroll(Component):
         def scroll_up():
             if active.value():
                 self._scroll_position.change_as_function(
-                    lambda s: s + self._scroll_speed
+                    lambda s: min(0, s + self._scroll_speed)
                 )
 
         return scroll_up

@@ -24,6 +24,7 @@ from trickle import (
     Surface,
     Visual,
 )
+from trickle.trickles.singular import Variable
 
 
 class Bed(Element):
@@ -98,6 +99,7 @@ class Bed(Element):
     class Editor(Component):
         def __init__(self, bed: "Bed"):
             self._bed = bed
+            self._collapsed = Variable(False)
 
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
@@ -130,7 +132,7 @@ class Bed(Element):
                 )
 
         def __call__(self, environment: Environment) -> Puddle[Visual]:
-            puddles = Indexed(
+            expanded_puddles = Indexed(
                 Constant("Bed"),
                 "Position: ("
                 + Derived(str, self._bed.horizontal)
@@ -140,6 +142,7 @@ class Bed(Element):
                 self._bed.elements,
             )
 
-            return Background(
-                Column(puddles, self.get_outer_component), EDITOR_BACKGROUND_COLOUR
-            )(environment)
+            # TODO: allow beds to be collapsed
+            collapsed_puddles = Indexed(Constant("Bed"))
+
+            return Column(expanded_puddles, self.get_outer_component)(environment)

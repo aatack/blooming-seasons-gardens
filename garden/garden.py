@@ -1,7 +1,8 @@
 from components.component import Anonymous, Component
 from components.positioning import Move, Scroll
-from settings import EDITOR_SCROLL_SPEED, EDITOR_WIDTH
-from trickle import Derived, Keyed, Overlay
+from components.presentation import Background, Fill
+from settings import EDITOR_BACKGROUND_COLOUR, EDITOR_SCROLL_SPEED, EDITOR_WIDTH
+from trickle import Derived, Keyed, Overlay, environment
 
 from garden.element import Element
 
@@ -16,14 +17,20 @@ class Garden(Keyed):
 
     @property
     def component(self) -> Component:
-        return Anonymous(
-            lambda environment: Derived(
+        def component(environment: environment.Environment) -> Derived:
+            plan = Move(
+                self.element.plan,
+                horizontal=environment.screen.width * EDITOR_WIDTH,
+            )
+            editor = Background(
+                Fill(Scroll(self.element.editor, scroll_speed=EDITOR_SCROLL_SPEED)),
+                EDITOR_BACKGROUND_COLOUR,
+            )
+
+            return Derived(
                 lambda p, e: Overlay(p, e),
-                Move(
-                    self.element.plan,
-                    horizontal=environment.screen.width * EDITOR_WIDTH,
-                )(environment),
-                Scroll(self.element.editor, scroll_speed=EDITOR_SCROLL_SPEED)(
+                plan(environment),
+                editor(
                     environment.where(
                         screen=environment.screen.resize(
                             width=environment.screen.width * EDITOR_WIDTH
@@ -31,4 +38,5 @@ class Garden(Keyed):
                     )
                 ),
             )
-        )
+
+        return Anonymous(component)

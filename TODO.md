@@ -35,13 +35,20 @@ List of things that still need to be done in the project.
 
 ## Features
 
--   Allow the basic elements to be drawn.
-    Each one will have two drawing modes:
+-   ~~Allow the basic elements to be drawn.
+    Each one will have two drawing modes:~~
     -   ~~**plan view**: a top-down view of the element as it will appear in the final plan.~~
     -   ~~**editor view**: a UI box that will appear on the left hand side of the screen, and allow minutiae to be edited in fine detail.~~
 
-    The plan view is likely to be the easier of the two, so we will start there, and initially will not have the elements respond to any user inputs.
+    ~~The plan view is likely to be the easier of the two, so we will start there, and initially will not have the elements respond to any user inputs.~~
 -   Look into using pyglet for hardware acceleration (currently quite CPU-intensive).
+-   Force components to only be instantiated once.
+-   Collapsible editor panes.
+-   Work out how to limit the bounds of scrollable components (this may require intercepting events sent between trickles).
+-   Allow string values to be edited.
+-   Background images.
+-   Adding new beds, flowers, labels, and arrows.
+-   Saving and loading.
 
 ## Notes
 
