@@ -49,6 +49,19 @@ class Screen(Keyed):
             height=Derived(shrink, self.height, amount),
         )
 
+    def contains_mouse(self, mouse: "Mouse") -> Puddle[bool]:
+        def contains_mouse(
+            width: Optional[float], height: Optional[float], x: float, y: float
+        ) -> bool:
+            return (
+                x >= 0
+                and ((width is None) or x < width)
+                and y >= 0
+                and ((height is None) or y < height)
+            )
+
+        return Derived(contains_mouse, self.width, self.height, mouse.x, mouse.y)
+
 
 class Mouse(Keyed):
     # TODO: handle modifiers and utils for things like click to drag/offsetting
@@ -66,6 +79,14 @@ class Mouse(Keyed):
         self.x = x
         self.y = y
 
+        self.click_listeners: Dict[Tuple[int, bool], List[Callable]] = {}
+
+    def add_listener(self, button: int, down: bool, listener: Callable):
+        pair = (button, down)
+        if pair not in self.click_listeners:
+            self.click_listeners[pair] = []
+        self.click_listeners[pair].append(listener)
+
     def move(self, x: float, y: float):
         assert isinstance(self.x, Variable)
         self.x.change(x)
@@ -74,6 +95,8 @@ class Mouse(Keyed):
         self.y.change(y)
 
     def click(self, button: int, down: bool):
+        for listener in self.click_listeners.get((button, down), []):
+            listener()
         self.broadcast(Mouse.Click(self.x.value(), self.y.value(), button, down))
 
     def respond(self, path: Path, event: Any):

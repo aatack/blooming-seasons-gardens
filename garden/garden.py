@@ -1,5 +1,5 @@
 from components.component import Anonymous, Component
-from components.positioning import Move
+from components.positioning import Move, Scroll
 from settings import EDITOR_WIDTH
 from trickle import Derived, Keyed, Overlay
 
@@ -23,7 +23,7 @@ class Garden(Keyed):
                     self.element.plan,
                     horizontal=environment.screen.width * EDITOR_WIDTH,
                 )(environment),
-                self.element.editor(
+                Scroll(self.element.editor)(
                     environment.where(
                         screen=environment.screen.resize(
                             width=environment.screen.width * EDITOR_WIDTH
