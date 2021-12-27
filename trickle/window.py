@@ -40,7 +40,10 @@ class Window:
         )
 
         self.time = 0.0
+
         self.time_since_last_fps = 1.0
+        self.time_since_last_draw = 1.0
+
         self.last_fps = ""
 
     def run(self, view: Puddle):
@@ -55,13 +58,7 @@ class Window:
 
     def loop(self, view: Puddle) -> bool:
         step = self.get_step()
-
-        self.surface.fill(tuple(int(colour * 255) for colour in self.background_colour))
-        view.value().render(self.surface)
-
-        self.draw_fps(step)
-
-        pygame.display.flip()
+        self.draw(view, step)
 
         for event in pygame.event.get():
             if event.type == pygame.VIDEORESIZE:
@@ -105,13 +102,28 @@ class Window:
     def get_step(self) -> float:
         _time = time()
         step = _time - self.time
+
         self.time = _time
+
+        self.time_since_last_fps += step
+        self.time_since_last_draw += step
+
         return step
 
-    def draw_fps(self, step: float):
+    def fps(self, step: float):
         if self.time_since_last_fps > 0.1 and step > 0:
             self.time_since_last_fps = 0.0
             self.last_fps = f"{1 / step:.2f}"
-        else:
-            self.time_since_last_fps += step
         self.surface.blit(Surface.text(self.last_fps, 12).surface, (5, 5))
+
+    def draw(self, view: Puddle, step: float):
+        if self.time_since_last_draw > 0.016:
+            self.surface.fill(
+                tuple(int(colour * 255) for colour in self.background_colour)
+            )
+            view.value().render(self.surface)
+
+            self.fps(step)
+
+            pygame.display.flip()
+            self.time_since_last_draw = 0.0
