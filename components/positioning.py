@@ -41,11 +41,18 @@ class Scroll(Component):
         self._scroll_speed = scroll_speed
         self._scroll_position = Variable(0)
 
+        # Amount by which the environment height is less than the component height; used
+        # to clip the scroll position appropriately
+        self._height_deficit: Puddle[float] = Variable(0.0)
+
     def scroll_down(self, active: Puddle[bool]):
         def scroll_down():
             if active.value():
+                deficit = self._height_deficit.value()
                 self._scroll_position.change_as_function(
-                    lambda s: s - self._scroll_speed
+                    lambda s: max(
+                        -deficit if deficit >= 0 else 0, s - self._scroll_speed
+                    )
                 )
 
         return scroll_down
@@ -71,4 +78,18 @@ class Scroll(Component):
             self.scroll_up(environment.screen.contains_mouse(environment.mouse)),
         )
 
-        return Move(self._component, vertical=self._scroll_position)(environment)
+        component = self._component(
+            environment.where(
+                mouse=environment.mouse.offset(vertical=self._scroll_position)
+            )
+        )
+
+        self._height_deficit = Derived(
+            lambda c, h: c.vertical_extent() - h, component, environment.screen.height
+        )
+
+        return Derived(
+            lambda c, y: Reposition(c, vertical_offset=y),
+            component,
+            self._scroll_position,
+        )
