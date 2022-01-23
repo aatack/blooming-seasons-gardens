@@ -2,6 +2,7 @@ from time import time
 from typing import Any, Optional
 
 import pygame
+from settings import VALIDATE_MOUSE_POSITION
 
 from trickle.environment import Environment
 from trickle.trickles.interaction import Keyboard, Mouse, Screen
@@ -90,15 +91,17 @@ class Window:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
 
-                assert x == self.environment.mouse.x.value()
-                assert y == self.environment.mouse.y.value()
+                if VALIDATE_MOUSE_POSITION:
+                    assert x == self.environment.mouse.x.value()
+                    assert y == self.environment.mouse.y.value()
 
                 self.environment.mouse.click(event.button, True)
             if event.type == pygame.MOUSEBUTTONUP:
                 x, y = event.pos
 
-                assert x == self.environment.mouse.x.value()
-                assert y == self.environment.mouse.y.value()
+                if VALIDATE_MOUSE_POSITION:
+                    assert x == self.environment.mouse.x.value()
+                    assert y == self.environment.mouse.y.value()
 
                 self.environment.mouse.click(event.button, False)
 
