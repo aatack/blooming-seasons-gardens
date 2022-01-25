@@ -2,6 +2,7 @@ from typing import List, Union
 
 from components.column import Column
 from components.component import Anonymous, Component
+from components.control import Button
 from components.positioning import Move
 from components.presentation import Background
 from garden.element import Element
@@ -39,9 +40,7 @@ class Bed(Element):
             assert isinstance(element, Element)
 
         super().__init__(
-            elements=Indexed(*elements),
-            horizontal=horizontal,
-            vertical=vertical,
+            elements=Indexed(*elements), horizontal=horizontal, vertical=vertical,
         )
 
     @property
