@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Union
+from typing import Callable, List, Tuple, Union
 
 from trickle import (
     Constant,
@@ -67,3 +67,22 @@ class TextColumn(Column):
             )
 
         super().__init__(puddles, get_component)
+
+
+class ComponentColumn(Component):
+    def __init__(self, *components: Component):
+        super().__init__()
+
+        self._components = components
+
+    def __call__(self, environment: Environment) -> Puddle[Visual]:
+        visuals: List[Puddle] = []
+        current_height = Constant(0.0)
+
+        for component in self._components:
+            assert isinstance(component, Component)
+            visual = Move(component, vertical=current_height)(environment)
+            current_height = Derived(lambda v: v.vertical_extent(), visual)
+            visuals.append(visual)
+
+        return Derived(lambda v: Overlay(*v), Indexed(*visuals))

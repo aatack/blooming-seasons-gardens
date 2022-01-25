@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from components.column import Column
+from components.column import Column, ComponentColumn
 from components.component import Anonymous, Component
 from components.control import Button
 from components.positioning import Move
@@ -144,4 +144,10 @@ class Bed(Element):
             # TODO: allow beds to be collapsed
             collapsed_puddles = Indexed(Constant("Bed"))
 
-            return Column(expanded_puddles, self.get_outer_component)(environment)
+            return ComponentColumn(
+                Button("Add plant", lambda: print("Add plant")),
+                Button("Add bed", lambda: print("Add bed")),
+                Button("Add label", lambda: print("Add label")),
+                Button("Add arrow", lambda: print("Add arrow")),
+                Column(expanded_puddles, self.get_outer_component),
+            )(environment)
