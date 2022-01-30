@@ -65,8 +65,10 @@ class Derived(Puddle):
             self.listen((key,), puddle)
 
     def respond(self, path: Path, event: Any):
+        previous_value = self.current_value
         self.current_value = self.compute()
-        self.broadcast(Derived.Changed())
+        if self.current_value != previous_value:
+            self.broadcast(Derived.Changed())
 
     def value(self) -> T:
         return self.current_value

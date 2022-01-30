@@ -4,10 +4,15 @@ from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived, Variable
+from trickle.visuals.overlay import Overlay
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
 from components.component import Component
+
+BACKGROUND_COLOUR = (84 / 255, 122 / 255, 184 / 255)
+HOVER_COLOUR = (121 / 255, 155 / 255, 209 / 255)
+CLICK_COLOUR = (165 / 255, 190 / 255, 230 / 255)
 
 
 class Button(Component):
@@ -27,11 +32,14 @@ class Button(Component):
         else:
             visual = self._component(environment)
 
+        width = Derived(lambda v: v.horizontal_extent(), visual)
+        height = Derived(lambda v: v.vertical_extent(), visual)
+
         contains_mouse = Derived(
             lambda m, w, h: 0 <= m["x"] < w and 0 <= m["y"] < h,
             environment.mouse,
-            Derived(lambda v: v.horizontal_extent(), visual),
-            Derived(lambda v: v.vertical_extent(), visual),
+            width,
+            height,
         )
         clicked = Variable(False)
 
@@ -40,14 +48,31 @@ class Button(Component):
                 clicked.change(True)
 
         def mouse_up():
-            if clicked.value() and contains_mouse.value():
-                self._callback()
-            clicked.change(False)
+            if clicked.value():
+                clicked.change(False)
+                if contains_mouse.value():
+                    self._callback()
 
         environment.mouse.add_listener(1, True, mouse_down)
         environment.mouse.add_listener(1, False, mouse_up)
 
-        return visual
+        colour = Derived(
+            lambda _clicked, _contains_mouse: CLICK_COLOUR
+            if _clicked
+            else (HOVER_COLOUR if _contains_mouse else BACKGROUND_COLOUR),
+            clicked,
+            contains_mouse,
+        )
+
+        return Derived(
+            lambda v, w, h, c: Overlay(
+                Surface.rectangle(w, h, red=c[0], green=c[1], blue=c[2]), v
+            ),
+            visual,
+            width,
+            height,
+            colour,
+        )
 
 
 class Entry(Component):
