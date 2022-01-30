@@ -4,7 +4,7 @@ from components.column import Column, ComponentColumn
 from components.component import Anonymous, Component
 from components.control import Button
 from components.positioning import Move
-from components.presentation import Background
+from components.presentation import Background, Fill, Pad
 from garden.element import Element
 from settings import (
     EDITOR_BACKGROUND_COLOUR,
@@ -144,10 +144,12 @@ class Bed(Element):
             # TODO: allow beds to be collapsed
             collapsed_puddles = Indexed(Constant("Bed"))
 
-            return ComponentColumn(
-                Button("Add plant", lambda: print("Add plant")),
-                Button("Add bed", lambda: print("Add bed")),
-                Button("Add label", lambda: print("Add label")),
-                Button("Add arrow", lambda: print("Add arrow")),
-                Column(expanded_puddles, self.get_outer_component),
+            return Move(
+                ComponentColumn(
+                    Pad(Button("Add plant", lambda: print("Add plant")), 2),
+                    Pad(Button("Add bed", lambda: print("Add bed")), 2),
+                    Pad(Button("Add label", lambda: print("Add label")), 2),
+                    Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
+                    Column(expanded_puddles, self.get_outer_component),
+                ),
             )(environment)

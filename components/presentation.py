@@ -55,8 +55,9 @@ class Pad(Component):
         return Derived(
             lambda v, p, w, h: Reposition(
                 v,
-                crop_right=self.crop_size(v.horizontal_extent(), p, w),
-                crop_bottom=self.crop_size(v.vertical_extent(), p, h),
+                # TODO: work out why uncommenting the below causes buggy behaviour
+                # crop_right=self.crop_size(v.horizontal_extent(), p, w),
+                # crop_bottom=self.crop_size(v.vertical_extent(), p, h),
             ),
             Move(self._component, vertical=self._padding, horizontal=self._padding)(
                 shrunk_environment
