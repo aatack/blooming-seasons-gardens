@@ -1,6 +1,5 @@
-from typing import Callable, Optional
-
 import pygame
+from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
@@ -14,9 +13,14 @@ class Reposition(Visual):
         self.y = y
 
     def simplify(self) -> "Visual":
+        from trickle.visuals.crop import Crop
+
         simplified_visual = self.visual.simplify()
 
-        if isinstance(simplified_visual, Overlay):
+        if isinstance(simplified_visual, Empty):
+            return simplified_visual
+
+        elif isinstance(simplified_visual, Overlay):
             return Overlay(
                 *[
                     Reposition(visual, x=self.x, y=self.y).simplify()
@@ -37,6 +41,11 @@ class Reposition(Visual):
                 x=self.x + simplified_visual.x,
                 y=self.y + simplified_visual.y,
             )
+
+        elif isinstance(simplified_visual, Crop):
+            # TODO: work out if this can be reliably simplified further, but probably
+            #       not
+            return Reposition(simplified_visual, x=self.x, y=self.y)
 
         else:
             raise Exception("Implementation error")
