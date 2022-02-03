@@ -1,7 +1,5 @@
 import pygame
 import pygame.freetype
-from trickle.visuals.overlay import Overlay
-from trickle.visuals.reposition import Reposition
 from trickle.visuals.visual import Visual
 
 
