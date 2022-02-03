@@ -15,12 +15,7 @@ class Visual(abc.ABC):
 
     @abc.abstractmethod
     def simplify(self) -> "Visual":
-        """
-        Simplify the structure of the visual where possible.
-
-        The simplified visual must be an overlay containing repositions, each of which
-        contains a surface.
-        """
+        """Simplify the structure of the visual where possible."""
 
     @abc.abstractmethod
     def render(self, surface: pygame.Surface):
@@ -31,37 +26,26 @@ class Visual(abc.ABC):
         """
 
     @abc.abstractmethod
-    def horizontal_extent(self) -> float:
-        """Get the visual's maximum extent in the positive x-direction."""
-
-    @abc.abstractmethod
-    def vertical_extent(self) -> float:
+    def top(self) -> float:
         """Get the visual's maximum extent in the negative y-direction."""
 
-    def assert_simplified(self: "Visual"):
-        from trickle.visuals.overlay import Overlay
+    @abc.abstractmethod
+    def left(self) -> float:
+        """Get the visual's maximum extent in the negative x-direction."""
 
-        assert isinstance(
-            self, Overlay
-        ), "Simplified visuals must have an overlay at their top level"
+    @abc.abstractmethod
+    def bottom(self) -> float:
+        """Get the visual's maximum extent in the positive y-direction."""
 
-        from trickle.visuals.reposition import Reposition
-        from trickle.visuals.surface import Surface
-
-        for child in self.visuals:
-            assert isinstance(child, Reposition), (
-                "Each child of the outer overlay in a simplified visual must be a "
-                "reposition"
-            )
-            assert isinstance(
-                child.visual, Surface
-            ), "Each leaf in a simplified visual must be a surface"
+    @abc.abstractmethod
+    def right(self) -> float:
+        """Get the visual's maximum extent in the positive x-direction."""
 
     def render_from_scratch(self, transparent: bool = False) -> pygame.Surface:
         from trickle.visuals.surface import Surface
 
         surface = Surface.empty(
-            self.horizontal_extent(), self.vertical_extent(), transparent=transparent
+            self.right(), self.bottom(), transparent=transparent
         ).surface
         self.render(surface)
 

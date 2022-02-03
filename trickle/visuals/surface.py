@@ -60,17 +60,25 @@ class Surface(Visual):
             surface = text_surface
         return Surface(surface)
 
-    def __init__(self, surface: pygame.Surface):
+    def __init__(self, surface: pygame.Surface, x: float = 0.0, y: float = 0.0):
         self.surface = surface
+        self.x = x
+        self.y = y
 
     def simplify(self) -> "Visual":
-        return Overlay(Reposition(self))
+        return self
 
     def render(self, surface: pygame.Surface):
-        surface.blit(self.surface, (0, 0))
+        surface.blit(self.surface, (int(self.x), int(self.y)))
 
-    def horizontal_extent(self) -> float:
-        return float(self.surface.get_size()[0])
+    def top(self) -> float:
+        return self.y
 
-    def vertical_extent(self) -> float:
-        return float(self.surface.get_size()[1])
+    def left(self) -> float:
+        return self.x
+
+    def bottom(self) -> float:
+        return self.y + float(self.surface.get_size()[1])
+
+    def right(self) -> float:
+        return self.x + float(self.surface.get_size()[0])
