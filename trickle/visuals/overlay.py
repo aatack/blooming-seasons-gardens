@@ -12,9 +12,8 @@ class Overlay(Visual):
 
         for visual in self.visuals:
             simplified_visual = visual.simplify()
-            if isinstance(simplified_visual, Empty):
-                continue
-            elif isinstance(simplified_visual, Overlay):
+            if isinstance(simplified_visual, Overlay):
+                # TODO: work out how to handle multiple empty visuals
                 visuals.extend(simplified_visual.visuals)
             else:
                 visuals.extend(simplified_visual)

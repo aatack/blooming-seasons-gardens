@@ -18,7 +18,7 @@ class Crop(Visual):
         simplified_visual = self.visual.simplify()
 
         if isinstance(simplified_visual, Empty):
-            return simplified_visual
+            return Empty(self)
 
         elif (self.right() <= self.left()) or (self.bottom() <= self.top()):
             return Empty(self)

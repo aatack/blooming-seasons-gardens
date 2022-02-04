@@ -18,7 +18,7 @@ class Reposition(Visual):
         simplified_visual = self.visual.simplify()
 
         if isinstance(simplified_visual, Empty):
-            return simplified_visual
+            return Empty(self)
 
         elif isinstance(simplified_visual, Overlay):
             return Overlay(
