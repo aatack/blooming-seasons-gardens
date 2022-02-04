@@ -17,12 +17,11 @@ class Crop(Visual):
 
         simplified_visual = self.visual.simplify()
 
-        if (
-            isinstance(simplified_visual, Empty)
-            or (self.right() <= self.left())
-            or (self.bottom() <= self.top())
-        ):
-            return Empty()
+        if isinstance(simplified_visual, Empty):
+            return simplified_visual
+
+        elif (self.right() <= self.left()) or (self.bottom() <= self.top()):
+            return Empty(right=self.right(), bottom=self.bottom())
 
         elif isinstance(simplified_visual, Overlay):
             return Overlay(
@@ -38,13 +37,39 @@ class Crop(Visual):
             return Crop(simplified_visual, self.width, self.height)
 
         elif isinstance(simplified_visual, Surface):
-            return Surface(
-                simplified_visual.surface.subsurface(
-                    0, 0, int(self.width), int(self.height)
-                ),
-                x=simplified_visual.x,
-                y=simplified_visual.y,
-            )
+            if (
+                simplified_visual.right() <= self.width
+                and simplified_visual.bottom() <= self.height
+            ):
+                return simplified_visual
+            elif (
+                self.width < simplified_visual.left()
+                or self.height < simplified_visual.top()
+            ):
+                return Empty(right=self.width, bottom=self.height)
+            else:
+                return Surface(
+                    simplified_visual.surface.subsurface(
+                        (
+                            0,
+                            0,
+                            int(
+                                min(
+                                    self.width - simplified_visual.x,
+                                    simplified_visual.surface.get_size()[0],
+                                )
+                            ),
+                            int(
+                                min(
+                                    self.height - simplified_visual.y,
+                                    simplified_visual.surface.get_size()[1],
+                                )
+                            ),
+                        )
+                    ),
+                    x=simplified_visual.x,
+                    y=simplified_visual.y,
+                )
 
         elif isinstance(simplified_visual, Crop):
             return Crop(
@@ -57,7 +82,9 @@ class Crop(Visual):
             raise Exception("Implementation error")
 
     def render(self, surface: pygame.Surface):
-        visual_surface = pygame.Surface((int(self.width), int(self.height)))
+        visual_surface = Surface.empty(
+            self.width, self.height, transparent=True
+        ).surface
         self.visual.render(visual_surface)
         # TODO: consider adding a starting x and y
         surface.blit(visual_surface, (0, 0))

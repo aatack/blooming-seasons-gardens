@@ -19,6 +19,8 @@ class Surface(Visual):
         red: float = 0.0,
         green: float = 0.0,
         blue: float = 0.0,
+        x: float = 0.0,
+        y: float = 0.0,
     ) -> "Surface":
         surface = Surface.empty(width, height).surface
 
@@ -26,7 +28,7 @@ class Surface(Visual):
         colour = (int(red * 255), int(green * 255), int(blue * 255))
 
         pygame.draw.rect(surface, colour, rectangle)
-        return Surface(surface)
+        return Surface(surface, x=x, y=y)
 
     @staticmethod
     def circle(
