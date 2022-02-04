@@ -3,17 +3,11 @@ from trickle.visuals.visual import Visual
 
 
 class Empty(Visual):
-    def __init__(
-        self,
-        top: float = 0.0,
-        left: float = 0.0,
-        bottom: float = 0.0,
-        right: float = 0.0,
-    ):
-        self._top = top
-        self._left = left
-        self._bottom = bottom
-        self._right = right
+    def __init__(self, visual: Visual):
+        self._top = visual.top()
+        self._left = visual.left()
+        self._bottom = visual.bottom()
+        self._right = visual.right()
 
     def simplify(self) -> "Visual":
         return self

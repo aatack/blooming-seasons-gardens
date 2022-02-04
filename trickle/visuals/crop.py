@@ -21,7 +21,7 @@ class Crop(Visual):
             return simplified_visual
 
         elif (self.right() <= self.left()) or (self.bottom() <= self.top()):
-            return Empty(right=self.right(), bottom=self.bottom())
+            return Empty(self)
 
         elif isinstance(simplified_visual, Overlay):
             return Overlay(
@@ -46,7 +46,7 @@ class Crop(Visual):
                 self.width < simplified_visual.left()
                 or self.height < simplified_visual.top()
             ):
-                return Empty(right=self.width, bottom=self.height)
+                return Empty(self)
             else:
                 return Surface(
                     simplified_visual.surface.subsurface(
