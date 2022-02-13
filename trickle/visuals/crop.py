@@ -12,7 +12,7 @@ class Crop(Visual):
         self.width = width
         self.height = height
 
-    def simplify(self) -> "Visual":
+    def _simplify(self) -> "Visual":
         from trickle.visuals.reposition import Reposition
 
         simplified_visual = self.visual.simplify()

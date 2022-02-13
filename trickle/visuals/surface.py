@@ -65,7 +65,7 @@ class Surface(Visual):
         self.x = x
         self.y = y
 
-    def simplify(self) -> "Visual":
+    def _simplify(self) -> "Visual":
         return self
 
     def render(self, surface: pygame.Surface):

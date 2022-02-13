@@ -7,7 +7,7 @@ class Overlay(Visual):
     def __init__(self, *visuals: Visual):
         self.visuals = visuals
 
-    def simplify(self) -> "Visual":
+    def _simplify(self) -> "Visual":
         visuals = []
 
         for visual in self.visuals:

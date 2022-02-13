@@ -12,7 +12,7 @@ class Reposition(Visual):
         self.x = x
         self.y = y
 
-    def simplify(self) -> "Visual":
+    def _simplify(self) -> "Visual":
         from trickle.visuals.crop import Crop
 
         simplified_visual = self.visual.simplify()

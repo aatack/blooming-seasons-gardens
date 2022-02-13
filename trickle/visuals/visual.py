@@ -13,8 +13,18 @@ class Visual(abc.ABC):
     achieved using simpler NamedTuple objects if performance ever does become an issue.
     """
 
-    @abc.abstractmethod
     def simplify(self) -> "Visual":
+        visual = self._simplify()
+
+        assert visual.top() == self.top()
+        assert visual.left() == self.left()
+        assert visual.bottom() == self.bottom()
+        assert visual.right() == self.right()
+
+        return visual
+
+    @abc.abstractmethod
+    def _simplify(self) -> "Visual":
         """Simplify the structure of the visual where possible."""
 
     @abc.abstractmethod
