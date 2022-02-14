@@ -62,6 +62,8 @@ class Arrow(Element):
 
     class Plan(Component):
         def __init__(self, arrow: "Arrow"):
+            super().__init__()
+
             self._arrow = arrow
 
         @staticmethod
@@ -86,8 +88,8 @@ class Arrow(Element):
             )
             return surface
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
-            return Derived(
+        def construct(self, environment: Environment):
+            self._visual = Derived(
                 self.plan,
                 self._arrow.start_horizontal,
                 self._arrow.start_vertical,
@@ -96,11 +98,19 @@ class Arrow(Element):
                 self._arrow.width,
             )
 
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass
+
     class Editor(Component):
         def __init__(self, arrow: "Arrow"):
+            super().__init__()
+
             self._arrow = arrow
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
+        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Arrow"),
                 "Start: ("
@@ -114,7 +124,7 @@ class Arrow(Element):
                 + Derived(str, self._arrow.end_vertical)
                 + ")",
             )
-            return Card(
+            self._visual = Card(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -123,3 +133,9 @@ class Arrow(Element):
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
             )(environment)
+
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass

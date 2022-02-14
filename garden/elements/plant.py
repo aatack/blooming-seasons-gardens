@@ -83,6 +83,8 @@ class Plant(Element):
 
     class Plan(Component):
         def __init__(self, plant: "Plant"):
+            super().__init__()
+
             self._plant = plant
 
         @staticmethod
@@ -109,8 +111,8 @@ class Plant(Element):
                 y=y * SCALE,
             )
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
-            return Derived(
+        def construct(self, environment: Environment):
+            self._visual = Derived(
                 self.plan,
                 self._plant.size,
                 self._plant.horizontal,
@@ -120,11 +122,19 @@ class Plant(Element):
                 self._plant.blue,
             )
 
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass
+
     class Editor(Component):
         def __init__(self, plant: "Plant"):
+            super().__init__()
+
             self._plant = plant
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
+        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Plant"),
                 "Name: " + self._plant.name,
@@ -135,7 +145,7 @@ class Plant(Element):
                 + Derived(str, self._plant.vertical)
                 + ")",
             )
-            return Card(
+            self._visual = Card(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -144,3 +154,9 @@ class Plant(Element):
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
             )(environment)
+
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass

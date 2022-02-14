@@ -19,10 +19,12 @@ from components.positioning import Move
 
 class Column(Component):
     def __init__(self, puddles: Indexed, get_component: Callable[[Puddle], Component]):
+        super().__init__()
+
         self._puddles = puddles
         self._get_component = get_component
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         resized_environment = environment.where(
             screen=environment.screen.resize(height=None)
         )
@@ -45,10 +47,16 @@ class Column(Component):
             updated_state = Derived(lambda v: v.bottom(), repositioned_visual)
             return updated_state, repositioned_visual
 
-        return Derived(
+        self._visual = Derived(
             lambda visuals: Overlay(*visuals),
             Folded(initial=Constant(0.0), function=function, indexed=self._puddles),
         )
+
+        # TODO: check this environment is correct
+        self._environment = resized_environment
+
+    def deconstruct(self):
+        pass
 
 
 class TextColumn(Column):
@@ -75,7 +83,7 @@ class ComponentColumn(Component):
 
         self._components = components
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         visuals: List[Puddle] = []
         current_height = Constant(0.0)
 
@@ -85,4 +93,10 @@ class ComponentColumn(Component):
             current_height = Derived(lambda v: v.bottom(), visual)
             visuals.append(visual)
 
-        return Derived(lambda v: Overlay(*v), Indexed(*visuals))
+        self._visual = Derived(lambda v: Overlay(*v), Indexed(*visuals))
+
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass

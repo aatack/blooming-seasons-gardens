@@ -22,7 +22,7 @@ class Button(Component):
         self._component = component
         self._callback = callback
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         if isinstance(self._component, str):
             visual = Constant(
                 Surface.text(
@@ -64,7 +64,7 @@ class Button(Component):
             contains_mouse,
         )
 
-        return Derived(
+        self._visual = Derived(
             lambda v, w, h, c: Overlay(
                 Surface.rectangle(w, h, red=c[0], green=c[1], blue=c[2]), v
             ),
@@ -73,6 +73,12 @@ class Button(Component):
             height,
             colour,
         )
+
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass
 
 
 class Entry(Component):

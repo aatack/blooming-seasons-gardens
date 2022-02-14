@@ -13,12 +13,14 @@ class Move(Component):
         horizontal: Union[Puddle, float] = 0.0,
         vertical: Union[Puddle, float] = 0.0,
     ):
+        super().__init__()
+
         self._component = component
         self._horizontal = puddle(horizontal)
         self._vertical = puddle(vertical)
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
-        return Derived(
+    def construct(self, environment: Environment):
+        self._visual = Derived(
             lambda v, x, y: Reposition(v, x=x, y=y),
             self._component(
                 environment.where(
@@ -31,12 +33,20 @@ class Move(Component):
             self._vertical,
         )
 
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass
+
 
 class Scroll(Component):
     SCROLL_DOWN_BUTTON = 5
     SCROLL_UP_BUTTON = 4
 
     def __init__(self, component: Component, scroll_speed: float = 25.0):
+        super().__init__()
+
         self._component = component
         self._scroll_speed = scroll_speed
         self._scroll_position = Variable(0)
@@ -66,7 +76,7 @@ class Scroll(Component):
 
         return scroll_up
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         environment.mouse.add_listener(
             self.SCROLL_DOWN_BUTTON,
             True,
@@ -88,6 +98,12 @@ class Scroll(Component):
             lambda c, h: c.bottom() - h, component, environment.screen.height
         )
 
-        return Derived(
+        self._visual = Derived(
             lambda c, y: Reposition(c, y=y), component, self._scroll_position,
         )
+
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass

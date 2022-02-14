@@ -28,10 +28,12 @@ class Fill(Component):
 
         Note that this is similar to applying a pad operation with a zero pad size.
         """
+        super().__init__()
+
         self._component = component
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
-        return Derived(
+    def construct(self, environment: Environment):
+        self._visual = Derived(
             lambda v, w, h: Crop(
                 v,
                 width=w if w is not None else v.right(),
@@ -42,18 +44,26 @@ class Fill(Component):
             environment.screen.height,
         )
 
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass
+
 
 class Pad(Component):
     def __init__(self, component: Component, padding: Union[Puddle, float]):
+        super().__init__()
+
         self._component = component
         self._padding = puddle(padding)
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         shrunk_environment = environment.where(
             screen=environment.screen.shrink(self._padding * 2)
         )
 
-        return Derived(
+        self._visual = Derived(
             lambda v, p, w, h: Reposition(
                 v,
                 # TODO: work out why uncommenting the below causes buggy behaviour
@@ -68,6 +78,12 @@ class Pad(Component):
             shrunk_environment.screen.height,
         )
 
+        # TODO: check this environment is correct
+        self._environment = shrunk_environment
+
+    def deconstruct(self):
+        pass
+
     @staticmethod
     def crop_size(extent: float, padding: float, window: Optional[float]) -> float:
         return window + (2 * padding) if window is not None else extent + padding
@@ -75,12 +91,14 @@ class Pad(Component):
 
 class Background(Component):
     def __init__(self, component: Component, colour: Tuple[float, float, float]):
+        super().__init__()
+
         self._component = component
         self._colour = colour
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
+    def construct(self, environment: Environment):
         visual = self._component(environment)
-        return Derived(
+        self._visual = Derived(
             lambda v: Overlay(
                 Surface.rectangle(
                     v.right(),
@@ -94,16 +112,30 @@ class Background(Component):
             visual,
         )
 
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass
+
 
 class Card(Component):
     def __init__(
         self, component: Component, colour: Tuple[float, float, float], padding: int
     ):
+        super().__init__()
+
         self._component = component
         self._colour = colour
         self._padding = padding
 
-    def __call__(self, environment: Environment) -> Puddle[Visual]:
-        return Pad(Background(Fill(self._component), self._colour), self._padding)(
-            environment
-        )
+    def construct(self, environment: Environment):
+        self._visual = Pad(
+            Background(Fill(self._component), self._colour), self._padding
+        )(environment)
+
+        # TODO: check this environment is correct
+        self._environment = environment
+
+    def deconstruct(self):
+        pass

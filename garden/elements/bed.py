@@ -67,9 +67,11 @@ class Bed(Element):
 
     class Plan(Component):
         def __init__(self, bed: "Bed"):
+            super().__init__()
+
             self._bed = bed
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
+        def construct(self, environment: Environment):
             offset_environment = environment.where(
                 mouse=environment.mouse.offset(
                     Derived(lambda h: h * SCALE, self._bed.horizontal),
@@ -88,15 +90,23 @@ class Bed(Element):
                 visuals: List[Visual], horizontal: float, vertical: float
             ) -> Visual:
                 return Reposition(
-                    Overlay(*visuals),
-                    x=horizontal * SCALE,
-                    y=vertical * SCALE,
+                    Overlay(*visuals), x=horizontal * SCALE, y=vertical * SCALE,
                 )
 
-            return Derived(plan, mapped, self._bed.horizontal, self._bed.vertical)
+            self._visual = Derived(
+                plan, mapped, self._bed.horizontal, self._bed.vertical
+            )
+
+            # TODO: check this environment is correct
+            self._environment = offset_environment
+
+        def deconstruct(self):
+            pass
 
     class Editor(Component):
         def __init__(self, bed: "Bed"):
+            super().__init__()
+
             self._bed = bed
             self._collapsed = Variable(False)
 
@@ -130,7 +140,7 @@ class Bed(Element):
                     )
                 )
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
+        def construct(self, environment: Environment):
             expanded_puddles = Indexed(
                 Constant("Bed"),
                 "Position: ("
@@ -144,7 +154,7 @@ class Bed(Element):
             # TODO: allow beds to be collapsed
             collapsed_puddles = Indexed(Constant("Bed"))
 
-            return Move(
+            self._visual = Move(
                 ComponentColumn(
                     Pad(Button("Add plant", lambda: print("Add plant")), 2),
                     Pad(Button("Add bed", lambda: print("Add bed")), 2),
@@ -153,3 +163,9 @@ class Bed(Element):
                     Column(expanded_puddles, self.get_outer_component),
                 ),
             )(environment)
+
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass

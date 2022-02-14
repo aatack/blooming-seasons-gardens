@@ -59,14 +59,16 @@ class Label(Element):
 
     class Plan(Component):
         def __init__(self, label: "Label"):
+            super().__init__()
+
             self._label = label
 
         @staticmethod
         def plan(text: str, size: int, x: float, y: float) -> Visual:
             return Reposition(Surface.text(text, size), x=x * SCALE, y=y * SCALE,)
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
-            return Derived(
+        def construct(self, environment: Environment):
+            self._visual = Derived(
                 self.plan,
                 self._label.text,
                 self._label.size,
@@ -74,11 +76,19 @@ class Label(Element):
                 self._label.vertical,
             )
 
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass
+
     class Editor(Component):
         def __init__(self, label: "Label"):
+            super().__init__()
+
             self._label = label
 
-        def __call__(self, environment: Environment) -> Puddle[Visual]:
+        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Label"),
                 "Text: " + Derived(str, self._label.text),
@@ -90,7 +100,7 @@ class Label(Element):
                 + ")",
             )
 
-            return Card(
+            self._visual = Card(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -99,3 +109,9 @@ class Label(Element):
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
             )(environment)
+
+            # TODO: check this environment is correct
+            self._environment = environment
+
+        def deconstruct(self):
+            pass
