@@ -97,9 +97,6 @@ class Bed(Element):
                 plan, mapped, self._bed.horizontal, self._bed.vertical
             )
 
-            # TODO: check this environment is correct
-            self._environment = offset_environment
-
         def deconstruct(self):
             pass
 
@@ -163,9 +160,6 @@ class Bed(Element):
                     Column(expanded_puddles, self.get_outer_component),
                 ),
             )(environment)
-
-            # TODO: check this environment is correct
-            self._environment = environment
 
         def deconstruct(self):
             pass

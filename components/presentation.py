@@ -44,9 +44,6 @@ class Fill(Component):
             environment.screen.height,
         )
 
-        # TODO: check this environment is correct
-        self._environment = environment
-
     def deconstruct(self):
         pass
 
@@ -77,9 +74,6 @@ class Pad(Component):
             shrunk_environment.screen.width,
             shrunk_environment.screen.height,
         )
-
-        # TODO: check this environment is correct
-        self._environment = shrunk_environment
 
     def deconstruct(self):
         pass
@@ -112,9 +106,6 @@ class Background(Component):
             visual,
         )
 
-        # TODO: check this environment is correct
-        self._environment = environment
-
     def deconstruct(self):
         pass
 
@@ -133,9 +124,6 @@ class Card(Component):
         self._visual = Pad(
             Background(Fill(self._component), self._colour), self._padding
         )(environment)
-
-        # TODO: check this environment is correct
-        self._environment = environment
 
     def deconstruct(self):
         pass

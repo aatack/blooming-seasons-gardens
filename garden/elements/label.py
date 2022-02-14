@@ -76,9 +76,6 @@ class Label(Element):
                 self._label.vertical,
             )
 
-            # TODO: check this environment is correct
-            self._environment = environment
-
         def deconstruct(self):
             pass
 
@@ -109,9 +106,6 @@ class Label(Element):
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
             )(environment)
-
-            # TODO: check this environment is correct
-            self._environment = environment
 
         def deconstruct(self):
             pass

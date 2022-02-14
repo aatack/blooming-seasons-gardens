@@ -33,9 +33,6 @@ class Move(Component):
             self._vertical,
         )
 
-        # TODO: check this environment is correct
-        self._environment = environment
-
     def deconstruct(self):
         pass
 
@@ -101,9 +98,6 @@ class Scroll(Component):
         self._visual = Derived(
             lambda c, y: Reposition(c, y=y), component, self._scroll_position,
         )
-
-        # TODO: check this environment is correct
-        self._environment = environment
 
     def deconstruct(self):
         pass

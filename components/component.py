@@ -2,6 +2,7 @@ import abc
 from typing import Callable, Optional
 
 from trickle import Environment, Puddle, Visual
+from trickle.trickles.interaction import Screen
 
 
 class Component(abc.ABC):
@@ -28,6 +29,12 @@ class Component(abc.ABC):
     def __call__(self, environment: Environment) -> Puddle[Visual]:
         """Construct a visual representation of a component within an environment."""
         self.construct(environment)
+
+        if self._environment is None:
+            self._environment = environment.where(
+                screen=Screen.for_visual(self._visual)
+            )
+
         self.assert_initialised()
 
         return self._visual

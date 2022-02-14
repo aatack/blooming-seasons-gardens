@@ -74,9 +74,6 @@ class Button(Component):
             colour,
         )
 
-        # TODO: check this environment is correct
-        self._environment = environment
-
     def deconstruct(self):
         pass
 

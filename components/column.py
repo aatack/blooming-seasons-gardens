@@ -52,9 +52,6 @@ class Column(Component):
             Folded(initial=Constant(0.0), function=function, indexed=self._puddles),
         )
 
-        # TODO: check this environment is correct
-        self._environment = resized_environment
-
     def deconstruct(self):
         pass
 
@@ -94,9 +91,6 @@ class ComponentColumn(Component):
             visuals.append(visual)
 
         self._visual = Derived(lambda v: Overlay(*v), Indexed(*visuals))
-
-        # TODO: check this environment is correct
-        self._environment = environment
 
     def deconstruct(self):
         pass

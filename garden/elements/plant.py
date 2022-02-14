@@ -122,9 +122,6 @@ class Plant(Element):
                 self._plant.blue,
             )
 
-            # TODO: check this environment is correct
-            self._environment = environment
-
         def deconstruct(self):
             pass
 
@@ -154,9 +151,6 @@ class Plant(Element):
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
             )(environment)
-
-            # TODO: check this environment is correct
-            self._environment = environment
 
         def deconstruct(self):
             pass
