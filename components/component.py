@@ -3,17 +3,17 @@ from typing import Callable, Optional
 
 from trickle import Environment, Puddle, Visual
 from trickle.trickles.interaction import Screen
+from trickle.trickles.singular import Derived
 
 
 class Component(abc.ABC):
     def __init__(self):
         self._visual: Optional[Puddle] = None
-        self._environment: Optional[Environment] = None
 
     @abc.abstractmethod
     def construct(self, environment: Environment):
         """
-        Construct and return a visual and its (potentially modified) environment.
+        Construct a visual for the component and store it internally.
         
         The visual and environment should be saved to `self._visual` and
         `self._environment` respectively; an error will be thrown if either is left as
@@ -28,34 +28,31 @@ class Component(abc.ABC):
 
     def __call__(self, environment: Environment) -> Puddle[Visual]:
         """Construct a visual representation of a component within an environment."""
+        assert self._visual is None
         self.construct(environment)
 
-        if self._environment is None:
-            self._environment = environment.where(
-                screen=Screen.for_visual(self._visual)
-            )
-
-        self.assert_initialised()
-
+        assert isinstance(self._visual, Puddle)
         return self._visual
 
-    def assert_initialised(self):
-        assert isinstance(
-            self._visual, Puddle
-        ), "Component's visual was not set during construction"
-        assert isinstance(
-            self._environment, Environment
-        ), "Component's environment was not set during construction"
+    @property
+    def top(self) -> Puddle[float]:
+        assert isinstance(self._visual, Puddle)
+        return Derived(lambda v: v.top(), self._visual)
 
     @property
-    def width(self) -> Puddle[float]:
-        self.assert_initialised()
-        return self._environment.screen.width
+    def left(self) -> Puddle[float]:
+        assert isinstance(self._visual, Puddle)
+        return Derived(lambda v: v.left(), self._visual)
 
     @property
-    def height(self) -> Puddle[float]:
-        self.assert_initialised()
-        return self._environment.screen.height
+    def bottom(self) -> Puddle[float]:
+        assert isinstance(self._visual, Puddle)
+        return Derived(lambda v: v.bottom(), self._visual)
+
+    @property
+    def right(self) -> Puddle[float]:
+        assert isinstance(self._visual, Puddle)
+        return Derived(lambda v: v.right(), self._visual)
 
 
 class Anonymous(Component):

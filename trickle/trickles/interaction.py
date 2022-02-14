@@ -4,19 +4,11 @@ from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle, puddle
 from trickle.trickles.singular import Derived, Variable
 from trickle.trickles.trickle import Path, Trickle
-from trickle.visuals.visual import Visual
 
 _UNSPECIFIED = object()
 
 
 class Screen(Keyed):
-    @staticmethod
-    def for_visual(visual: Puddle[Visual]) -> "Screen":
-        return Screen(
-            width=Derived(lambda v: v.right(), visual),
-            height=Derived(lambda v: v.bottom(), visual),
-        )
-
     def __init__(
         self,
         width: Union[Puddle[Optional[float]], Optional[float]],
