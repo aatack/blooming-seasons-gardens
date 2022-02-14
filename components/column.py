@@ -42,7 +42,7 @@ class Column(Component):
             repositioned_visual = Move(
                 self._get_component(next_puddle), vertical=current_state
             )(resized_environment)
-            updated_state = Derived(lambda v: v.vertical_extent(), repositioned_visual)
+            updated_state = Derived(lambda v: v.bottom(), repositioned_visual)
             return updated_state, repositioned_visual
 
         return Derived(
@@ -82,7 +82,7 @@ class ComponentColumn(Component):
         for component in self._components:
             assert isinstance(component, Component)
             visual = Move(component, vertical=current_height)(environment)
-            current_height = Derived(lambda v: v.vertical_extent(), visual)
+            current_height = Derived(lambda v: v.bottom(), visual)
             visuals.append(visual)
 
         return Derived(lambda v: Overlay(*v), Indexed(*visuals))

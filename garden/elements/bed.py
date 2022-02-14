@@ -89,8 +89,8 @@ class Bed(Element):
             ) -> Visual:
                 return Reposition(
                     Overlay(*visuals),
-                    horizontal_offset=horizontal * SCALE,
-                    vertical_offset=vertical * SCALE,
+                    x=horizontal * SCALE,
+                    y=vertical * SCALE,
                 )
 
             return Derived(plan, mapped, self._bed.horizontal, self._bed.vertical)

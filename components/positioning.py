@@ -19,7 +19,7 @@ class Move(Component):
 
     def __call__(self, environment: Environment) -> Puddle[Visual]:
         return Derived(
-            lambda v, x, y: Reposition(v, horizontal_offset=x, vertical_offset=y),
+            lambda v, x, y: Reposition(v, x=x, y=y),
             self._component(
                 environment.where(
                     mouse=environment.mouse.offset(
@@ -85,11 +85,9 @@ class Scroll(Component):
         )
 
         self._height_deficit = Derived(
-            lambda c, h: c.vertical_extent() - h, component, environment.screen.height
+            lambda c, h: c.bottom() - h, component, environment.screen.height
         )
 
         return Derived(
-            lambda c, y: Reposition(c, vertical_offset=y),
-            component,
-            self._scroll_position,
+            lambda c, y: Reposition(c, y=y), component, self._scroll_position,
         )

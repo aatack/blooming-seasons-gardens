@@ -10,6 +10,7 @@ from trickle import (
     Visual,
     puddle,
 )
+from trickle.visuals.crop import Crop
 
 from components.component import Component
 from components.positioning import Move
@@ -31,10 +32,10 @@ class Fill(Component):
 
     def __call__(self, environment: Environment) -> Puddle[Visual]:
         return Derived(
-            lambda v, w, h: Reposition(
+            lambda v, w, h: Crop(
                 v,
-                crop_right=w if w is not None else v.horizontal_extent(),
-                crop_bottom=h if h is not None else v.vertical_extent(),
+                width=w if w is not None else v.right(),
+                height=h if h is not None else v.bottom(),
             ),
             self._component(environment),
             environment.screen.width,
@@ -82,8 +83,8 @@ class Background(Component):
         return Derived(
             lambda v: Overlay(
                 Surface.rectangle(
-                    v.horizontal_extent(),
-                    v.vertical_extent(),
+                    v.right(),
+                    v.bottom(),
                     red=self._colour[0],
                     green=self._colour[1],
                     blue=self._colour[2],

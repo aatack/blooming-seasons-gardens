@@ -94,19 +94,19 @@ class Plant(Element):
                 Overlay(
                     Reposition(
                         Surface.circle(radius=outer * SCALE),
-                        horizontal_offset=-outer * SCALE,
-                        vertical_offset=-outer * SCALE,
+                        x=-outer * SCALE,
+                        y=-outer * SCALE,
                     ),
                     Reposition(
                         Surface.circle(
                             radius=inner * SCALE, red=red, green=green, blue=blue
                         ),
-                        horizontal_offset=-inner * SCALE,
-                        vertical_offset=-inner * SCALE,
+                        x=-inner * SCALE,
+                        y=-inner * SCALE,
                     ),
                 ),
-                horizontal_offset=x * SCALE,
-                vertical_offset=y * SCALE,
+                x=x * SCALE,
+                y=y * SCALE,
             )
 
         def __call__(self, environment: Environment) -> Puddle[Visual]:

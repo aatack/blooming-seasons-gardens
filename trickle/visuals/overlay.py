@@ -16,7 +16,7 @@ class Overlay(Visual):
                 # TODO: work out how to handle multiple empty visuals
                 visuals.extend(simplified_visual.visuals)
             else:
-                visuals.extend(simplified_visual)
+                visuals.append(simplified_visual)
 
         return Overlay(*visuals)
 

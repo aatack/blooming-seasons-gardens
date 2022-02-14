@@ -16,10 +16,8 @@ class Visual(abc.ABC):
     def simplify(self) -> "Visual":
         visual = self._simplify()
 
-        assert visual.top() == self.top()
-        assert visual.left() == self.left()
-        assert visual.bottom() == self.bottom()
-        assert visual.right() == self.right()
+        # TODO: potentially check that the bounds of the simplified are the same as the
+        #       bounds of the original
 
         return visual
 

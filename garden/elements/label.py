@@ -63,11 +63,7 @@ class Label(Element):
 
         @staticmethod
         def plan(text: str, size: int, x: float, y: float) -> Visual:
-            return Reposition(
-                Surface.text(text, size),
-                horizontal_offset=x * SCALE,
-                vertical_offset=y * SCALE,
-            )
+            return Reposition(Surface.text(text, size), x=x * SCALE, y=y * SCALE,)
 
         def __call__(self, environment: Environment) -> Puddle[Visual]:
             return Derived(
