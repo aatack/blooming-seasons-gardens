@@ -1,7 +1,7 @@
-from typing import Union
+from typing import Optional, Union
 
 from trickle import Derived, Environment, Puddle, Reposition, Visual, puddle
-from trickle.trickles.singular import Variable
+from trickle.trickles.singular import Constant, Variable
 
 from components.component import Component
 
@@ -18,6 +18,8 @@ class Move(Component):
         self._component = component
         self._horizontal = puddle(horizontal)
         self._vertical = puddle(vertical)
+
+        assert isinstance(self._component, Component)
 
     def construct(self, environment: Environment):
         self._visual = Derived(
@@ -36,6 +38,22 @@ class Move(Component):
     def deconstruct(self):
         pass
 
+    @property
+    def top(self) -> Puddle[float]:
+        return self._component.top + self._vertical
+
+    @property
+    def left(self) -> Puddle[float]:
+        return self._component.left + self._horizontal
+
+    @property
+    def bottom(self) -> Puddle[float]:
+        return self._component.bottom + self._vertical
+
+    @property
+    def right(self) -> Puddle[float]:
+        return self._component.right + self._horizontal
+
 
 class Scroll(Component):
     SCROLL_DOWN_BUTTON = 5
@@ -51,6 +69,8 @@ class Scroll(Component):
         # Amount by which the environment height is less than the component height; used
         # to clip the scroll position appropriately
         self._height_deficit: Puddle[float] = Variable(0.0)
+
+        self._original_environment: Optional[Environment] = None
 
     def scroll_down(self, active: Puddle[bool]):
         def scroll_down():
@@ -74,6 +94,8 @@ class Scroll(Component):
         return scroll_up
 
     def construct(self, environment: Environment):
+        self._original_environment = environment
+
         environment.mouse.add_listener(
             self.SCROLL_DOWN_BUTTON,
             True,
@@ -87,7 +109,8 @@ class Scroll(Component):
 
         component = self._component(
             environment.where(
-                mouse=environment.mouse.offset(vertical=self._scroll_position)
+                mouse=environment.mouse.offset(vertical=self._scroll_position),
+                screen=environment.screen.resize(height=None),
             )
         )
 
@@ -101,3 +124,21 @@ class Scroll(Component):
 
     def deconstruct(self):
         pass
+
+    @property
+    def top(self) -> Puddle[float]:
+        return Constant(0.0)
+
+    @property
+    def left(self) -> Puddle[float]:
+        return Constant(0.0)
+
+    @property
+    def bottom(self) -> Puddle[float]:
+        assert self._original_environment is not None
+        return self._original_environment.screen.height
+
+    @property
+    def right(self) -> Puddle[float]:
+        assert self._original_environment is not None
+        return self._original_environment.screen.width

@@ -31,8 +31,14 @@ class Button(Component):
         else:
             visual = self._component(environment)
 
-        width = Derived(lambda v: v.right(), visual)
-        height = Derived(lambda v: v.bottom(), visual)
+        width = Derived(
+            lambda v, w: v.right() if w is None else w, visual, environment.screen.width
+        )
+        height = Derived(
+            lambda v, h: v.bottom() if h is None else h,
+            visual,
+            environment.screen.height,
+        )
 
         contains_mouse = Derived(
             lambda m, w, h: 0 <= m["x"] < w and 0 <= m["y"] < h,

@@ -44,6 +44,14 @@ class Fill(Component):
         pass
 
     @property
+    def top(self) -> Puddle[float]:
+        return self._component.top
+
+    @property
+    def left(self) -> Puddle[float]:
+        return self._component.left
+
+    @property
     def bottom(self) -> Puddle[float]:
         assert self._height is not None
         return Derived(
@@ -83,15 +91,19 @@ class Pad(Component):
     def deconstruct(self):
         pass
 
+    @property
     def top(self) -> Puddle[float]:
         return Derived(lambda t, p: t - p, self._component.top, self._padding)
 
+    @property
     def left(self) -> Puddle[float]:
         return Derived(lambda l, p: l - p, self._component.left, self._padding)
 
+    @property
     def bottom(self) -> Puddle[float]:
         return Derived(lambda b, p: b + p, self._component.bottom, self._padding)
 
+    @property
     def right(self) -> Puddle[float]:
         return Derived(lambda r, p: r + p, self._component.right, self._padding)
 
@@ -124,6 +136,22 @@ class Background(Component):
     def deconstruct(self):
         pass
 
+    @property
+    def top(self) -> Puddle[float]:
+        return self._component.top
+
+    @property
+    def left(self) -> Puddle[float]:
+        return self._component.left
+
+    @property
+    def bottom(self) -> Puddle[float]:
+        return self._component.bottom
+
+    @property
+    def right(self) -> Puddle[float]:
+        return self._component.right
+
 
 class Card(Component):
     def __init__(
@@ -135,10 +163,33 @@ class Card(Component):
         self._colour = colour
         self._padding = padding
 
+        self._modified: Optional[Component] = None
+
     def construct(self, environment: Environment):
-        self._visual = Pad(
+        self._modified = Pad(
             Background(Fill(self._component), self._colour), self._padding
-        )(environment)
+        )
+        self._visual = self._modified(environment)
 
     def deconstruct(self):
         pass
+
+    @property
+    def top(self) -> Puddle[float]:
+        assert self._modified is not None
+        return self._component.top
+
+    @property
+    def left(self) -> Puddle[float]:
+        assert self._modified is not None
+        return self._component.left
+
+    @property
+    def bottom(self) -> Puddle[float]:
+        assert self._modified is not None
+        return self._component.bottom
+
+    @property
+    def right(self) -> Puddle[float]:
+        assert self._modified is not None
+        return self._component.right

@@ -13,7 +13,7 @@ from trickle import (
 )
 from trickle import puddle as to_puddle
 
-from components.component import Component
+from components.component import Anonymous, Component
 from components.positioning import Move
 
 
@@ -64,11 +64,13 @@ class TextColumn(Column):
         padding = to_puddle(padding)
 
         def get_component(puddle: Puddle) -> Component:
-            return lambda _: Derived(
-                lambda v, s, p: Surface.text(str(v), s, padding=p),
-                puddle,
-                size,
-                padding,
+            return Anonymous(
+                lambda _: Derived(
+                    lambda v, s, p: Surface.text(str(v), s, padding=p),
+                    puddle,
+                    size,
+                    padding,
+                )
             )
 
         super().__init__(puddles, get_component)
