@@ -1,6 +1,7 @@
 import pygame
 from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
+from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
@@ -76,6 +77,22 @@ class Crop(Visual):
                 simplified_visual.visual,
                 min(self.width, simplified_visual.width),
                 min(self.height, simplified_visual.height),
+            )
+
+        elif isinstance(simplified_visual, Rectangle):
+            top = max(simplified_visual.top(), 0.0)
+            left = max(simplified_visual.left(), 0.0)
+            bottom = min(simplified_visual.bottom(), self.height)
+            right = min(simplified_visual.right(), self.width)
+
+            return Rectangle(
+                x=left,
+                y=top,
+                width=right - left,
+                height=bottom - top,
+                red=simplified_visual.red,
+                green=simplified_visual.green,
+                blue=simplified_visual.blue,
             )
 
         else:

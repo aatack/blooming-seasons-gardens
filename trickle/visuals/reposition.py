@@ -1,6 +1,7 @@
 import pygame
 from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
+from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
 from trickle.visuals.visual import Visual
 
@@ -46,6 +47,17 @@ class Reposition(Visual):
             # TODO: work out if this can be reliably simplified further, but probably
             #       not
             return Reposition(simplified_visual, x=self.x, y=self.y)
+
+        elif isinstance(simplified_visual, Rectangle):
+            return Rectangle(
+                x=simplified_visual.x + self.x,
+                y=simplified_visual.y + self.y,
+                width=simplified_visual.width,
+                height=simplified_visual.height,
+                red=simplified_visual.red,
+                green=simplified_visual.green,
+                blue=simplified_visual.blue,
+            )
 
         else:
             raise Exception("Implementation error")

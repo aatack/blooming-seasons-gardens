@@ -2,11 +2,10 @@ from typing import Callable, Union
 
 from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
-from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived, Variable
 from trickle.visuals.overlay import Overlay
+from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
-from trickle.visuals.visual import Visual
 
 from components.component import Component
 
@@ -66,7 +65,7 @@ class Button(Component):
 
         self._visual = Derived(
             lambda v, w, h, c: Overlay(
-                Surface.rectangle(w, h, red=c[0], green=c[1], blue=c[2]), v
+                Rectangle(width=w, height=h, red=c[0], green=c[1], blue=c[2]), v
             ),
             visual,
             width,

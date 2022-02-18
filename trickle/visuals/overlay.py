@@ -1,5 +1,4 @@
 import pygame
-from trickle.visuals.empty import Empty
 from trickle.visuals.visual import Visual
 
 

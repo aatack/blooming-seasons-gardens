@@ -1,5 +1,6 @@
 import pygame
 import pygame.freetype
+from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.visual import Visual
 
 
@@ -11,24 +12,6 @@ class Surface(Visual):
         else:
             surface = pygame.Surface((int(width), int(height)))
         return Surface(surface)
-
-    @staticmethod
-    def rectangle(
-        width: float,
-        height: float,
-        red: float = 0.0,
-        green: float = 0.0,
-        blue: float = 0.0,
-        x: float = 0.0,
-        y: float = 0.0,
-    ) -> "Surface":
-        surface = Surface.empty(width, height).surface
-
-        rectangle = (0, 0, int(width), int(height))
-        colour = (int(red * 255), int(green * 255), int(blue * 255))
-
-        pygame.draw.rect(surface, colour, rectangle)
-        return Surface(surface, x=x, y=y)
 
     @staticmethod
     def circle(

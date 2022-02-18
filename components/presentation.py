@@ -1,7 +1,8 @@
 from typing import Optional, Tuple, Union
 
-from trickle import Derived, Environment, Overlay, Puddle, Surface, puddle
+from trickle import Derived, Environment, Overlay, Puddle, puddle
 from trickle.visuals.crop import Crop
+from trickle.visuals.rectangle import Rectangle
 
 from components.component import Component
 from components.positioning import Move
@@ -106,9 +107,9 @@ class Background(Component):
         visual = self._component(environment)
         self._visual = Derived(
             lambda v, r, b: Overlay(
-                Surface.rectangle(
-                    r,
-                    b,
+                Rectangle(
+                    width=r,
+                    height=b,
                     red=self._colour[0],
                     green=self._colour[1],
                     blue=self._colour[2],
