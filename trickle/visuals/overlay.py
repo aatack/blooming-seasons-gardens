@@ -27,7 +27,7 @@ class Overlay(Visual):
         return min(visual.top() for visual in self.visuals)
 
     def left(self) -> float:
-        return min(visual.bottom() for visual in self.visuals)
+        return min(visual.left() for visual in self.visuals)
 
     def bottom(self) -> float:
         return max(visual.bottom() for visual in self.visuals)
