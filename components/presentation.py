@@ -93,10 +93,10 @@ class Background(Component):
     def construct(self, environment: Environment):
         visual = self._component(environment)
         self._visual = Derived(
-            lambda v: Overlay(
+            lambda v, r, b: Overlay(
                 Surface.rectangle(
-                    v.right(),
-                    v.bottom(),
+                    r,
+                    b,
                     red=self._colour[0],
                     green=self._colour[1],
                     blue=self._colour[2],
@@ -104,6 +104,8 @@ class Background(Component):
                 v,
             ),
             visual,
+            self._component.right,
+            self._component.bottom,
         )
 
     def deconstruct(self):

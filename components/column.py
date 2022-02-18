@@ -41,11 +41,11 @@ class Column(Component):
             function will be called on the puddle, and then an appropriately modified
             environment passed, to build a visual from the puddle.
             """
-            repositioned_visual = Move(
+            repositioned_component = Move(
                 self._get_component(next_puddle), vertical=current_state
-            )(resized_environment)
-            updated_state = Derived(lambda v: v.bottom(), repositioned_visual)
-            return updated_state, repositioned_visual
+            )
+            repositioned_visual = repositioned_component(resized_environment)
+            return repositioned_component.bottom, repositioned_visual
 
         self._visual = Derived(
             lambda visuals: Overlay(*visuals),
@@ -86,8 +86,9 @@ class ComponentColumn(Component):
 
         for component in self._components:
             assert isinstance(component, Component)
-            visual = Move(component, vertical=current_height)(environment)
-            current_height = Derived(lambda v: v.bottom(), visual)
+            moved = Move(component, vertical=current_height)
+            visual = moved(environment)
+            current_height = moved.bottom
             visuals.append(visual)
 
         self._visual = Derived(lambda v: Overlay(*v), Indexed(*visuals))
