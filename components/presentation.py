@@ -177,19 +177,19 @@ class Card(Component):
     @property
     def top(self) -> Puddle[float]:
         assert self._modified is not None
-        return self._component.top
+        return self._modified.top
 
     @property
     def left(self) -> Puddle[float]:
         assert self._modified is not None
-        return self._component.left
+        return self._modified.left
 
     @property
     def bottom(self) -> Puddle[float]:
         assert self._modified is not None
-        return self._component.bottom
+        return self._modified.bottom
 
     @property
     def right(self) -> Puddle[float]:
         assert self._modified is not None
-        return self._component.right
+        return self._modified.right

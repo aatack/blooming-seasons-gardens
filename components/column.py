@@ -9,7 +9,6 @@ from trickle import (
     Overlay,
     Puddle,
     Surface,
-    Visual,
 )
 from trickle import puddle as to_puddle
 
@@ -97,3 +96,7 @@ class ComponentColumn(Component):
 
     def deconstruct(self):
         pass
+
+    @property
+    def bottom(self) -> Puddle[float]:
+        return self._components[-1].bottom
