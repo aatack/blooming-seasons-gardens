@@ -1,15 +1,6 @@
 from typing import Optional, Tuple, Union
 
-from trickle import (
-    Derived,
-    Environment,
-    Overlay,
-    Puddle,
-    Reposition,
-    Surface,
-    Visual,
-    puddle,
-)
+from trickle import Derived, Environment, Overlay, Puddle, Surface, puddle
 from trickle.visuals.crop import Crop
 
 from components.component import Component
@@ -25,14 +16,18 @@ class Fill(Component):
         visual changes if the component's visual is smaller than the screen already in a
         particular dimension.  No changes will take place if the size of the screen is
         not defined along a dimension.
-
-        Note that this is similar to applying a pad operation with a zero pad size.
         """
         super().__init__()
 
         self._component = component
 
+        self._width: Optional[Puddle[float]] = None
+        self._height: Optional[Puddle[float]] = None
+
     def construct(self, environment: Environment):
+        self._width = environment.screen.width
+        self._height = environment.screen.height
+
         self._visual = Derived(
             lambda v, w, h: Crop(
                 v,
@@ -47,6 +42,26 @@ class Fill(Component):
     def deconstruct(self):
         pass
 
+    @property
+    def bottom(self) -> Puddle[float]:
+        assert self._height is not None
+        return Derived(
+            lambda t, h, b: t + h if h is not None else b,
+            self.top,
+            self._height,
+            self._component.bottom,
+        )
+
+    @property
+    def right(self) -> Puddle[float]:
+        assert self._width is not None
+        return Derived(
+            lambda l, w, r: l + w if w is not None else r,
+            self.left,
+            self._width,
+            self._component.right,
+        )
+
 
 class Pad(Component):
     def __init__(self, component: Component, padding: Union[Puddle, float]):
@@ -60,27 +75,24 @@ class Pad(Component):
             screen=environment.screen.shrink(self._padding * 2)
         )
 
-        self._visual = Derived(
-            lambda v, p, w, h: Reposition(
-                v,
-                # TODO: work out why uncommenting the below causes buggy behaviour
-                # crop_right=self.crop_size(v.horizontal_extent(), p, w),
-                # crop_bottom=self.crop_size(v.vertical_extent(), p, h),
-            ),
-            Move(self._component, vertical=self._padding, horizontal=self._padding)(
-                shrunk_environment
-            ),
-            self._padding,
-            shrunk_environment.screen.width,
-            shrunk_environment.screen.height,
-        )
+        self._visual = Move(
+            self._component, vertical=self._padding, horizontal=self._padding
+        )(shrunk_environment)
 
     def deconstruct(self):
         pass
 
-    @staticmethod
-    def crop_size(extent: float, padding: float, window: Optional[float]) -> float:
-        return window + (2 * padding) if window is not None else extent + padding
+    def top(self) -> Puddle[float]:
+        return Derived(lambda t, p: t - p, self._component.top, self._padding)
+
+    def left(self) -> Puddle[float]:
+        return Derived(lambda l, p: l - p, self._component.left, self._padding)
+
+    def bottom(self) -> Puddle[float]:
+        return Derived(lambda b, p: b + p, self._component.bottom, self._padding)
+
+    def right(self) -> Puddle[float]:
+        return Derived(lambda r, p: r + p, self._component.right, self._padding)
 
 
 class Background(Component):
