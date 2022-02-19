@@ -2,7 +2,7 @@ from typing import Union
 
 import pygame
 from components.column import TextColumn
-from components.component import Component
+from components.component import Anonymous, Component
 from components.presentation import Card
 from garden.element import Element
 from settings import (
@@ -12,7 +12,7 @@ from settings import (
     EDITOR_TEXT_SIZE,
 )
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Constant, Derived, Environment, Indexed, Puddle, Surface, Visual
+from trickle import Constant, Derived, Indexed, Puddle, Surface, Visual
 
 
 class Arrow(Element):
@@ -60,11 +60,20 @@ class Arrow(Element):
     def editor(self) -> Component:
         return Arrow.Editor(self)
 
-    class Plan(Component):
+    class Plan(Anonymous):
         def __init__(self, arrow: "Arrow"):
-            super().__init__()
-
             self._arrow = arrow
+
+            super().__init__(
+                lambda _: Derived(
+                    self.plan,
+                    self._arrow.start_horizontal,
+                    self._arrow.start_vertical,
+                    self._arrow.end_horizontal,
+                    self._arrow.end_vertical,
+                    self._arrow.width,
+                )
+            )
 
         @staticmethod
         def plan(
@@ -88,26 +97,10 @@ class Arrow(Element):
             )
             return surface
 
-        def construct(self, environment: Environment):
-            self._visual = Derived(
-                self.plan,
-                self._arrow.start_horizontal,
-                self._arrow.start_vertical,
-                self._arrow.end_horizontal,
-                self._arrow.end_vertical,
-                self._arrow.width,
-            )
-
-        def deconstruct(self):
-            pass
-
-    class Editor(Component):
+    class Editor(Card):
         def __init__(self, arrow: "Arrow"):
-            super().__init__()
-
             self._arrow = arrow
 
-        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Arrow"),
                 "Start: ("
@@ -121,7 +114,8 @@ class Arrow(Element):
                 + Derived(str, self._arrow.end_vertical)
                 + ")",
             )
-            self._visual = Card(
+
+            super().__init__(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -129,7 +123,4 @@ class Arrow(Element):
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
-            )(environment)
-
-        def deconstruct(self):
-            pass
+            )
