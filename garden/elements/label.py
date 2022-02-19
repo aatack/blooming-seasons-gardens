@@ -1,7 +1,7 @@
 from typing import Union
 
 from components.column import TextColumn
-from components.component import Component
+from components.component import Anonymous, Component
 from components.presentation import Card
 from garden.element import Element
 from settings import (
@@ -11,16 +11,7 @@ from settings import (
     EDITOR_TEXT_SIZE,
 )
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import (
-    Constant,
-    Derived,
-    Environment,
-    Indexed,
-    Puddle,
-    Reposition,
-    Surface,
-    Visual,
-)
+from trickle import Constant, Derived, Indexed, Puddle, Reposition, Surface, Visual
 
 
 class Label(Element):
@@ -57,35 +48,28 @@ class Label(Element):
     def editor(self) -> Component:
         return Label.Editor(self)
 
-    class Plan(Component):
+    class Plan(Anonymous):
         def __init__(self, label: "Label"):
-            super().__init__()
-
             self._label = label
+
+            super().__init__(
+                lambda _: Derived(
+                    self.plan,
+                    self._label.text,
+                    self._label.size,
+                    self._label.horizontal,
+                    self._label.vertical,
+                )
+            )
 
         @staticmethod
         def plan(text: str, size: int, x: float, y: float) -> Visual:
             return Reposition(Surface.text(text, size), x=x * SCALE, y=y * SCALE,)
 
-        def construct(self, environment: Environment):
-            self._visual = Derived(
-                self.plan,
-                self._label.text,
-                self._label.size,
-                self._label.horizontal,
-                self._label.vertical,
-            )
-
-        def deconstruct(self):
-            pass
-
-    class Editor(Component):
+    class Editor(Card):
         def __init__(self, label: "Label"):
-            super().__init__()
-
             self._label = label
 
-        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Label"),
                 "Text: " + Derived(str, self._label.text),
@@ -97,7 +81,7 @@ class Label(Element):
                 + ")",
             )
 
-            self._visual = Card(
+            super().__init__(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -105,7 +89,4 @@ class Label(Element):
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
-            )(environment)
-
-        def deconstruct(self):
-            pass
+            )
