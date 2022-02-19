@@ -71,3 +71,22 @@ class Anonymous(Component):
 
     def _height(self) -> Puddle[float]:
         return Derived(lambda v: v.bottom(), self._visual)
+
+
+class Wrap(Component):
+    def __init__(self, component: Component):
+        super().__init__()
+
+        self._component = component
+
+    def construct(self, environment: Environment):
+        self._visual = self._component(environment)
+
+    def deconstruct(self):
+        self._component.deconstruct()
+
+    def _width(self) -> Puddle[float]:
+        return self._component.width
+
+    def _height(self) -> Puddle[float]:
+        return self._component.height

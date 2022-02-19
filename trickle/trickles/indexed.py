@@ -1,7 +1,7 @@
-from typing import Any, Callable, List, NamedTuple, Tuple
+from typing import Any, Callable, List, NamedTuple, Tuple, cast
 
 from trickle.trickles.puddle import Puddle, T
-from trickle.trickles.singular import Derived
+from trickle.trickles.singular import Derived, Function
 from trickle.trickles.trickle import Path
 
 
@@ -57,10 +57,7 @@ class Indexed(Puddle[List[T]]):
 
 class Mapped(Indexed):
     def __init__(
-        self,
-        function: Callable,
-        indexed: Indexed,
-        function_of_puddle: bool = False,
+        self, function: Callable, indexed: Indexed, function_of_puddle: bool = False,
     ):
         self.function = function
         self.indexed = indexed
@@ -162,3 +159,12 @@ class Folded(Indexed):
             self.add(puddle, broadcast=False)
 
         self.broadcast(Indexed.Removed(index))
+
+    def internal_state(self) -> Puddle:
+        """Get a puddle that tracks the last value in the internal state."""
+        return Function(
+            lambda f: cast(Folded, f).intermediate[-1].value()
+            if len(cast(Folded, f).intermediate) > 0
+            else None,
+            self,
+        )

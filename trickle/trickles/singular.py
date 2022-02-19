@@ -78,3 +78,37 @@ class Derived(Puddle):
             *[puddle.value() for puddle in self.indexed],
             **{key: puddle.value() for key, puddle in self.keyed.items()},
         )
+
+
+class Function(Puddle):
+    class Changed(NamedTuple):
+        pass
+
+    def __init__(self, function: Callable, *indexed: Puddle, **keyed: Puddle):
+        super().__init__()
+
+        self.function = function
+        self.indexed = indexed
+        self.keyed = keyed
+
+        self.current_value = self.compute()
+
+        for index, puddle in enumerate(self.indexed):
+            self.listen((index,), puddle)
+        for key, puddle in self.keyed.items():
+            self.listen((key,), puddle)
+
+    def respond(self, path: Path, event: Any):
+        previous_value = self.current_value
+        self.current_value = self.compute()
+        if self.current_value != previous_value:
+            self.broadcast(Function.Changed())
+
+    def value(self) -> T:
+        return self.current_value
+
+    def compute(self) -> T:
+        return self.function(
+            *[puddle for puddle in self.indexed],
+            **{key: puddle for key, puddle in self.keyed.items()},
+        )

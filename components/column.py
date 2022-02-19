@@ -25,6 +25,8 @@ class Column(Component):
 
         self._environment: Optional[Environment] = None
 
+        self._folded: Optional[Folded] = None
+
     def construct(self, environment: Environment):
         self._environment = environment
 
@@ -50,10 +52,11 @@ class Column(Component):
             repositioned_visual = repositioned_component(resized_environment)
             return repositioned_component.height, repositioned_visual
 
-        self._visual = Derived(
-            lambda visuals: Overlay(*visuals),
-            Folded(initial=Constant(0.0), function=function, indexed=self._puddles),
+        self._folded = Folded(
+            initial=Constant(0.0), function=function, indexed=self._puddles
         )
+
+        self._visual = Derived(lambda visuals: Overlay(*visuals), self._folded)
 
     def deconstruct(self):
         pass
@@ -63,7 +66,7 @@ class Column(Component):
 
     def _height(self) -> Puddle[float]:
         # TODO: potentially compute this more accurately based on the components
-        return Derived(lambda v: v.bottom(), self._visual)
+        return Derived(lambda s: 0.0 if s is None else s, self._folded.internal_state())
 
 
 class TextColumn(Column):

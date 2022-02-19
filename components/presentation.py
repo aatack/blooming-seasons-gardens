@@ -78,10 +78,10 @@ class Pad(Component):
         pass
 
     def _width(self) -> Puddle[float]:
-        return self._component.width + self._padding
+        return self._component.width + (2 * self._padding)
 
     def _height(self) -> Puddle[float]:
-        return self._component.height + self._padding
+        return self._component.height + (2 * self._padding)
 
 
 class Background(Component):

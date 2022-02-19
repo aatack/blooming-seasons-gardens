@@ -2,8 +2,8 @@ from typing import Union
 
 import pygame
 from components.column import TextColumn
-from components.component import Anonymous, Component
-from components.presentation import Card
+from components.component import Anonymous, Component, Wrap
+from components.presentation import Card, Pad
 from garden.element import Element
 from settings import (
     EDITOR_BLOCK_COLOUR,
@@ -97,7 +97,7 @@ class Arrow(Element):
             )
             return surface
 
-    class Editor(Card):
+    class Editor(Wrap):
         def __init__(self, arrow: "Arrow"):
             self._arrow = arrow
 
@@ -116,11 +116,16 @@ class Arrow(Element):
             )
 
             super().__init__(
-                TextColumn(
-                    puddles,
-                    Constant(EDITOR_TEXT_SIZE),
-                    padding=Constant(EDITOR_TEXT_PADDING),
-                ),
-                EDITOR_BLOCK_COLOUR,
-                EDITOR_PADDING,
+                Pad(
+                    Card(
+                        TextColumn(
+                            puddles,
+                            Constant(EDITOR_TEXT_SIZE),
+                            padding=Constant(EDITOR_TEXT_PADDING),
+                        ),
+                        EDITOR_BLOCK_COLOUR,
+                        EDITOR_PADDING,
+                    ),
+                    10,
+                )
             )
