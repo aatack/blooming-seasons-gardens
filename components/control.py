@@ -8,11 +8,23 @@ from trickle.visuals.overlay import Overlay
 from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
 
-from components.component import Component
+from components.component import Component, Wrap
 
 BACKGROUND_COLOUR = (84 / 255, 122 / 255, 184 / 255)
 HOVER_COLOUR = (121 / 255, 155 / 255, 209 / 255)
 CLICK_COLOUR = (165 / 255, 190 / 255, 230 / 255)
+
+
+class ChangeEnvironment(Wrap):
+    def __init__(
+        self, function: Callable[[Environment], Environment], component: Component
+    ):
+        super().__init__(component)
+
+        self._function = function
+
+    def construct(self, environment: Environment):
+        self._visual = self._component(self._function(environment))
 
 
 class Button(Component):

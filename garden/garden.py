@@ -38,4 +38,5 @@ class Garden(Keyed):
                 ),
             )
 
+        # TODO: implement this as a component directly
         return Anonymous(component)

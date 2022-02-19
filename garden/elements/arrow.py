@@ -116,16 +116,13 @@ class Arrow(Element):
             )
 
             super().__init__(
-                Pad(
-                    Card(
-                        TextColumn(
-                            puddles,
-                            Constant(EDITOR_TEXT_SIZE),
-                            padding=Constant(EDITOR_TEXT_PADDING),
-                        ),
-                        EDITOR_BLOCK_COLOUR,
-                        EDITOR_PADDING,
+                Card(
+                    TextColumn(
+                        puddles,
+                        Constant(EDITOR_TEXT_SIZE),
+                        padding=Constant(EDITOR_TEXT_PADDING),
                     ),
-                    10,
-                )
+                    EDITOR_BLOCK_COLOUR,
+                    EDITOR_PADDING,
+                ),
             )

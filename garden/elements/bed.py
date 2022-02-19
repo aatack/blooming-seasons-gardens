@@ -2,7 +2,7 @@ from typing import List, Union
 
 from components.column import Column, ComponentColumn
 from components.component import Anonymous, Component
-from components.control import Button
+from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Background, Fill, Pad
 from garden.element import Element
@@ -126,11 +126,7 @@ class Bed(Element):
 
             super().__init__(
                 Pad(Button("Add plant", lambda: print("Add plant")), 2),
-                # STARTHERE: work out which component's bounds calculations are
-                # outputting incorrect values, then fix components to simply have
-                # width and height (and possibly, make them explicitly defined);
-                # top and left should always be zero
-                Pad(Button("Add bed", lambda: print("Add bed")), 20),
+                Pad(Button("Add bed", lambda: print("Add bed")), 2),
                 Pad(Button("Add label", lambda: print("Add label")), 2),
                 Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
                 Column(expanded_puddles, self.get_outer_component),
@@ -139,23 +135,18 @@ class Bed(Element):
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
-            return Anonymous(
-                lambda e: Move(_element.editor, horizontal=EDITOR_BED_INDENT)(
-                    e.where(
-                        screen=e.screen.resize(
-                            width=e.screen.width - EDITOR_BED_INDENT, height=None
-                        )
+            return ChangeEnvironment(
+                lambda e: e.where(
+                    screen=e.screen.resize(
+                        width=e.screen.width - EDITOR_BED_INDENT, height=None
                     )
-                )
+                ),
+                Move(_element.editor, horizontal=EDITOR_BED_INDENT),
             )
 
         def get_outer_component(self, _element: Puddle) -> Component:
             if _element is self._bed.elements:
-                return Anonymous(
-                    lambda _environment: Column(_element, self.get_inner_component)(
-                        _environment
-                    )
-                )
+                return Column(_element, self.get_inner_component)
             else:
                 return Anonymous(
                     lambda _: Derived(
