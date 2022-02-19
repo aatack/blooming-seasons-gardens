@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
-from trickle import Derived, Environment, Puddle, Reposition, Visual, puddle
-from trickle.trickles.singular import Constant, Variable
+from trickle import Derived, Environment, Puddle, Reposition, puddle
+from trickle.trickles.singular import Variable
 
 from components.component import Component
 

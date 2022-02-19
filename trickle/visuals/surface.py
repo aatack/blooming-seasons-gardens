@@ -1,6 +1,5 @@
 import pygame
 import pygame.freetype
-from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.visual import Visual
 
 

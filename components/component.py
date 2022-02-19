@@ -2,7 +2,6 @@ import abc
 from typing import Callable, Optional
 
 from trickle import Environment, Puddle, Visual
-from trickle.trickles.interaction import Screen
 from trickle.trickles.singular import Derived
 
 
@@ -14,7 +13,7 @@ class Component(abc.ABC):
     def construct(self, environment: Environment):
         """
         Construct a visual for the component and store it internally.
-        
+
         The visual and environment should be saved to `self._visual` and
         `self._environment` respectively; an error will be thrown if either is left as
         `None`.

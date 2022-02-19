@@ -14,7 +14,6 @@ from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
     Constant,
     Derived,
-    Environment,
     Indexed,
     Overlay,
     Puddle,

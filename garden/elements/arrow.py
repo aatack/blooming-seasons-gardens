@@ -3,7 +3,7 @@ from typing import Union
 import pygame
 from components.column import TextColumn
 from components.component import Anonymous, Component, Wrap
-from components.presentation import Card, Pad
+from components.presentation import Card
 from garden.element import Element
 from settings import (
     EDITOR_BLOCK_COLOUR,

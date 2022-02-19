@@ -4,14 +4,9 @@ from components.column import Column, ComponentColumn
 from components.component import Anonymous, Component
 from components.control import Button, ChangeEnvironment
 from components.positioning import Move
-from components.presentation import Background, Fill, Pad
+from components.presentation import Pad
 from garden.element import Element
-from settings import (
-    EDITOR_BACKGROUND_COLOUR,
-    EDITOR_BED_INDENT,
-    EDITOR_TEXT_PADDING,
-    EDITOR_TEXT_SIZE,
-)
+from settings import EDITOR_BED_INDENT, EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
     Constant,
@@ -122,7 +117,7 @@ class Bed(Element):
             )
 
             # TODO: allow beds to be collapsed
-            collapsed_puddles = Indexed(Constant("Bed"))
+            _ = Indexed(Constant("Bed"))
 
             super().__init__(
                 Pad(Button("Add plant", lambda: print("Add plant")), 2),
