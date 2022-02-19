@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 from trickle import (
     Constant,
@@ -23,7 +23,11 @@ class Column(Component):
         self._puddles = puddles
         self._get_component = get_component
 
+        self._environment: Optional[Environment] = None
+
     def construct(self, environment: Environment):
+        self._environment = environment
+
         resized_environment = environment.where(
             screen=environment.screen.resize(height=None)
         )
@@ -44,7 +48,7 @@ class Column(Component):
                 self._get_component(next_puddle), vertical=current_state
             )
             repositioned_visual = repositioned_component(resized_environment)
-            return repositioned_component.bottom, repositioned_visual
+            return repositioned_component.height, repositioned_visual
 
         self._visual = Derived(
             lambda visuals: Overlay(*visuals),
@@ -53,6 +57,13 @@ class Column(Component):
 
     def deconstruct(self):
         pass
+
+    def _width(self) -> Puddle[float]:
+        return self._environment.screen.width
+
+    def _height(self) -> Puddle[float]:
+        # TODO: potentially compute this more accurately based on the components
+        return Derived(lambda v: v.bottom(), self._visual)
 
 
 class TextColumn(Column):
@@ -81,22 +92,38 @@ class ComponentColumn(Component):
 
         self._components = components
 
+        self._environment: Optional[Environment] = None
+        self._height_internal: Optional[Puddle] = None
+
     def construct(self, environment: Environment):
+        self._environment = environment
+
+        resized_environment = environment.where(
+            screen=environment.screen.resize(height=None)
+        )
+
         visuals: List[Puddle] = []
         current_height = Constant(0.0)
 
         for component in self._components:
             assert isinstance(component, Component)
             moved = Move(component, vertical=current_height)
-            visual = moved(environment)
-            current_height = moved.bottom
+
+            visual = moved(resized_environment)
+            current_height = moved.height
+
             visuals.append(visual)
+            self._height_internal = current_height
 
         self._visual = Derived(lambda v: Overlay(*v), Indexed(*visuals))
 
     def deconstruct(self):
         pass
 
-    @property
-    def bottom(self) -> Puddle[float]:
-        return self._components[-1].bottom
+    def _width(self) -> Puddle[float]:
+        assert self._environment is not None
+        return self._environment.screen.width
+
+    def _height(self) -> Puddle[float]:
+        assert self._height_internal is not None
+        return self._height_internal

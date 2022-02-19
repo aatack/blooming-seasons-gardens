@@ -100,12 +100,41 @@ class Bed(Element):
         def deconstruct(self):
             pass
 
-    class Editor(Component):
-        def __init__(self, bed: "Bed"):
-            super().__init__()
+        def _width(self) -> Puddle[float]:
+            return Derived(lambda v: v.right(), self._visual)
 
+        def _height(self) -> Puddle[float]:
+            return Derived(lambda v: v.bottom(), self._visual)
+
+    class Editor(ComponentColumn):
+        def __init__(self, bed: "Bed"):
             self._bed = bed
             self._collapsed = Variable(False)
+
+            expanded_puddles = Indexed(
+                Constant("Bed"),
+                "Position: ("
+                + Derived(str, self._bed.horizontal)
+                + ", "
+                + Derived(str, self._bed.vertical)
+                + ")",
+                self._bed.elements,
+            )
+
+            # TODO: allow beds to be collapsed
+            collapsed_puddles = Indexed(Constant("Bed"))
+
+            super().__init__(
+                Pad(Button("Add plant", lambda: print("Add plant")), 2),
+                # STARTHERE: work out which component's bounds calculations are
+                # outputting incorrect values, then fix components to simply have
+                # width and height (and possibly, make them explicitly defined);
+                # top and left should always be zero
+                Pad(Button("Add bed", lambda: print("Add bed")), 20),
+                Pad(Button("Add label", lambda: print("Add label")), 2),
+                Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
+                Column(expanded_puddles, self.get_outer_component),
+            )
 
         @staticmethod
         def get_inner_component(_element: Puddle) -> Component:
@@ -136,30 +165,3 @@ class Bed(Element):
                         _element,
                     )
                 )
-
-        def construct(self, environment: Environment):
-            expanded_puddles = Indexed(
-                Constant("Bed"),
-                "Position: ("
-                + Derived(str, self._bed.horizontal)
-                + ", "
-                + Derived(str, self._bed.vertical)
-                + ")",
-                self._bed.elements,
-            )
-
-            # TODO: allow beds to be collapsed
-            collapsed_puddles = Indexed(Constant("Bed"))
-
-            self._visual = Move(
-                ComponentColumn(
-                    Pad(Button("Add plant", lambda: print("Add plant")), 2),
-                    Pad(Button("Add bed", lambda: print("Add bed")), 2),
-                    Pad(Button("Add label", lambda: print("Add label")), 2),
-                    Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
-                    Column(expanded_puddles, self.get_outer_component),
-                ),
-            )(environment)
-
-        def deconstruct(self):
-            pass

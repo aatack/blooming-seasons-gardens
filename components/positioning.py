@@ -38,21 +38,11 @@ class Move(Component):
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        return self._component.top + self._vertical
+    def _width(self) -> Puddle[float]:
+        return self._component.width + self._horizontal
 
-    @property
-    def left(self) -> Puddle[float]:
-        return self._component.left + self._horizontal
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        return self._component.bottom + self._vertical
-
-    @property
-    def right(self) -> Puddle[float]:
-        return self._component.right + self._horizontal
+    def _height(self) -> Puddle[float]:
+        return self._component.height + self._vertical
 
 
 class Scroll(Component):
@@ -125,20 +115,10 @@ class Scroll(Component):
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        return Constant(0.0)
-
-    @property
-    def left(self) -> Puddle[float]:
-        return Constant(0.0)
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        assert self._original_environment is not None
-        return self._original_environment.screen.height
-
-    @property
-    def right(self) -> Puddle[float]:
+    def _width(self) -> Puddle[float]:
         assert self._original_environment is not None
         return self._original_environment.screen.width
+
+    def _height(self) -> Puddle[float]:
+        assert self._original_environment is not None
+        return self._original_environment.screen.height

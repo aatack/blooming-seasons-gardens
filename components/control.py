@@ -1,7 +1,8 @@
-from typing import Callable, Union
+from typing import Callable, Optional, Union
 
 from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
+from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived, Variable
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.rectangle import Rectangle
@@ -21,6 +22,9 @@ class Button(Component):
         self._component = component
         self._callback = callback
 
+        self._width_internal: Optional[Puddle] = None
+        self._height_internal: Optional[Puddle] = None
+
     def construct(self, environment: Environment):
         if isinstance(self._component, str):
             visual = Constant(
@@ -31,10 +35,10 @@ class Button(Component):
         else:
             visual = self._component(environment)
 
-        width = Derived(
+        self._width_internal = Derived(
             lambda v, w: v.right() if w is None else w, visual, environment.screen.width
         )
-        height = Derived(
+        self._height_internal = Derived(
             lambda v, h: v.bottom() if h is None else h,
             visual,
             environment.screen.height,
@@ -43,8 +47,8 @@ class Button(Component):
         contains_mouse = Derived(
             lambda m, w, h: 0 <= m["x"] < w and 0 <= m["y"] < h,
             environment.mouse,
-            width,
-            height,
+            self._width_internal,
+            self._height_internal,
         )
         clicked = Variable(False)
 
@@ -74,13 +78,21 @@ class Button(Component):
                 Rectangle(width=w, height=h, red=c[0], green=c[1], blue=c[2]), v
             ),
             visual,
-            width,
-            height,
+            self._width_internal,
+            self._height_internal,
             colour,
         )
 
     def deconstruct(self):
         pass
+
+    def _width(self) -> Puddle[float]:
+        assert self._width_internal is not None
+        return self._width_internal
+
+    def _height(self) -> Puddle[float]:
+        assert self._height_internal is not None
+        return self._height_internal
 
 
 class Entry(Component):

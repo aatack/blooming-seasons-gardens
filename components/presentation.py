@@ -22,12 +22,10 @@ class Fill(Component):
 
         self._component = component
 
-        self._width: Optional[Puddle[float]] = None
-        self._height: Optional[Puddle[float]] = None
+        self._environment: Optional[Environment] = None
 
     def construct(self, environment: Environment):
-        self._width = environment.screen.width
-        self._height = environment.screen.height
+        self._environment = environment
 
         self._visual = Derived(
             lambda v, w, h: Crop(
@@ -43,32 +41,20 @@ class Fill(Component):
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        return self._component.top
-
-    @property
-    def left(self) -> Puddle[float]:
-        return self._component.left
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        assert self._height is not None
+    def _width(self) -> Puddle[float]:
+        assert self._environment is not None
         return Derived(
-            lambda t, h, b: t + h if h is not None else b,
-            self.top,
-            self._height,
-            self._component.bottom,
+            lambda w, r: w if w is not None else r,
+            self._environment.screen.width,
+            self._component.width,
         )
 
-    @property
-    def right(self) -> Puddle[float]:
-        assert self._width is not None
+    def _height(self) -> Puddle[float]:
+        assert self._environment is not None
         return Derived(
-            lambda l, w, r: l + w if w is not None else r,
-            self.left,
-            self._width,
-            self._component.right,
+            lambda h, b: h if h is not None else b,
+            self._environment.screen.height,
+            self._component.height,
         )
 
 
@@ -91,21 +77,11 @@ class Pad(Component):
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        return Derived(lambda t, p: t - p, self._component.top, self._padding)
+    def _width(self) -> Puddle[float]:
+        return self._component.width + self._padding
 
-    @property
-    def left(self) -> Puddle[float]:
-        return Derived(lambda l, p: l - p, self._component.left, self._padding)
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        return Derived(lambda b, p: b + p, self._component.bottom, self._padding)
-
-    @property
-    def right(self) -> Puddle[float]:
-        return Derived(lambda r, p: r + p, self._component.right, self._padding)
+    def _height(self) -> Puddle[float]:
+        return self._component.height + self._padding
 
 
 class Background(Component):
@@ -129,28 +105,18 @@ class Background(Component):
                 v,
             ),
             visual,
-            self._component.right,
-            self._component.bottom,
+            self._component.width,
+            self._component.height,
         )
 
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        return self._component.top
+    def _width(self) -> Puddle[float]:
+        return self._component.width
 
-    @property
-    def left(self) -> Puddle[float]:
-        return self._component.left
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        return self._component.bottom
-
-    @property
-    def right(self) -> Puddle[float]:
-        return self._component.right
+    def _height(self) -> Puddle[float]:
+        return self._component.height
 
 
 class Card(Component):
@@ -174,22 +140,8 @@ class Card(Component):
     def deconstruct(self):
         pass
 
-    @property
-    def top(self) -> Puddle[float]:
-        assert self._modified is not None
-        return self._modified.top
+    def _width(self) -> Puddle[float]:
+        return self._modified.width
 
-    @property
-    def left(self) -> Puddle[float]:
-        assert self._modified is not None
-        return self._modified.left
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        assert self._modified is not None
-        return self._modified.bottom
-
-    @property
-    def right(self) -> Puddle[float]:
-        assert self._modified is not None
-        return self._modified.right
+    def _height(self) -> Puddle[float]:
+        return self._modified.height

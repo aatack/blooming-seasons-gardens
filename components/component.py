@@ -26,6 +26,14 @@ class Component(abc.ABC):
         Do any work necessary to ensure the component's puddles are garbage collected.
         """
 
+    @abc.abstractmethod
+    def _width(self) -> Puddle[float]:
+        """Return  a puddle denoting the width of the constructed component."""
+
+    @abc.abstractmethod
+    def _height(self) -> Puddle[float]:
+        """Return  a puddle denoting the height of the constructed component."""
+
     def __call__(self, environment: Environment) -> Puddle[Visual]:
         """Construct a visual representation of a component within an environment."""
         assert self._visual is None
@@ -35,24 +43,14 @@ class Component(abc.ABC):
         return self._visual
 
     @property
-    def top(self) -> Puddle[float]:
-        assert isinstance(self._visual, Puddle)
-        return Derived(lambda v: v.top(), self._visual)
+    def width(self) -> Puddle[float]:
+        # TODO: cache the result and lower bound it at zero
+        return self._width()
 
     @property
-    def left(self) -> Puddle[float]:
-        assert isinstance(self._visual, Puddle)
-        return Derived(lambda v: v.left(), self._visual)
-
-    @property
-    def bottom(self) -> Puddle[float]:
-        assert isinstance(self._visual, Puddle)
-        return Derived(lambda v: v.bottom(), self._visual)
-
-    @property
-    def right(self) -> Puddle[float]:
-        assert isinstance(self._visual, Puddle)
-        return Derived(lambda v: v.right(), self._visual)
+    def height(self) -> Puddle[float]:
+        # TODO: cache the result and lower bound it at zero
+        return self._height()
 
 
 class Anonymous(Component):
@@ -67,3 +65,9 @@ class Anonymous(Component):
 
     def deconstruct(self):
         pass
+
+    def _width(self) -> Puddle[float]:
+        return Derived(lambda v: v.right(), self._visual)
+
+    def _height(self) -> Puddle[float]:
+        return Derived(lambda v: v.bottom(), self._visual)

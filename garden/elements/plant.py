@@ -1,7 +1,7 @@
 from typing import Union
 
 from components.column import TextColumn
-from components.component import Component
+from components.component import Anonymous, Component
 from components.presentation import Card
 from garden.element import Element
 from settings import (
@@ -81,11 +81,21 @@ class Plant(Element):
     def editor(self) -> Component:
         return Plant.Editor(self)
 
-    class Plan(Component):
+    class Plan(Anonymous):
         def __init__(self, plant: "Plant"):
-            super().__init__()
-
             self._plant = plant
+
+            super().__init__(
+                lambda _: Derived(
+                    self.plan,
+                    self._plant.size,
+                    self._plant.horizontal,
+                    self._plant.vertical,
+                    self._plant.red,
+                    self._plant.green,
+                    self._plant.blue,
+                )
+            )
 
         @staticmethod
         def plan(
@@ -111,27 +121,10 @@ class Plant(Element):
                 y=y * SCALE,
             )
 
-        def construct(self, environment: Environment):
-            self._visual = Derived(
-                self.plan,
-                self._plant.size,
-                self._plant.horizontal,
-                self._plant.vertical,
-                self._plant.red,
-                self._plant.green,
-                self._plant.blue,
-            )
-
-        def deconstruct(self):
-            pass
-
-    class Editor(Component):
+    class Editor(Card):
         def __init__(self, plant: "Plant"):
-            super().__init__()
-
             self._plant = plant
 
-        def construct(self, environment: Environment):
             puddles = Indexed(
                 Constant("Plant"),
                 "Name: " + self._plant.name,
@@ -142,7 +135,8 @@ class Plant(Element):
                 + Derived(str, self._plant.vertical)
                 + ")",
             )
-            self._visual = Card(
+
+            super().__init__(
                 TextColumn(
                     puddles,
                     Constant(EDITOR_TEXT_SIZE),
@@ -150,7 +144,4 @@ class Plant(Element):
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
-            )(environment)
-
-        def deconstruct(self):
-            pass
+            )
