@@ -1,5 +1,8 @@
+from typing import Tuple
+
 import pygame
 import pygame.freetype
+from pygame import gfxdraw
 from trickle.visuals.empty import Empty
 from trickle.visuals.visual import Visual
 
@@ -34,7 +37,7 @@ class Surface(Visual):
         radius = int(radius)
         colour = (int(red * 255), int(green * 255), int(blue * 255))
 
-        pygame.draw.circle(surface, colour, (radius, radius), radius)
+        _draw_anti_aliased_circle(surface, colour, (radius, radius), radius)
 
         return Surface(surface)
 
@@ -75,3 +78,13 @@ class Surface(Visual):
 
     def right(self) -> float:
         return self.x + float(self.surface.get_size()[0])
+
+
+def _draw_anti_aliased_circle(
+    surface: pygame.Surface,
+    colour: Tuple[int, int, int],
+    origin: Tuple[int, int],
+    radius: int,
+):
+    gfxdraw.aacircle(surface, origin[0], origin[1], radius - 1, colour)
+    gfxdraw.filled_circle(surface, origin[0], origin[1], radius - 1, colour)
