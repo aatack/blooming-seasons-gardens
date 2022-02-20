@@ -105,7 +105,7 @@ class Scroll(Component):
         )
 
         self._height_deficit = Derived(
-            lambda c, h: c.bottom() - h, component, environment.screen.height
+            lambda c, h: c - h, self._component.height, environment.screen.height
         )
 
         self._visual = Derived(
