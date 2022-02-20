@@ -20,7 +20,7 @@ EDITOR_BLOCK_COLOUR = (0.7,) * 3
 EDITOR_BACKGROUND_COLOUR = (0.9,) * 3
 
 # Navigation
-EDITOR_SCROLL_SPEED = 25.0
+EDITOR_SCROLL_SPEED = 75.0
 
 # Seems the mouse's click position can sometimes get out of sync with its integrated
 # position - when enabled, this will check whether that is the case at each click event

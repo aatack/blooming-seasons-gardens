@@ -6,6 +6,8 @@ from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Pad
 from garden.element import Element
+from garden.elements.arrow import Arrow
+from garden.elements.label import Label
 from garden.elements.plant import Plant
 from settings import EDITOR_BED_INDENT, EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
@@ -122,9 +124,11 @@ class Bed(Element):
 
             super().__init__(
                 Pad(Button("Add plant", lambda: self.add_plant("Plant", 0.1)), 2),
-                Pad(Button("Add bed", lambda: print("Add bed")), 2),
-                Pad(Button("Add label", lambda: print("Add label")), 2),
-                Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
+                Pad(Button("Add bed", lambda: self.add_bed([])), 2),
+                Pad(Button("Add label", lambda: self.add_label("Label")), 2),
+                Pad(
+                    Button("Add arrow", lambda: self.add_arrow(0.0, 0.0, 0.5, 0.5),), 2,
+                ),
                 Column(expanded_puddles, self.get_outer_component),
             )
 
@@ -156,3 +160,12 @@ class Bed(Element):
 
         def add_plant(self, *args, **kwargs):
             self._bed.elements.add(Plant(*args, **kwargs))
+
+        def add_bed(self, *args, **kwargs):
+            self._bed.elements.add(Bed(*args, **kwargs))
+
+        def add_label(self, *args, **kwargs):
+            self._bed.elements.add(Label(*args, **kwargs))
+
+        def add_arrow(self, *args, **kwargs):
+            self._bed.elements.add(Arrow(*args, **kwargs))
