@@ -6,6 +6,7 @@ from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Pad
 from garden.element import Element
+from garden.elements.plant import Plant
 from settings import EDITOR_BED_INDENT, EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
 from trickle import (
@@ -120,7 +121,7 @@ class Bed(Element):
             _ = Indexed(Constant("Bed"))
 
             super().__init__(
-                Pad(Button("Add plant", lambda: print("Add plant")), 2),
+                Pad(Button("Add plant", lambda: self.add_plant("Plant", 0.1)), 2),
                 Pad(Button("Add bed", lambda: print("Add bed")), 2),
                 Pad(Button("Add label", lambda: print("Add label")), 2),
                 Pad(Button("Add arrow", lambda: print("Add arrow")), 2),
@@ -128,26 +129,30 @@ class Bed(Element):
             )
 
         @staticmethod
-        def get_inner_component(_element: Puddle) -> Component:
+        def get_inner_component(element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
+            assert isinstance(element, Element)
             return ChangeEnvironment(
                 lambda e: e.where(
                     screen=e.screen.resize(
                         width=e.screen.width - EDITOR_BED_INDENT, height=None
                     )
                 ),
-                Move(_element.editor, horizontal=EDITOR_BED_INDENT),
+                Move(element.editor, horizontal=EDITOR_BED_INDENT),
             )
 
-        def get_outer_component(self, _element: Puddle) -> Component:
-            if _element is self._bed.elements:
-                return Column(_element, self.get_inner_component)
+        def get_outer_component(self, element: Puddle) -> Component:
+            if element is self._bed.elements:
+                return Column(element, self.get_inner_component)
             else:
                 return Anonymous(
                     lambda _: Derived(
                         lambda v: Surface.text(
                             str(v), EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING
                         ),
-                        _element,
+                        element,
                     )
                 )
+
+        def add_plant(self, *args, **kwargs):
+            self._bed.elements.add(Plant(*args, **kwargs))

@@ -24,13 +24,29 @@ class Overlay(Visual):
             visual.render(surface)
 
     def top(self) -> float:
-        return min(visual.top() for visual in self.visuals)
+        return (
+            0.0
+            if len(self.visuals) == 0
+            else min(visual.top() for visual in self.visuals)
+        )
 
     def left(self) -> float:
-        return min(visual.left() for visual in self.visuals)
+        return (
+            0.0
+            if len(self.visuals) == 0
+            else min(visual.left() for visual in self.visuals)
+        )
 
     def bottom(self) -> float:
-        return max(visual.bottom() for visual in self.visuals)
+        return (
+            0.0
+            if len(self.visuals) == 0
+            else max(visual.bottom() for visual in self.visuals)
+        )
 
     def right(self) -> float:
-        return max(visual.right() for visual in self.visuals)
+        return (
+            0.0
+            if len(self.visuals) == 0
+            else max(visual.right() for visual in self.visuals)
+        )

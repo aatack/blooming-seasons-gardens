@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar, Union
 
 from trickle.trickles.trickle import Trickle
 
@@ -39,11 +39,11 @@ class Puddle(Trickle, Generic[T]):
     def __rtruediv__(self, other: Any) -> "Puddle":
         return type(self).__truediv__(other, self)
 
-    def log(self, message: str) -> "Puddle":
+    def log(self, message: Union[str, Callable[[Trickle], str]]) -> "Puddle":
         from trickle.trickles.log import Log
 
         log = Log(message)
-        log.listen((message,), self)
+        log.listen((len(log.input_map),), self)
         return self
 
 

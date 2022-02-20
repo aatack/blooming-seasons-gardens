@@ -80,7 +80,7 @@ class Derived(Puddle):
         )
 
 
-class Function(Puddle):
+class Pointer(Puddle):
     class Changed(NamedTuple):
         pass
 
@@ -91,21 +91,25 @@ class Function(Puddle):
         self.indexed = indexed
         self.keyed = keyed
 
-        self.current_value = self.compute()
+        self.reference = self.compute()
+        self.listen(("reference",), self.reference)
 
         for index, puddle in enumerate(self.indexed):
-            self.listen((index,), puddle)
+            self.listen(("pointer", index,), puddle)
         for key, puddle in self.keyed.items():
-            self.listen((key,), puddle)
+            self.listen(("pointer", key,), puddle)
 
     def respond(self, path: Path, event: Any):
-        previous_value = self.current_value
-        self.current_value = self.compute()
-        if self.current_value != previous_value:
-            self.broadcast(Function.Changed())
+        if path[0] == "pointer":
+            self.ignore(("reference",))
+            self.reference = self.compute()
+            self.listen(("reference",), self.reference)
+
+        # TODO: why is it not safe to update only when the value changes?
+        self.broadcast(Pointer.Changed())
 
     def value(self) -> T:
-        return self.current_value
+        return self.reference.value()
 
     def compute(self) -> T:
         return self.function(

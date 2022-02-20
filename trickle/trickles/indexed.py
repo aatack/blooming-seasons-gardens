@@ -1,7 +1,7 @@
 from typing import Any, Callable, List, NamedTuple, Tuple, cast
 
 from trickle.trickles.puddle import Puddle, T
-from trickle.trickles.singular import Derived, Function
+from trickle.trickles.singular import Derived, Pointer
 from trickle.trickles.trickle import Path
 
 
@@ -162,9 +162,9 @@ class Folded(Indexed):
 
     def internal_state(self) -> Puddle:
         """Get a puddle that tracks the last value in the internal state."""
-        return Function(
-            lambda f: cast(Folded, f).intermediate[-1].value()
+        return Pointer(
+            lambda f: cast(Folded, f).intermediate[-1]
             if len(cast(Folded, f).intermediate) > 0
-            else None,
+            else self.initial,
             self,
         )

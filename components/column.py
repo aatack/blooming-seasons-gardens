@@ -116,8 +116,8 @@ class ComponentColumn(Component):
             current_height = moved.height
 
             visuals.append(visual)
-            self._height_internal = current_height
 
+        self._height_internal = current_height
         self._visual = Derived(lambda v: Overlay(*v), Indexed(*visuals))
 
     def deconstruct(self):
