@@ -1,8 +1,9 @@
 from typing import Union
 
-from components.column import TextColumn
+from components.column import ComponentColumn
 from components.component import Anonymous, Component
 from components.presentation import Card
+from components.text import Text
 from garden.element import Element
 from settings import (
     EDITOR_BLOCK_COLOUR,
@@ -11,7 +12,7 @@ from settings import (
     EDITOR_TEXT_SIZE,
 )
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Constant, Derived, Indexed, Puddle, Reposition, Surface, Visual
+from trickle import Derived, Puddle, Reposition, Surface, Visual
 
 
 class Label(Element):
@@ -70,22 +71,21 @@ class Label(Element):
         def __init__(self, label: "Label"):
             self._label = label
 
-            puddles = Indexed(
-                Constant("Label"),
-                "Text: " + Derived(str, self._label.text),
-                "Size: " + Derived(str, self._label.size),
-                "Position: ("
-                + Derived(str, self._label.horizontal)
-                + ", "
-                + Derived(str, self._label.vertical)
-                + ")",
-            )
+            def text(string: Union[Puddle, str]) -> Component:
+                return Text(string, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
             super().__init__(
-                TextColumn(
-                    puddles,
-                    Constant(EDITOR_TEXT_SIZE),
-                    padding=Constant(EDITOR_TEXT_PADDING),
+                ComponentColumn(
+                    text("Label"),
+                    text("Text: " + Derived(str, self._label.text)),
+                    text("Size: " + Derived(str, self._label.size)),
+                    text(
+                        "Position: ("
+                        + Derived(str, self._label.horizontal)
+                        + ", "
+                        + Derived(str, self._label.vertical)
+                        + ")"
+                    ),
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,

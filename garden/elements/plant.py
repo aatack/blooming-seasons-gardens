@@ -1,9 +1,10 @@
 from typing import Union
 
-from components.column import ComponentColumn, TextColumn
+from components.column import ComponentColumn
 from components.component import Anonymous, Component
 from components.control import Entry
 from components.presentation import Card
+from components.text import Text
 from garden.element import Element
 from settings import (
     EDITOR_BLOCK_COLOUR,
@@ -12,16 +13,7 @@ from settings import (
     EDITOR_TEXT_SIZE,
 )
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import (
-    Constant,
-    Derived,
-    Indexed,
-    Overlay,
-    Puddle,
-    Reposition,
-    Surface,
-    Visual,
-)
+from trickle import Derived, Overlay, Puddle, Reposition, Surface, Visual
 
 
 class Plant(Element):
@@ -125,24 +117,21 @@ class Plant(Element):
         def __init__(self, plant: "Plant"):
             self._plant = plant
 
-            puddles = Indexed(
-                Constant("Plant"),
-                "Name: " + self._plant.name,
-                "Position: ("
-                + Derived(str, self._plant.horizontal)
-                + ", "
-                + Derived(str, self._plant.vertical)
-                + ")",
-                Constant("Size:"),
-            )
+            def text(string: Union[Puddle, str]) -> Component:
+                return Text(string, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
             super().__init__(
                 ComponentColumn(
-                    TextColumn(
-                        puddles,
-                        Constant(EDITOR_TEXT_SIZE),
-                        padding=Constant(EDITOR_TEXT_PADDING),
+                    text("Plant"),
+                    text("Name: " + self._plant.name),
+                    text(
+                        "Position: ("
+                        + Derived(str, self._plant.horizontal)
+                        + ", "
+                        + Derived(str, self._plant.vertical)
+                        + ")"
                     ),
+                    text("Size:"),
                     Entry(self._plant.size, Entry.Converters.float),
                 ),
                 EDITOR_BLOCK_COLOUR,

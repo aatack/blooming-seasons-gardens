@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from components.column import Column, ComponentColumn
-from components.component import Anonymous, Component
+from components.component import Component
 from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Pad
@@ -21,7 +21,6 @@ from trickle import (
     Overlay,
     Puddle,
     Reposition,
-    Surface,
     Visual,
 )
 from trickle.trickles.singular import Variable
@@ -110,31 +109,32 @@ class Bed(Element):
             self._bed = bed
             self._collapsed = Variable(False)
 
-            expanded_puddles = Indexed(
-                Constant("Bed"),
-                "Position: ("
-                + Derived(str, self._bed.horizontal)
-                + ", "
-                + Derived(str, self._bed.vertical)
-                + ")",
-                self._bed.elements,
-            )
-
             # TODO: allow beds to be collapsed
             _ = Indexed(Constant("Bed"))
+
+            def text(string: Union[Puddle, str]) -> Component:
+                return Text(string, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
             super().__init__(
                 Pad(Button("Add plant", lambda: self.add_plant("Plant", 0.1)), 2),
                 Pad(Button("Add bed", lambda: self.add_bed([])), 2),
                 Pad(Button("Add label", lambda: self.add_label("Label")), 2),
                 Pad(
-                    Button("Add arrow", lambda: self.add_arrow(0.0, 0.0, 0.5, 0.5),), 2,
+                    Button("Add arrow", lambda: self.add_arrow(0.0, 0.0, 0.5, 0.5)), 2,
                 ),
-                Column(expanded_puddles, self.get_outer_component),
+                text("Bed"),
+                text(
+                    "Position: ("
+                    + Derived(str, self._bed.horizontal)
+                    + ", "
+                    + Derived(str, self._bed.vertical)
+                    + ")"
+                ),
+                Column(self._bed.elements, self._child_element),
             )
 
         @staticmethod
-        def get_inner_component(element: Puddle) -> Component:
+        def _child_element(element: Puddle) -> Component:
             """Take one of the bed's elements and reposition it."""
             assert isinstance(element, Element)
             return ChangeEnvironment(
@@ -145,12 +145,6 @@ class Bed(Element):
                 ),
                 Move(element.editor, horizontal=EDITOR_BED_INDENT),
             )
-
-        def get_outer_component(self, element: Puddle) -> Component:
-            if element is self._bed.elements:
-                return Column(element, self.get_inner_component)
-            else:
-                return Text(element, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
         def add_plant(self, *args, **kwargs):
             self._bed.elements.add(Plant(*args, **kwargs))

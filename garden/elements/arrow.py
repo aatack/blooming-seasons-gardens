@@ -1,9 +1,10 @@
 from typing import Union
 
 import pygame
-from components.column import TextColumn
+from components.column import ComponentColumn, TextColumn
 from components.component import Anonymous, Component, Wrap
 from components.presentation import Card
+from components.text import Text
 from garden.element import Element
 from settings import (
     EDITOR_BLOCK_COLOUR,
@@ -12,7 +13,7 @@ from settings import (
     EDITOR_TEXT_SIZE,
 )
 from settings import PIXELS_PER_DISTANCE_UNIT as SCALE
-from trickle import Constant, Derived, Indexed, Puddle, Surface, Visual
+from trickle import Derived, Puddle, Surface, Visual
 
 
 class Arrow(Element):
@@ -101,26 +102,27 @@ class Arrow(Element):
         def __init__(self, arrow: "Arrow"):
             self._arrow = arrow
 
-            puddles = Indexed(
-                Constant("Arrow"),
-                "Start: ("
-                + Derived(str, self._arrow.start_horizontal)
-                + ", "
-                + Derived(str, self._arrow.start_vertical)
-                + ")",
-                "End: ("
-                + Derived(str, self._arrow.end_horizontal)
-                + ", "
-                + Derived(str, self._arrow.end_vertical)
-                + ")",
-            )
+            def text(string: Union[Puddle, str]) -> Component:
+                return Text(string, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
             super().__init__(
                 Card(
-                    TextColumn(
-                        puddles,
-                        Constant(EDITOR_TEXT_SIZE),
-                        padding=Constant(EDITOR_TEXT_PADDING),
+                    ComponentColumn(
+                        text("Arrow"),
+                        text(
+                            "Start: ("
+                            + Derived(str, self._arrow.start_horizontal)
+                            + ", "
+                            + Derived(str, self._arrow.start_vertical)
+                            + ")"
+                        ),
+                        text(
+                            "End: ("
+                            + Derived(str, self._arrow.end_horizontal)
+                            + ", "
+                            + Derived(str, self._arrow.end_vertical)
+                            + ")"
+                        ),
                     ),
                     EDITOR_BLOCK_COLOUR,
                     EDITOR_PADDING,
