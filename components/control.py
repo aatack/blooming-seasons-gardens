@@ -1,9 +1,10 @@
 from typing import Any, Callable, Optional, Union
 
+import pygame
 from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
 from trickle.trickles.puddle import Puddle
-from trickle.trickles.singular import Constant, Derived, Variable
+from trickle.trickles.singular import Constant, Derived, Pointer, Variable
 from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.rectangle import Rectangle
@@ -110,20 +111,42 @@ class Button(Component):
 
 
 class Entry(Component):
+    class InvalidConversion(Exception):
+        pass
+
+    class Converters:
+        @staticmethod
+        def float(string: str) -> float:
+            try:
+                return float(string)
+            except ValueError:
+                raise Entry.InvalidConversion
 
     SELECTED_COLOUR = {"red": 152 / 255, "green": 203 / 255, "blue": 250 / 255}
     UNSELECTED_COLOUR = {"red": 1.0, "green": 1.0, "blue": 1.0}
+    INVALID_COLOUR = {"red": 247 / 255, "green": 104 / 255, "blue": 104 / 255}
 
-    def __init__(self, variable: Variable):
+    def __init__(self, variable: Variable, converter: Callable[[str], Any]):
         super().__init__()
 
         self._variable = variable
+        self._converter = converter
 
         self._selected = Variable(False)
-        self._selected.log(lambda v: v.value())
+        self._string = Variable("")
+        self._error = Variable(False)
+
+        self._environment: Optional[Environment] = None
 
     def construct(self, environment: Environment):
-        self._visual = Derived(self._build_visual, self._variable, self._selected)
+        self._environment = environment
+
+        variable = Pointer(
+            lambda s: self._string if s.value() else self._variable, self._selected,
+        )
+        self._visual = Derived(
+            self._build_visual, variable, self._selected, self._error
+        )
 
         contains_mouse = Derived(
             lambda m, w, h: 0 <= m["x"] < w and 0 <= m["y"] < h,
@@ -137,27 +160,66 @@ class Entry(Component):
             if contains_mouse.value():
                 clicked.change(True)
             else:
-                self._selected.change(False)
+                self._end_selected()
 
         def mouse_up():
             if clicked.value():
                 clicked.change(False)
                 if contains_mouse.value():
-                    self._selected.change(True)
+                    self._begin_selected()
 
         environment.mouse.add_listener(1, True, mouse_down)
         environment.mouse.add_listener(1, False, mouse_up)
 
+        environment.keyboard.general_listeners.append(self._key)
+
+    def _begin_selected(self):
+        self._string.change(str(self._variable.value()))
+        self._selected.change(True)
+
+    def _end_selected(self):
+        self._selected.change(False)
+
+    def _update_underlying_variable(self, value: str):
+        self._string.change(value)
+        try:
+            self._variable.change(self._converter(self._string.value()))
+            self._error.change(False)
+        except self.InvalidConversion:
+            self._error.change(True)
+
     @classmethod
-    def _build_visual(cls, value: Any, selected: bool) -> Visual:
+    def _build_visual(cls, value: Any, selected: bool, error: bool) -> Visual:
         text = Surface.text(str(value), EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
         background = Rectangle(
             width=text.right(),
             height=text.bottom(),
-            **(cls.SELECTED_COLOUR if selected else cls.UNSELECTED_COLOUR)
+            **(
+                (cls.INVALID_COLOUR if error else cls.SELECTED_COLOUR)
+                if selected
+                else cls.UNSELECTED_COLOUR
+            )
         )
 
         return Overlay(background, text)
+
+    def _key(self, key: int, down: bool):
+        if not self._selected.value() or not down:
+            return
+
+        if key == pygame.K_SPACE:
+            self._update_underlying_variable(self._string.value() + " ")
+        elif key == pygame.K_BACKSPACE:
+            if pygame.K_LCTRL in self._environment.keyboard.held:
+                self._update_underlying_variable("")
+            else:
+                self._update_underlying_variable(self._string.value()[:-1])
+        elif key == pygame.K_RETURN:
+            self._end_selected()
+        else:
+            character = pygame.key.name(key)
+            if len(character) == 1:
+                self._update_underlying_variable(self._string.value() + character)
 
     def deconstruct(self):
         pass

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, NamedTuple, Optional, Set, Tuple, Union
 
 from trickle.trickles.keyed import Keyed
 from trickle.trickles.puddle import Puddle, puddle
@@ -134,14 +134,26 @@ class Keyboard(Trickle):
         super().__init__()
 
         self.key_listeners: Dict[Tuple[int, bool], List[Callable]] = {}
+        self.general_listeners: List[Callable[[int, bool], None]] = []
+
+        self.held: Set[int] = set()
 
     class Key(NamedTuple):
         key: int
         down: bool
 
     def key(self, key: int, down: bool):
+        if down:
+            self.held.add(key)
+        else:
+            self.held.remove(key)
+
         for listener in self.key_listeners.get((key, down), []):
             listener()
+
+        for listener in self.general_listeners:
+            listener(key, down)
+
         self.broadcast(Keyboard.Key(key, down))
 
     def respond(self, path: Path, event: Any):

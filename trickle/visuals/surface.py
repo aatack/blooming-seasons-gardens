@@ -1,24 +1,35 @@
 import pygame
 import pygame.freetype
+from trickle.visuals.empty import Empty
 from trickle.visuals.visual import Visual
 
 
 class Surface(Visual):
+    class TooBig(Exception):
+        def __init__(self, fallback: Visual):
+            self.fallback = fallback
+
     @staticmethod
     def empty(width: float, height: float, transparent: bool = False) -> "Surface":
-        if transparent:
-            surface = pygame.Surface((int(width), int(height)), pygame.SRCALPHA)
-        else:
-            surface = pygame.Surface((int(width), int(height)))
-        return Surface(surface)
+        try:
+            if transparent:
+                surface = pygame.Surface((int(width), int(height)), pygame.SRCALPHA)
+            else:
+                surface = pygame.Surface((int(width), int(height)))
+            return Surface(surface)
+        except pygame.error:
+            raise Surface.TooBig(Empty(bottom=height, right=width))
 
     @staticmethod
     def circle(
         radius: float, red: float = 0.0, green: float = 0.0, blue: float = 0.0
     ) -> "Surface":
-        # TODO: fix the harshness of circles (and, actually, all other primitives)
+        # TODO: fix the harshness of circles
 
-        surface = Surface.empty(2 * radius, 2 * radius, transparent=True).surface
+        try:
+            surface = Surface.empty(2 * radius, 2 * radius, transparent=True).surface
+        except Surface.TooBig as e:
+            return e.fallback
 
         radius = int(radius)
         colour = (int(red * 255), int(green * 255), int(blue * 255))

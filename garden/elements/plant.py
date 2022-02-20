@@ -143,7 +143,7 @@ class Plant(Element):
                         Constant(EDITOR_TEXT_SIZE),
                         padding=Constant(EDITOR_TEXT_PADDING),
                     ),
-                    Entry(self._plant.size),
+                    Entry(self._plant.size, Entry.Converters.float),
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,
