@@ -5,6 +5,7 @@ from components.component import Anonymous, Component
 from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Pad
+from components.text import Text
 from garden.element import Element
 from garden.elements.arrow import Arrow
 from garden.elements.label import Label
@@ -149,14 +150,7 @@ class Bed(Element):
             if element is self._bed.elements:
                 return Column(element, self.get_inner_component)
             else:
-                return Anonymous(
-                    lambda _: Derived(
-                        lambda v: Surface.text(
-                            str(v), EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING
-                        ),
-                        element,
-                    )
-                )
+                return Text(element, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
         def add_plant(self, *args, **kwargs):
             self._bed.elements.add(Plant(*args, **kwargs))
