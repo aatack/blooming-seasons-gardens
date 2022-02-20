@@ -1,7 +1,7 @@
 from typing import Union
 
 import pygame
-from components.column import ComponentColumn, TextColumn
+from components.column import ComponentColumn
 from components.component import Anonymous, Component, Wrap
 from components.presentation import Card
 from components.text import Text

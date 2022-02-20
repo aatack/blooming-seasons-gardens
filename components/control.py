@@ -5,7 +5,6 @@ from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived, Pointer, Variable
-from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
