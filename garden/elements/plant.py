@@ -1,7 +1,8 @@
 from typing import Union
 
-from components.column import TextColumn
+from components.column import ComponentColumn, TextColumn
 from components.component import Anonymous, Component
+from components.control import Entry
 from components.presentation import Card
 from garden.element import Element
 from settings import (
@@ -127,19 +128,22 @@ class Plant(Element):
             puddles = Indexed(
                 Constant("Plant"),
                 "Name: " + self._plant.name,
-                "Size: " + Derived(str, self._plant.size),
                 "Position: ("
                 + Derived(str, self._plant.horizontal)
                 + ", "
                 + Derived(str, self._plant.vertical)
                 + ")",
+                Constant("Size:"),
             )
 
             super().__init__(
-                TextColumn(
-                    puddles,
-                    Constant(EDITOR_TEXT_SIZE),
-                    padding=Constant(EDITOR_TEXT_PADDING),
+                ComponentColumn(
+                    TextColumn(
+                        puddles,
+                        Constant(EDITOR_TEXT_SIZE),
+                        padding=Constant(EDITOR_TEXT_PADDING),
+                    ),
+                    Entry(self._plant.size),
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,

@@ -1,12 +1,14 @@
-from typing import Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 from settings import EDITOR_TEXT_PADDING, EDITOR_TEXT_SIZE
 from trickle import Environment
 from trickle.trickles.puddle import Puddle
 from trickle.trickles.singular import Constant, Derived, Variable
+from trickle.visuals.empty import Empty
 from trickle.visuals.overlay import Overlay
 from trickle.visuals.rectangle import Rectangle
 from trickle.visuals.surface import Surface
+from trickle.visuals.visual import Visual
 
 from components.component import Component, Wrap
 
@@ -108,4 +110,60 @@ class Button(Component):
 
 
 class Entry(Component):
-    pass
+
+    SELECTED_COLOUR = {"red": 152 / 255, "green": 203 / 255, "blue": 250 / 255}
+    UNSELECTED_COLOUR = {"red": 1.0, "green": 1.0, "blue": 1.0}
+
+    def __init__(self, variable: Variable):
+        super().__init__()
+
+        self._variable = variable
+
+        self._selected = Variable(False)
+        self._selected.log(lambda v: v.value())
+
+    def construct(self, environment: Environment):
+        self._visual = Derived(self._build_visual, self._variable, self._selected)
+
+        contains_mouse = Derived(
+            lambda m, w, h: 0 <= m["x"] < w and 0 <= m["y"] < h,
+            environment.mouse,
+            self.width,
+            self.height,
+        )
+        clicked = Variable(False)
+
+        def mouse_down():
+            if contains_mouse.value():
+                clicked.change(True)
+            else:
+                self._selected.change(False)
+
+        def mouse_up():
+            if clicked.value():
+                clicked.change(False)
+                if contains_mouse.value():
+                    self._selected.change(True)
+
+        environment.mouse.add_listener(1, True, mouse_down)
+        environment.mouse.add_listener(1, False, mouse_up)
+
+    @classmethod
+    def _build_visual(cls, value: Any, selected: bool) -> Visual:
+        text = Surface.text(str(value), EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
+        background = Rectangle(
+            width=text.right(),
+            height=text.bottom(),
+            **(cls.SELECTED_COLOUR if selected else cls.UNSELECTED_COLOUR)
+        )
+
+        return Overlay(background, text)
+
+    def deconstruct(self):
+        pass
+
+    def _width(self) -> Puddle[float]:
+        return Derived(lambda v: v.right(), self._visual)
+
+    def _height(self) -> Puddle[float]:
+        return Derived(lambda v: v.bottom(), self._visual)
