@@ -133,7 +133,7 @@ class Card(Component):
 
     def construct(self, environment: Environment):
         self._modified = Pad(
-            Background(Fill(self._component), self._colour), self._padding
+            Background(Fill(Pad(self._component, 2)), self._colour), self._padding,
         )
         self._visual = self._modified(environment)
 
