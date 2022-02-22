@@ -45,15 +45,20 @@ class Surface(Visual):
     def text(
         text: str, size: int, font: str = "segoeuisemibold", padding: int = 0
     ) -> "Surface":
-        text_surface, *_ = pygame.freetype.SysFont(font, size).render(text)
-        if padding != 0:
-            width, height = text_surface.get_size()
-            surface = Surface.empty(
-                (2 * padding) + width, (2 * padding) + height, transparent=True
-            ).surface
-            surface.blit(text_surface, (padding, padding))
-        else:
-            surface = text_surface
+        system_font = pygame.freetype.SysFont(font, size)
+        system_font.origin = True
+
+        height = system_font.get_sized_height()
+        bounds = system_font.get_rect(text)
+
+        surface = Surface.empty(
+            bounds.width + 4 + (2 * padding), height + (2 * padding), transparent=True
+        ).surface
+
+        system_font.render_to(
+            surface, (2 + padding, int(height * 0.75) + padding), None
+        )
+
         return Surface(surface)
 
     def __init__(self, surface: pygame.Surface, x: float = 0.0, y: float = 0.0):
