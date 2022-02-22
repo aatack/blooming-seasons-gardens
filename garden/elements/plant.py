@@ -4,6 +4,7 @@ from components.column import ComponentColumn
 from components.component import Anonymous, Component
 from components.control import Entry
 from components.presentation import Card
+from components.row import ComponentRow
 from components.text import Text
 from garden.element import Element
 from settings import (
@@ -131,8 +132,9 @@ class Plant(Element):
                         + Derived(str, self._plant.vertical)
                         + ")"
                     ),
-                    text("Size:"),
-                    Entry(self._plant.size, Entry.Converters.float),
+                    ComponentRow(
+                        text("Size:"), Entry(self._plant.size, Entry.Converters.float)
+                    ),
                 ),
                 EDITOR_BLOCK_COLOUR,
                 EDITOR_PADDING,

@@ -5,6 +5,7 @@ from components.component import Component
 from components.control import Button, ChangeEnvironment
 from components.positioning import Move
 from components.presentation import Pad
+from components.row import ComponentRow
 from components.text import Text
 from garden.element import Element
 from garden.elements.arrow import Arrow
@@ -116,12 +117,6 @@ class Bed(Element):
                 return Text(string, EDITOR_TEXT_SIZE, padding=EDITOR_TEXT_PADDING)
 
             super().__init__(
-                Pad(Button("Add plant", lambda: self.add_plant("Plant", 0.1)), 2),
-                Pad(Button("Add bed", lambda: self.add_bed([])), 2),
-                Pad(Button("Add label", lambda: self.add_label("Label")), 2),
-                Pad(
-                    Button("Add arrow", lambda: self.add_arrow(0.0, 0.0, 0.5, 0.5)), 2,
-                ),
                 text("Bed"),
                 text(
                     "Position: ("
@@ -129,6 +124,15 @@ class Bed(Element):
                     + ", "
                     + Derived(str, self._bed.vertical)
                     + ")"
+                ),
+                ComponentRow(
+                    Pad(Button("Add plant", lambda: self.add_plant("Plant", 0.1)), 2),
+                    Pad(Button("Add bed", lambda: self.add_bed([])), 2),
+                    Pad(Button("Add label", lambda: self.add_label("Label")), 2),
+                    Pad(
+                        Button("Add arrow", lambda: self.add_arrow(0.0, 0.0, 0.5, 0.5)),
+                        2,
+                    ),
                 ),
                 Column(self._bed.elements, self._child_element),
             )
