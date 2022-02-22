@@ -2,7 +2,9 @@ from typing import Union
 
 from components.column import ComponentColumn
 from components.component import Anonymous, Component
+from components.control import Entry
 from components.presentation import Card
+from components.row import ComponentRow
 from components.text import Text
 from garden.element import Element
 from settings import (
@@ -77,14 +79,19 @@ class Label(Element):
             super().__init__(
                 ComponentColumn(
                     text("Label"),
-                    text("Text: " + Derived(str, self._label.text)),
-                    text("Size: " + Derived(str, self._label.size)),
-                    text(
-                        "Position: ("
-                        + Derived(str, self._label.horizontal)
-                        + ", "
-                        + Derived(str, self._label.vertical)
-                        + ")"
+                    ComponentRow(
+                        text("Text: "), Entry(self._label.text, Entry.Converters.string)
+                    ),
+                    ComponentRow(
+                        text("Size: "),
+                        Entry(self._label.size, Entry.Converters.integer),
+                    ),
+                    ComponentRow(
+                        text("Position: ("),
+                        Entry(self._label.horizontal, Entry.Converters.float),
+                        text(", "),
+                        Entry(self._label.vertical, Entry.Converters.float),
+                        text(")"),
                     ),
                 ),
                 EDITOR_BLOCK_COLOUR,

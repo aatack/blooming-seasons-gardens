@@ -3,7 +3,9 @@ from typing import Union
 import pygame
 from components.column import ComponentColumn
 from components.component import Anonymous, Component, Wrap
+from components.control import Entry
 from components.presentation import Card
+from components.row import ComponentRow
 from components.text import Text
 from garden.element import Element
 from settings import (
@@ -109,19 +111,19 @@ class Arrow(Element):
                 Card(
                     ComponentColumn(
                         text("Arrow"),
-                        text(
-                            "Start: ("
-                            + Derived(str, self._arrow.start_horizontal)
-                            + ", "
-                            + Derived(str, self._arrow.start_vertical)
-                            + ")"
+                        ComponentRow(
+                            text("Start: ("),
+                            Entry(self._arrow.start_horizontal, Entry.Converters.float),
+                            text(", "),
+                            Entry(self._arrow.start_vertical, Entry.Converters.float),
+                            text(")"),
                         ),
-                        text(
-                            "End: ("
-                            + Derived(str, self._arrow.end_horizontal)
-                            + ", "
-                            + Derived(str, self._arrow.end_vertical)
-                            + ")"
+                        ComponentRow(
+                            text("End: ("),
+                            Entry(self._arrow.start_horizontal, Entry.Converters.float),
+                            text(", "),
+                            Entry(self._arrow.start_vertical, Entry.Converters.float),
+                            text(")"),
                         ),
                     ),
                     EDITOR_BLOCK_COLOUR,

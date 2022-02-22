@@ -124,13 +124,15 @@ class Plant(Element):
             super().__init__(
                 ComponentColumn(
                     text("Plant"),
-                    text("Name: " + self._plant.name),
-                    text(
-                        "Position: ("
-                        + Derived(str, self._plant.horizontal)
-                        + ", "
-                        + Derived(str, self._plant.vertical)
-                        + ")"
+                    ComponentRow(
+                        text("Name: "), Entry(self._plant.name, Entry.Converters.string)
+                    ),
+                    ComponentRow(
+                        text("Position: ("),
+                        Entry(self._plant.horizontal, Entry.Converters.float),
+                        text(", "),
+                        Entry(self._plant.vertical, Entry.Converters.float),
+                        text(")"),
                     ),
                     ComponentRow(
                         text("Size:"), Entry(self._plant.size, Entry.Converters.float)

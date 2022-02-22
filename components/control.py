@@ -121,6 +121,17 @@ class Entry(Component):
             except ValueError:
                 raise Entry.InvalidConversion
 
+        @staticmethod
+        def integer(string: str) -> int:
+            try:
+                return int(string)
+            except ValueError:
+                raise Entry.InvalidConversion
+
+        @staticmethod
+        def string(string: str) -> str:
+            return string.strip()
+
     SELECTED_COLOUR = {"red": 152 / 255, "green": 203 / 255, "blue": 250 / 255}
     UNSELECTED_COLOUR = {"red": 1.0, "green": 1.0, "blue": 1.0}
     INVALID_COLOUR = {"red": 247 / 255, "green": 104 / 255, "blue": 104 / 255}
