@@ -48,6 +48,9 @@ class Surface(Visual):
         system_font = pygame.freetype.SysFont(font, size)
         system_font.origin = True
 
+        # TODO: work out how to do this properly.  See the following link for more info:
+        # https://www.pygame.org/docs/ref/freetype.html#pygame.freetype.Font.get_rect
+
         height = system_font.get_sized_height()
         bounds = system_font.get_rect(text)
 
