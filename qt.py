@@ -25,4 +25,5 @@ __all__ = [
     "QPen",
     "QFont",
     "QFontMetrics",
+    "QScrollArea",
 ]

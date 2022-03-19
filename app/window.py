@@ -38,7 +38,14 @@ class Window(QMainWindow):
 
     @cached_property
     def editor_view(self) -> QWidget:
-        return self.garden.widget
+        scroll = QScrollArea()
+
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(self.garden.widget)
+
+        return scroll
 
     @cached_property
     def plan_view(self) -> QWidget:
