@@ -8,13 +8,11 @@ from qt import (
     QLineEdit,
     QPushButton,
     QRadioButton,
-    QSlider,
-    Qt,
     QVBoxLayout,
     QWidget,
 )
 
-from app.utils import build_colour_slider
+from app.utils import build_colour_slider, set_widget_background
 
 
 class Garden:
@@ -77,6 +75,7 @@ class Bed:
         self._garden: Optional[Garden] = None
 
         self._name = ""
+        self._position = (0.0, 0.0)
         self._plants: List["Plant"] = []
 
     def set_garden(self, garden: Garden):
@@ -90,6 +89,9 @@ class Bed:
 
     def set_name(self, name: str):
         self._name = name
+
+    def set_position(self, position: Tuple[float, float]):
+        self._position = position
 
     def add_plant(self, plant: "Plant"):
         plant.set_bed(self)
@@ -113,8 +115,11 @@ class Bed:
         layout = QVBoxLayout()
         widget.setLayout(layout)
 
-        set_name = QLineEdit()
-        set_name.textEdited.connect(lambda: self.set_name(set_name.text()))
+        darkness = 128
+        set_widget_background(widget, (darkness,) * 3)
+
+        # set_name = QLineEdit()
+        # set_name.textEdited.connect(lambda: self.set_name(set_name.text()))
 
         def add_new_plant():
             self.add_plant(Plant())
@@ -125,12 +130,51 @@ class Bed:
         remove = QPushButton("Remove")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
-        layout.addWidget(set_name)
+        # layout.addWidget(set_name)
+        layout.addLayout(self._form)
         layout.addWidget(add_plant)
         layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
         return widget
+
+    @cached_property
+    def _form(self) -> QFormLayout:
+        form = QFormLayout()
+
+        # Name
+        name_label = QLabel("Name:")
+        name_edit = QLineEdit(self._name)
+        name_edit.textEdited.connect(lambda: self.set_name(name_edit.text()))
+        form.addRow(name_label, name_edit)
+
+        # Position
+        position_label = QLabel("Position:")
+        position_layout = QHBoxLayout()
+
+        x_label = QLabel("x =")
+        x_edit = QLineEdit(str(self._position[0]))
+        y_label = QLabel("y =")
+        y_edit = QLineEdit(str(self._position[1]))
+
+        position_layout.addWidget(x_label)
+        position_layout.addWidget(x_edit)
+        position_layout.addWidget(y_label)
+        position_layout.addWidget(y_edit)
+
+        def update_position():
+            try:
+                x, y = float(x_edit.text()), float(y_edit.text())
+                self.set_position((x, y))
+            except ValueError:
+                pass
+
+        x_edit.textEdited.connect(update_position)
+        y_edit.textEdited.connect(update_position)
+
+        form.addRow(position_label, position_layout)
+
+        return form
 
     @cached_property
     def _plants_layout(self) -> QVBoxLayout:
@@ -158,6 +202,7 @@ class Plant:
 
         self._name = ""
         self._size = 0.1
+        self._position = (0.0, 0.0)
         self._colour = (0, 64, 128)
 
     def set_bed(self, bed: Bed):
@@ -171,6 +216,9 @@ class Plant:
 
     def set_size(self, size: float):
         self._size = size
+
+    def set_position(self, position: Tuple[float, float]):
+        self._position = position
 
     def set_colour(self, colour: Tuple[int, int, int]):
         self._colour = colour
@@ -225,13 +273,13 @@ class Plant:
 
         # Name
         name_label = QLabel("Name:")
-        name_edit = QLineEdit()
+        name_edit = QLineEdit(self._name)
         name_edit.textEdited.connect(lambda: self.set_name(name_edit.text()))
         form.addRow(name_label, name_edit)
 
         # Size
         size_label = QLabel("Size:")
-        size_edit = QLineEdit()
+        size_edit = QLineEdit(str(self._size))
 
         def update_size():
             try:
@@ -242,6 +290,32 @@ class Plant:
 
         size_edit.textEdited.connect(update_size)
         form.addRow(size_label, size_edit)
+
+        # Position
+        position_label = QLabel("Position:")
+        position_layout = QHBoxLayout()
+
+        x_label = QLabel("x =")
+        x_edit = QLineEdit(str(self._position[0]))
+        y_label = QLabel("y =")
+        y_edit = QLineEdit(str(self._position[1]))
+
+        position_layout.addWidget(x_label)
+        position_layout.addWidget(x_edit)
+        position_layout.addWidget(y_label)
+        position_layout.addWidget(y_edit)
+
+        def update_position():
+            try:
+                x, y = float(x_edit.text()), float(y_edit.text())
+                self.set_position((x, y))
+            except ValueError:
+                pass
+
+        x_edit.textEdited.connect(update_position)
+        y_edit.textEdited.connect(update_position)
+
+        form.addRow(position_label, position_layout)
 
         # Colour
         colour_label = QLabel("Colour:")
@@ -266,7 +340,8 @@ class Plant:
         return {
             "name": self._name,
             "size": self._size,
-            "colour": list(self._colour)
+            "position": list(self._position),
+            "colour": list(self._colour),
         }
 
     @staticmethod
@@ -275,6 +350,7 @@ class Plant:
 
         plant.set_name(json["name"])
         plant.set_size(json["size"])
+        plant.set_position(tuple(json["position"]))
         plant.set_colour(tuple(json["colour"]))
 
         return plant
