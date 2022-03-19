@@ -31,6 +31,14 @@ class Garden:
     def __init__(self):
         self._beds: List["Bed"] = []
 
+        self.plan_view_widget: Optional[QWidget] = None
+        self._rendered = False
+
+    def update_render(self):
+        if self._rendered:
+            assert self.plan_view_widget is not None
+            self.plan_view_widget.update()
+
     @property
     def beds(self) -> Iterator["Bed"]:
         yield from self._beds
@@ -40,12 +48,14 @@ class Garden:
         self._beds.append(bed)
 
         self._beds_layout.addWidget(bed.widget)
+        self.update_render()
 
     def remove_bed(self, bed: "Bed"):
         self._beds.remove(bed)
         self._beds_layout.removeWidget(bed.widget)
 
         bed.remove()
+        self.update_render()
 
     @cached_property
     def widget(self) -> QWidget:
@@ -75,6 +85,7 @@ class Garden:
 
     @cached_property
     def renderable(self) -> Renderable:
+        self._rendered = True
         return Garden.Renderable(self)
 
     def serialise(self) -> list:
@@ -121,6 +132,12 @@ class Bed:
         self._position = (0.0, 0.0)
         self._plants: List["Plant"] = []
 
+        self._rendered = False
+
+    def update_render(self):
+        if self._rendered:
+            self.garden.update_render()
+
     @property
     def garden(self) -> Garden:
         assert self._garden is not None
@@ -140,6 +157,7 @@ class Bed:
     @name.setter
     def name(self, name: str):
         self._name = name
+        self.update_render()
 
     @property
     def position(self) -> Tuple[float, float]:
@@ -148,6 +166,7 @@ class Bed:
     @position.setter
     def position(self, position: Tuple[float, float]):
         self._position = position
+        self.update_render()
 
     @property
     def plants(self) -> Iterator["Plant"]:
@@ -158,12 +177,14 @@ class Bed:
         self._plants.append(plant)
 
         self._plants_layout.addWidget(plant.widget)
+        self.update_render()
 
     def remove_plant(self, plant: "Plant"):
         self._plants.remove(plant)
         self._plants_layout.removeWidget(plant.widget)
 
         plant.remove()
+        self.update_render()
 
     def remove(self):
         self._garden = None
@@ -242,6 +263,7 @@ class Bed:
 
     @cached_property
     def renderable(self) -> Renderable:
+        self._rendered = True
         return Bed.Renderable(self)
 
     def serialise(self) -> dict:
@@ -280,6 +302,12 @@ class Plant:
         self._position = (0.0, 0.0)
         self._colour = (0, 64, 128)
 
+        self._rendered = False
+
+    def update_render(self):
+        if self._rendered:
+            self.bed.update_render()
+
     @property
     def bed(self) -> Bed:
         assert self._bed is not None
@@ -299,6 +327,7 @@ class Plant:
     @name.setter
     def name(self, name: str):
         self._name = name
+        self.update_render()
 
     @property
     def size(self) -> float:
@@ -307,6 +336,7 @@ class Plant:
     @size.setter
     def size(self, size: float):
         self._size = size
+        self.update_render()
 
     @property
     def position(self) -> Tuple[float, float]:
@@ -315,6 +345,7 @@ class Plant:
     @position.setter
     def position(self, position: Tuple[float, float]):
         self._position = position
+        self.update_render()
 
     @property
     def colour(self) -> Tuple[int, int, int]:
@@ -323,6 +354,7 @@ class Plant:
     @colour.setter
     def colour(self, colour: Tuple[int, int, int]):
         self._colour = colour
+        self.update_render()
 
     def remove(self):
         self._garden = None
@@ -443,6 +475,7 @@ class Plant:
 
     @cached_property
     def renderable(self) -> Renderable:
+        self._rendered = True
         return Plant.Renderable(self)
 
     def serialise(self) -> dict:

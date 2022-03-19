@@ -15,8 +15,12 @@ class Window(QMainWindow):
 
         self.garden = garden
 
+        _ = self.plan_view
+
         self.setCentralWidget(self.central_widget)
         self.setStatusBar(self.status_bar)
+
+        self.garden.plan_view_widget = self.plan_view
 
     @cached_property
     def status_bar(self) -> QStatusBar:
@@ -50,7 +54,7 @@ class Window(QMainWindow):
         return scroll
 
     @cached_property
-    def plan_view(self) -> QWidget:
+    def plan_view(self) -> "PlanView":
         editor_view = PlanView(self.garden.renderable)
 
         set_widget_background(editor_view, (255, 255, 255))
