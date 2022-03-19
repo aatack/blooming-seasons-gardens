@@ -1,7 +1,7 @@
 from functools import cached_property
 from typing import Optional
 
-from qt import *
+from qt import QHBoxLayout, QMainWindow, QMenuBar, QScrollArea, QStatusBar, Qt, QWidget
 
 from app.camera import WidgetCamera
 from app.canvas import Canvas, Renderable
@@ -17,18 +17,32 @@ class Window(QMainWindow):
 
         _ = self.plan_view
 
+        self.setMenuBar(self.menu_bar)
         self.setCentralWidget(self.central_widget)
         self.setStatusBar(self.status_bar)
 
         self.garden.plan_view_widget = self.plan_view
 
     @cached_property
-    def status_bar(self) -> QStatusBar:
-        status_bar = QStatusBar()
+    def menu_bar(self) -> QMenuBar:
+        menu_bar = QMenuBar(self)
 
-        # TODO: add widgets and status information
+        file_menu = menu_bar.addMenu("&File")
+        file_menu.addAction("New")
+        file_menu.addAction("Open")
+        file_menu.addAction("Save")
+        file_menu.addAction("Exit")
 
-        return status_bar
+        edit_menu = menu_bar.addMenu("&Edit")
+        edit_menu.addAction("Copy")
+        edit_menu.addAction("Paste")
+        edit_menu.addAction("Cut")
+
+        help_menu = menu_bar.addMenu("&Help")
+        help_menu.addAction("Help Content")
+        help_menu.addAction("About")
+
+        return menu_bar
 
     @cached_property
     def central_widget(self) -> QWidget:
@@ -41,6 +55,14 @@ class Window(QMainWindow):
         central_widget.setLayout(views)
 
         return central_widget
+
+    @cached_property
+    def status_bar(self) -> QStatusBar:
+        status_bar = QStatusBar()
+
+        # TODO: add widgets and status information
+
+        return status_bar
 
     @cached_property
     def editor_view(self) -> QWidget:

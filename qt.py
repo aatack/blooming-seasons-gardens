@@ -26,4 +26,6 @@ __all__ = [
     "QFont",
     "QFontMetrics",
     "QScrollArea",
+    "QMenuBar",
+    "QMenu",
 ]
