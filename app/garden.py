@@ -256,11 +256,9 @@ class Plant:
             self.plant = plant
 
         def render(self, camera: Camera):
-            camera.circle(
-                self.plant.get_position(),
-                self.plant.get_size(),
-                self.plant.get_colour(),
-            )
+            x, y = self.plant.get_position()
+            radius = self.plant.get_size()
+            camera.circle((x - radius, y - radius), radius, self.plant.get_colour())
 
     def __init__(self):
         self._bed: Optional[Bed] = None

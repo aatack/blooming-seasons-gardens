@@ -104,9 +104,13 @@ class PlanView(Canvas):
 
         # TODO: also calculate the new x and y coordinates
 
-        if change > 0:
-            self._camera_scale *= 1.2
-            self.update()
-        if change < 0:
-            self._camera_scale /= 1.2
+        if change != 0:
+            fixed_x = (event.x() / self._camera_scale) - self._camera_x
+            fixed_y = (event.y() / self._camera_scale) - self._camera_y
+            zoom = 1.2 if change > 0 else (1 / 1.2)
+
+            self._camera_x = ((fixed_x + self._camera_x) / zoom) - fixed_x
+            self._camera_y = ((fixed_y + self._camera_y) / zoom) - fixed_y
+
+            self._camera_scale *= zoom
             self.update()

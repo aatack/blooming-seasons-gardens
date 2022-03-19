@@ -9,6 +9,14 @@ Colour = Tuple[int, int, int]
 
 class Camera:
     @abc.abstractmethod
+    def transform(self, point: Point) -> Point:
+        pass
+
+    @abc.abstractmethod
+    def inverse_transform(self, point: Point) -> Point:
+        pass
+
+    @abc.abstractmethod
     def rectangle(self, position: Point, width: float, height: float, colour: Colour):
         pass
 
@@ -45,6 +53,12 @@ class WidgetCamera(Camera):
         self._font_metrics = QFontMetrics(self._font)
 
         self._font_height = self._font_metrics.height() / self._fudge_factor
+
+    def transform(self, point: Point) -> Point:
+        return point
+
+    def inverse_transform(self, point: Point) -> Point:
+        return point
 
     def destroy(self):
         self._painter = None
@@ -96,36 +110,27 @@ class ScaledCamera(Camera):
         self._camera = camera
         self._scale = scale
 
+    def transform(self, point: Point) -> Point:
+        return point[0] * self._scale, point[1] * self._scale
+
+    def inverse_transform(self, point: Point) -> Point:
+        return point[0] / self._scale, point[1] / self._scale
+
     def rectangle(self, position: Point, width: float, height: float, colour: Colour):
         self._camera.rectangle(
-            (position[0] * self._scale, position[1] * self._scale),
-            width * self._scale,
-            height * self._scale,
-            colour,
+            self.transform(position), width * self._scale, height * self._scale, colour
         )
 
     def circle(self, position: Point, radius: float, colour: Colour):
-        self._camera.circle(
-            (position[0] * self._scale, position[1] * self._scale),
-            radius * self._scale,
-            colour,
-        )
+        self._camera.circle(self.transform(position), radius * self._scale, colour)
 
     def line(self, start: Point, end: Point, width: float, colour: Colour):
         self._camera.line(
-            (start[0] * self._scale, start[1] * self._scale),
-            (end[0] * self._scale, end[1] * self._scale),
-            width * self._scale,
-            colour,
+            self.transform(start), self.transform(end), width * self._scale, colour
         )
 
     def text(self, position: Point, text: str, height: float, colour: Colour):
-        self._camera.text(
-            (position[0] * self._scale, position[1] * self._scale),
-            text,
-            height * self._scale,
-            colour,
-        )
+        self._camera.text(self.transform(position), text, height * self._scale, colour)
 
 
 class ShiftedCamera(Camera):
@@ -133,17 +138,20 @@ class ShiftedCamera(Camera):
         self._camera = camera
         self._shift = shift
 
-    def _transform(self, point: Point) -> Point:
+    def transform(self, point: Point) -> Point:
         return point[0] + self._shift[0], point[1] + self._shift[1]
 
+    def inverse_transform(self, point: Point) -> Point:
+        return point[0] - self._shift[0], point[1] - self._shift[1]
+
     def rectangle(self, position: Point, width: float, height: float, colour: Colour):
-        self._camera.rectangle(self._transform(position), width, height, colour)
+        self._camera.rectangle(self.transform(position), width, height, colour)
 
     def circle(self, position: Point, radius: float, colour: Colour):
-        self._camera.circle(self._transform(position), radius, colour)
+        self._camera.circle(self.transform(position), radius, colour)
 
     def line(self, start: Point, end: Point, width: float, colour: Colour):
-        self._camera.line(self._transform(start), self._transform(end), width, colour)
+        self._camera.line(self.transform(start), self.transform(end), width, colour)
 
     def text(self, position: Point, text: str, height: float, colour: Colour):
-        self._camera.text(self._transform(position), text, height, colour)
+        self._camera.text(self.transform(position), text, height, colour)
