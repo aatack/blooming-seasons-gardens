@@ -152,7 +152,8 @@ class Entry(Component):
         self._environment = environment
 
         variable = Pointer(
-            lambda s: self._string if s.value() else self._variable, self._selected,
+            lambda s: self._string if s.value() else self._variable,
+            self._selected,
         )
         self._visual = Derived(
             self._build_visual, variable, self._selected, self._error

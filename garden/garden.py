@@ -19,7 +19,8 @@ class Garden(Keyed):
     def component(self) -> Component:
         def component(environment: environment.Environment) -> Derived:
             plan = Move(
-                self.element.plan, horizontal=environment.screen.width * EDITOR_WIDTH,
+                self.element.plan,
+                horizontal=environment.screen.width * EDITOR_WIDTH,
             )
             editor = Background(
                 Fill(Scroll(self.element.editor, scroll_speed=EDITOR_SCROLL_SPEED)),

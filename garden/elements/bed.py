@@ -39,7 +39,9 @@ class Bed(Element):
             assert isinstance(element, Element)
 
         super().__init__(
-            elements=Indexed(*elements), horizontal=horizontal, vertical=vertical,
+            elements=Indexed(*elements),
+            horizontal=horizontal,
+            vertical=vertical,
         )
 
     @property
@@ -89,7 +91,9 @@ class Bed(Element):
                 visuals: List[Visual], horizontal: float, vertical: float
             ) -> Visual:
                 return Reposition(
-                    Overlay(*visuals), x=horizontal * SCALE, y=vertical * SCALE,
+                    Overlay(*visuals),
+                    x=horizontal * SCALE,
+                    y=vertical * SCALE,
                 )
 
             self._visual = Derived(

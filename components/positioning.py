@@ -109,7 +109,9 @@ class Scroll(Component):
         )
 
         self._visual = Derived(
-            lambda c, y: Reposition(c, y=y), component, self._scroll_position,
+            lambda c, y: Reposition(c, y=y),
+            component,
+            self._scroll_position,
         )
 
     def deconstruct(self):

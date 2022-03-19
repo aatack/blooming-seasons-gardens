@@ -2,6 +2,7 @@ from functools import cached_property
 
 from qt import *
 
+from app.canvas import Canvas
 from app.garden import Garden
 from app.utils import set_widget_background
 
@@ -41,7 +42,7 @@ class Window(QMainWindow):
 
     @cached_property
     def plan_view(self) -> QWidget:
-        editor_view = QWidget()
+        editor_view = Canvas()
 
         set_widget_background(editor_view, (255, 255, 255))
 

@@ -20,5 +20,9 @@ __all__ = [
     "Qt",
     "QColor",
     "QSlider",
-    "QLayout"
+    "QLayout",
+    "QPainter",
+    "QPen",
+    "QFont",
+    "QFontMetrics",
 ]

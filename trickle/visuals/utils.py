@@ -12,7 +12,13 @@ def debug_visual(
     if height is None:
         height = int(visual.bottom() + 100)
 
-    surface = pygame.display.set_mode((width, height,), pygame.RESIZABLE)
+    surface = pygame.display.set_mode(
+        (
+            width,
+            height,
+        ),
+        pygame.RESIZABLE,
+    )
 
     while True:
         for event in pygame.event.get():

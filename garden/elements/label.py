@@ -67,7 +67,11 @@ class Label(Element):
 
         @staticmethod
         def plan(text: str, size: int, x: float, y: float) -> Visual:
-            return Reposition(Surface.text(text, size), x=x * SCALE, y=y * SCALE,)
+            return Reposition(
+                Surface.text(text, size),
+                x=x * SCALE,
+                y=y * SCALE,
+            )
 
     class Editor(Card):
         def __init__(self, label: "Label"):

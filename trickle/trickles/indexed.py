@@ -57,7 +57,10 @@ class Indexed(Puddle[List[T]]):
 
 class Mapped(Indexed):
     def __init__(
-        self, function: Callable, indexed: Indexed, function_of_puddle: bool = False,
+        self,
+        function: Callable,
+        indexed: Indexed,
+        function_of_puddle: bool = False,
     ):
         self.function = function
         self.indexed = indexed

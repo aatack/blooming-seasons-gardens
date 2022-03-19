@@ -95,9 +95,21 @@ class Pointer(Puddle):
         self.listen(("reference",), self.reference)
 
         for index, puddle in enumerate(self.indexed):
-            self.listen(("pointer", index,), puddle)
+            self.listen(
+                (
+                    "pointer",
+                    index,
+                ),
+                puddle,
+            )
         for key, puddle in self.keyed.items():
-            self.listen(("pointer", key,), puddle)
+            self.listen(
+                (
+                    "pointer",
+                    key,
+                ),
+                puddle,
+            )
 
     def respond(self, path: Path, event: Any):
         if path[0] == "pointer":

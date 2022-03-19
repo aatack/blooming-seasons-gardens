@@ -63,7 +63,7 @@ class Garden:
     @staticmethod
     def deserialise(json: list) -> "Garden":
         garden = Garden()
-        
+
         for bed in json:
             garden.add_bed(Bed.deserialise(bed))
 
@@ -183,7 +183,7 @@ class Bed:
     def serialise(self) -> dict:
         return {
             "name": self._name,
-            "plants": [plant.serialise() for plant in self._plants]
+            "plants": [plant.serialise() for plant in self._plants],
         }
 
     @staticmethod
