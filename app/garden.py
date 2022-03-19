@@ -25,7 +25,6 @@ class Garden:
             self.garden = garden
 
         def render(self, camera: Camera):
-            camera = camera.scale(100).shift(x=1, y=1)
             for bed in self.garden.iterate_beds():
                 bed.renderable.render(camera)
 
@@ -112,7 +111,7 @@ class Bed:
 
         def render(self, camera: Camera):
             for plant in self.bed.iterate_plants():
-                plant.renderable.render(camera)
+                plant.renderable.render(camera.shift(*self.bed.get_position()))
 
     def __init__(self):
         self._garden: Optional[Garden] = None
@@ -132,6 +131,9 @@ class Bed:
 
     def set_name(self, name: str):
         self._name = name
+
+    def get_position(self) -> Tuple[float, float]:
+        return self._position
 
     def set_position(self, position: Tuple[float, float]):
         self._position = position

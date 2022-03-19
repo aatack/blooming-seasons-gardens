@@ -1,8 +1,10 @@
 from functools import cached_property
+from typing import Optional
 
 from qt import *
 
-from app.canvas import Canvas
+from app.camera import WidgetCamera
+from app.canvas import Canvas, Renderable
 from app.garden import Garden
 from app.utils import set_widget_background
 
@@ -49,8 +51,62 @@ class Window(QMainWindow):
 
     @cached_property
     def plan_view(self) -> QWidget:
-        editor_view = Canvas(self.garden.renderable)
+        editor_view = PlanView(self.garden.renderable)
 
         set_widget_background(editor_view, (255, 255, 255))
 
         return editor_view
+
+
+class PlanView(Canvas):
+    def __init__(self, renderable: Renderable):
+        super().__init__(renderable)
+
+        self._camera_x = 1.0
+        self._camera_y = 1.0
+
+        self._camera_scale = 100.0
+
+        self._mouse_x: Optional[int] = None
+        self._mouse_y: Optional[int] = None
+
+        self.setMouseTracking(True)
+
+    def paintEvent(self, _):
+        camera = WidgetCamera(self)
+
+        self._renderable.render(
+            camera.scale(self._camera_scale).shift(self._camera_x, self._camera_y)
+        )
+
+        camera.destroy()
+
+    def mouseMoveEvent(self, event):
+        if self._mouse_x is None:
+            self._mouse_x = event.x()
+        if self._mouse_y is None:
+            self._mouse_y = event.y()
+
+        if event.buttons() == Qt.LeftButton:
+            x = event.x() - self._mouse_x
+            y = event.y() - self._mouse_y
+
+            self._camera_x += x / self._camera_scale
+            self._camera_y += y / self._camera_scale
+
+            self.update()
+
+        self._mouse_x = event.x()
+        self._mouse_y = event.y()
+
+    def wheelEvent(self, event):
+        change = event.angleDelta().y()
+
+        # TODO: also calculate the new x and y coordinates
+
+        if change > 0:
+            self._camera_scale *= 1.2
+            self.update()
+        if change < 0:
+            self._camera_scale /= 1.2
+            self.update()
