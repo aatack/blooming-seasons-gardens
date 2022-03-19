@@ -2,6 +2,8 @@ from functools import cached_property
 
 from qt import *
 
+from app.utils import set_widget_background
+
 
 class Window(QMainWindow):
     def __init__(self):
@@ -22,9 +24,29 @@ class Window(QMainWindow):
     def central_widget(self) -> QWidget:
         central_widget = QWidget()
 
-        central_widget.setLayout(self.example_form)
+        views = QHBoxLayout()
+        views.addWidget(self.plan_view, 1)
+        views.addWidget(self.editor_view, 2)
+
+        central_widget.setLayout(views)
 
         return central_widget
+
+    @cached_property
+    def plan_view(self) -> QWidget:
+        plan_view = QWidget()
+
+        plan_view.setLayout(self.example_form)
+        
+        return plan_view
+
+    @cached_property
+    def editor_view(self) -> QWidget:
+        editor_view = QWidget()
+
+        set_widget_background(editor_view, (255, 255, 255))
+
+        return editor_view
 
     @cached_property
     def example_form(self) -> QFormLayout:
@@ -49,11 +71,10 @@ class Window(QMainWindow):
         horizontal.addWidget(male_button)
         horizontal.addWidget(female_button)
         horizontal.addStretch()
-        
+
         example_form.addRow(QLabel("sex"), horizontal)
         submit = QPushButton("Submit")
         example_form.addRow(submit, QPushButton("Cancel"))
         submit.clicked.connect(lambda: self.status_bar.showMessage("Submitted", 500))
 
         return example_form
-

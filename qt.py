@@ -17,4 +17,6 @@ __all__ = [
     "QRadioButton",
     "QWidget",
     "QStyleFactory",
+    "Qt",
+    "QColor"
 ]
