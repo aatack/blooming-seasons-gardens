@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import List, Optional, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 from qt import (
     QFormLayout,
@@ -12,13 +12,27 @@ from qt import (
     QWidget,
 )
 
+from app.camera import Camera
 from app.canvas import Renderable
 from app.utils import build_colour_slider, set_widget_background
 
 
 class Garden:
+    class Renderable(Renderable):
+        def __init__(self, garden: "Garden"):
+            super().__init__()
+
+            self.garden = garden
+
+        def render(self, camera: Camera):
+            for bed in self.garden.iterate_beds():
+                bed.renderable.render(camera)
+
     def __init__(self):
         self._beds: List["Bed"] = []
+
+    def iterate_beds(self) -> Iterator["Bed"]:
+        yield from self._beds
 
     def add_bed(self, bed: "Bed"):
         bed.set_garden(self)
@@ -60,9 +74,7 @@ class Garden:
 
     @cached_property
     def renderable(self) -> Renderable:
-        from app.canvas import ExampleRenderable
-
-        return ExampleRenderable()
+        return Garden.Renderable(self)
 
     def serialise(self) -> list:
         return [bed.serialise() for bed in self._beds]
@@ -91,6 +103,16 @@ class Garden:
 
 
 class Bed:
+    class Renderable(Renderable):
+        def __init__(self, bed: "Bed"):
+            super().__init__()
+
+            self.bed = bed
+
+        def render(self, camera: Camera):
+            for plant in self.bed.iterate_plants():
+                plant.renderable.render(camera)
+
     def __init__(self):
         self._garden: Optional[Garden] = None
 
@@ -112,6 +134,9 @@ class Bed:
 
     def set_position(self, position: Tuple[float, float]):
         self._position = position
+
+    def iterate_plants(self) -> Iterator["Plant"]:
+        yield from self._plants
 
     def add_plant(self, plant: "Plant"):
         plant.set_bed(self)
@@ -200,6 +225,10 @@ class Bed:
     def _plants_layout(self) -> QVBoxLayout:
         return QVBoxLayout()
 
+    @cached_property
+    def renderable(self) -> Renderable:
+        return Bed.Renderable(self)
+
     def serialise(self) -> dict:
         return {
             "name": self._name,
@@ -217,6 +246,19 @@ class Bed:
 
 
 class Plant:
+    class Renderable(Renderable):
+        def __init__(self, plant: "Plant"):
+            super().__init__()
+
+            self.plant = plant
+
+        def render(self, camera: Camera):
+            camera.circle(
+                self.plant.get_position(),
+                self.plant.get_size(),
+                self.plant.get_colour(),
+            )
+
     def __init__(self):
         self._bed: Optional[Bed] = None
 
@@ -234,11 +276,20 @@ class Plant:
     def set_name(self, name: str):
         self._name = name
 
+    def get_size(self) -> float:
+        return self._size
+
     def set_size(self, size: float):
         self._size = size
 
+    def get_position(self) -> Tuple[float, float]:
+        return self._position
+
     def set_position(self, position: Tuple[float, float]):
         self._position = position
+
+    def get_colour(self) -> Tuple[int, int, int]:
+        return self._colour
 
     def set_colour(self, colour: Tuple[int, int, int]):
         self._colour = colour
@@ -355,6 +406,10 @@ class Plant:
         form.addRow(colour_label, colour_layout)
 
         return form
+
+    @cached_property
+    def renderable(self) -> Renderable:
+        return Plant.Renderable(self)
 
     def serialise(self) -> dict:
         return {
