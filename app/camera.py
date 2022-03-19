@@ -24,6 +24,12 @@ class Camera:
     def text(self, position: Point, text: str, height: float, colour: Colour):
         pass
 
+    def scale(self, scale: float) -> "Camera":
+        return ScaledCamera(self, scale)
+
+    def shift(self, x: float = 0.0, y: float = 0.0) -> "Camera":
+        return ShiftedCamera(self, (x, y))
+
 
 class WidgetCamera(Camera):
     def __init__(self, widget: QWidget):
@@ -83,3 +89,61 @@ class WidgetCamera(Camera):
         self._painter.setFont(QFont(self._base_font_family, font_size))
 
         self._painter.drawText(int(position[0]), int(position[1] + height), text)
+
+
+class ScaledCamera(Camera):
+    def __init__(self, camera: Camera, scale: float):
+        self._camera = camera
+        self._scale = scale
+
+    def rectangle(self, position: Point, width: float, height: float, colour: Colour):
+        self._camera.rectangle(
+            (position[0] * self._scale, position[1] * self._scale),
+            width * self._scale,
+            height * self._scale,
+            colour,
+        )
+
+    def circle(self, position: Point, radius: float, colour: Colour):
+        self._camera.circle(
+            (position[0] * self._scale, position[1] * self._scale),
+            radius * self._scale,
+            colour,
+        )
+
+    def line(self, start: Point, end: Point, width: float, colour: Colour):
+        self._camera.line(
+            (start[0] * self._scale, start[1] * self._scale),
+            (end[0] * self._scale, end[1] * self._scale),
+            width * self._scale,
+            colour,
+        )
+
+    def text(self, position: Point, text: str, height: float, colour: Colour):
+        self._camera.text(
+            (position[0] * self._scale, position[1] * self._scale),
+            text,
+            height * self._scale,
+            colour,
+        )
+
+
+class ShiftedCamera(Camera):
+    def __init__(self, camera: Camera, shift: Tuple[float, float]):
+        self._camera = camera
+        self._shift = shift
+
+    def _transform(self, point: Point) -> Point:
+        return point[0] + self._shift[0], point[1] + self._shift[1]
+
+    def rectangle(self, position: Point, width: float, height: float, colour: Colour):
+        self._camera.rectangle(self._transform(position), width, height, colour)
+
+    def circle(self, position: Point, radius: float, colour: Colour):
+        self._camera.circle(self._transform(position), radius, colour)
+
+    def line(self, start: Point, end: Point, width: float, colour: Colour):
+        self._camera.line(self._transform(start), self._transform(end), width, colour)
+
+    def text(self, position: Point, text: str, height: float, colour: Colour):
+        self._camera.text(self._transform(position), text, height, colour)

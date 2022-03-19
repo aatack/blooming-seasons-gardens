@@ -25,6 +25,7 @@ class Garden:
             self.garden = garden
 
         def render(self, camera: Camera):
+            camera = camera.scale(100).shift(x=1, y=1)
             for bed in self.garden.iterate_beds():
                 bed.renderable.render(camera)
 
