@@ -1,3 +1,5 @@
+from functools import cached_property
+
 from qt import *
 
 
@@ -5,41 +7,53 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.status = QStatusBar()
-        self.widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.setStatusBar(self.status_bar)
 
-        self.setCentralWidget(self.widget)
-        self.setStatusBar(self.status)
+    @cached_property
+    def status_bar(self) -> QStatusBar:
+        status_bar = QStatusBar()
 
-        self._populate_content()
+        # TODO: add widgets and status information
 
-    def _populate_content(self):
-        status_button = QPushButton("Status button")
-        self.status.addWidget(status_button)
+        return status_bar
 
-        l1 = QLabel("Name")
-        nm = QLineEdit()
+    @cached_property
+    def central_widget(self) -> QWidget:
+        central_widget = QWidget()
 
-        l2 = QLabel("Address")
-        add1 = QLineEdit()
-        add2 = QLineEdit()
-        fbox = QFormLayout()
-        fbox.addRow(l1, nm)
-        vbox = QVBoxLayout()
+        central_widget.setLayout(self.example_form)
 
-        vbox.addWidget(add1)
-        vbox.addWidget(add2)
-        fbox.addRow(l2, vbox)
-        hbox = QHBoxLayout()
+        return central_widget
 
-        r1 = QRadioButton("Male")
-        r2 = QRadioButton("Female")
-        hbox.addWidget(r1)
-        hbox.addWidget(r2)
-        hbox.addStretch()
-        fbox.addRow(QLabel("sex"), hbox)
+    @cached_property
+    def example_form(self) -> QFormLayout:
+        example_form = QFormLayout()
+
+        name_label = QLabel("Name")
+        name_edit = QLineEdit()
+
+        address_label = QLabel("Address")
+        first_address_edit = QLineEdit()
+        second_address_edit = QLineEdit()
+        example_form.addRow(name_label, name_edit)
+        vertical = QVBoxLayout()
+
+        vertical.addWidget(first_address_edit)
+        vertical.addWidget(second_address_edit)
+        example_form.addRow(address_label, vertical)
+        horizontal = QHBoxLayout()
+
+        male_button = QRadioButton("Male")
+        female_button = QRadioButton("Female")
+        horizontal.addWidget(male_button)
+        horizontal.addWidget(female_button)
+        horizontal.addStretch()
+        
+        example_form.addRow(QLabel("sex"), horizontal)
         submit = QPushButton("Submit")
-        fbox.addRow(submit, QPushButton("Cancel"))
-        submit.clicked.connect(lambda: self.status.showMessage("Submitted", 500))
+        example_form.addRow(submit, QPushButton("Cancel"))
+        submit.clicked.connect(lambda: self.status_bar.showMessage("Submitted", 500))
 
-        self.widget.setLayout(fbox)
+        return example_form
+
