@@ -18,5 +18,7 @@ __all__ = [
     "QWidget",
     "QStyleFactory",
     "Qt",
-    "QColor"
+    "QColor",
+    "QSlider",
+    "QLayout"
 ]

@@ -8,9 +8,13 @@ from qt import (
     QLineEdit,
     QPushButton,
     QRadioButton,
+    QSlider,
+    Qt,
     QVBoxLayout,
     QWidget,
 )
+
+from app.utils import build_colour_slider
 
 
 class Garden:
@@ -209,11 +213,54 @@ class Plant:
         remove = QPushButton("Remove")
         remove.clicked.connect(lambda: self._bed.remove_plant(self))
 
-        layout.addLayout(example_form)
+        layout.addLayout(self._form)
         layout.addWidget(remove)
 
         widget.setLayout(layout)
         return widget
+
+    @cached_property
+    def _form(self) -> QFormLayout:
+        form = QFormLayout()
+
+        # Name
+        name_label = QLabel("Name:")
+        name_edit = QLineEdit()
+        name_edit.textEdited.connect(lambda: self.set_name(name_edit.text()))
+        form.addRow(name_label, name_edit)
+
+        # Size
+        size_label = QLabel("Size:")
+        size_edit = QLineEdit()
+
+        def update_size():
+            try:
+                size = float(size_edit.text())
+                self.set_size(size)
+            except ValueError:
+                pass
+
+        size_edit.textEdited.connect(update_size)
+        form.addRow(size_label, size_edit)
+
+        # Colour
+        colour_label = QLabel("Colour:")
+        colour_layout = QHBoxLayout()
+
+        red = build_colour_slider("red", colour_layout, self._colour[0])
+        green = build_colour_slider("green", colour_layout, self._colour[1])
+        blue = build_colour_slider("blue", colour_layout, self._colour[2])
+
+        def update_colour():
+            self.set_colour((red.value(), green.value(), blue.value()))
+
+        red.valueChanged.connect(update_colour)
+        green.valueChanged.connect(update_colour)
+        blue.valueChanged.connect(update_colour)
+
+        form.addRow(colour_label, colour_layout)
+
+        return form
 
     def serialise(self) -> dict:
         return {
