@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from qt import (
     QFormLayout,
@@ -24,7 +24,6 @@ class Garden:
         self._beds_layout.addWidget(bed.widget)
 
     def remove_bed(self, bed: "Bed"):
-        print(bed.serialise())
         self._beds.remove(bed)
         self._beds_layout.removeWidget(bed.widget)
 
@@ -39,9 +38,13 @@ class Garden:
         def add_new_bed():
             self.add_bed(Bed())
 
+        dump = QPushButton("Dump")
+        dump.clicked.connect(lambda: print(self.serialise()))
+
         add_bed = QPushButton("Add Bed")
         add_bed.clicked.connect(add_new_bed)
 
+        layout.addWidget(dump)
         layout.addWidget(add_bed)
         layout.addLayout(self._beds_layout)
         layout.addStretch()
@@ -88,7 +91,16 @@ class Bed:
         plant.set_bed(self)
         self._plants.append(plant)
 
+        self._plants_layout.addWidget(plant.widget)
+
+    def remove_plant(self, plant: "Plant"):
+        self._plants.remove(plant)
+        self._plants_layout.removeWidget(plant.widget)
+
+        plant.remove()
+
     def remove(self):
+        self._garden = None
         self.widget.deleteLater()
 
     @cached_property
@@ -100,13 +112,25 @@ class Bed:
         set_name = QLineEdit()
         set_name.textEdited.connect(lambda: self.set_name(set_name.text()))
 
+        def add_new_plant():
+            self.add_plant(Plant())
+
+        add_plant = QPushButton("Add Plant")
+        add_plant.clicked.connect(add_new_plant)
+
         remove = QPushButton("Remove")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
         layout.addWidget(set_name)
+        layout.addWidget(add_plant)
+        layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
         return widget
+
+    @cached_property
+    def _plants_layout(self) -> QVBoxLayout:
+        return QVBoxLayout()
 
     def serialise(self) -> dict:
         return {
@@ -128,15 +152,33 @@ class Plant:
     def __init__(self):
         self._bed: Optional[Bed] = None
 
+        self._name = ""
+        self._size = 0.1
+        self._colour = (0, 64, 128)
+
     def set_bed(self, bed: Bed):
         assert isinstance(bed, Bed)
         assert self._bed is None
 
         self._bed = bed
 
+    def set_name(self, name: str):
+        self._name = name
+
+    def set_size(self, size: float):
+        self._size = size
+
+    def set_colour(self, colour: Tuple[int, int, int]):
+        self._colour = colour
+
+    def remove(self):
+        self._garden = None
+        self.widget.deleteLater()
+
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
+        layout = QVBoxLayout()
 
         example_form = QFormLayout()
 
@@ -163,14 +205,29 @@ class Plant:
         example_form.addRow(QLabel("sex"), horizontal)
         submit = QPushButton("Submit")
         example_form.addRow(submit, QPushButton("Cancel"))
-        submit.clicked.connect(lambda: self.status_bar.showMessage("Submitted", 500))
 
-        widget.setLayout(example_form)
+        remove = QPushButton("Remove")
+        remove.clicked.connect(lambda: self._bed.remove_plant(self))
+
+        layout.addLayout(example_form)
+        layout.addWidget(remove)
+
+        widget.setLayout(layout)
         return widget
 
     def serialise(self) -> dict:
-        return {}
+        return {
+            "name": self._name,
+            "size": self._size,
+            "colour": list(self._colour)
+        }
 
     @staticmethod
     def deserialise(json: dict) -> "Plant":
-        return Plant()
+        plant = Plant()
+
+        plant.set_name(json["name"])
+        plant.set_size(json["size"])
+        plant.set_colour(tuple(json["colour"]))
+
+        return plant
