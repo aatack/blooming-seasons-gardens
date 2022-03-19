@@ -25,17 +25,18 @@ class Garden:
             self.garden = garden
 
         def render(self, camera: Camera):
-            for bed in self.garden.iterate_beds():
+            for bed in self.garden.beds:
                 bed.renderable.render(camera)
 
     def __init__(self):
         self._beds: List["Bed"] = []
 
-    def iterate_beds(self) -> Iterator["Bed"]:
+    @property
+    def beds(self) -> Iterator["Bed"]:
         yield from self._beds
 
     def add_bed(self, bed: "Bed"):
-        bed.set_garden(self)
+        bed.garden = self
         self._beds.append(bed)
 
         self._beds_layout.addWidget(bed.widget)
@@ -77,7 +78,7 @@ class Garden:
         return Garden.Renderable(self)
 
     def serialise(self) -> list:
-        return [bed.serialise() for bed in self._beds]
+        return [bed.serialise() for bed in self.beds]
 
     @staticmethod
     def deserialise(json: list) -> "Garden":
@@ -110,8 +111,8 @@ class Bed:
             self.bed = bed
 
         def render(self, camera: Camera):
-            for plant in self.bed.iterate_plants():
-                plant.renderable.render(camera.shift(*self.bed.get_position()))
+            for plant in self.bed.plants:
+                plant.renderable.render(camera.shift(*self.bed.position))
 
     def __init__(self):
         self._garden: Optional[Garden] = None
@@ -120,29 +121,40 @@ class Bed:
         self._position = (0.0, 0.0)
         self._plants: List["Plant"] = []
 
-    def set_garden(self, garden: Garden):
+    @property
+    def garden(self) -> Garden:
+        assert self._garden is not None
+        return self._garden
+
+    @garden.setter
+    def garden(self, garden: Garden):
         assert isinstance(garden, Garden)
         assert self._garden is None
 
         self._garden = garden
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         return self._name
 
-    def set_name(self, name: str):
+    @name.setter
+    def name(self, name: str):
         self._name = name
 
-    def get_position(self) -> Tuple[float, float]:
+    @property
+    def position(self) -> Tuple[float, float]:
         return self._position
 
-    def set_position(self, position: Tuple[float, float]):
+    @position.setter
+    def position(self, position: Tuple[float, float]):
         self._position = position
 
-    def iterate_plants(self) -> Iterator["Plant"]:
+    @property
+    def plants(self) -> Iterator["Plant"]:
         yield from self._plants
 
     def add_plant(self, plant: "Plant"):
-        plant.set_bed(self)
+        plant.bed = self
         self._plants.append(plant)
 
         self._plants_layout.addWidget(plant.widget)
@@ -166,19 +178,15 @@ class Bed:
         darkness = 128
         set_widget_background(widget, (darkness,) * 3)
 
-        # set_name = QLineEdit()
-        # set_name.textEdited.connect(lambda: self.set_name(set_name.text()))
-
         def add_new_plant():
             self.add_plant(Plant())
 
         add_plant = QPushButton("Add Plant")
         add_plant.clicked.connect(add_new_plant)
 
-        remove = QPushButton("Remove")
+        remove = QPushButton("Remove Bed")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
-        # layout.addWidget(set_name)
         layout.addLayout(self._form)
         layout.addWidget(add_plant)
         layout.addLayout(self._plants_layout)
@@ -193,7 +201,11 @@ class Bed:
         # Name
         name_label = QLabel("Name:")
         name_edit = QLineEdit(self._name)
-        name_edit.textEdited.connect(lambda: self.set_name(name_edit.text()))
+
+        def set_name():
+            self.name = name_edit.text()
+
+        name_edit.textEdited.connect(set_name)
         form.addRow(name_label, name_edit)
 
         # Position
@@ -213,7 +225,7 @@ class Bed:
         def update_position():
             try:
                 x, y = float(x_edit.text()), float(y_edit.text())
-                self.set_position((x, y))
+                self.position = (x, y)
             except ValueError:
                 pass
 
@@ -256,9 +268,9 @@ class Plant:
             self.plant = plant
 
         def render(self, camera: Camera):
-            x, y = self.plant.get_position()
-            radius = self.plant.get_size()
-            camera.circle((x - radius, y - radius), radius, self.plant.get_colour())
+            x, y = self.plant.position
+            radius = self.plant.size
+            camera.circle((x - radius, y - radius), radius, self.plant.colour)
 
     def __init__(self):
         self._bed: Optional[Bed] = None
@@ -268,31 +280,48 @@ class Plant:
         self._position = (0.0, 0.0)
         self._colour = (0, 64, 128)
 
-    def set_bed(self, bed: Bed):
+    @property
+    def bed(self) -> Bed:
+        assert self._bed is not None
+        return self._bed
+
+    @bed.setter
+    def bed(self, bed: Bed):
         assert isinstance(bed, Bed)
         assert self._bed is None
 
         self._bed = bed
 
-    def set_name(self, name: str):
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
         self._name = name
 
-    def get_size(self) -> float:
+    @property
+    def size(self) -> float:
         return self._size
 
-    def set_size(self, size: float):
+    @size.setter
+    def size(self, size: float):
         self._size = size
 
-    def get_position(self) -> Tuple[float, float]:
+    @property
+    def position(self) -> Tuple[float, float]:
         return self._position
 
-    def set_position(self, position: Tuple[float, float]):
+    @position.setter
+    def position(self, position: Tuple[float, float]):
         self._position = position
 
-    def get_colour(self) -> Tuple[int, int, int]:
+    @property
+    def colour(self) -> Tuple[int, int, int]:
         return self._colour
 
-    def set_colour(self, colour: Tuple[int, int, int]):
+    @colour.setter
+    def colour(self, colour: Tuple[int, int, int]):
         self._colour = colour
 
     def remove(self):
@@ -330,7 +359,7 @@ class Plant:
         submit = QPushButton("Submit")
         example_form.addRow(submit, QPushButton("Cancel"))
 
-        remove = QPushButton("Remove")
+        remove = QPushButton("Remove Plant")
         remove.clicked.connect(lambda: self._bed.remove_plant(self))
 
         layout.addLayout(self._form)
@@ -346,7 +375,11 @@ class Plant:
         # Name
         name_label = QLabel("Name:")
         name_edit = QLineEdit(self._name)
-        name_edit.textEdited.connect(lambda: self.set_name(name_edit.text()))
+
+        def set_name():
+            self.name = name_edit.text()
+
+        name_edit.textEdited.connect(set_name)
         form.addRow(name_label, name_edit)
 
         # Size
@@ -356,7 +389,7 @@ class Plant:
         def update_size():
             try:
                 size = float(size_edit.text())
-                self.set_size(size)
+                self.size = size
             except ValueError:
                 pass
 
@@ -380,7 +413,7 @@ class Plant:
         def update_position():
             try:
                 x, y = float(x_edit.text()), float(y_edit.text())
-                self.set_position((x, y))
+                self.position = (x, y)
             except ValueError:
                 pass
 
@@ -398,7 +431,7 @@ class Plant:
         blue = build_colour_slider("blue", colour_layout, self._colour[2])
 
         def update_colour():
-            self.set_colour((red.value(), green.value(), blue.value()))
+            self.colour = (red.value(), green.value(), blue.value())
 
         red.valueChanged.connect(update_colour)
         green.valueChanged.connect(update_colour)
@@ -424,9 +457,9 @@ class Plant:
     def deserialise(json: dict) -> "Plant":
         plant = Plant()
 
-        plant.set_name(json["name"])
-        plant.set_size(json["size"])
-        plant.set_position(tuple(json["position"]))
-        plant.set_colour(tuple(json["colour"]))
+        plant.name = json["name"]
+        plant.size = json["size"]
+        plant.position = tuple(json["position"])
+        plant.colour = tuple(json["colour"])
 
         return plant
