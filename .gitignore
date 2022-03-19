@@ -135,3 +135,6 @@ dmypy.json
 main.py
 main.bat
 main.sh
+
+# Temporary files
+tmp/

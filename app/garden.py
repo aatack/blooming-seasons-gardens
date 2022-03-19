@@ -12,6 +12,7 @@ from qt import (
     QWidget,
 )
 
+from app.canvas import Renderable
 from app.utils import build_colour_slider, set_widget_background
 
 
@@ -57,6 +58,12 @@ class Garden:
     def _beds_layout(self) -> QVBoxLayout:
         return QVBoxLayout()
 
+    @cached_property
+    def renderable(self) -> Renderable:
+        from app.canvas import ExampleRenderable
+
+        return ExampleRenderable()
+
     def serialise(self) -> list:
         return [bed.serialise() for bed in self._beds]
 
@@ -68,6 +75,19 @@ class Garden:
             garden.add_bed(Bed.deserialise(bed))
 
         return garden
+
+    def write(self, path: str):
+        import json
+
+        with open(path, "w") as file:
+            json.dump(self.serialise(), file)
+
+    @staticmethod
+    def read(path: str) -> "Garden":
+        import json
+
+        with open(path, "r") as file:
+            return Garden.deserialise(json.load(file))
 
 
 class Bed:

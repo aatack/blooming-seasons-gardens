@@ -42,7 +42,7 @@ class Window(QMainWindow):
 
     @cached_property
     def plan_view(self) -> QWidget:
-        editor_view = Canvas()
+        editor_view = Canvas(self.garden.renderable)
 
         set_widget_background(editor_view, (255, 255, 255))
 
