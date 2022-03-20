@@ -32,4 +32,11 @@ __all__ = [
     "QPixmap",
     "QFileDialog",
     "QMessageBox",
+    "QAbstractAnimation",
+    "QPropertyAnimation",
+    "QFrame",
+    "QSizePolicy",
+    "QParallelAnimationGroup",
+    "QToolButton",
+    "pyqtSlot",
 ]
