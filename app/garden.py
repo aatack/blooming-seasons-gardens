@@ -2,13 +2,14 @@ from functools import cached_property
 from typing import Iterator, List, Optional, Tuple
 
 from qt import (
+    QFileDialog,
     QFormLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPixmap,
     QPushButton,
-    QRadioButton,
     QVBoxLayout,
     QWidget,
 )
@@ -239,6 +240,29 @@ class Background:
         y_edit.textEdited.connect(update_position)
 
         form.addRow(position_label, position_layout)
+
+        # Image
+        def choose_image():
+            path, _ = QFileDialog.getOpenFileName()
+            if len(path) != 0:  # If user did not cancel the selection
+                image = QPixmap(path)
+                if image.size().width() == 0 and image.size().height() == 0:
+                    # User selected a non-image file
+                    error = QMessageBox()
+                    error.setIcon(QMessageBox.Critical)
+                    error.setText("Could not load background")
+                    error.setInformativeText(
+                        "Tried to load a file that is not a valid background.  "
+                        "This is likely because it is not an image file."
+                    )
+                    error.setWindowTitle("Error")
+                    error.exec()
+                else:
+                    self.path = path
+
+        choose_image_button = QPushButton("Choose new background")
+        choose_image_button.clicked.connect(choose_image)
+        form.addWidget(choose_image_button)
 
         return widget
 

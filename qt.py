@@ -30,4 +30,6 @@ __all__ = [
     "QMenu",
     "QTimer",
     "QPixmap",
+    "QFileDialog",
+    "QMessageBox",
 ]

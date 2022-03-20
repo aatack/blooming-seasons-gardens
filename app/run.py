@@ -1,6 +1,5 @@
 from qt import QApplication
 
-from app.garden import Garden
 from app.window import Window
 
 
