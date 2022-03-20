@@ -71,6 +71,8 @@ class Garden:
         layout = QVBoxLayout()
         widget.setLayout(layout)
 
+        layout.addWidget(self.background.widget)
+
         def add_new_bed():
             self.add_bed(Bed())
 
@@ -98,7 +100,7 @@ class Garden:
 
     def serialise(self) -> list:
         return {
-            "background": self._background.serialise(),
+            "background": self.background.serialise(),
             "beds": [bed.serialise() for bed in self.beds],
         }
 
@@ -134,7 +136,7 @@ class Background:
 
         def render(self, camera: Camera):
             if (image := self.background.image) is not None:
-                camera.image((0.0, 0.0), 10.0, image)
+                camera.image(self.background.position, self.background.height, image)
 
     def __init__(self, garden: Garden):
         self._garden = garden
@@ -193,16 +195,70 @@ class Background:
         return self._image
 
     @cached_property
+    def widget(self) -> QWidget:
+        widget = QWidget()
+        form = QFormLayout()
+        widget.setLayout(form)
+
+        # Height
+        height_label = QLabel("Background height:")
+        height_edit = QLineEdit(str(self.height))
+
+        def update_height():
+            try:
+                height = float(height_edit.text())
+                self.height = height
+            except ValueError:
+                pass
+
+        height_edit.textEdited.connect(update_height)
+        form.addRow(height_label, height_edit)
+
+        # Position
+        position_label = QLabel("Background position:")
+        position_layout = QHBoxLayout()
+
+        x_label = QLabel("x =")
+        x_edit = QLineEdit(str(self.position[0]))
+        y_label = QLabel("y =")
+        y_edit = QLineEdit(str(self.position[1]))
+
+        position_layout.addWidget(x_label)
+        position_layout.addWidget(x_edit)
+        position_layout.addWidget(y_label)
+        position_layout.addWidget(y_edit)
+
+        def update_position():
+            try:
+                x, y = float(x_edit.text()), float(y_edit.text())
+                self.position = (x, y)
+            except ValueError:
+                pass
+
+        x_edit.textEdited.connect(update_position)
+        y_edit.textEdited.connect(update_position)
+
+        form.addRow(position_label, position_layout)
+
+        return widget
+
+    @cached_property
     def renderable(self) -> Renderable:
         self._rendered = True
         return Background.Renderable(self)
 
     def serialise(self) -> dict:
         # TODO: work out how best to also save the image to disk
-        return {"path": self._path}
+        return {
+            "height": self._height,
+            "position": list(self._position),
+            "path": self.path,
+        }
 
     def deserialise(self, json: dict):
         self.path = json["path"]
+        self.height = json["height"]
+        self.position = tuple(json["position"])
 
 
 class Bed:
@@ -312,7 +368,7 @@ class Bed:
 
         # Name
         name_label = QLabel("Name:")
-        name_edit = QLineEdit(self._name)
+        name_edit = QLineEdit(self.name)
 
         def set_name():
             self.name = name_edit.text()
@@ -325,9 +381,9 @@ class Bed:
         position_layout = QHBoxLayout()
 
         x_label = QLabel("x =")
-        x_edit = QLineEdit(str(self._position[0]))
+        x_edit = QLineEdit(str(self.position[0]))
         y_label = QLabel("y =")
-        y_edit = QLineEdit(str(self._position[1]))
+        y_edit = QLineEdit(str(self.position[1]))
 
         position_layout.addWidget(x_label)
         position_layout.addWidget(x_edit)
@@ -359,8 +415,8 @@ class Bed:
 
     def serialise(self) -> dict:
         return {
-            "name": self._name,
-            "plants": [plant.serialise() for plant in self._plants],
+            "name": self.name,
+            "plants": [plant.serialise() for plant in self.plants],
         }
 
     @staticmethod
@@ -455,40 +511,15 @@ class Plant:
     def widget(self) -> QWidget:
         widget = QWidget()
         layout = QVBoxLayout()
+        widget.setLayout(layout)
 
-        example_form = QFormLayout()
-
-        name_label = QLabel("Name")
-        name_edit = QLineEdit()
-
-        address_label = QLabel("Address")
-        first_address_edit = QLineEdit()
-        second_address_edit = QLineEdit()
-        example_form.addRow(name_label, name_edit)
-        vertical = QVBoxLayout()
-
-        vertical.addWidget(first_address_edit)
-        vertical.addWidget(second_address_edit)
-        example_form.addRow(address_label, vertical)
-        horizontal = QHBoxLayout()
-
-        male_button = QRadioButton("Male")
-        female_button = QRadioButton("Female")
-        horizontal.addWidget(male_button)
-        horizontal.addWidget(female_button)
-        horizontal.addStretch()
-
-        example_form.addRow(QLabel("sex"), horizontal)
-        submit = QPushButton("Submit")
-        example_form.addRow(submit, QPushButton("Cancel"))
+        layout.addLayout(self._form)
 
         remove = QPushButton("Remove Plant")
         remove.clicked.connect(lambda: self._bed.remove_plant(self))
 
-        layout.addLayout(self._form)
         layout.addWidget(remove)
 
-        widget.setLayout(layout)
         return widget
 
     @cached_property
@@ -497,7 +528,7 @@ class Plant:
 
         # Name
         name_label = QLabel("Name:")
-        name_edit = QLineEdit(self._name)
+        name_edit = QLineEdit(self.name)
 
         def set_name():
             self.name = name_edit.text()
@@ -507,7 +538,7 @@ class Plant:
 
         # Size
         size_label = QLabel("Size:")
-        size_edit = QLineEdit(str(self._size))
+        size_edit = QLineEdit(str(self.size))
 
         def update_size():
             try:
@@ -524,9 +555,9 @@ class Plant:
         position_layout = QHBoxLayout()
 
         x_label = QLabel("x =")
-        x_edit = QLineEdit(str(self._position[0]))
+        x_edit = QLineEdit(str(self.position[0]))
         y_label = QLabel("y =")
-        y_edit = QLineEdit(str(self._position[1]))
+        y_edit = QLineEdit(str(self.position[1]))
 
         position_layout.addWidget(x_label)
         position_layout.addWidget(x_edit)
@@ -571,10 +602,10 @@ class Plant:
 
     def serialise(self) -> dict:
         return {
-            "name": self._name,
-            "size": self._size,
-            "position": list(self._position),
-            "colour": list(self._colour),
+            "name": self.name,
+            "size": self.size,
+            "position": list(self.position),
+            "colour": list(self.colour),
         }
 
     @staticmethod
