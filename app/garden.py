@@ -6,6 +6,7 @@ from qt import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QPixmap,
     QPushButton,
     QRadioButton,
     QVBoxLayout,
@@ -24,7 +25,12 @@ class Garden:
 
             self.garden = garden
 
+            # TODO: move to a separate background object
+            self._background = QPixmap("tmp/high-def-background.jpg")
+
         def render(self, camera: Camera):
+            camera.image((0.0, 0.0), 10.0, self._background)
+
             for bed in self.garden.beds:
                 bed.renderable.render(camera)
 

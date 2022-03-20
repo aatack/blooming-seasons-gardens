@@ -29,4 +29,5 @@ __all__ = [
     "QMenuBar",
     "QMenu",
     "QTimer",
+    "QPixmap",
 ]

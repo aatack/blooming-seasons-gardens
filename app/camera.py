@@ -1,7 +1,7 @@
 import abc
 from typing import Optional, Tuple
 
-from qt import QColor, QFont, QFontMetrics, QPainter, QPen, QWidget
+from qt import QColor, QFont, QFontMetrics, QPainter, QPen, QPixmap, QWidget
 
 Point = Tuple[float, float]
 Colour = Tuple[int, int, int]
@@ -30,6 +30,10 @@ class Camera:
 
     @abc.abstractmethod
     def text(self, position: Point, text: str, height: float, colour: Colour):
+        pass
+
+    @abc.abstractmethod
+    def image(self, position: Point, height: float, path: str):
         pass
 
     def scale(self, scale: float) -> "Camera":
@@ -104,6 +108,12 @@ class WidgetCamera(Camera):
 
         self._painter.drawText(int(position[0]), int(position[1] + height), text)
 
+    def image(self, position: Point, height: float, image: QPixmap):
+        width = image.width() * (height / image.height())
+        self._painter.drawPixmap(
+            int(position[0]), int(position[1]), int(width), int(height), image
+        )
+
 
 class ScaledCamera(Camera):
     def __init__(self, camera: Camera, scale: float):
@@ -132,6 +142,9 @@ class ScaledCamera(Camera):
     def text(self, position: Point, text: str, height: float, colour: Colour):
         self._camera.text(self.transform(position), text, height * self._scale, colour)
 
+    def image(self, position: Point, height: float, image: QPixmap):
+        self._camera.image(self.transform(position), height * self._scale, image)
+
 
 class ShiftedCamera(Camera):
     def __init__(self, camera: Camera, shift: Tuple[float, float]):
@@ -155,3 +168,6 @@ class ShiftedCamera(Camera):
 
     def text(self, position: Point, text: str, height: float, colour: Colour):
         self._camera.text(self.transform(position), text, height, colour)
+
+    def image(self, position: Point, height: float, image: QPixmap):
+        self._camera.image(self.transform(position), height, image)
