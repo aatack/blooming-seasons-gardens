@@ -32,7 +32,7 @@ class Garden:
                 bed.renderable.render(camera)
 
     def __init__(self):
-        self._background: Background = Background()
+        self._background: Background = Background(self)
         self._beds: List["Bed"] = []
 
         self.plan_view_widget: Optional[QWidget] = None
@@ -106,8 +106,7 @@ class Garden:
     def deserialise(json: list) -> "Garden":
         garden = Garden()
 
-        # TODO: is it safe to set the background like this?
-        garden._background = Background.deserialise(json["background"])
+        garden.background.deserialise(json["background"])
 
         for bed in json["beds"]:
             garden.add_bed(Bed.deserialise(bed))
@@ -137,10 +136,11 @@ class Background:
             if (image := self.background.image) is not None:
                 camera.image((0.0, 0.0), 10.0, image)
 
-    def __init__(self):
-        self._garden: Optional[Garden] = None
+    def __init__(self, garden: Garden):
+        self._garden = garden
 
-        # TODO: position and height
+        self._position = (0.0, 0.0)
+        self._height = 10.0
         self._path: Optional[str] = None
         self._image: Optional[QPixmap] = None
 
@@ -148,6 +148,32 @@ class Background:
 
         # TODO: allow the path to be set by the user
         self.path = "tmp/high-def-background.jpg"
+
+    def update_render(self):
+        if self._rendered:
+            self.garden.update_render()
+
+    @property
+    def garden(self) -> Garden:
+        return self._garden
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self._position
+
+    @position.setter
+    def position(self, position: Tuple[float, float]):
+        self._position = position
+        self.update_render()
+
+    @property
+    def height(self) -> float:
+        return self._height
+
+    @height.setter
+    def height(self, height: float):
+        self._height = height
+        self.update_render()
 
     @property
     def path(self) -> Optional[str]:
@@ -160,6 +186,7 @@ class Background:
             self._image = None
         else:
             self._image = QPixmap(path)
+        self.update_render()
 
     @property
     def image(self) -> Optional[QPixmap]:
@@ -171,14 +198,11 @@ class Background:
         return Background.Renderable(self)
 
     def serialise(self) -> dict:
-        # TODO: work out how to also save the image to disk
+        # TODO: work out how best to also save the image to disk
         return {"path": self._path}
 
-    @staticmethod
-    def deserialise(json: dict) -> "Background":
-        background = Background()
-        background.path = json["path"]
-        return background
+    def deserialise(self, json: dict):
+        self.path = json["path"]
 
 
 class Bed:
