@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import Iterator, List, Optional, Tuple
+from typing import Callable, Iterator, List, Optional, Tuple
 
 from qt import (
     QFileDialog,
@@ -16,7 +16,12 @@ from qt import (
 
 from app.camera import Camera
 from app.canvas import Renderable
-from app.utils import build_colour_slider, set_widget_background
+from app.utils import (
+    Collapsible,
+    FrameLayout,
+    build_colour_slider,
+    set_widget_background,
+)
 
 
 class Garden:
@@ -363,9 +368,11 @@ class Bed:
 
     @cached_property
     def widget(self) -> QWidget:
-        widget = QWidget()
+        widget = FrameLayout(title="Bed")
+        inner_widget = QWidget()
         layout = QVBoxLayout()
-        widget.setLayout(layout)
+        inner_widget.setLayout(layout)
+        widget.addWidget(inner_widget)
 
         darkness = 128
         set_widget_background(widget, (darkness,) * 3)
