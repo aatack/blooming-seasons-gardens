@@ -1,7 +1,18 @@
+import time
 from functools import cached_property
 from typing import Optional
 
-from qt import QHBoxLayout, QMainWindow, QMenuBar, QScrollArea, QStatusBar, Qt, QWidget
+from qt import (
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMenuBar,
+    QScrollArea,
+    QStatusBar,
+    Qt,
+    QTimer,
+    QWidget,
+)
 
 from app.camera import WidgetCamera
 from app.canvas import Canvas, Renderable
@@ -10,10 +21,14 @@ from app.utils import set_widget_background
 
 
 class Window(QMainWindow):
-    def __init__(self, garden: Garden):
+    def __init__(self, garden_path: str):
         super().__init__()
 
-        self.garden = garden
+        self.garden_path = garden_path
+        self.garden = Garden.read(self.garden_path)
+
+        self.last_saved = time.time()
+        self.update_last_saved_display()
 
         _ = self.plan_view
 
@@ -23,6 +38,21 @@ class Window(QMainWindow):
 
         self.garden.plan_view_widget = self.plan_view
 
+    def save(self):
+        self.garden.write(self.garden_path)
+        self.last_saved = time.time()
+        self.update_last_saved_display()
+
+    def update_last_saved_display(self):
+        elapsed = int((time.time() - self.last_saved) / 60)
+        if elapsed == 0:
+            string = "Last saved less than a minute ago"
+        elif elapsed == 1:
+            string = "Last saved 1 minute ago"
+        else:
+            string = f"Last saved {elapsed} minutes ago"
+        self.last_saved_display.setText(string)
+
     @cached_property
     def menu_bar(self) -> QMenuBar:
         menu_bar = QMenuBar(self)
@@ -30,7 +60,9 @@ class Window(QMainWindow):
         file_menu = menu_bar.addMenu("&File")
         file_menu.addAction("New")
         file_menu.addAction("Open")
-        file_menu.addAction("Save")
+        save = file_menu.addAction("Save")
+        save.triggered.connect(self.save)
+
         file_menu.addAction("Exit")
 
         edit_menu = menu_bar.addMenu("&Edit")
@@ -60,9 +92,16 @@ class Window(QMainWindow):
     def status_bar(self) -> QStatusBar:
         status_bar = QStatusBar()
 
-        # TODO: add widgets and status information
+        status_bar.addWidget(self.last_saved_display)
+        timer = QTimer(self)
+        timer.timeout.connect(self.update_last_saved_display)
+        timer.start(10000)
 
         return status_bar
+
+    @cached_property
+    def last_saved_display(self) -> QLabel:
+        return QLabel("")
 
     @cached_property
     def editor_view(self) -> QWidget:

@@ -28,4 +28,5 @@ __all__ = [
     "QScrollArea",
     "QMenuBar",
     "QMenu",
+    "QTimer",
 ]
