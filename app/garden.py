@@ -25,16 +25,14 @@ class Garden:
 
             self.garden = garden
 
-            # TODO: move to a separate background object
-            self._background = QPixmap("tmp/high-def-background.jpg")
-
         def render(self, camera: Camera):
-            camera.image((0.0, 0.0), 10.0, self._background)
+            self.garden.background.renderable.render(camera)
 
             for bed in self.garden.beds:
                 bed.renderable.render(camera)
 
     def __init__(self):
+        self._background: Background = Background()
         self._beds: List["Bed"] = []
 
         self.plan_view_widget: Optional[QWidget] = None
@@ -44,6 +42,10 @@ class Garden:
         if self._rendered:
             assert self.plan_view_widget is not None
             self.plan_view_widget.update()
+
+    @property
+    def background(self) -> "Background":
+        return self._background
 
     @property
     def beds(self) -> Iterator["Bed"]:
@@ -118,6 +120,57 @@ class Garden:
 
         with open(path, "r") as file:
             return Garden.deserialise(json.load(file))
+
+
+class Background:
+    class Renderable(Renderable):
+        def __init__(self, background: "Background"):
+            self.background = background
+
+        def render(self, camera: Camera):
+            if (image := self.background.image) is not None:
+                camera.image((0.0, 0.0), 10.0, image)
+
+    def __init__(self):
+        self._garden: Optional[Garden] = None
+
+        # TODO: position and height
+        self._path: Optional[str] = None
+        self._image: Optional[QPixmap] = None
+
+        self._rendered = False
+
+        # TODO: allow the path to be set by the user
+        self.path = "tmp/high-def-background.jpg"
+
+    @property
+    def path(self) -> Optional[str]:
+        return self._path
+
+    @path.setter
+    def path(self, path: Optional[str]):
+        self._path = path
+        if path is None:
+            self._image = None
+        else:
+            self._image = QPixmap(path)
+
+    @property
+    def image(self) -> Optional[QPixmap]:
+        return self._image
+
+    @cached_property
+    def renderable(self) -> Renderable:
+        self._rendered = True
+        return Background.Renderable(self)
+
+    def serialise(self) -> dict:
+        # TODO: work out how to also save the image to disk
+        return {"path": self._path}
+
+    @staticmethod
+    def deserialise(json: dict) -> "Background":
+        return Background(json["path"])
 
 
 class Bed:

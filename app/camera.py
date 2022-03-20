@@ -33,7 +33,7 @@ class Camera:
         pass
 
     @abc.abstractmethod
-    def image(self, position: Point, height: float, path: str):
+    def image(self, position: Point, height: float, image: QPixmap):
         pass
 
     def scale(self, scale: float) -> "Camera":
