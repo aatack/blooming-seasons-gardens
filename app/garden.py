@@ -97,13 +97,19 @@ class Garden:
         return Garden.Renderable(self)
 
     def serialise(self) -> list:
-        return [bed.serialise() for bed in self.beds]
+        return {
+            "background": self._background.serialise(),
+            "beds": [bed.serialise() for bed in self.beds],
+        }
 
     @staticmethod
     def deserialise(json: list) -> "Garden":
         garden = Garden()
 
-        for bed in json:
+        # TODO: is it safe to set the background like this?
+        garden._background = Background.deserialise(json["background"])
+
+        for bed in json["beds"]:
             garden.add_bed(Bed.deserialise(bed))
 
         return garden
@@ -170,7 +176,9 @@ class Background:
 
     @staticmethod
     def deserialise(json: dict) -> "Background":
-        return Background(json["path"])
+        background = Background()
+        background.path = json["path"]
+        return background
 
 
 class Bed:
