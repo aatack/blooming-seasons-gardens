@@ -217,12 +217,12 @@ class FrameLayout(QWidget):
             self._arrow_horizontal = (
                 QtCore.QPointF(7.0, 8.0),
                 QtCore.QPointF(17.0, 8.0),
-                QtCore.QPointF(12.0, 13.0),
+                QtCore.QPointF(12.0, 18.0),
             )
             # vertical == 1
             self._arrow_vertical = (
                 QtCore.QPointF(8.0, 7.0),
-                QtCore.QPointF(13.0, 12.0),
+                QtCore.QPointF(18.0, 12.0),
                 QtCore.QPointF(8.0, 17.0),
             )
             # arrow
