@@ -20,6 +20,8 @@ from qt import (
     pyqtSlot,
 )
 
+from app.widgets import Arrow
+
 
 def set_widget_background(widget: QWidget, colour: Tuple[int, int, int]):
     widget.setAutoFillBackground(True)
@@ -112,7 +114,7 @@ class Collapsible(QWidget):
 
 __author__ = "Caroline Beyne"
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore
 
 
 class FrameLayout(QWidget):
@@ -155,11 +157,8 @@ class FrameLayout(QWidget):
     def toggleCollapsed(self):
         self._content.setVisible(self._is_collasped)
         self._is_collasped = not self._is_collasped
-        self._title_frame._arrow.setArrow(int(self._is_collasped))
+        self._title_frame._arrow.down = self._is_collasped
 
-    ############################
-    #           TITLE          #
-    ############################
     class TitleFrame(QFrame):
         def __init__(self, parent=None, title="", collapsed=False):
             QFrame.__init__(self, parent=parent)
@@ -184,7 +183,8 @@ class FrameLayout(QWidget):
             self._callback = callback
 
         def initArrow(self, collapsed):
-            self._arrow = FrameLayout.Arrow(collapsed=collapsed)
+            self._arrow = Arrow(self)
+            self._arrow.down = collapsed
             self._arrow.setStyleSheet("border:0px")
 
             return self._arrow
@@ -203,42 +203,3 @@ class FrameLayout(QWidget):
                 self._callback()
 
             return super(FrameLayout.TitleFrame, self).mousePressEvent(event)
-
-    #############################
-    #           ARROW           #
-    #############################
-    class Arrow(QFrame):
-        def __init__(self, parent=None, collapsed=False):
-            QFrame.__init__(self, parent=parent)
-
-            self.setMaximumSize(24, 24)
-
-            # horizontal == 0
-            self._arrow_horizontal = (
-                QtCore.QPointF(7.0, 8.0),
-                QtCore.QPointF(17.0, 8.0),
-                QtCore.QPointF(12.0, 18.0),
-            )
-            # vertical == 1
-            self._arrow_vertical = (
-                QtCore.QPointF(8.0, 7.0),
-                QtCore.QPointF(18.0, 12.0),
-                QtCore.QPointF(8.0, 17.0),
-            )
-            # arrow
-            self._arrow = None
-            self.setArrow(int(collapsed))
-
-        def setArrow(self, arrow_dir):
-            if arrow_dir:
-                self._arrow = self._arrow_vertical
-            else:
-                self._arrow = self._arrow_horizontal
-
-        def paintEvent(self, event):
-            painter = QPainter()
-            painter.begin(self)
-            painter.setBrush(QColor(192, 192, 192))
-            painter.setPen(QColor(64, 64, 64))
-            painter.drawPolygon(*self._arrow)
-            painter.end()

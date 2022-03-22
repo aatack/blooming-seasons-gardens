@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 __all__ = [
+    "pyqtSlot",
     "QMainWindow",
     "QApplication",
     "QStatusBar",
@@ -38,5 +39,5 @@ __all__ = [
     "QSizePolicy",
     "QParallelAnimationGroup",
     "QToolButton",
-    "pyqtSlot",
+    "QPointF",
 ]
