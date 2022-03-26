@@ -13,6 +13,7 @@ from qt import (
     QVBoxLayout,
     QWidget,
 )
+from settings import COLLAPSIBLE_BODY_BACKGROUND
 
 from app.camera import Camera
 from app.canvas import Renderable
@@ -366,7 +367,10 @@ class Bed:
     @cached_property
     def widget(self) -> QWidget:
         content = QWidget()
+        set_widget_background(content, COLLAPSIBLE_BODY_BACKGROUND)
+
         layout = QVBoxLayout()
+
         content.setLayout(layout)
 
         def add_new_plant():
@@ -445,12 +449,16 @@ class Bed:
     def serialise(self) -> dict:
         return {
             "name": self.name,
+            "position": list(self.position),
             "plants": [plant.serialise() for plant in self.plants],
         }
 
     @staticmethod
     def deserialise(json: dict) -> "Bed":
         bed = Bed()
+
+        bed.name = json["name"]
+        bed.position = tuple(json["position"])
 
         for plant in json["plants"]:
             bed.add_plant(Plant.deserialise(plant))

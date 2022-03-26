@@ -7,7 +7,6 @@ from qt import (
     QHBoxLayout,
     QLabel,
     QLayout,
-    QPainter,
     QParallelAnimationGroup,
     QPropertyAnimation,
     QScrollArea,
@@ -20,7 +19,7 @@ from qt import (
     pyqtSlot,
 )
 
-from app.widgets import Arrow
+# from app.widgets import Arrow
 
 
 def set_widget_background(widget: QWidget, colour: Tuple[int, int, int]):
@@ -184,7 +183,8 @@ class FrameLayout(QWidget):
             self._callback = callback
 
         def initArrow(self, collapsed):
-            self._arrow = Arrow(self)
+            # self._arrow = Arrow(self)
+            raise NotImplementedError()
             self._arrow.down = collapsed
             self._arrow.setStyleSheet("border:0px")
 

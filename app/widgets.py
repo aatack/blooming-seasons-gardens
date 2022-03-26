@@ -12,6 +12,9 @@ from qt import (
     QVBoxLayout,
     QWidget,
 )
+from settings import COLLAPSIBLE_HEADER_BACKGROUND
+
+from app.utils import set_widget_background
 
 
 class Collapsible(QWidget):
@@ -47,6 +50,9 @@ class Collapsible(QWidget):
     def _layout(self) -> QLayout:
         layout = QVBoxLayout()
 
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+
         layout.addWidget(self._header)
         layout.addWidget(self._body)
 
@@ -76,6 +82,8 @@ class Collapsible(QWidget):
             layout.addWidget(arrow)
             layout.addWidget(label)
 
+            set_widget_background(self, COLLAPSIBLE_HEADER_BACKGROUND)
+
         def mousePressEvent(self, event):
             self._callback()
 
@@ -103,6 +111,7 @@ class Collapsible(QWidget):
     @body.setter
     def body(self, body: QWidget):
         layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(body)
         self.body.setLayout(layout)
 

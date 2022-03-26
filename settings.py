@@ -25,3 +25,8 @@ EDITOR_SCROLL_SPEED = 75.0
 # Seems the mouse's click position can sometimes get out of sync with its integrated
 # position - when enabled, this will check whether that is the case at each click event
 VALIDATE_MOUSE_POSITION = False
+
+# Background colours
+PLAN_VIEW_BACKGROUND = (255, 255, 255)
+COLLAPSIBLE_HEADER_BACKGROUND = (128, 128, 128)
+COLLAPSIBLE_BODY_BACKGROUND = (220, 220, 220)

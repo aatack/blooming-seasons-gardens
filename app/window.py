@@ -13,6 +13,7 @@ from qt import (
     QTimer,
     QWidget,
 )
+from settings import PLAN_VIEW_BACKGROUND
 
 from app.camera import WidgetCamera
 from app.canvas import Canvas, Renderable
@@ -116,11 +117,11 @@ class Window(QMainWindow):
 
     @cached_property
     def plan_view(self) -> "PlanView":
-        editor_view = PlanView(self.garden.renderable)
+        plan_view = PlanView(self.garden.renderable)
 
-        set_widget_background(editor_view, (255, 255, 255))
+        set_widget_background(plan_view, PLAN_VIEW_BACKGROUND)
 
-        return editor_view
+        return plan_view
 
 
 class PlanView(Canvas):
