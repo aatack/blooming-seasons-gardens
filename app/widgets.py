@@ -12,7 +12,11 @@ from qt import (
     QVBoxLayout,
     QWidget,
 )
-from settings import COLLAPSIBLE_HEADER_BACKGROUND, HIGHLIGHT_BACKGROUND
+from settings import (
+    COLLAPSIBLE_BODY_BACKGROUND,
+    COLLAPSIBLE_HEADER_BACKGROUND,
+    HIGHLIGHT_BACKGROUND,
+)
 
 from app.utils import set_widget_background
 
@@ -118,6 +122,7 @@ class Collapsible(QWidget):
 
     @body.setter
     def body(self, body: QWidget):
+        set_widget_background(body, COLLAPSIBLE_BODY_BACKGROUND)
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(body)

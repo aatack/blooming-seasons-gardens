@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import Callable, Iterator, List, Optional, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 from qt import (
     QFileDialog,
@@ -13,11 +13,10 @@ from qt import (
     QVBoxLayout,
     QWidget,
 )
-from settings import COLLAPSIBLE_BODY_BACKGROUND
 
 from app.camera import Camera
 from app.canvas import Renderable
-from app.utils import build_colour_slider, set_widget_background
+from app.utils import build_colour_slider
 from app.widgets import Collapsible
 
 
@@ -367,7 +366,6 @@ class Bed:
     @cached_property
     def widget(self) -> QWidget:
         content = QWidget()
-        set_widget_background(content, COLLAPSIBLE_BODY_BACKGROUND)
 
         layout = QVBoxLayout()
 
