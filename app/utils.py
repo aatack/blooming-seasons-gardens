@@ -164,6 +164,7 @@ class FrameLayout(QWidget):
             QFrame.__init__(self, parent=parent)
 
             self.setMinimumHeight(24)
+            self.setMaximumHeight(24)
             self.move(QtCore.QPoint(24, 0))
             self.setStyleSheet("border:1px solid rgb(41, 41, 41); ")
 
