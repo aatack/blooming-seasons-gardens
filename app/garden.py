@@ -16,12 +16,8 @@ from qt import (
 
 from app.camera import Camera
 from app.canvas import Renderable
-from app.utils import (
-    Collapsible,
-    FrameLayout,
-    build_colour_slider,
-    set_widget_background,
-)
+from app.utils import FrameLayout, build_colour_slider, set_widget_background
+from app.widgets import Collapsible
 
 
 class Garden:
@@ -333,6 +329,7 @@ class Bed:
     @name.setter
     def name(self, name: str):
         self._name = name
+        self._collapsible.title = self.name
         self.update_render()
 
     @property
@@ -368,14 +365,9 @@ class Bed:
 
     @cached_property
     def widget(self) -> QWidget:
-        widget = FrameLayout(title="Bed")
-        inner_widget = QWidget()
+        content = QWidget()
         layout = QVBoxLayout()
-        inner_widget.setLayout(layout)
-        widget.addWidget(inner_widget)
-
-        darkness = 128
-        set_widget_background(widget, (darkness,) * 3)
+        content.setLayout(layout)
 
         def add_new_plant():
             self.add_plant(Plant())
@@ -391,7 +383,13 @@ class Bed:
         layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
-        return widget
+        self._collapsible.body = content
+        self._collapsible.title = self.name
+        return self._collapsible
+
+    @cached_property
+    def _collapsible(self) -> Collapsible:
+        return Collapsible()
 
     @cached_property
     def _form(self) -> QFormLayout:
