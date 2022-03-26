@@ -12,7 +12,7 @@ from qt import (
     QVBoxLayout,
     QWidget,
 )
-from settings import COLLAPSIBLE_HEADER_BACKGROUND
+from settings import COLLAPSIBLE_HEADER_BACKGROUND, HIGHLIGHT_BACKGROUND
 
 from app.utils import set_widget_background
 
@@ -84,8 +84,16 @@ class Collapsible(QWidget):
 
             set_widget_background(self, COLLAPSIBLE_HEADER_BACKGROUND)
 
+            self.setMouseTracking(True)
+
         def mousePressEvent(self, event):
             self._callback()
+
+        def enterEvent(self, event):
+            set_widget_background(self, HIGHLIGHT_BACKGROUND)
+
+        def leaveEvent(self, event):
+            set_widget_background(self, COLLAPSIBLE_HEADER_BACKGROUND)
 
     @cached_property
     def _header(self) -> QFrame:
