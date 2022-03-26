@@ -17,7 +17,7 @@ from settings import COLLAPSIBLE_BODY_BACKGROUND
 
 from app.camera import Camera
 from app.canvas import Renderable
-from app.utils import FrameLayout, build_colour_slider, set_widget_background
+from app.utils import build_colour_slider, set_widget_background
 from app.widgets import Collapsible
 
 
