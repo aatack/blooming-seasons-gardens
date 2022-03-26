@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import Optional
+from typing import Callable, Optional
 
 from qt import (
     QColor,
@@ -19,7 +19,7 @@ class Collapsible(QWidget):
         super().__init__(parent)
 
         self._title = ""
-        self._collapsed = False
+        self._collapsed = True
 
         self.setLayout(self._layout)
 
@@ -36,6 +36,13 @@ class Collapsible(QWidget):
     def collapsed(self) -> bool:
         return self._collapsed
 
+    @collapsed.setter
+    def collapsed(self, collapsed: bool):
+        self._collapsed = collapsed
+
+        self._body.setVisible(not self.collapsed)
+        self._arrow.down = not self.collapsed
+
     @cached_property
     def _layout(self) -> QLayout:
         layout = QVBoxLayout()
@@ -45,21 +52,39 @@ class Collapsible(QWidget):
 
         return layout
 
+    class Header(QFrame):
+        def __init__(
+            self,
+            arrow: "Arrow",
+            label: QLabel,
+            callback: Callable[[], None],
+            parent: Optional[QWidget] = None,
+        ):
+            super().__init__(parent)
+
+            self._callback = callback
+
+            self.setMinimumHeight(24)
+            self.setMaximumHeight(24)
+
+            layout = QHBoxLayout()
+            self.setLayout(layout)
+
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(0)
+
+            layout.addWidget(arrow)
+            layout.addWidget(label)
+
+        def mousePressEvent(self, event):
+            self._callback()
+
     @cached_property
     def _header(self) -> QFrame:
-        header = QFrame(self)
+        def callback():
+            self.collapsed = not self.collapsed
 
-        header.setMinimumHeight(24)
-        header.setMaximumHeight(24)
-
-        layout = QHBoxLayout(header)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-
-        layout.addWidget(self._arrow)
-        layout.addWidget(self._label)
-
-        return header
+        return self.Header(self._arrow, self._label, callback)
 
     @cached_property
     def _arrow(self) -> QWidget:
@@ -84,19 +109,22 @@ class Collapsible(QWidget):
     @cached_property
     def _body(self) -> QWidget:
         body = QWidget()
+
         body.setVisible(not self.collapsed)
+        self._arrow.down = not self.collapsed
+
         return body
 
 
 class Arrow(QFrame):
 
-    RIGHT = (
+    DOWN = (
         QPointF(7.0, 8.0),
         QPointF(17.0, 8.0),
         QPointF(12.0, 18.0),
     )
 
-    DOWN = (
+    RIGHT = (
         QPointF(8.0, 7.0),
         QPointF(18.0, 12.0),
         QPointF(8.0, 17.0),
