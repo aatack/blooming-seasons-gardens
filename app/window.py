@@ -41,6 +41,11 @@ class Window(QMainWindow):
 
         self.garden.plan_view_widget = self.plan_view
 
+        self.showMaximized()
+        self.setWindowTitle(
+            f"Blooming Seasons Design Studio - {garden_path.split('/')[-2]}"
+        )
+
     def save(self):
         self.garden.write(self.garden_path)
         self.last_saved = time.time()
@@ -86,7 +91,7 @@ class Window(QMainWindow):
 
         views = QHBoxLayout()
         views.addWidget(self.editor_view, 1)
-        views.addWidget(self.plan_view, 2)
+        views.addWidget(self.plan_view, 3)
 
         central_widget.setLayout(views)
 
