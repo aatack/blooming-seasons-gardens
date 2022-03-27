@@ -24,11 +24,11 @@ from app.utils import create_new_garden, open_existing_garden, set_widget_backgr
 
 
 class Window(QMainWindow):
-    def __init__(self, garden_path: str):
+    def __init__(self, path: str):
         super().__init__()
 
-        self.garden_path = garden_path
-        self.garden = Garden.read(self.garden_path)
+        self.path = path
+        self.garden = Garden.read(self.path)
 
         self.last_saved = time.time()
         self.update_last_saved_display()
@@ -42,12 +42,10 @@ class Window(QMainWindow):
         self.garden.plan_view_widget = self.plan_view
 
         self.showMaximized()
-        self.setWindowTitle(
-            f"Blooming Seasons Design Studio - {garden_path.split('/')[-2]}"
-        )
+        self.setWindowTitle(f"Blooming Seasons Design Studio - {path.split('/')[-2]}")
 
     def save(self):
-        self.garden.write(self.garden_path)
+        self.garden.write(self.path)
         self.last_saved = time.time()
         self.update_last_saved_display()
 

@@ -34,25 +34,12 @@ class Garden:
             for bed in self.garden.beds:
                 bed.renderable.render(camera)
 
-    def __init__(self, save_location: str):
-        self._path: Optional[str] = save_location
-
+    def __init__(self):
         self._background: Background = Background(self)
         self._beds: List["Bed"] = []
 
         self.plan_view_widget: Optional[QWidget] = None
         self._rendered = False
-
-    @property
-    def path(self) -> str:
-        assert self._path is not None
-        assert self._path.endswith("/")
-
-        return self._path
-
-    @path.setter
-    def path(self, path: str):
-        self._path = path
 
     def update_render(self):
         if self._rendered:
@@ -121,8 +108,8 @@ class Garden:
         }
 
     @staticmethod
-    def deserialise(json: list, path: str) -> "Garden":
-        garden = Garden(path)
+    def deserialise(json: list) -> "Garden":
+        garden = Garden()
 
         garden.background.deserialise(json["background"])
 
@@ -142,7 +129,12 @@ class Garden:
         import json
 
         with open(path + "garden.bsg", "r") as file:
-            return Garden.deserialise(json.load(file), path)
+            garden = Garden.deserialise(json.load(file))
+
+        if isfile(background := path + "background.png"):
+            garden.background.path = background
+
+        return garden
 
 
 class Background:
@@ -293,10 +285,6 @@ class Background:
         return {"height": self._height, "position": list(self._position)}
 
     def deserialise(self, json: dict):
-        background = self.garden.path + "background.png"
-        if isfile(background):
-            self.path = background
-
         self.height = json["height"]
         self.position = tuple(json["position"])
 
