@@ -40,4 +40,5 @@ __all__ = [
     "QParallelAnimationGroup",
     "QToolButton",
     "QPointF",
+    "QCoreApplication",
 ]

@@ -3,6 +3,8 @@ from functools import cached_property
 from typing import Optional
 
 from qt import (
+    QCoreApplication,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QMainWindow,
@@ -44,6 +46,11 @@ class Window(QMainWindow):
         self.last_saved = time.time()
         self.update_last_saved_display()
 
+    def new(self):
+        path = QFileDialog.getExistingDirectory()
+
+        raise NotImplementedError()
+
     def update_last_saved_display(self):
         elapsed = int((time.time() - self.last_saved) / 60)
         if elapsed == 0:
@@ -59,21 +66,17 @@ class Window(QMainWindow):
         menu_bar = QMenuBar(self)
 
         file_menu = menu_bar.addMenu("&File")
-        file_menu.addAction("New")
+
+        new_action = file_menu.addAction("New")
+        new_action.triggered.connect(self.new)
+
         file_menu.addAction("Open")
-        save = file_menu.addAction("Save")
-        save.triggered.connect(self.save)
 
-        file_menu.addAction("Exit")
+        save_action = file_menu.addAction("Save")
+        save_action.triggered.connect(self.save)
 
-        edit_menu = menu_bar.addMenu("&Edit")
-        edit_menu.addAction("Copy")
-        edit_menu.addAction("Paste")
-        edit_menu.addAction("Cut")
-
-        help_menu = menu_bar.addMenu("&Help")
-        help_menu.addAction("Help Content")
-        help_menu.addAction("About")
+        exit_action = file_menu.addAction("Exit")
+        exit_action.triggered.connect(lambda: QCoreApplication.quit())
 
         return menu_bar
 
