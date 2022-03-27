@@ -478,15 +478,19 @@ class Bed:
 
 class Plant:
     class Renderable(Renderable):
+        BORDER_THICKNESS = 0.015
+
         def __init__(self, plant: "Plant"):
             super().__init__()
 
             self.plant = plant
 
         def render(self, camera: Camera):
-            x, y = self.plant.position
             radius = self.plant.size
-            camera.circle((x - radius, y - radius), radius, self.plant.colour)
+            # TODO: use an unfilled circle to make the border align better with the rest
+            #       of the plant
+            camera.circle(self.plant.position, radius + self.BORDER_THICKNESS, (0, 0, 0))
+            camera.circle(self.plant.position, radius - self.BORDER_THICKNESS, self.plant.colour)
 
     def __init__(self):
         self._bed: Optional[Bed] = None

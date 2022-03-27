@@ -88,9 +88,10 @@ class WidgetCamera(Camera):
         )
 
     def circle(self, position: Point, radius: float, colour: Colour):
+        self._painter.setRenderHint(QPainter.Antialiasing)
         self.set_colour(colour)
         self._painter.drawEllipse(
-            int(position[0]), int(position[1]), int(2 * radius), int(2 * radius)
+            position[0] - radius, position[1] - radius, 2 * radius, 2 * radius
         )
 
     def line(self, start: Point, end: Point, width: float, colour: Colour):
