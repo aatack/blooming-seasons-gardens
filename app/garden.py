@@ -33,12 +33,25 @@ class Garden:
             for bed in self.garden.beds:
                 bed.renderable.render(camera)
 
-    def __init__(self):
+    def __init__(self, save_location: str):
+        self._path: Optional[str] = save_location
+
         self._background: Background = Background(self)
         self._beds: List["Bed"] = []
 
         self.plan_view_widget: Optional[QWidget] = None
         self._rendered = False
+
+    @property
+    def path(self) -> str:
+        assert self._path is not None
+        assert self._path.endswith("/")
+
+        return self._path
+
+    @path.setter
+    def path(self, path: str):
+        self._path = path
 
     def update_render(self):
         if self._rendered:
@@ -107,8 +120,8 @@ class Garden:
         }
 
     @staticmethod
-    def deserialise(json: list) -> "Garden":
-        garden = Garden()
+    def deserialise(json: list, path: str) -> "Garden":
+        garden = Garden(path)
 
         garden.background.deserialise(json["background"])
 
@@ -120,15 +133,15 @@ class Garden:
     def write(self, path: str):
         import json
 
-        with open(path, "w") as file:
+        with open(path + "garden.bsg", "w") as file:
             json.dump(self.serialise(), file)
 
     @staticmethod
     def read(path: str) -> "Garden":
         import json
 
-        with open(path, "r") as file:
-            return Garden.deserialise(json.load(file))
+        with open(path + "garden.bsg", "r") as file:
+            return Garden.deserialise(json.load(file), path)
 
 
 class Background:
@@ -150,8 +163,7 @@ class Background:
 
         self._rendered = False
 
-        # TODO: allow the path to be set by the user
-        self.path = "tmp/high-def-background.jpg"
+        self.path = self.garden.path + "background.png"
 
     def update_render(self):
         if self._rendered:
@@ -190,6 +202,7 @@ class Background:
             self._image = None
         else:
             self._image = QPixmap(path)
+            assert self.image.height() > 0 and self.image.width() > 0
         self.update_render()
 
     @property
@@ -259,6 +272,10 @@ class Background:
                     error.setWindowTitle("Error")
                     error.exec()
                 else:
+                    path = self.garden.path + "background.png"
+                    image.save(path)
+                    # Bit of a workaround - should probably just have a `refresh`
+                    # function
                     self.path = path
 
         choose_image_button = QPushButton("Choose new background")
@@ -274,14 +291,10 @@ class Background:
 
     def serialise(self) -> dict:
         # TODO: work out how best to also save the image to disk
-        return {
-            "height": self._height,
-            "position": list(self._position),
-            "path": self.path,
-        }
+        return {"height": self._height, "position": list(self._position)}
 
     def deserialise(self, json: dict):
-        self.path = json["path"]
+        self.path = self.garden.path + "background.png"
         self.height = json["height"]
         self.position = tuple(json["position"])
 
