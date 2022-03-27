@@ -1,4 +1,5 @@
 from functools import cached_property
+from os.path import isfile
 from typing import Iterator, List, Optional, Tuple
 
 from qt import (
@@ -163,8 +164,6 @@ class Background:
 
         self._rendered = False
 
-        self.path = self.garden.path + "background.png"
-
     def update_render(self):
         if self._rendered:
             self.garden.update_render()
@@ -294,7 +293,10 @@ class Background:
         return {"height": self._height, "position": list(self._position)}
 
     def deserialise(self, json: dict):
-        self.path = self.garden.path + "background.png"
+        background = self.garden.path + "background.png"
+        if isfile(background):
+            self.path = background
+
         self.height = json["height"]
         self.position = tuple(json["position"])
 
