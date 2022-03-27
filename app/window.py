@@ -4,7 +4,6 @@ from typing import Optional
 
 from qt import (
     QCoreApplication,
-    QFileDialog,
     QHBoxLayout,
     QLabel,
     QMainWindow,

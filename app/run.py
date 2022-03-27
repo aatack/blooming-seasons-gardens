@@ -3,7 +3,6 @@ from typing import Optional
 from qt import QApplication, QMainWindow
 
 from app.splash import Splash
-from app.window import Window
 
 
 class RuntimeEnvironment:
