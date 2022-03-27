@@ -79,13 +79,13 @@ class Garden:
         def add_new_bed():
             self.add_bed(Bed())
 
-        dump = QPushButton("Dump")
-        dump.clicked.connect(lambda: print(self.serialise()))
+        debug = QPushButton("Debug")
+        debug.clicked.connect(lambda: print(self.serialise()))
 
         add_bed = QPushButton("Add Bed")
         add_bed.clicked.connect(add_new_bed)
 
-        layout.addWidget(dump)
+        layout.addWidget(debug)
         layout.addWidget(add_bed)
         layout.addLayout(self._beds_layout)
         layout.addStretch()
@@ -263,7 +263,16 @@ class Background:
                     error.setWindowTitle("Error")
                     error.exec()
                 else:
-                    path = self.garden.path + "background.png"
+                    # NOTE: currently this will lead to the change in background being
+                    #       saved immediately, even if the user did not request it
+                    # TODO: fix the above note
+
+                    from app.run import RuntimeEnvironment
+                    from app.window import Window
+
+                    window = RuntimeEnvironment.window
+                    assert isinstance(window, Window)
+                    path = window.path + "background.png"
                     image.save(path)
                     # Bit of a workaround - should probably just have a `refresh`
                     # function

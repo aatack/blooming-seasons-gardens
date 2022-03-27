@@ -1,7 +1,17 @@
-from os.path import isfile
+from os import makedirs
+from os.path import isdir, isfile
 from typing import Tuple
 
-from qt import QColor, QFileDialog, QLayout, QMessageBox, QSlider, Qt, QWidget
+from qt import (
+    QColor,
+    QFileDialog,
+    QInputDialog,
+    QLayout,
+    QMessageBox,
+    QSlider,
+    Qt,
+    QWidget,
+)
 
 
 def set_widget_background(widget: QWidget, colour: Tuple[int, int, int]):
@@ -28,11 +38,62 @@ def build_colour_slider(colour: str, parent: QLayout, initial_value: int) -> QSl
 
 
 def create_new_garden():
-    raise NotImplementedError()
+    path = QFileDialog.getExistingDirectory()
+
+    if len(path) == 0:
+        return  # User clicked cancel
+
+    assert not path.endswith("/")
+    path += "/"
+
+    name, okay = QInputDialog.getText(None, "Title", "Label")
+
+    if not okay:
+        return
+
+    if "/" in name:
+        error = QMessageBox()
+        error.setIcon(QMessageBox.Critical)
+        error.setText("Invalid garden name")
+        error.setInformativeText("Garden names may not contain '/' characters.")
+        error.setWindowTitle("Error")
+        error.exec()
+
+    else:
+        if isdir(path + name):
+            error = QMessageBox()
+            error.setIcon(QMessageBox.Critical)
+            error.setText("Folder already exists")
+            error.setInformativeText(
+                f"A new garden must be created in a new folder, but the name you have "
+                f"given ({name}) is already a folder within '{path}'.  Please try a "
+                "new name."
+            )
+            error.setWindowTitle("Error")
+            error.exec()
+
+        else:
+            from app.garden import Garden
+
+            full_path = path + name + "/"
+            makedirs(full_path)
+            garden = Garden()
+            garden.write(full_path)
+
+            from app.run import RuntimeEnvironment
+            from app.window import Window
+
+            if RuntimeEnvironment.window is not None:
+                RuntimeEnvironment.window.close()
+
+            RuntimeEnvironment.window = Window(full_path)
 
 
 def open_existing_garden():
     path = QFileDialog.getExistingDirectory()
+
+    if len(path) == 0:
+        return  # User clicked cancel
 
     assert not path.endswith("/")
     path += "/"

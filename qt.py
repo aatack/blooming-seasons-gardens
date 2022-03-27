@@ -41,4 +41,5 @@ __all__ = [
     "QToolButton",
     "QPointF",
     "QCoreApplication",
+    "QInputDialog",
 ]

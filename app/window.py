@@ -27,6 +27,8 @@ class Window(QMainWindow):
     def __init__(self, path: str):
         super().__init__()
 
+        assert path.endswith("/")
+
         self.path = path
         self.garden = Garden.read(self.path)
 
