@@ -20,7 +20,7 @@ from settings import PLAN_VIEW_BACKGROUND
 from app.camera import WidgetCamera
 from app.canvas import Canvas, Renderable
 from app.garden import Garden
-from app.utils import set_widget_background
+from app.utils import create_new_garden, open_existing_garden, set_widget_background
 
 
 class Window(QMainWindow):
@@ -51,11 +51,6 @@ class Window(QMainWindow):
         self.last_saved = time.time()
         self.update_last_saved_display()
 
-    def new(self):
-        path = QFileDialog.getExistingDirectory()
-
-        raise NotImplementedError()
-
     def update_last_saved_display(self):
         elapsed = int((time.time() - self.last_saved) / 60)
         if elapsed == 0:
@@ -73,9 +68,10 @@ class Window(QMainWindow):
         file_menu = menu_bar.addMenu("&File")
 
         new_action = file_menu.addAction("New")
-        new_action.triggered.connect(self.new)
+        new_action.triggered.connect(create_new_garden)
 
-        file_menu.addAction("Open")
+        open_action = file_menu.addAction("Open")
+        open_action.triggered.connect(open_existing_garden)
 
         save_action = file_menu.addAction("Save")
         save_action.triggered.connect(self.save)

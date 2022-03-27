@@ -2,7 +2,7 @@ from functools import cached_property
 
 from qt import QHBoxLayout, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
-from app.utils import open_existing_garden
+from app.utils import create_new_garden, open_existing_garden
 
 
 class Splash(QMainWindow):
@@ -32,6 +32,7 @@ class Splash(QMainWindow):
 
         new_button = QPushButton("Create new garden")
         new_button.setMinimumWidth(150)
+        new_button.clicked.connect(create_new_garden)
         inner_layout.addWidget(new_button)
 
         open_button = QPushButton("Open existing garden")

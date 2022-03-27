@@ -1,16 +1,7 @@
 from os.path import isfile
-from typing import Optional, Tuple
+from typing import Tuple
 
-from qt import (
-    QColor,
-    QFileDialog,
-    QLayout,
-    QMainWindow,
-    QMessageBox,
-    QSlider,
-    Qt,
-    QWidget,
-)
+from qt import QColor, QFileDialog, QLayout, QMessageBox, QSlider, Qt, QWidget
 
 
 def set_widget_background(widget: QWidget, colour: Tuple[int, int, int]):
@@ -34,6 +25,10 @@ def build_colour_slider(colour: str, parent: QLayout, initial_value: int) -> QSl
     slider.setValue(initial_value)
 
     return slider
+
+
+def create_new_garden():
+    raise NotImplementedError()
 
 
 def open_existing_garden():
