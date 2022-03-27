@@ -1,6 +1,16 @@
-from typing import Tuple
+from os.path import isfile
+from typing import Optional, Tuple
 
-from qt import QColor, QLayout, QSlider, Qt, QWidget
+from qt import (
+    QColor,
+    QFileDialog,
+    QLayout,
+    QMainWindow,
+    QMessageBox,
+    QSlider,
+    Qt,
+    QWidget,
+)
 
 
 def set_widget_background(widget: QWidget, colour: Tuple[int, int, int]):
@@ -24,3 +34,30 @@ def build_colour_slider(colour: str, parent: QLayout, initial_value: int) -> QSl
     slider.setValue(initial_value)
 
     return slider
+
+
+def open_existing_garden():
+    path = QFileDialog.getExistingDirectory()
+
+    assert not path.endswith("/")
+    path += "/"
+
+    if not isfile(path + "garden.bsg"):
+        error = QMessageBox()
+        error.setIcon(QMessageBox.Critical)
+        error.setText("Could not load garden")
+        error.setInformativeText(
+            f"Tried to load a folder that is not a garden: '{path}'.  A folder that "
+            "contains a garden will have a file called 'garden.bsg' inside it."
+        )
+        error.setWindowTitle("Error")
+        error.exec()
+
+    else:
+        from app.run import RuntimeEnvironment
+        from app.window import Window
+
+        if RuntimeEnvironment.window is not None:
+            RuntimeEnvironment.window.close()
+
+        RuntimeEnvironment.window = Window(path)
