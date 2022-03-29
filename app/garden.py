@@ -489,8 +489,12 @@ class Plant:
             radius = self.plant.size
             # TODO: use an unfilled circle to make the border align better with the rest
             #       of the plant
-            camera.circle(self.plant.position, radius + self.BORDER_THICKNESS, (0, 0, 0))
-            camera.circle(self.plant.position, radius - self.BORDER_THICKNESS, self.plant.colour)
+            camera.circle(
+                self.plant.position, radius + self.BORDER_THICKNESS, (0, 0, 0)
+            )
+            camera.circle(
+                self.plant.position, radius - self.BORDER_THICKNESS, self.plant.colour
+            )
 
     def __init__(self):
         self._bed: Optional[Bed] = None
@@ -669,3 +673,106 @@ class Plant:
         plant.colour = tuple(json["colour"])
 
         return plant
+
+
+class Label:
+    class Renderable(Renderable):
+        def __init__(self, label: "Label"):
+            super().__init__()
+
+            self.label = label
+
+        def render(self, camera: Camera):
+            camera.text(
+                self.label.position, self.label.label, self.label.size, (0, 0, 0)
+            )
+
+    def __init__(self):
+        self._bed: Optional[Bed] = None
+
+        self._label = ""
+        self._size = 12
+        self._position = (0.0, 0.0)
+
+        self._rendered = False
+
+    def update_render(self):
+        if self._rendered:
+            self.bed.update_render()
+
+    @property
+    def bed(self) -> Bed:
+        assert self._bed is not None
+        return self._bed
+
+    @bed.setter
+    def bed(self, bed: Bed):
+        assert isinstance(bed, Bed)
+        assert self._bed is None
+
+        self._bed = bed
+
+    @property
+    def label(self) -> str:
+        return self._label
+
+    @label.setter
+    def label(self, label: str):
+        self._label = label
+        self.update_render()
+
+    @property
+    def size(self) -> int:
+        return self._size
+
+    @size.setter
+    def size(self, size: int):
+        self._size = size
+        self.update_render()
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self._position
+
+    @position.setter
+    def position(self, position: Tuple[float, float]):
+        self._position = position
+        self.update_render()
+
+    def remove(self):
+        self._garden = None
+        self.widget.deleteLater()
+
+    @cached_property
+    def widget(self) -> QWidget:
+        widget = QWidget()
+        layout = QVBoxLayout()
+        widget.setLayout(layout)
+
+        # layout.addLayout(self._form)
+        layout.addWidget(QPushButton("Test label"))
+
+        remove = QPushButton("Remove Plant")
+        remove.clicked.connect(lambda: self._bed.remove_plant(self))
+
+        layout.addWidget(remove)
+
+        return widget
+
+    @cached_property
+    def renderable(self) -> Renderable:
+        self._rendered = True
+        return Label.Renderable(self)
+
+    def serialise(self) -> dict:
+        return {"label": self.label, "size": self.size, "position": list(self.position)}
+
+    @staticmethod
+    def deserialise(json: dict) -> "Label":
+        label = Label()
+
+        label.label = json["label"]
+        label.size = json["size"]
+        label.position = tuple(json["position"])
+
+        return label
