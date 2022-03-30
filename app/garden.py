@@ -311,6 +311,8 @@ class Bed:
                 plant.renderable.render(bed_camera)
             for label in self.bed.labels:
                 label.renderable.render(bed_camera)
+            for arrow in self.bed.arrows:
+                arrow.renderable.render(bed_camera)
 
     def __init__(self):
         self._garden: Optional[Garden] = None
@@ -537,7 +539,7 @@ class Bed:
         for label in json["labels"]:
             bed.add_label(Label.deserialise(label))
 
-        for arrow in json.get("arrows", []):  # TODO: replace with a strict getter
+        for arrow in json["arrows"]:
             bed.add_arrow(Arrow.deserialise(arrow))
 
         return bed
@@ -1034,7 +1036,7 @@ class Arrow:
     @cached_property
     def renderable(self) -> Renderable:
         self._rendered = True
-        return Label.Renderable(self)
+        return Arrow.Renderable(self)
 
     def serialise(self) -> dict:
         return {"start": list(self.start), "end": list(self.end)}
