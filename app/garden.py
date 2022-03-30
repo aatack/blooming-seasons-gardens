@@ -866,3 +866,152 @@ class Label:
         label.position = tuple(json["position"])
 
         return label
+
+
+class Arrow:
+    class Renderable(Renderable):
+        def __init__(self, arrow: "Arrow"):
+            super().__init__()
+
+            self.arrow = arrow
+
+        def render(self, camera: Camera):
+            camera.line(self.arrow.start, self.arrow.end, 2, (0, 0, 0))
+
+    def __init__(self):
+        self._bed: Optional[Bed] = None
+
+        self._start = (0.0, 0.0)
+        self._end = (0.0, 0.0)
+
+        # TODO: add width
+
+        self._rendered = False
+
+    def update_render(self):
+        if self._rendered:
+            self.bed.update_render()
+
+    @property
+    def bed(self) -> Bed:
+        assert self._bed is not None
+        return self._bed
+
+    @bed.setter
+    def bed(self, bed: Bed):
+        assert isinstance(bed, Bed)
+        assert self._bed is None
+
+        self._bed = bed
+
+    @property
+    def start(self) -> Tuple[float, float]:
+        return self._start
+
+    @start.setter
+    def start(self, start: Tuple[float, float]):
+        self._start = start
+        self.update_render()
+
+    @property
+    def end(self) -> Tuple[float, float]:
+        return self._end
+
+    @end.setter
+    def end(self, end: Tuple[float, float]):
+        self._end = end
+        self.update_render()
+
+    def remove(self):
+        self._garden = None
+        self.widget.deleteLater()
+
+    @cached_property
+    def widget(self) -> QWidget:
+        widget = QWidget()
+        layout = QVBoxLayout()
+        widget.setLayout(layout)
+
+        layout.addLayout(self._form)
+
+        remove = QPushButton("Remove Arrow")
+        remove.clicked.connect(lambda: self._bed.remove_arrow(self))
+
+        layout.addWidget(remove)
+
+        return widget
+
+    @cached_property
+    def _form(self) -> QFormLayout:
+        form = QFormLayout()
+
+        # Start
+        start_label = QLabel("Start:")
+        start_layout = QHBoxLayout()
+
+        start_x_label = QLabel("x =")
+        start_x_edit = QLineEdit(str(self.start[0]))
+        start_y_label = QLabel("y =")
+        start_y_edit = QLineEdit(str(self.start[1]))
+
+        start_layout.addWidget(start_x_label)
+        start_layout.addWidget(start_x_edit)
+        start_layout.addWidget(start_y_label)
+        start_layout.addWidget(start_y_edit)
+
+        def update_start():
+            try:
+                x, y = float(start_x_edit.text()), float(start_y_edit.text())
+                self.start = (x, y)
+            except ValueError:
+                pass
+
+        start_x_edit.textEdited.connect(update_start)
+        start_y_edit.textEdited.connect(update_start)
+
+        form.addRow(start_label, start_layout)
+
+        # End
+        end_label = QLabel("End:")
+        end_layout = QHBoxLayout()
+
+        end_x_label = QLabel("x =")
+        end_x_edit = QLineEdit(str(self.end[0]))
+        end_y_label = QLabel("y =")
+        end_y_edit = QLineEdit(str(self.end[1]))
+
+        end_layout.addWidget(end_x_label)
+        end_layout.addWidget(end_x_edit)
+        end_layout.addWidget(end_y_label)
+        end_layout.addWidget(end_y_edit)
+
+        def update_end():
+            try:
+                x, y = float(end_x_edit.text()), float(end_y_edit.text())
+                self.end = (x, y)
+            except ValueError:
+                pass
+
+        end_x_edit.textEdited.connect(update_end)
+        end_y_edit.textEdited.connect(update_end)
+
+        form.addRow(end_label, end_layout)
+
+        return form
+
+    @cached_property
+    def renderable(self) -> Renderable:
+        self._rendered = True
+        return Label.Renderable(self)
+
+    def serialise(self) -> dict:
+        return {"start": list(self.start), "end": list(self.end)}
+
+    @staticmethod
+    def deserialise(json: dict) -> "Arrow":
+        arrow = Arrow()
+
+        arrow.start = tuple(json["start"])
+        arrow.end = tuple(json["end"])
+
+        return arrow
