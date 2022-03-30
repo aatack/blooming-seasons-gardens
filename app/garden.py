@@ -910,6 +910,7 @@ class Arrow:
             self.arrow = arrow
 
         def render(self, camera: Camera):
+            # TODO: render with rounded ends (superimpose circles?)
             camera.line(self.arrow.start, self.arrow.end, self.arrow.width, (0, 0, 0))
 
     def __init__(self):
