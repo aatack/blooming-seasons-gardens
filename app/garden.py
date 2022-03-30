@@ -726,7 +726,7 @@ class Label:
         self._bed: Optional[Bed] = None
 
         self._label = ""
-        self._size = 12
+        self._size = 0.1
         self._position = (0.0, 0.0)
 
         self._rendered = False
@@ -757,11 +757,11 @@ class Label:
         self.update_render()
 
     @property
-    def size(self) -> int:
+    def size(self) -> float:
         return self._size
 
     @size.setter
-    def size(self, size: int):
+    def size(self, size: float):
         self._size = size
         self.update_render()
 

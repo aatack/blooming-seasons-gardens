@@ -3,6 +3,7 @@ from typing import Optional
 from qt import QApplication, QMainWindow
 
 from app.splash import Splash
+from app.window import Window
 
 
 class RuntimeEnvironment:
@@ -11,9 +12,12 @@ class RuntimeEnvironment:
     window: Optional[QMainWindow] = None
 
 
-def run():
+def run(path: Optional[str] = None):
     app = QApplication([])
 
-    RuntimeEnvironment.window = Splash()
+    if path is None:
+        RuntimeEnvironment.window = Splash()
+    else:
+        RuntimeEnvironment.window = Window(path)
 
     app.exec()
