@@ -910,15 +910,14 @@ class Arrow:
             self.arrow = arrow
 
         def render(self, camera: Camera):
-            camera.line(self.arrow.start, self.arrow.end, 2, (0, 0, 0))
+            camera.line(self.arrow.start, self.arrow.end, self.arrow.width, (0, 0, 0))
 
     def __init__(self):
         self._bed: Optional[Bed] = None
 
         self._start = (0.0, 0.0)
         self._end = (0.0, 0.0)
-
-        # TODO: add width
+        self._width = 0.02
 
         self._rendered = False
 
@@ -959,6 +958,15 @@ class Arrow:
     def remove(self):
         self._garden = None
         self.widget.deleteLater()
+
+    @property
+    def width(self) -> float:
+        return self._width
+
+    @width.setter
+    def width(self, width: float):
+        self._width = width
+        self.update_render()
 
     @cached_property
     def widget(self) -> QWidget:
@@ -1031,6 +1039,20 @@ class Arrow:
 
         form.addRow(end_label, end_layout)
 
+        # Width
+        width_label = QLabel("Width:")
+        width_edit = QLineEdit(str(self.width))
+
+        def update_width():
+            try:
+                width = float(width_edit.text())
+                self.width = width
+            except ValueError:
+                pass
+
+        width_edit.textEdited.connect(update_width)
+        form.addRow(width_label, width_edit)
+
         return form
 
     @cached_property
@@ -1039,7 +1061,7 @@ class Arrow:
         return Arrow.Renderable(self)
 
     def serialise(self) -> dict:
-        return {"start": list(self.start), "end": list(self.end)}
+        return {"start": list(self.start), "end": list(self.end), "width": self.width}
 
     @staticmethod
     def deserialise(json: dict) -> "Arrow":
@@ -1047,5 +1069,6 @@ class Arrow:
 
         arrow.start = tuple(json["start"])
         arrow.end = tuple(json["end"])
+        arrow.width = json["width"]
 
         return arrow
