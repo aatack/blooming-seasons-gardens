@@ -784,8 +784,7 @@ class Label:
         layout = QVBoxLayout()
         widget.setLayout(layout)
 
-        # layout.addLayout(self._form)
-        layout.addWidget(QPushButton("Test label"))
+        layout.addLayout(self._form)
 
         remove = QPushButton("Remove Label")
         remove.clicked.connect(lambda: self._bed.remove_label(self))
@@ -793,6 +792,62 @@ class Label:
         layout.addWidget(remove)
 
         return widget
+
+    @cached_property
+    def _form(self) -> QFormLayout:
+        form = QFormLayout()
+
+        # Label
+        label_label = QLabel("Label:")
+        label_edit = QLineEdit(self.label)
+
+        def set_label():
+            self.label = label_edit.text()
+
+        label_edit.textEdited.connect(set_label)
+        form.addRow(label_label, label_edit)
+
+        # Size
+        size_label = QLabel("Size:")
+        size_edit = QLineEdit(str(self.size))
+
+        def update_size():
+            try:
+                size = float(size_edit.text())
+                self.size = size
+            except ValueError:
+                pass
+
+        size_edit.textEdited.connect(update_size)
+        form.addRow(size_label, size_edit)
+
+        # Position
+        position_label = QLabel("Position:")
+        position_layout = QHBoxLayout()
+
+        x_label = QLabel("x =")
+        x_edit = QLineEdit(str(self.position[0]))
+        y_label = QLabel("y =")
+        y_edit = QLineEdit(str(self.position[1]))
+
+        position_layout.addWidget(x_label)
+        position_layout.addWidget(x_edit)
+        position_layout.addWidget(y_label)
+        position_layout.addWidget(y_edit)
+
+        def update_position():
+            try:
+                x, y = float(x_edit.text()), float(y_edit.text())
+                self.position = (x, y)
+            except ValueError:
+                pass
+
+        x_edit.textEdited.connect(update_position)
+        y_edit.textEdited.connect(update_position)
+
+        form.addRow(position_label, position_layout)
+
+        return form
 
     @cached_property
     def renderable(self) -> Renderable:
