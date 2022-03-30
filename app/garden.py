@@ -319,6 +319,7 @@ class Bed:
         self._position = (0.0, 0.0)
         self._plants: List["Plant"] = []
         self._labels: List["Label"] = []
+        self._arrows: List["Arrow"] = []
 
         self._rendered = False
 
@@ -395,6 +396,26 @@ class Bed:
         label.remove()
         self.update_render()
 
+    @property
+    def arrows(self) -> Iterator["Arrow"]:
+        yield from self._arrows
+
+    def add_arrow(self, arrow: "Arrow"):
+        arrow.bed = self
+        self._arrows.append(arrow)
+
+        # TODO: do we need a specialised arrows layout?
+        self._plants_layout.addWidget(arrow.widget)
+        self.update_render()
+
+    def remove_arrow(self, arrow: "Arrow"):
+        self._arrows.remove(arrow)
+        # TODO: do we need a specialised arrows widget?
+        self._plants_layout.removeWidget(arrow.widget)
+
+        arrow.remove()
+        self.update_render()
+
     def remove(self):
         self._garden = None
         self.widget.deleteLater()
@@ -419,12 +440,19 @@ class Bed:
         add_label = QPushButton("Add Label")
         add_label.clicked.connect(add_new_label)
 
+        def add_new_arrow():
+            self.add_arrow(Arrow())
+
+        add_arrow = QPushButton("Add Arrow")
+        add_arrow.clicked.connect(add_new_arrow)
+
         remove = QPushButton("Remove Bed")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
         layout.addLayout(self._form)
         layout.addWidget(add_plant)
         layout.addWidget(add_label)
+        layout.addWidget(add_arrow)
         layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
@@ -493,6 +521,7 @@ class Bed:
             "position": list(self.position),
             "plants": [plant.serialise() for plant in self.plants],
             "labels": [label.serialise() for label in self.labels],
+            "arrows": [arrow.serialise() for arrow in self.arrows],
         }
 
     @staticmethod
@@ -507,6 +536,9 @@ class Bed:
 
         for label in json["labels"]:
             bed.add_label(Label.deserialise(label))
+
+        for arrow in json.get("arrows", []):  # TODO: replace with a strict getter
+            bed.add_arrow(Arrow.deserialise(arrow))
 
         return bed
 
