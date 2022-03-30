@@ -315,6 +315,7 @@ class Bed:
         self._name = ""
         self._position = (0.0, 0.0)
         self._plants: List["Plant"] = []
+        self._labels: List["Label"] = []
 
         self._rendered = False
 
@@ -371,6 +372,26 @@ class Bed:
         plant.remove()
         self.update_render()
 
+    @property
+    def labels(self) -> Iterator["Label"]:
+        yield from self._labels
+
+    def add_label(self, label: "Label"):
+        label.bed = self
+        self._labels.append(label)
+
+        # TODO: do we need a specialised labels layout?
+        self._plants_layout.addWidget(label.widget)
+        self.update_render()
+
+    def remove_label(self, label: "Label"):
+        self._labels.remove(label)
+        # TODO: do we need a specialised labels layout?
+        self._plants_layout.removeWidget(label.widget)
+
+        label.remove()
+        self.update_render()
+
     def remove(self):
         self._garden = None
         self.widget.deleteLater()
@@ -389,11 +410,18 @@ class Bed:
         add_plant = QPushButton("Add Plant")
         add_plant.clicked.connect(add_new_plant)
 
+        def add_new_label():
+            self.add_label(Label())
+
+        add_label = QPushButton("Add Label")
+        add_label.clicked.connect(add_new_label)
+
         remove = QPushButton("Remove Bed")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
         layout.addLayout(self._form)
         layout.addWidget(add_plant)
+        layout.addWidget(add_label)
         layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
@@ -461,6 +489,7 @@ class Bed:
             "name": self.name,
             "position": list(self.position),
             "plants": [plant.serialise() for plant in self.plants],
+            "labels": [label.serialise() for label in self.labels],
         }
 
     @staticmethod
@@ -472,6 +501,9 @@ class Bed:
 
         for plant in json["plants"]:
             bed.add_plant(Plant.deserialise(plant))
+
+        for label in json["labels"]:
+            bed.add_label(Label.deserialise(label))
 
         return bed
 
@@ -752,8 +784,8 @@ class Label:
         # layout.addLayout(self._form)
         layout.addWidget(QPushButton("Test label"))
 
-        remove = QPushButton("Remove Plant")
-        remove.clicked.connect(lambda: self._bed.remove_plant(self))
+        remove = QPushButton("Remove Label")
+        remove.clicked.connect(lambda: self._bed.remove_label(self))
 
         layout.addWidget(remove)
 
