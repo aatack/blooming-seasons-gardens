@@ -306,8 +306,11 @@ class Bed:
             self.bed = bed
 
         def render(self, camera: Camera):
+            bed_camera = camera.shift(*self.bed.position)
             for plant in self.bed.plants:
-                plant.renderable.render(camera.shift(*self.bed.position))
+                plant.renderable.render(bed_camera)
+            for label in self.bed.labels:
+                label.renderable.render(bed_camera)
 
     def __init__(self):
         self._garden: Optional[Garden] = None
