@@ -42,4 +42,5 @@ __all__ = [
     "QPointF",
     "QCoreApplication",
     "QInputDialog",
+    "QRect",
 ]

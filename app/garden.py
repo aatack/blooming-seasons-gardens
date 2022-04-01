@@ -11,6 +11,7 @@ from qt import (
     QMessageBox,
     QPixmap,
     QPushButton,
+    QRect,
     QVBoxLayout,
     QWidget,
 )
@@ -270,7 +271,7 @@ class Background:
                     from app.run import RuntimeEnvironment
                     from app.window import Window
 
-                    window = RuntimeEnvironment.window
+                    (window,) = RuntimeEnvironment.windows
                     assert isinstance(window, Window)
                     path = window.path + "background.png"
                     image.save(path)

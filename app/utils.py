@@ -83,10 +83,11 @@ def create_new_garden():
             from app.run import RuntimeEnvironment
             from app.window import Window
 
-            if RuntimeEnvironment.window is not None:
-                RuntimeEnvironment.window.close()
+        for window in list(RuntimeEnvironment.windows):
+            window.close()
+            RuntimeEnvironment.windows.remove(window)
 
-            RuntimeEnvironment.window = Window(full_path)
+        RuntimeEnvironment.windows = {Window(full_path)}
 
 
 def open_existing_garden():
@@ -113,7 +114,8 @@ def open_existing_garden():
         from app.run import RuntimeEnvironment
         from app.window import Window
 
-        if RuntimeEnvironment.window is not None:
-            RuntimeEnvironment.window.close()
+        for window in list(RuntimeEnvironment.windows):
+            window.close()
+            RuntimeEnvironment.windows.remove(window)
 
-        RuntimeEnvironment.window = Window(path)
+        RuntimeEnvironment.windows = {Window(path)}
