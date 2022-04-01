@@ -6,6 +6,7 @@ from qt import (
     QCoreApplication,
     QHBoxLayout,
     QLabel,
+    QLayout,
     QMainWindow,
     QMenuBar,
     QScrollArea,
@@ -183,3 +184,25 @@ class PlanView(Canvas):
 
             self._camera_scale *= zoom
             self.update()
+
+
+class Modal(QWidget):
+    @staticmethod
+    def create(layout: QLayout):
+        Modal().setLayout(layout)
+
+    def __init__(self):
+        from app.run import RuntimeEnvironment
+
+        super().__init__()
+
+        self.move(100, 100)
+
+        RuntimeEnvironment.windows.add(self)
+        self.show()
+
+    def close_modal(self):
+        from app.run import RuntimeEnvironment
+
+        RuntimeEnvironment.windows.remove(self)
+        self.close()

@@ -718,6 +718,20 @@ class Plant:
 
         form.addRow(colour_label, colour_layout)
 
+        # Modal
+        def open_modal():
+            from app.window import Modal
+
+            layout = QVBoxLayout()
+            layout.addWidget(QPushButton("Hello"))
+            layout.addWidget(QPushButton("world"))
+
+            Modal.create(layout)
+
+        modal_button = QPushButton("Open Modal")
+        modal_button.clicked.connect(open_modal)
+        form.addRow("Open modal", modal_button)
+
         return form
 
     @cached_property
