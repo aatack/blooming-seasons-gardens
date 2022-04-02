@@ -287,10 +287,10 @@ class Background:
         # Move button
         def move_callback(dx: int, dy: int):
             x, y = self.position
-            self.position = x + (0.01 * dx), y + (0.01 * dy)
+            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         def scroll_callback(up: bool):
-            self.height *= 1.2 if up else (1 / 1.2)
+            self.height = round(self.height * (1.2 if up else (1 / 1.2)), 2)
 
         move_button = DragButton(
             "Move", move_callback=move_callback, scroll_callback=scroll_callback
@@ -485,7 +485,7 @@ class Bed:
         # Move button
         def move_callback(dx: int, dy: int):
             x, y = self.position
-            self.position = x + (0.01 * dx), y + (0.01 * dy)
+            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         move_button = DragButton("Move", move_callback=move_callback)
         layout.addWidget(move_button)
@@ -736,10 +736,10 @@ class Plant:
         # Move button
         def move_callback(dx: int, dy: int):
             x, y = self.position
-            self.position = x + (0.01 * dx), y + (0.01 * dy)
+            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         def scroll_callback(up: bool):
-            self.size *= 1.2 if up else (1 / 1.2)
+            self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
 
         move_button = DragButton(
             "Move", move_callback=move_callback, scroll_callback=scroll_callback
@@ -985,10 +985,10 @@ class Label:
         # Move button
         def move_callback(dx: int, dy: int):
             x, y = self.position
-            self.position = x + (0.01 * dx), y + (0.01 * dy)
+            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         def scroll_callback(up: bool):
-            self.size *= 1.2 if up else (1 / 1.2)
+            self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
 
         move_button = DragButton(
             "Move", move_callback=move_callback, scroll_callback=scroll_callback
@@ -1213,30 +1213,30 @@ class Arrow:
         # Move start button
         def move_start_callback(dx: int, dy: int):
             x, y = self.start
-            self.start = x + (0.01 * dx), y + (0.01 * dy)
+            self.start = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
-        def scroll_callback(up: bool):
-            self.width *= 1.2 if up else (1 / 1.2)
+        def scroll_start_callback(up: bool):
+            self.width = round(self.width * (1.2 if up else (1 / 1.2)), 2)
 
         move_start_button = DragButton(
             "Move Start",
             move_callback=move_start_callback,
-            scroll_callback=scroll_callback,
+            scroll_callback=scroll_start_callback,
         )
         layout.addWidget(move_start_button)
 
         # Move end button
         def move_end_callback(dx: int, dy: int):
             x, y = self.end
-            self.end = x + (0.01 * dx), y + (0.01 * dy)
+            self.end = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
-        def scroll_callback(up: bool):
-            self.width *= 1.2 if up else (1 / 1.2)
+        def scroll_end_callback(up: bool):
+            self.width = round(self.width * (1.2 if up else (1 / 1.2)), 2)
 
         move_end_button = DragButton(
             "Move End",
             move_callback=move_end_callback,
-            scroll_callback=scroll_callback,
+            scroll_callback=scroll_end_callback,
         )
         layout.addWidget(move_end_button)
 
