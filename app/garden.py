@@ -81,13 +81,9 @@ class Garden:
         def add_new_bed():
             self.add_bed(Bed())
 
-        debug = QPushButton("Debug")
-        debug.clicked.connect(lambda: print(self.serialise()))
-
         add_bed = QPushButton("Add Bed")
         add_bed.clicked.connect(add_new_bed)
 
-        layout.addWidget(debug)
         layout.addWidget(add_bed)
         layout.addLayout(self._beds_layout)
         layout.addStretch()

@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 from qt import (
     QColor,
