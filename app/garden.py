@@ -652,7 +652,7 @@ class Plant:
             self.position = x + (0.01 * dx), y + (0.01 * dy)
 
         def scroll_callback(up: bool):
-            self.size *= 1.2 if up else (1/1.2)
+            self.size *= 1.2 if up else (1 / 1.2)
 
         move_button = DragButton(
             "Move", move_callback=move_callback, scroll_callback=scroll_callback
@@ -1076,20 +1076,91 @@ class Arrow:
         self._width = width
         self.update_render()
 
+    # @cached_property
+    # def widget(self) -> QWidget:
+    #     widget = QWidget()
+    #     layout = QVBoxLayout()
+    #     widget.setLayout(layout)
+
+    #     layout.addLayout(self._form)
+
+    #     remove = QPushButton("Remove Arrow")
+    #     remove.clicked.connect(lambda: self._bed.remove_arrow(self))
+
+    #     layout.addWidget(remove)
+
+    #     return widget
+
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         widget.setLayout(layout)
+
+        # Title
+        layout.addWidget(QLabel("Arrow"))
+
+        layout.addStretch()
+
+        # Move start button
+        def move_start_callback(dx: int, dy: int):
+            x, y = self.start
+            self.start = x + (0.01 * dx), y + (0.01 * dy)
+
+        def scroll_callback(up: bool):
+            self.width *= 1.2 if up else (1 / 1.2)
+
+        move_start_button = DragButton(
+            "Move Start",
+            move_callback=move_start_callback,
+            scroll_callback=scroll_callback,
+        )
+        layout.addWidget(move_start_button)
+
+        # Move end button
+        def move_end_callback(dx: int, dy: int):
+            x, y = self.end
+            self.end = x + (0.01 * dx), y + (0.01 * dy)
+
+        def scroll_callback(up: bool):
+            self.width *= 1.2 if up else (1 / 1.2)
+
+        move_end_button = DragButton(
+            "Move End",
+            move_callback=move_end_callback,
+            scroll_callback=scroll_callback,
+        )
+        layout.addWidget(move_end_button)
+
+        # Edit button
+        def edit():
+            self.modal.open_modal()
+
+        edit_button = QPushButton("Edit")
+        edit_button.clicked.connect(edit)
+        layout.addWidget(edit_button)
+
+        return widget
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
 
         layout.addLayout(self._form)
 
+        def remove_callback():
+            self._bed.remove_arrow(self)
+            self.modal.close_modal()
+
         remove = QPushButton("Remove Arrow")
-        remove.clicked.connect(lambda: self._bed.remove_arrow(self))
+        remove.clicked.connect(remove_callback)
 
         layout.addWidget(remove)
 
-        return widget
+        return Modal("Edit Arrow", layout)
 
     @cached_property
     def _form(self) -> QFormLayout:
