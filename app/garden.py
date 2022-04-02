@@ -1,6 +1,6 @@
 from functools import cached_property
 from os.path import isfile
-from typing import Iterator, List, Optional, Tuple
+from typing import Any, Iterator, List, Optional, Tuple
 
 from qt import (
     QFileDialog,
@@ -635,11 +635,11 @@ class Plant:
         self._garden = None
         self.widget.deleteLater()
 
-    class CustomWidget(QWidget):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+    class RepositionButton(QPushButton):
+        def __init__(self, text: str, positionable: Any):
+            super().__init__(text)
 
-            self.plant: Optional[Plant] = None
+            self._positionable = positionable
 
             self._mouse_x: Optional[int] = None
             self._mouse_y: Optional[int] = None
@@ -660,15 +660,15 @@ class Plant:
                 dx = event.x() - self._mouse_x
                 dy = event.y() - self._mouse_y
 
-                x, y = self.plant.position
-                self.plant.position = (x + (dx * 0.01), y + (dy * 0.01))
+                x, y = self._positionable.position
+                self._positionable.position = (x + (dx * 0.01), y + (dy * 0.01))
 
             self._mouse_x = event.x()
             self._mouse_y = event.y()
 
     @cached_property
     def widget(self) -> QWidget:
-        widget = self.CustomWidget()
+        widget = QWidget()
         widget.plant = self
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -679,14 +679,6 @@ class Plant:
 
         layout.addStretch()
 
-        # Move button
-        def move():
-            raise NotImplementedError()
-
-        move_button = QPushButton("Move")
-        move_button.clicked.connect(move)
-        layout.addWidget(move_button)
-
         # Edit button
         def edit():
             self.modal.open_modal()
@@ -694,6 +686,10 @@ class Plant:
         edit_button = QPushButton("Edit")
         edit_button.clicked.connect(edit)
         layout.addWidget(edit_button)
+
+        # Move button
+        move_button = self.RepositionButton("Move", self)
+        layout.addWidget(move_button)
 
         return widget
 
