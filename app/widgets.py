@@ -186,10 +186,16 @@ class Arrow(QFrame):
 
 
 class DragButton(QPushButton):
-    def __init__(self, text: str, callback: Callable[[int, int], None]):
+    def __init__(
+        self,
+        text: str,
+        move_callback: Optional[Callable[[int, int], None]] = None,
+        scroll_callback: Optional[Callable[[bool], None]] = None,
+    ):
         super().__init__(text)
 
-        self._callback = callback
+        self._move_callback = move_callback
+        self._scroll_callback = scroll_callback
 
         self._initial_x: Optional[int] = None
         self._initial_y: Optional[int] = None
@@ -206,7 +212,7 @@ class DragButton(QPushButton):
 
     def mouseMoveEvent(self, event):
         if self._initial_x is None or self._initial_y is None:
-            self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
+            return
 
         if event.buttons() == Qt.LeftButton:
             dx = QCursor.pos().x() - self._initial_x
@@ -214,4 +220,13 @@ class DragButton(QPushButton):
 
             QCursor.setPos(self._initial_x, self._initial_y)
 
-            self._callback(dx, dy)
+            if self._move_callback is not None:
+                self._move_callback(dx, dy)
+
+    def wheelEvent(self, event):
+        if self._initial_x is None or self._initial_y is None:
+            return
+
+        if self._scroll_callback is not None:
+            up = event.angleDelta().y() > 0
+            self._scroll_callback(up)

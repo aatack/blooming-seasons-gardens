@@ -651,7 +651,12 @@ class Plant:
             x, y = self.position
             self.position = x + (0.01 * dx), y + (0.01 * dy)
 
-        move_button = DragButton("Move", move_callback)
+        def scroll_callback(up: bool):
+            self.size *= 1.2 if up else (1/1.2)
+
+        move_button = DragButton(
+            "Move", move_callback=move_callback, scroll_callback=scroll_callback
+        )
         layout.addWidget(move_button)
 
         # Edit button
@@ -877,11 +882,16 @@ class Label:
         layout.addStretch()
 
         # Move button
-        def move():
-            raise NotImplementedError()
+        def move_callback(dx: int, dy: int):
+            x, y = self.position
+            self.position = x + (0.01 * dx), y + (0.01 * dy)
 
-        move_button = QPushButton("Move")
-        move_button.clicked.connect(move)
+        def scroll_callback(up: bool):
+            self.size *= 1.2 if up else (1 / 1.2)
+
+        move_button = DragButton(
+            "Move", move_callback=move_callback, scroll_callback=scroll_callback
+        )
         layout.addWidget(move_button)
 
         # Edit button
