@@ -84,7 +84,17 @@ class Garden:
         add_bed = QPushButton("Add Bed")
         add_bed.clicked.connect(add_new_bed)
 
-        layout.addWidget(add_bed)
+        def open_nursery():
+            raise NotImplementedError()
+
+        nursery = QPushButton("Open Nursery")
+        nursery.clicked.connect(open_nursery)
+
+        row = QHBoxLayout()
+        row.addWidget(add_bed)
+        row.addWidget(nursery)
+
+        layout.addLayout(row)
         layout.addLayout(self._beds_layout)
         layout.addStretch()
 
