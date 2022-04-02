@@ -1,9 +1,8 @@
 from functools import cached_property
 from os.path import isfile
-from typing import Any, Iterator, List, Optional, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 from qt import (
-    QCursor,
     QFileDialog,
     QFormLayout,
     QHBoxLayout,
@@ -12,8 +11,6 @@ from qt import (
     QMessageBox,
     QPixmap,
     QPushButton,
-    QRect,
-    Qt,
     QVBoxLayout,
     QWidget,
 )
@@ -21,7 +18,7 @@ from qt import (
 from app.camera import Camera
 from app.canvas import Renderable
 from app.utils import build_colour_slider
-from app.widgets import Collapsible
+from app.widgets import Collapsible, DragButton
 
 
 class Garden:
@@ -636,39 +633,6 @@ class Plant:
         self._garden = None
         self.widget.deleteLater()
 
-    class RepositionButton(QPushButton):
-        def __init__(self, text: str, positionable: Any):
-            super().__init__(text)
-
-            self._positionable = positionable
-
-            self._initial_x: Optional[int] = None
-            self._initial_y: Optional[int] = None
-
-            self.setMouseTracking(True)
-
-        def mousePressEvent(self, event):
-            self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
-            self.setCursor(Qt.BlankCursor)
-
-        def mouseReleaseEvent(self, event):
-            self._initial_x, self._initial_y = None, None
-            # print([x for x in dir(Qt) if "Cursor" in x])
-            self.setCursor(Qt.ArrowCursor)
-
-        def mouseMoveEvent(self, event):
-            if self._initial_x is None or self._initial_y is None:
-                self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
-
-            if event.buttons() == Qt.LeftButton:
-                dx = QCursor.pos().x() - self._initial_x
-                dy = QCursor.pos().y() - self._initial_y
-
-                QCursor.setPos(self._initial_x, self._initial_y)
-
-                x, y = self._positionable.position
-                self._positionable.position = (x + (dx * 0.01), y + (dy * 0.01))
-
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
@@ -682,6 +646,14 @@ class Plant:
 
         layout.addStretch()
 
+        # Move button
+        def move_callback(dx: int, dy: int):
+            x, y = self.position
+            self.position = x + (0.01 * dx), y + (0.01 * dy)
+
+        move_button = DragButton("Move", move_callback)
+        layout.addWidget(move_button)
+
         # Edit button
         def edit():
             self.modal.open_modal()
@@ -689,10 +661,6 @@ class Plant:
         edit_button = QPushButton("Edit")
         edit_button.clicked.connect(edit)
         layout.addWidget(edit_button)
-
-        # Move button
-        move_button = self.RepositionButton("Move", self)
-        layout.addWidget(move_button)
 
         return widget
 

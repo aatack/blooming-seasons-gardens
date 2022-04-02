@@ -1,14 +1,17 @@
 from functools import cached_property
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 from qt import (
     QColor,
+    QCursor,
     QFrame,
     QHBoxLayout,
     QLabel,
     QLayout,
     QPainter,
     QPointF,
+    QPushButton,
+    Qt,
     QVBoxLayout,
     QWidget,
 )
@@ -180,3 +183,35 @@ class Arrow(QFrame):
         painter.drawPolygon(*self._arrow)
 
         painter.end()
+
+
+class DragButton(QPushButton):
+    def __init__(self, text: str, callback: Callable[[int, int], None]):
+        super().__init__(text)
+
+        self._callback = callback
+
+        self._initial_x: Optional[int] = None
+        self._initial_y: Optional[int] = None
+
+        self.setMouseTracking(True)
+
+    def mousePressEvent(self, event):
+        self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
+        self.setCursor(Qt.BlankCursor)
+
+    def mouseReleaseEvent(self, event):
+        self._initial_x, self._initial_y = None, None
+        self.setCursor(Qt.ArrowCursor)
+
+    def mouseMoveEvent(self, event):
+        if self._initial_x is None or self._initial_y is None:
+            self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
+
+        if event.buttons() == Qt.LeftButton:
+            dx = QCursor.pos().x() - self._initial_x
+            dy = QCursor.pos().y() - self._initial_y
+
+            QCursor.setPos(self._initial_x, self._initial_y)
+
+            self._callback(dx, dy)
