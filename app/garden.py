@@ -450,9 +450,6 @@ class Bed:
         add_arrow = QPushButton("Add Arrow")
         add_arrow.clicked.connect(add_new_arrow)
 
-        remove = QPushButton("Remove Bed")
-        remove.clicked.connect(lambda: self._garden.remove_bed(self))
-
         # Move button
         def move_callback(dx: int, dy: int):
             x, y = self.position
@@ -469,8 +466,6 @@ class Bed:
         edit_button.clicked.connect(edit)
         layout.addWidget(edit_button)
 
-        layout.addLayout(self._form)
-
         row.addWidget(add_plant)
         row.addWidget(add_label)
         row.addWidget(add_arrow)
@@ -485,11 +480,29 @@ class Bed:
         layout.addWidget(divider)
 
         layout.addLayout(self._plants_layout)
-        layout.addWidget(remove)
 
         self._collapsible.body = content
         self._collapsible.title = self.name
         return self._collapsible
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
+
+        layout.addLayout(self._form)
+
+        def remove_callback():
+            self._garden.remove_bed(self)
+            self.modal.close_modal()
+
+        remove = QPushButton("Remove Bed")
+        remove.clicked.connect(remove_callback)
+
+        layout.addWidget(remove)
+
+        return Modal("Edit Plant", layout)
 
     @cached_property
     def _collapsible(self) -> Collapsible:
