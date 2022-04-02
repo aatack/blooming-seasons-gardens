@@ -638,10 +638,10 @@ class Plant:
     def widget(self) -> QWidget:
         widget = QWidget()
         layout = QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0,0)
+        layout.setContentsMargins(0, 0, 0, 0)
         widget.setLayout(layout)
 
-        # Label
+        # Title
         layout.addWidget(self._title)
 
         layout.addStretch()
@@ -838,6 +838,7 @@ class Label:
     def label(self, label: str):
         self._label = label
         self.update_render()
+        self._update_title()
 
     @property
     def size(self) -> float:
@@ -864,17 +865,51 @@ class Label:
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
         widget.setLayout(layout)
+
+        # Title
+        layout.addWidget(self._title)
+
+        layout.addStretch()
+
+        # Move button
+        def move():
+            raise NotImplementedError()
+
+        move_button = QPushButton("Move")
+        move_button.clicked.connect(move)
+        layout.addWidget(move_button)
+
+        # Edit button
+        def edit():
+            self.modal.open_modal()
+
+        edit_button = QPushButton("Edit")
+        edit_button.clicked.connect(edit)
+        layout.addWidget(edit_button)
+
+        return widget
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
 
         layout.addLayout(self._form)
 
+        def remove_callback():
+            self._bed.remove_label(self)
+            self.modal.close_modal()
+
         remove = QPushButton("Remove Label")
-        remove.clicked.connect(lambda: self._bed.remove_label(self))
+        remove.clicked.connect(remove_callback)
 
         layout.addWidget(remove)
 
-        return widget
+        return Modal("Edit Label", layout)
 
     @cached_property
     def _form(self) -> QFormLayout:
@@ -931,6 +966,17 @@ class Label:
         form.addRow(position_label, position_layout)
 
         return form
+
+    @cached_property
+    def _title(self) -> QLabel:
+        return QLabel(self._title_text)
+
+    @property
+    def _title_text(self) -> str:
+        return f"Label: {self.label}"
+
+    def _update_title(self):
+        self._title.setText(self._title_text)
 
     @cached_property
     def renderable(self) -> Renderable:
