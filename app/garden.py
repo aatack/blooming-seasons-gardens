@@ -5,6 +5,7 @@ from typing import Iterator, List, Optional, Tuple
 from qt import (
     QFileDialog,
     QFormLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -427,6 +428,7 @@ class Bed:
         content = QWidget()
 
         layout = QVBoxLayout()
+        row = QHBoxLayout()
 
         content.setLayout(layout)
 
@@ -451,10 +453,37 @@ class Bed:
         remove = QPushButton("Remove Bed")
         remove.clicked.connect(lambda: self._garden.remove_bed(self))
 
+        # Move button
+        def move_callback(dx: int, dy: int):
+            x, y = self.position
+            self.position = x + (0.01 * dx), y + (0.01 * dy)
+
+        move_button = DragButton("Move", move_callback=move_callback)
+        layout.addWidget(move_button)
+
+        # Edit button
+        def edit():
+            self.modal.open_modal()
+
+        edit_button = QPushButton("Edit")
+        edit_button.clicked.connect(edit)
+        layout.addWidget(edit_button)
+
         layout.addLayout(self._form)
-        layout.addWidget(add_plant)
-        layout.addWidget(add_label)
-        layout.addWidget(add_arrow)
+
+        row.addWidget(add_plant)
+        row.addWidget(add_label)
+        row.addWidget(add_arrow)
+        row.addStretch()
+        row.addWidget(move_button)
+        row.addWidget(edit_button)
+        layout.addLayout(row)
+
+        divider = QFrame()
+        divider.setFrameShape(QFrame.HLine)
+        divider.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(divider)
+
         layout.addLayout(self._plants_layout)
         layout.addWidget(remove)
 
@@ -1053,6 +1082,7 @@ class Arrow:
     def start(self, start: Tuple[float, float]):
         self._start = start
         self.update_render()
+        self._update_title()
 
     @property
     def end(self) -> Tuple[float, float]:
@@ -1062,6 +1092,7 @@ class Arrow:
     def end(self, end: Tuple[float, float]):
         self._end = end
         self.update_render()
+        self._update_title()
 
     def remove(self):
         self._garden = None
@@ -1076,21 +1107,6 @@ class Arrow:
         self._width = width
         self.update_render()
 
-    # @cached_property
-    # def widget(self) -> QWidget:
-    #     widget = QWidget()
-    #     layout = QVBoxLayout()
-    #     widget.setLayout(layout)
-
-    #     layout.addLayout(self._form)
-
-    #     remove = QPushButton("Remove Arrow")
-    #     remove.clicked.connect(lambda: self._bed.remove_arrow(self))
-
-    #     layout.addWidget(remove)
-
-    #     return widget
-
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
@@ -1099,7 +1115,7 @@ class Arrow:
         widget.setLayout(layout)
 
         # Title
-        layout.addWidget(QLabel("Arrow"))
+        layout.addWidget(self._title)
 
         layout.addStretch()
 
@@ -1233,6 +1249,21 @@ class Arrow:
         form.addRow(width_label, width_edit)
 
         return form
+
+    @cached_property
+    def _title(self) -> QLabel:
+        return QLabel(self._title_text)
+
+    @property
+    def _title_text(self) -> str:
+        start_x, start_y = self.start
+        end_x, end_y = self.end
+        distance = (((end_x - start_x) ** 2) + ((end_y - start_y) ** 2)) ** 0.5
+
+        return f"Arrow ({distance:.2f}m)"
+
+    def _update_title(self):
+        self._title.setText(self._title_text)
 
     @cached_property
     def renderable(self) -> Renderable:
