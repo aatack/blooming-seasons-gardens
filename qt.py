@@ -43,4 +43,5 @@ __all__ = [
     "QCoreApplication",
     "QInputDialog",
     "QRect",
+    "QCursor",
 ]

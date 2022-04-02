@@ -3,6 +3,7 @@ from os.path import isfile
 from typing import Any, Iterator, List, Optional, Tuple
 
 from qt import (
+    QCursor,
     QFileDialog,
     QFormLayout,
     QHBoxLayout,
@@ -641,30 +642,32 @@ class Plant:
 
             self._positionable = positionable
 
-            self._mouse_x: Optional[int] = None
-            self._mouse_y: Optional[int] = None
+            self._initial_x: Optional[int] = None
+            self._initial_y: Optional[int] = None
 
             self.setMouseTracking(True)
 
         def mousePressEvent(self, event):
-            self._mouse_x = event.x()
-            self._mouse_y = event.y()
+            self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
+            self.setCursor(Qt.BlankCursor)
+
+        def mouseReleaseEvent(self, event):
+            self._initial_x, self._initial_y = None, None
+            # print([x for x in dir(Qt) if "Cursor" in x])
+            self.setCursor(Qt.ArrowCursor)
 
         def mouseMoveEvent(self, event):
-            if self._mouse_x is None:
-                self._mouse_x = event.x()
-            if self._mouse_y is None:
-                self._mouse_y = event.y()
+            if self._initial_x is None or self._initial_y is None:
+                self._initial_x, self._initial_y = QCursor.pos().x(), QCursor.pos().y()
 
             if event.buttons() == Qt.LeftButton:
-                dx = event.x() - self._mouse_x
-                dy = event.y() - self._mouse_y
+                dx = QCursor.pos().x() - self._initial_x
+                dy = QCursor.pos().y() - self._initial_y
+
+                QCursor.setPos(self._initial_x, self._initial_y)
 
                 x, y = self._positionable.position
                 self._positionable.position = (x + (dx * 0.01), y + (dy * 0.01))
-
-            self._mouse_x = event.x()
-            self._mouse_y = event.y()
 
     @cached_property
     def widget(self) -> QWidget:
