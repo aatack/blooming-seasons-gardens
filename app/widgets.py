@@ -230,3 +230,7 @@ class DragButton(QPushButton):
         if self._scroll_callback is not None:
             up = event.angleDelta().y() > 0
             self._scroll_callback(up)
+
+        # NOTE: if the mouse is moved quickly enough this can still result in the scroll
+        #       event being missed, and propagating to the outer widget
+        event.accept()
