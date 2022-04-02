@@ -191,11 +191,13 @@ class DragButton(QPushButton):
         text: str,
         move_callback: Optional[Callable[[int, int], None]] = None,
         scroll_callback: Optional[Callable[[bool], None]] = None,
+        hover_callback: Optional[Callable[[bool], None]] = None,
     ):
         super().__init__(text)
 
         self._move_callback = move_callback
         self._scroll_callback = scroll_callback
+        self._hover_callback = hover_callback
 
         self._initial_x: Optional[int] = None
         self._initial_y: Optional[int] = None
@@ -234,3 +236,11 @@ class DragButton(QPushButton):
         # NOTE: if the mouse is moved quickly enough this can still result in the scroll
         #       event being missed, and propagating to the outer widget
         event.accept()
+
+    def enterEvent(self, event):
+        if self._hover_callback is not None:
+            self._hover_callback(True)
+
+    def leaveEvent(self, event):
+        if self._hover_callback is not None:
+            self._hover_callback(False)
