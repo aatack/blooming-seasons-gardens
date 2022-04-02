@@ -600,6 +600,7 @@ class Plant:
     def name(self, name: str):
         self._name = name
         self.update_render()
+        self._update_title()
 
     @property
     def size(self) -> float:
@@ -618,6 +619,7 @@ class Plant:
     def position(self, position: Tuple[float, float]):
         self._position = position
         self.update_render()
+        self._update_title()
 
     @property
     def colour(self) -> Tuple[int, int, int]:
@@ -635,17 +637,63 @@ class Plant:
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0,0)
         widget.setLayout(layout)
+
+        # Label
+        layout.addWidget(self._title)
+
+        layout.addStretch()
+
+        # Move button
+        def move():
+            raise NotImplementedError()
+
+        move_button = QPushButton("Move")
+        move_button.clicked.connect(move)
+        layout.addWidget(move_button)
+
+        # Edit button
+        def edit():
+            self.modal.open_modal()
+
+        edit_button = QPushButton("Edit")
+        edit_button.clicked.connect(edit)
+        layout.addWidget(edit_button)
+
+        return widget
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
 
         layout.addLayout(self._form)
 
+        def remove_callback():
+            self._bed.remove_plant(self)
+            self.modal.close_modal()
+
         remove = QPushButton("Remove Plant")
-        remove.clicked.connect(lambda: self._bed.remove_plant(self))
+        remove.clicked.connect(remove_callback)
 
         layout.addWidget(remove)
 
-        return widget
+        return Modal("Edit Plant", layout)
+
+    @cached_property
+    def _title(self) -> QLabel:
+        return QLabel(self._title_text)
+
+    @property
+    def _title_text(self) -> str:
+        x, y = self.position
+        return f"{self.name if len(self.name) > 0 else 'Plant'} (x = {x}, y = {y})"
+
+    def _update_title(self):
+        self._title.setText(self._title_text)
 
     @cached_property
     def _form(self) -> QFormLayout:
@@ -717,20 +765,6 @@ class Plant:
         blue.valueChanged.connect(update_colour)
 
         form.addRow(colour_label, colour_layout)
-
-        # Modal
-        def open_modal():
-            from app.window import Modal
-
-            layout = QVBoxLayout()
-            layout.addWidget(QPushButton("Hello"))
-            layout.addWidget(QPushButton("world"))
-
-            Modal.create(layout)
-
-        modal_button = QPushButton("Open Modal")
-        modal_button.clicked.connect(open_modal)
-        form.addRow("Open modal", modal_button)
 
         return form
 

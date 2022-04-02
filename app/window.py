@@ -187,16 +187,17 @@ class PlanView(Canvas):
 
 
 class Modal(QWidget):
-    @staticmethod
-    def create(layout: QLayout):
-        Modal().setLayout(layout)
+    # TODO: remove the modal from the runtime environment when it receives a close event
 
-    def __init__(self):
-        from app.run import RuntimeEnvironment
-
+    def __init__(self, title: str, layout: QLayout):
         super().__init__()
 
+        self.setWindowTitle(title)
+        self.setLayout(layout)
         self.move(100, 100)
+
+    def open_modal(self):
+        from app.run import RuntimeEnvironment
 
         RuntimeEnvironment.windows.add(self)
         self.show()
