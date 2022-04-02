@@ -456,6 +456,15 @@ class Bed:
         self._garden = None
         self.widget.deleteLater()
 
+    def set_hovered(self, hovered: bool):
+        for plant in self.plants:
+            plant.set_hovered(hovered)
+        for label in self.labels:
+            label.set_hovered(hovered)
+        for arrow in self.arrows:
+            arrow.set_start_hovered(hovered)
+            arrow.set_end_hovered(hovered)
+
     @cached_property
     def widget(self) -> QWidget:
         content = QWidget()
@@ -485,10 +494,13 @@ class Bed:
 
         # Move button
         def move_callback(dx: int, dy: int):
+            self.set_hovered(False)
             x, y = self.position
             self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
-        move_button = DragButton("Move", move_callback=move_callback)
+        move_button = DragButton(
+            "Move", move_callback=move_callback, hover_callback=self.set_hovered
+        )
         layout.addWidget(move_button)
 
         # Edit button
@@ -640,10 +652,14 @@ class Plant:
             # TODO: use an unfilled circle to make the border align better with the rest
             #       of the plant
             camera.circle(
-                self.plant.position, radius + self.BORDER_THICKNESS, (0, 0, 0)
+                self.plant.position,
+                radius + (self.BORDER_THICKNESS * (2 if self.plant.hovered else 1)),
+                HOVER_COLOUR if self.plant.hovered else (0, 0, 0),
             )
             camera.circle(
-                self.plant.position, radius - self.BORDER_THICKNESS, self.plant.colour
+                self.plant.position,
+                radius - (self.BORDER_THICKNESS * (2 if self.plant.hovered else 1)),
+                self.plant.colour,
             )
 
     def __init__(self):
@@ -655,6 +671,8 @@ class Plant:
         self._colour = (0, 64, 128)
 
         self._rendered = False
+
+        self.hovered = False
 
     def update_render(self):
         if self._rendered:
@@ -722,6 +740,10 @@ class Plant:
         self._garden = None
         self.widget.deleteLater()
 
+    def set_hovered(self, hovered: bool):
+        self.hovered = hovered
+        self.update_render()
+
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
@@ -736,14 +758,19 @@ class Plant:
 
         # Move button
         def move_callback(dx: int, dy: int):
+            self.set_hovered(False)
             x, y = self.position
             self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         def scroll_callback(up: bool):
+            self.set_hovered(False)
             self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
 
         move_button = DragButton(
-            "Move", move_callback=move_callback, scroll_callback=scroll_callback
+            "Move",
+            move_callback=move_callback,
+            scroll_callback=scroll_callback,
+            hover_callback=self.set_hovered,
         )
         layout.addWidget(move_button)
 
@@ -903,7 +930,10 @@ class Label:
 
         def render(self, camera: Camera):
             camera.text(
-                self.label.position, self.label.label, self.label.size, (0, 0, 0)
+                self.label.position,
+                self.label.label,
+                self.label.size,
+                HOVER_COLOUR if self.label.hovered else (0, 0, 0),
             )
 
     def __init__(self):
@@ -914,6 +944,8 @@ class Label:
         self._position = (0.0, 0.0)
 
         self._rendered = False
+
+        self.hovered = False
 
     def update_render(self):
         if self._rendered:
@@ -971,6 +1003,10 @@ class Label:
         self._garden = None
         self.widget.deleteLater()
 
+    def set_hovered(self, hovered: bool):
+        self.hovered = hovered
+        self.update_render()
+
     @cached_property
     def widget(self) -> QWidget:
         widget = QWidget()
@@ -985,14 +1021,19 @@ class Label:
 
         # Move button
         def move_callback(dx: int, dy: int):
+            self.set_hovered(False)
             x, y = self.position
             self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
 
         def scroll_callback(up: bool):
+            self.set_hovered(False)
             self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
 
         move_button = DragButton(
-            "Move", move_callback=move_callback, scroll_callback=scroll_callback
+            "Move",
+            move_callback=move_callback,
+            scroll_callback=scroll_callback,
+            hover_callback=self.set_hovered,
         )
         layout.addWidget(move_button)
 
