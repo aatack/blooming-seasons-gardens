@@ -1124,6 +1124,11 @@ class Arrow:
         self.update_render()
         self._update_title()
 
+        if (x := self.start[0]) != parse_float(self._start_x_edit.text()):
+            self._start_x_edit.setText(str(x))
+        if (y := self.start[1]) != parse_float(self._start_y_edit.text()):
+            self._start_y_edit.setText(str(y))
+
     @property
     def end(self) -> Tuple[float, float]:
         return self._end
@@ -1133,6 +1138,11 @@ class Arrow:
         self._end = end
         self.update_render()
         self._update_title()
+
+        if (x := self.end[0]) != parse_float(self._end_x_edit.text()):
+            self._end_x_edit.setText(str(x))
+        if (y := self.end[1]) != parse_float(self._end_y_edit.text()):
+            self._end_y_edit.setText(str(y))
 
     def remove(self):
         self._garden = None
@@ -1146,6 +1156,9 @@ class Arrow:
     def width(self, width: float):
         self._width = width
         self.update_render()
+
+        if self.width != parse_float(self._width_edit.text()):
+            self._width_edit.setText(str(self.width))
 
     @cached_property
     def widget(self) -> QWidget:
@@ -1227,24 +1240,22 @@ class Arrow:
         start_layout = QHBoxLayout()
 
         start_x_label = QLabel("x =")
-        start_x_edit = QLineEdit(str(self.start[0]))
         start_y_label = QLabel("y =")
-        start_y_edit = QLineEdit(str(self.start[1]))
 
         start_layout.addWidget(start_x_label)
-        start_layout.addWidget(start_x_edit)
+        start_layout.addWidget(self._start_x_edit)
         start_layout.addWidget(start_y_label)
-        start_layout.addWidget(start_y_edit)
+        start_layout.addWidget(self._start_y_edit)
 
         def update_start():
-            try:
-                x, y = float(start_x_edit.text()), float(start_y_edit.text())
-                self.start = (x, y)
-            except ValueError:
-                pass
+            x = parse_float(self._start_x_edit.text())
+            y = parse_float(self._start_y_edit.text())
 
-        start_x_edit.textEdited.connect(update_start)
-        start_y_edit.textEdited.connect(update_start)
+            if x is not None and y is not None:
+                self.start = (x, y)
+
+        self._start_x_edit.textEdited.connect(update_start)
+        self._start_y_edit.textEdited.connect(update_start)
 
         form.addRow(start_label, start_layout)
 
@@ -1253,42 +1264,56 @@ class Arrow:
         end_layout = QHBoxLayout()
 
         end_x_label = QLabel("x =")
-        end_x_edit = QLineEdit(str(self.end[0]))
         end_y_label = QLabel("y =")
-        end_y_edit = QLineEdit(str(self.end[1]))
 
         end_layout.addWidget(end_x_label)
-        end_layout.addWidget(end_x_edit)
+        end_layout.addWidget(self._end_x_edit)
         end_layout.addWidget(end_y_label)
-        end_layout.addWidget(end_y_edit)
+        end_layout.addWidget(self._end_y_edit)
 
         def update_end():
-            try:
-                x, y = float(end_x_edit.text()), float(end_y_edit.text())
-                self.end = (x, y)
-            except ValueError:
-                pass
+            x = parse_float(self._end_x_edit.text())
+            y = parse_float(self._end_y_edit.text())
 
-        end_x_edit.textEdited.connect(update_end)
-        end_y_edit.textEdited.connect(update_end)
+            if x is not None and y is not None:
+                self.end = (x, y)
+
+        self._end_x_edit.textEdited.connect(update_end)
+        self._end_y_edit.textEdited.connect(update_end)
 
         form.addRow(end_label, end_layout)
 
         # Width
         width_label = QLabel("Width:")
-        width_edit = QLineEdit(str(self.width))
 
         def update_width():
-            try:
-                width = float(width_edit.text())
+            if (width := parse_float(self._width_edit.text())) is not None:
                 self.width = width
-            except ValueError:
-                pass
 
-        width_edit.textEdited.connect(update_width)
-        form.addRow(width_label, width_edit)
+        self._width_edit.textEdited.connect(update_width)
+        form.addRow(width_label, self._width_edit)
 
         return form
+
+    @cached_property
+    def _start_x_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.start[0]))
+
+    @cached_property
+    def _start_y_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.start[1]))
+
+    @cached_property
+    def _end_x_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.end[0]))
+
+    @cached_property
+    def _end_y_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.end[1]))
+
+    @cached_property
+    def _width_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.width))
 
     @cached_property
     def _title(self) -> QLabel:
