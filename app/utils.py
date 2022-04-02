@@ -1,6 +1,6 @@
 from os import makedirs
 from os.path import isdir, isfile
-from typing import Tuple
+from typing import Optional, Tuple
 
 from qt import (
     QColor,
@@ -119,3 +119,11 @@ def open_existing_garden():
             RuntimeEnvironment.windows.remove(window)
 
         RuntimeEnvironment.windows = {Window(path)}
+
+
+def parse_float(string: str) -> Optional[float]:
+    try:
+        value = float(string)
+        return value
+    except ValueError:
+        return None
