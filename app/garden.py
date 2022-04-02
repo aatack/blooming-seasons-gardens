@@ -12,6 +12,7 @@ from qt import (
     QPixmap,
     QPushButton,
     QRect,
+    Qt,
     QVBoxLayout,
     QWidget,
 )
@@ -634,9 +635,41 @@ class Plant:
         self._garden = None
         self.widget.deleteLater()
 
+    class CustomWidget(QWidget):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.plant: Optional[Plant] = None
+
+            self._mouse_x: Optional[int] = None
+            self._mouse_y: Optional[int] = None
+
+            self.setMouseTracking(True)
+
+        def mousePressEvent(self, event):
+            self._mouse_x = event.x()
+            self._mouse_y = event.y()
+
+        def mouseMoveEvent(self, event):
+            if self._mouse_x is None:
+                self._mouse_x = event.x()
+            if self._mouse_y is None:
+                self._mouse_y = event.y()
+
+            if event.buttons() == Qt.LeftButton:
+                dx = event.x() - self._mouse_x
+                dy = event.y() - self._mouse_y
+
+                x, y = self.plant.position
+                self.plant.position = (x + (dx * 0.01), y + (dy * 0.01))
+
+            self._mouse_x = event.x()
+            self._mouse_y = event.y()
+
     @cached_property
     def widget(self) -> QWidget:
-        widget = QWidget()
+        widget = self.CustomWidget()
+        widget.plant = self
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         widget.setLayout(layout)
@@ -690,7 +723,9 @@ class Plant:
     @property
     def _title_text(self) -> str:
         x, y = self.position
-        return f"{self.name if len(self.name) > 0 else 'Plant'} (x = {x}, y = {y})"
+        return (
+            f"{self.name if len(self.name) > 0 else 'Plant'} (x = {x:.2f}, y = {y:.2f})"
+        )
 
     def _update_title(self):
         self._title.setText(self._title_text)
