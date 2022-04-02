@@ -174,6 +174,11 @@ class Background:
         self._position = position
         self.update_render()
 
+        if (x := self.position[0]) != parse_float(self._x_edit.text()):
+            self._x_edit.setText(str(x))
+        if (y := self.position[1]) != parse_float(self._y_edit.text()):
+            self._y_edit.setText(str(y))
+
     @property
     def height(self) -> float:
         return self._height
@@ -182,6 +187,9 @@ class Background:
     def height(self, height: float):
         self._height = height
         self.update_render()
+
+        if self.height != parse_float(self._height_edit.text()):
+            self._height_edit.setText(str(self.height))
 
     @property
     def path(self) -> Optional[str]:
@@ -209,41 +217,35 @@ class Background:
 
         # Height
         height_label = QLabel("Background height:")
-        height_edit = QLineEdit(str(self.height))
 
         def update_height():
-            try:
-                height = float(height_edit.text())
+            if (height := parse_float(self._height_edit.text())) is not None:
                 self.height = height
-            except ValueError:
-                pass
 
-        height_edit.textEdited.connect(update_height)
-        form.addRow(height_label, height_edit)
+        self._height_edit.textEdited.connect(update_height)
+        form.addRow(height_label, self._height_edit)
 
         # Position
         position_label = QLabel("Background position:")
         position_layout = QHBoxLayout()
 
         x_label = QLabel("x =")
-        x_edit = QLineEdit(str(self.position[0]))
         y_label = QLabel("y =")
-        y_edit = QLineEdit(str(self.position[1]))
 
         position_layout.addWidget(x_label)
-        position_layout.addWidget(x_edit)
+        position_layout.addWidget(self._x_edit)
         position_layout.addWidget(y_label)
-        position_layout.addWidget(y_edit)
+        position_layout.addWidget(self._y_edit)
 
         def update_position():
-            try:
-                x, y = float(x_edit.text()), float(y_edit.text())
-                self.position = (x, y)
-            except ValueError:
-                pass
+            x = parse_float(self._x_edit.text())
+            y = parse_float(self._y_edit.text())
 
-        x_edit.textEdited.connect(update_position)
-        y_edit.textEdited.connect(update_position)
+            if x is not None and y is not None:
+                self.position = (x, y)
+
+        self._x_edit.textEdited.connect(update_position)
+        self._y_edit.textEdited.connect(update_position)
 
         form.addRow(position_label, position_layout)
 
@@ -281,9 +283,34 @@ class Background:
 
         choose_image_button = QPushButton("Choose new background")
         choose_image_button.clicked.connect(choose_image)
-        form.addWidget(choose_image_button)
+
+        # Move button
+        def move_callback(dx: int, dy: int):
+            x, y = self.position
+            self.position = x + (0.01 * dx), y + (0.01 * dy)
+
+        def scroll_callback(up: bool):
+            self.height *= 1.2 if up else (1 / 1.2)
+
+        move_button = DragButton(
+            "Move", move_callback=move_callback, scroll_callback=scroll_callback
+        )
+
+        form.addRow(move_button, choose_image_button)
 
         return widget
+
+    @cached_property
+    def _height_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.height))
+
+    @cached_property
+    def _x_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[0]))
+
+    @cached_property
+    def _y_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[1]))
 
     @cached_property
     def renderable(self) -> Renderable:
