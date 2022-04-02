@@ -911,6 +911,9 @@ class Label:
         self._size = size
         self.update_render()
 
+        if self.size != parse_float(self._size_edit.text()):
+            self._size_edit.setText(str(self.size))
+
     @property
     def position(self) -> Tuple[float, float]:
         return self._position
@@ -919,6 +922,11 @@ class Label:
     def position(self, position: Tuple[float, float]):
         self._position = position
         self.update_render()
+
+        if (x := self.position[0]) != parse_float(self._x_edit.text()):
+            self._x_edit.setText(str(x))
+        if (y := self.position[1]) != parse_float(self._y_edit.text()):
+            self._y_edit.setText(str(y))
 
     def remove(self):
         self._garden = None
@@ -994,45 +1002,51 @@ class Label:
 
         # Size
         size_label = QLabel("Size:")
-        size_edit = QLineEdit(str(self.size))
 
         def update_size():
-            try:
-                size = float(size_edit.text())
+            if (size := parse_float(self._size_edit.text())) is not None:
                 self.size = size
-            except ValueError:
-                pass
 
-        size_edit.textEdited.connect(update_size)
-        form.addRow(size_label, size_edit)
+        self._size_edit.textEdited.connect(update_size)
+        form.addRow(size_label, self._size_edit)
 
         # Position
         position_label = QLabel("Position:")
         position_layout = QHBoxLayout()
 
         x_label = QLabel("x =")
-        x_edit = QLineEdit(str(self.position[0]))
         y_label = QLabel("y =")
-        y_edit = QLineEdit(str(self.position[1]))
 
         position_layout.addWidget(x_label)
-        position_layout.addWidget(x_edit)
+        position_layout.addWidget(self._x_edit)
         position_layout.addWidget(y_label)
-        position_layout.addWidget(y_edit)
+        position_layout.addWidget(self._y_edit)
 
         def update_position():
-            try:
-                x, y = float(x_edit.text()), float(y_edit.text())
-                self.position = (x, y)
-            except ValueError:
-                pass
+            x = parse_float(self._x_edit.text())
+            y = parse_float(self._y_edit.text())
 
-        x_edit.textEdited.connect(update_position)
-        y_edit.textEdited.connect(update_position)
+            if x is not None and y is not None:
+                self.position = (x, y)
+
+        self._x_edit.textEdited.connect(update_position)
+        self._y_edit.textEdited.connect(update_position)
 
         form.addRow(position_label, position_layout)
 
         return form
+
+    @cached_property
+    def _size_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.size))
+
+    @cached_property
+    def _x_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[0]))
+
+    @cached_property
+    def _y_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[1]))
 
     @cached_property
     def _title(self) -> QLabel:
