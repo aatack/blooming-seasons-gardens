@@ -2,6 +2,7 @@ from functools import cached_property
 from os.path import isfile
 from typing import Iterator, List, Optional, Tuple
 
+from black import main
 from qt import (
     QFileDialog,
     QFormLayout,
@@ -14,6 +15,8 @@ from qt import (
     QPixmap,
     QPushButton,
     QRect,
+    QScrollArea,
+    Qt,
     QVBoxLayout,
     QWidget,
 )
@@ -159,26 +162,87 @@ class Nursery:
     def __init__(self, garden: Garden):
         self._garden = garden
 
+        self._plants: List["Plant"] = []
+
+    @property
+    def garden(self) -> Garden:
+        assert isinstance(self._garden, Garden)
+        return self._garden
+
+    @property
+    def plants(self) -> Iterator["Plant"]:
+        yield from self._plants
+
+    def add_plant(self, plant: "Plant"):
+        # plant.bed = self
+        self._plants.append(plant)
+
+        self._plants_layout.addWidget(plant.widget)
+
+    def remove_plant(self, plant: "Plant"):
+        self._plants.remove(plant)
+        self._plants_layout.removeWidget(plant.widget)
+
+        plant.remove()
+
     @cached_property
     def modal(self):
         from app.window import Modal
 
-        modal = Modal("Nursery", self.layout)
+        layout = QVBoxLayout()
+        layout.addWidget(self.widget)
+
+        modal = Modal("Nursery", layout)
         modal.setGeometry(QRect(200, 200, 400, 600))
         return modal
 
     @cached_property
+    def widget(self) -> QWidget:
+        scroll = QScrollArea()
+
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+
+        widget = QWidget()
+        widget.setLayout(self.layout)
+        scroll.setWidget(widget)
+
+        return scroll
+
+    @cached_property
     def layout(self) -> QLayout:
+
         layout = QVBoxLayout()
-        layout.addWidget(QPushButton("Test"))
+
+        def add_new_plant():
+            self.add_plant(Plant())
+
+        add_plant = QPushButton("Add Plant")
+        add_plant.clicked.connect(add_new_plant)
+
+        layout.addWidget(add_plant)
+
+        divider = QFrame()
+        divider.setFrameShape(QFrame.HLine)
+        divider.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(divider)
+
+        layout.addLayout(self._plants_layout)
+        layout.addStretch()
 
         return layout
 
-    def serialise(self) -> dict:
-        return {}
+    @cached_property
+    def _plants_layout(self) -> QVBoxLayout:
+        return QVBoxLayout()
 
-    def deserialise(self, json: dict) -> "Nursery":
-        pass
+    def serialise(self) -> list:
+        return [plant.serialise() for plant in self.plants]
+
+    def deserialise(self, json: list) -> "Nursery":
+        for plant in json:
+            self.add_plant(Plant.deserialise(plant))
 
 
 class Background:
