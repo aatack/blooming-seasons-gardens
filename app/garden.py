@@ -1033,7 +1033,6 @@ class NurseryPlant:
 
         self._name = ""
         self._size = 0.1
-        self._position = (0.0, 0.0)
         self._colour = (0, 64, 128)
 
         self.hovered = False
@@ -1071,20 +1070,6 @@ class NurseryPlant:
             self._size_edit.setText(str(self.size))
 
     @property
-    def position(self) -> Tuple[float, float]:
-        return self._position
-
-    @position.setter
-    def position(self, position: Tuple[float, float]):
-        self._position = position
-        self._update_title()
-
-        if (x := self.position[0]) != parse_float(self._x_edit.text()):
-            self._x_edit.setText(str(x))
-        if (y := self.position[1]) != parse_float(self._y_edit.text()):
-            self._y_edit.setText(str(y))
-
-    @property
     def colour(self) -> Tuple[int, int, int]:
         return self._colour
 
@@ -1110,24 +1095,6 @@ class NurseryPlant:
         layout.addWidget(self._title)
 
         layout.addStretch()
-
-        # Move button
-        def move_callback(dx: int, dy: int):
-            self.set_hovered(False)
-            x, y = self.position
-            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
-
-        def scroll_callback(up: bool):
-            self.set_hovered(False)
-            self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
-
-        move_button = DragButton(
-            "Move",
-            move_callback=move_callback,
-            scroll_callback=scroll_callback,
-            hover_callback=self.set_hovered,
-        )
-        layout.addWidget(move_button)
 
         # Edit button
         def edit():
@@ -1164,10 +1131,7 @@ class NurseryPlant:
 
     @property
     def _title_text(self) -> str:
-        x, y = self.position
-        return (
-            f"{self.name if len(self.name) > 0 else 'Plant'} (x = {x:.2f}, y = {y:.2f})"
-        )
+        return self.name if len(self.name) > 0 else "Plant"
 
     def _update_title(self):
         self._title.setText(self._title_text)
@@ -1196,30 +1160,6 @@ class NurseryPlant:
         self._size_edit.textChanged.connect(update_size)
         form.addRow(size_label, self._size_edit)
 
-        # Position
-        position_label = QLabel("Position:")
-        position_layout = QHBoxLayout()
-
-        x_label = QLabel("x =")
-        y_label = QLabel("y =")
-
-        position_layout.addWidget(x_label)
-        position_layout.addWidget(self._x_edit)
-        position_layout.addWidget(y_label)
-        position_layout.addWidget(self._y_edit)
-
-        def update_position():
-            x = parse_float(self._x_edit.text())
-            y = parse_float(self._y_edit.text())
-
-            if x is not None and y is not None:
-                self.position = (x, y)
-
-        self._x_edit.textEdited.connect(update_position)
-        self._y_edit.textEdited.connect(update_position)
-
-        form.addRow(position_label, position_layout)
-
         # Colour
         colour_label = QLabel("Colour:")
         colour_layout = QHBoxLayout()
@@ -1243,24 +1183,11 @@ class NurseryPlant:
     def _size_edit(self) -> QLineEdit:
         return QLineEdit(str(self.size))
 
-    @cached_property
-    def _x_edit(self) -> QLineEdit:
-        return QLineEdit(str(self.position[0]))
-
-    @cached_property
-    def _y_edit(self) -> QLineEdit:
-        return QLineEdit(str(self.position[1]))
-
-    @cached_property
-    def renderable(self) -> Renderable:
-        self._rendered = True
-        return Plant.Renderable(self)
-
     def serialise(self) -> dict:
         return {
             "name": self.name,
             "size": self.size,
-            "position": list(self.position),
+            "position": [0.0, 0.0],
             "colour": list(self.colour),
         }
 
@@ -1270,7 +1197,6 @@ class NurseryPlant:
 
         plant.name = json["name"]
         plant.size = json["size"]
-        plant.position = tuple(json["position"])
         plant.colour = tuple(json["colour"])
 
         return plant
