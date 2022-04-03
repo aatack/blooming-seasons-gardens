@@ -13,6 +13,7 @@ from qt import (
     QMessageBox,
     QPixmap,
     QPushButton,
+    QRect,
     QVBoxLayout,
     QWidget,
 )
@@ -118,6 +119,7 @@ class Garden:
     def serialise(self) -> list:
         return {
             "background": self.background.serialise(),
+            "nursery": self.nursery.serialise(),
             "beds": [bed.serialise() for bed in self.beds],
         }
 
@@ -126,6 +128,8 @@ class Garden:
         garden = Garden()
 
         garden.background.deserialise(json["background"])
+        if "nursery" in json:
+            garden.nursery.deserialise(json["nursery"])
 
         for bed in json["beds"]:
             garden.add_bed(Bed.deserialise(bed))
@@ -159,7 +163,9 @@ class Nursery:
     def modal(self):
         from app.window import Modal
 
-        return Modal("Nursery", self.layout)
+        modal = Modal("Nursery", self.layout)
+        modal.setGeometry(QRect(200, 200, 400, 600))
+        return modal
 
     @cached_property
     def layout(self) -> QLayout:
