@@ -8,6 +8,7 @@ from qt import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLayout,
     QLineEdit,
     QMessageBox,
     QPixmap,
@@ -37,7 +38,8 @@ class Garden:
                 bed.renderable.render(camera)
 
     def __init__(self):
-        self._background: Background = Background(self)
+        self._background = Background(self)
+        self._nursery = Nursery(self)
         self._beds: List["Bed"] = []
 
         self.plan_view_widget: Optional[QWidget] = None
@@ -51,6 +53,10 @@ class Garden:
     @property
     def background(self) -> "Background":
         return self._background
+
+    @property
+    def nursery(self) -> "Nursery":
+        return self._nursery
 
     @property
     def beds(self) -> Iterator["Bed"]:
@@ -85,7 +91,7 @@ class Garden:
         add_bed.clicked.connect(add_new_bed)
 
         def open_nursery():
-            raise NotImplementedError()
+            self.nursery.modal.open_modal()
 
         nursery = QPushButton("Open Nursery")
         nursery.clicked.connect(open_nursery)
@@ -143,6 +149,30 @@ class Garden:
             garden.background.path = background
 
         return garden
+
+
+class Nursery:
+    def __init__(self, garden: Garden):
+        self._garden = garden
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        return Modal("Nursery", self.layout)
+
+    @cached_property
+    def layout(self) -> QLayout:
+        layout = QVBoxLayout()
+        layout.addWidget(QPushButton("Test"))
+
+        return layout
+
+    def serialise(self) -> dict:
+        return {}
+
+    def deserialise(self, json: dict) -> "Nursery":
+        pass
 
 
 class Background:
