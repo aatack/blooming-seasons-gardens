@@ -162,7 +162,7 @@ class Nursery:
     def __init__(self, garden: Garden):
         self._garden = garden
 
-        self._plants: List["Plant"] = []
+        self._plants: List["NurseryPlant"] = []
 
     @property
     def garden(self) -> Garden:
@@ -170,16 +170,16 @@ class Nursery:
         return self._garden
 
     @property
-    def plants(self) -> Iterator["Plant"]:
+    def plants(self) -> Iterator["NurseryPlant"]:
         yield from self._plants
 
-    def add_plant(self, plant: "Plant"):
-        # plant.bed = self
+    def add_plant(self, plant: "NurseryPlant"):
+        plant.nursery = self
         self._plants.append(plant)
 
         self._plants_layout.addWidget(plant.widget)
 
-    def remove_plant(self, plant: "Plant"):
+    def remove_plant(self, plant: "NurseryPlant"):
         self._plants.remove(plant)
         self._plants_layout.removeWidget(plant.widget)
 
@@ -216,7 +216,7 @@ class Nursery:
         layout = QVBoxLayout()
 
         def add_new_plant():
-            self.add_plant(Plant())
+            self.add_plant(NurseryPlant())
 
         add_plant = QPushButton("Add Plant")
         add_plant.clicked.connect(add_new_plant)
@@ -242,7 +242,7 @@ class Nursery:
 
     def deserialise(self, json: list) -> "Nursery":
         for plant in json:
-            self.add_plant(Plant.deserialise(plant))
+            self.add_plant(NurseryPlant.deserialise(plant))
 
 
 class Background:
@@ -1018,6 +1018,255 @@ class Plant:
     @staticmethod
     def deserialise(json: dict) -> "Plant":
         plant = Plant()
+
+        plant.name = json["name"]
+        plant.size = json["size"]
+        plant.position = tuple(json["position"])
+        plant.colour = tuple(json["colour"])
+
+        return plant
+
+
+class NurseryPlant:
+    def __init__(self):
+        self._nursery: Optional[Nursery] = None
+
+        self._name = ""
+        self._size = 0.1
+        self._position = (0.0, 0.0)
+        self._colour = (0, 64, 128)
+
+        self.hovered = False
+
+    @property
+    def nursery(self) -> Nursery:
+        assert self._nursery is not None
+        return self._nursery
+
+    @nursery.setter
+    def nursery(self, nursery: Nursery):
+        assert isinstance(nursery, Nursery)
+        assert self._nursery is None
+
+        self._nursery = nursery
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
+        self._name = name
+        self._update_title()
+
+    @property
+    def size(self) -> float:
+        return self._size
+
+    @size.setter
+    def size(self, size: float):
+        self._size = size
+
+        if self.size != parse_float(self._size_edit.text()):
+            self._size_edit.setText(str(self.size))
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self._position
+
+    @position.setter
+    def position(self, position: Tuple[float, float]):
+        self._position = position
+        self._update_title()
+
+        if (x := self.position[0]) != parse_float(self._x_edit.text()):
+            self._x_edit.setText(str(x))
+        if (y := self.position[1]) != parse_float(self._y_edit.text()):
+            self._y_edit.setText(str(y))
+
+    @property
+    def colour(self) -> Tuple[int, int, int]:
+        return self._colour
+
+    @colour.setter
+    def colour(self, colour: Tuple[int, int, int]):
+        self._colour = colour
+
+    def remove(self):
+        self._garden = None
+        self.widget.deleteLater()
+
+    def set_hovered(self, hovered: bool):
+        self.hovered = hovered
+
+    @cached_property
+    def widget(self) -> QWidget:
+        widget = QWidget()
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        widget.setLayout(layout)
+
+        # Title
+        layout.addWidget(self._title)
+
+        layout.addStretch()
+
+        # Move button
+        def move_callback(dx: int, dy: int):
+            self.set_hovered(False)
+            x, y = self.position
+            self.position = round(x + (0.01 * dx), 2), round(y + (0.01 * dy), 2)
+
+        def scroll_callback(up: bool):
+            self.set_hovered(False)
+            self.size = round(self.size * (1.2 if up else (1 / 1.2)), 2)
+
+        move_button = DragButton(
+            "Move",
+            move_callback=move_callback,
+            scroll_callback=scroll_callback,
+            hover_callback=self.set_hovered,
+        )
+        layout.addWidget(move_button)
+
+        # Edit button
+        def edit():
+            self.modal.open_modal()
+
+        edit_button = QPushButton("Edit")
+        edit_button.clicked.connect(edit)
+        layout.addWidget(edit_button)
+
+        return widget
+
+    @cached_property
+    def modal(self):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
+
+        layout.addLayout(self._form)
+
+        def remove_callback():
+            self._nursery.remove_plant(self)
+            self.modal.close_modal()
+
+        remove = QPushButton("Remove Plant")
+        remove.clicked.connect(remove_callback)
+
+        layout.addWidget(remove)
+
+        return Modal("Edit Plant", layout)
+
+    @cached_property
+    def _title(self) -> QLabel:
+        return QLabel(self._title_text)
+
+    @property
+    def _title_text(self) -> str:
+        x, y = self.position
+        return (
+            f"{self.name if len(self.name) > 0 else 'Plant'} (x = {x:.2f}, y = {y:.2f})"
+        )
+
+    def _update_title(self):
+        self._title.setText(self._title_text)
+
+    @cached_property
+    def _form(self) -> QFormLayout:
+        form = QFormLayout()
+
+        # Name
+        name_label = QLabel("Name:")
+        name_edit = QLineEdit(self.name)
+
+        def set_name():
+            self.name = name_edit.text()
+
+        name_edit.textEdited.connect(set_name)
+        form.addRow(name_label, name_edit)
+
+        # Size
+        size_label = QLabel("Size:")
+
+        def update_size():
+            if (size := parse_float(self._size_edit.text())) is not None:
+                self.size = size
+
+        self._size_edit.textChanged.connect(update_size)
+        form.addRow(size_label, self._size_edit)
+
+        # Position
+        position_label = QLabel("Position:")
+        position_layout = QHBoxLayout()
+
+        x_label = QLabel("x =")
+        y_label = QLabel("y =")
+
+        position_layout.addWidget(x_label)
+        position_layout.addWidget(self._x_edit)
+        position_layout.addWidget(y_label)
+        position_layout.addWidget(self._y_edit)
+
+        def update_position():
+            x = parse_float(self._x_edit.text())
+            y = parse_float(self._y_edit.text())
+
+            if x is not None and y is not None:
+                self.position = (x, y)
+
+        self._x_edit.textEdited.connect(update_position)
+        self._y_edit.textEdited.connect(update_position)
+
+        form.addRow(position_label, position_layout)
+
+        # Colour
+        colour_label = QLabel("Colour:")
+        colour_layout = QHBoxLayout()
+
+        red = build_colour_slider("red", colour_layout, self._colour[0])
+        green = build_colour_slider("green", colour_layout, self._colour[1])
+        blue = build_colour_slider("blue", colour_layout, self._colour[2])
+
+        def update_colour():
+            self.colour = (red.value(), green.value(), blue.value())
+
+        red.valueChanged.connect(update_colour)
+        green.valueChanged.connect(update_colour)
+        blue.valueChanged.connect(update_colour)
+
+        form.addRow(colour_label, colour_layout)
+
+        return form
+
+    @cached_property
+    def _size_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.size))
+
+    @cached_property
+    def _x_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[0]))
+
+    @cached_property
+    def _y_edit(self) -> QLineEdit:
+        return QLineEdit(str(self.position[1]))
+
+    @cached_property
+    def renderable(self) -> Renderable:
+        self._rendered = True
+        return Plant.Renderable(self)
+
+    def serialise(self) -> dict:
+        return {
+            "name": self.name,
+            "size": self.size,
+            "position": list(self.position),
+            "colour": list(self.colour),
+        }
+
+    @staticmethod
+    def deserialise(json: dict) -> "NurseryPlant":
+        plant = NurseryPlant()
 
         plant.name = json["name"]
         plant.size = json["size"]
