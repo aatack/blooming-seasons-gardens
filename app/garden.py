@@ -24,7 +24,13 @@ from settings import HOVER_COLOUR
 
 from app.camera import Camera
 from app.canvas import Renderable
-from app.utils import build_colour_slider, parse_float
+from app.utils import (
+    build_colour_slider,
+    make_layout,
+    make_scroll,
+    make_widget,
+    parse_float,
+)
 from app.widgets import Collapsible, DragButton
 
 
@@ -241,7 +247,7 @@ class Nursery:
         from app.window import Modal
 
         layout = QVBoxLayout()
-        modal = Modal("Select Plant", layout)
+        modal = Modal("Select Plant", make_layout(make_scroll(make_widget(layout))))
 
         blank_plant_button = QPushButton("Blank Plant")
         blank_plant_button.clicked.connect(
