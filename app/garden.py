@@ -1,6 +1,6 @@
 from functools import cached_property
 from os.path import isfile
-from typing import Iterator, List, Optional, Tuple
+from typing import Any, Callable, Iterator, List, Optional, Tuple
 
 from black import main
 from qt import (
@@ -236,6 +236,41 @@ class Nursery:
     @cached_property
     def _plants_layout(self) -> QVBoxLayout:
         return QVBoxLayout()
+
+    def open_select_modal(self, bed: "Bed"):
+        from app.window import Modal
+
+        layout = QVBoxLayout()
+        modal = Modal("Select Plant", layout)
+
+        blank_plant_button = QPushButton("Blank Plant")
+        blank_plant_button.clicked.connect(
+            self._plant_adder(NurseryPlant(), bed, modal)
+        )
+        layout.addWidget(blank_plant_button)
+
+        divider = QFrame()
+        divider.setFrameShape(QFrame.HLine)
+        divider.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(divider)
+
+        layout.addStretch()
+
+        modal.setGeometry(200, 200, 400, 600)
+        modal.open_modal()
+
+    def _plant_adder(
+        self, plant: "NurseryPlant", bed: "Bed", modal: Any
+    ) -> Callable[[], None]:
+        from app.window import Modal
+
+        assert isinstance(modal, Modal)
+
+        def adder():
+            bed.add_plant(Plant.deserialise(plant.serialise()))
+            modal.close_modal()
+
+        return adder
 
     def serialise(self) -> list:
         return [plant.serialise() for plant in self.plants]
@@ -580,11 +615,8 @@ class Bed:
 
         content.setLayout(layout)
 
-        def add_new_plant():
-            self.add_plant(Plant())
-
         add_plant = QPushButton("Add Plant")
-        add_plant.clicked.connect(add_new_plant)
+        add_plant.clicked.connect(lambda: self.garden.nursery.open_select_modal(self))
 
         def add_new_label():
             self.add_label(Label())
