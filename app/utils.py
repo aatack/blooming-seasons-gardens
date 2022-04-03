@@ -1,6 +1,6 @@
 from os import makedirs
 from os.path import isdir, isfile
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from qt import (
     QColor,
@@ -8,8 +8,10 @@ from qt import (
     QInputDialog,
     QLayout,
     QMessageBox,
+    QScrollArea,
     QSlider,
     Qt,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -127,3 +129,41 @@ def parse_float(string: str) -> Optional[float]:
         return value
     except ValueError:
         return None
+
+
+def make_widget(widget: Union[QWidget, QLayout]) -> QWidget:
+    if isinstance(widget, QWidget):
+        return widget
+    elif isinstance(widget, QLayout):
+        outer_widget = QWidget()
+        outer_widget.setLayout(widget)
+        return outer_widget
+    else:
+        raise Exception()
+
+
+def make_layout(layout: Union[QWidget, QLayout]) -> QLayout:
+    if isinstance(layout, QLayout):
+        return layout
+    elif isinstance(layout, QWidget):
+        outer_layout = QVBoxLayout()
+        outer_layout.setContentsMargins(0, 0, 0, 0)
+        outer_layout.addWidget(layout)
+        return outer_layout
+    else:
+        raise Exception()
+
+
+def make_scroll(content: Union[QWidget, QLayout]) -> QWidget:
+    scroll = QScrollArea()
+
+    scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+    scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    scroll.setWidgetResizable(True)
+
+    if isinstance(content, QWidget):
+        scroll.setWidget(content)
+    elif isinstance(content, QLayout):
+        scroll.setLayout(make_layout(content))
+
+    return scroll
