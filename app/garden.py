@@ -254,6 +254,11 @@ class Nursery:
         divider.setFrameShadow(QFrame.Sunken)
         layout.addWidget(divider)
 
+        for plant in self.plants:
+            plant_button = QPushButton(plant.name)
+            plant_button.clicked.connect(self._plant_adder(plant, bed, modal))
+            layout.addWidget(plant_button)
+
         layout.addStretch()
 
         modal.setGeometry(200, 200, 400, 600)
