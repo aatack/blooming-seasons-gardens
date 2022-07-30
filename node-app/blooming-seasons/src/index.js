@@ -13,18 +13,25 @@ class Calculator extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { temperature: "" };
+        this.state = { temperature: "0" };
     }
 
-    handleChange = e => {
-        this.setState({ temperature: e.target.value });
+    onChange = value => {
+        this.setState({ temperature: value });
     }
 
     render() {
         return (
             <div>
-                <TemperatureInput scale="c" />
-                <TemperatureInput scale="f" />
+                <TemperatureInput
+                    scale="c"
+                    value={this.state.temperature}
+                    onChange={this.onChange} />
+                <TemperatureInput
+                    scale="f"
+                    value={this.state.temperature}
+                    onChange={this.onChange} />
+                <BoilingVerdict celsius={this.state.temperature} />
             </div>
         )
     }
@@ -56,22 +63,28 @@ function tryConvert(temperature, convert) {
 class TemperatureInput extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = { temperature: "" };
     }
 
-    handleChange = e => {
-        this.setState({ temperature: e.target.value });
+    onChange = e => {
+        this.props.onChange(
+            this.props.scale === "c" ?
+                e.target.value :
+                tryConvert(e.target.value, toCelsius)
+        );
     }
 
     render() {
-        const temperature = this.state.temperature;
         const scale = this.props.scale;
+        const temperature = (
+            scale === "c" ?
+                this.props.value :
+                tryConvert(this.props.value, toFahrenheit)
+        );
 
         return (
             <fieldset>
-                <legend>Enter temperatre in {scaleNames[scale]}:</legend>
-                <input value={temperature} onChange={this.handleChange} />
+                <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                <input value={temperature} onChange={this.onChange} />
             </fieldset>
         )
     }
