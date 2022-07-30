@@ -1,27 +1,34 @@
-function nextTodoId(todos) {
-    const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
-    return maxId + 1
-}
+const initialState = [
+    { id: 0, text: 'Learn React', completed: true },
+    { id: 1, text: 'Learn Redux', completed: false, color: 'purple' },
+    { id: 2, text: 'Build something fun!', completed: false, color: 'blue' }
+]
 
-function wrapTodo(todoReducer) {
-    return (state, action) => {
-        return { ...state, todos: todoReducer(state.todos, action.payload) }
-    }
-}
-
-function added(state, payload) {
-    return [
-        ...state,
-        { id: nextTodoId(state), text: payload, completed: false }
-    ]
-}
-
-function toggled(state, payload) {
-    return state.todos.map(todo => {
-        if (todo.id !== payload) {
-            return todo
-        } else {
-            return { ...todo, completed: !todo.completed }
+export default function reduceTodos(state = initialState, action) {
+    switch (action.type) {
+        case 'todos/added': {
+            return [
+                ...state,
+                {
+                    id: nextTodoId(state),
+                    text: action.payload,
+                    completed: false
+                }
+            ]
         }
-    })
+        case 'todos/toggled': {
+            return state.map(todo => {
+                if (todo.id !== action.payload) {
+                    return todo
+                }
+
+                return {
+                    ...todo,
+                    completed: !todo.completed
+                }
+            })
+        }
+        default:
+            return state
+    }
 }

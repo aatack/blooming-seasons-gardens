@@ -1,9 +1,16 @@
-function wrapFilter(filterReducer) {
-    return (state, action) => {
-        return { ...state, filters: filterReducer(state.filters, action.payload) }
-    }
+const initialState = {
+    status: 'All',
+    colors: []
 }
 
-function statusChanged(state, payload) {
-    return { ...state, status: payload }
+export default function filtersReducer(state = initialState, action) {
+    switch (action.type) {
+        case 'filters/statusChanged': {
+            return {
+                ...state, status: action.payload
+            }
+        }
+        default:
+            return state
+    }
 }

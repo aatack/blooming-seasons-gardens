@@ -1,3 +1,7 @@
+import { combineReducers } from "redux"
+import reduceTodos from './features/todos'
+import reduceFilters from './features/filters'
+
 const initialState = {
     todos: [
         { id: 0, text: 'Learn React', completed: true },
@@ -10,18 +14,8 @@ const initialState = {
     }
 }
 
-export default function appReducer(state = initialState, action) {
-    switch (action.type) {
-        case "todos/added": {
-            return wrapTodo(added)(state, action)
-        }
-        case "todos/toggled": {
-            return wrapTodo(toggled)(state, action)
-        }
-        case "filters/statusChanged": {
-            return wrapFilter(statusChanged)
-        }
-        default:
-            return state
-    }
-}
+const rootReducer = combineReducers({
+    todos: reduceTodos, filtrers: reduceFilters
+})
+
+export default rootReducer
