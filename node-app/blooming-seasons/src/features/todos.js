@@ -4,6 +4,11 @@ const initialState = [
     { id: 2, text: 'Build something fun!', completed: false, color: 'blue' }
 ]
 
+function nextTodoId(todos) {
+    const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
+    return maxId + 1
+}
+
 export default function reduceTodos(state = initialState, action) {
     switch (action.type) {
         case 'todos/added': {
