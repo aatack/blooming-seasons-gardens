@@ -92,10 +92,33 @@ const TodoListItem = ({ id }) => {
     )
 }
 
+const Footer = () => {
+    const todosRemaining = useSelector(state => {
+        return state.todos.filter(todo => !todo.completed).length
+    })
+
+    const { status, filters } = useSelector(state => state.filters)
+
+    return (
+        <footer className="footer">
+            <div className="actions">
+                <h5>Actions</h5>
+                <button className="button">Mark all completed</button>
+                <button className="button">Clear completed</button>
+            </div>
+
+            <p>{todosRemaining} items remaining</p>
+            {/* <StatusFilter value={status} onChange={onStatusChange} />
+            <ColourFilters value={colours} onChange={onColourChange} /> */}
+        </footer>
+    )
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <Provider store={store}>
         <Header />
         <TodoList />
+        <Footer />
     </Provider>
 )
