@@ -16,7 +16,6 @@ const Header = () => {
         if (e.key === "Enter" && trimmedText) {
             dispatch({ type: "todos/added", payload: trimmedText })
             setText("")
-            console.log(store.getState())
         }
     }
 
@@ -71,6 +70,10 @@ const TodoListItem = ({ id }) => {
         })
     }
 
+    const handleDeleted = () => {
+        dispatch({ type: "todos/deleted", payload: todo.id })
+    }
+
     return (
         <li>
             <div className="view">
@@ -83,6 +86,7 @@ const TodoListItem = ({ id }) => {
                 <select value={colour} onChange={handleColourChanged}>
                     {colourOptionsElements}
                 </select>
+                <button onClick={handleDeleted}>Delete</button>
             </div>
         </li>
     )

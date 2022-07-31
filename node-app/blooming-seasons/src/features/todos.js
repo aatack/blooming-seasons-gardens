@@ -45,6 +45,9 @@ export default function reduceTodos(state = initialState, action) {
                 }
             })
         }
+        case "todos/deleted": {
+            return state.filter(todo => todo.id !== action.payload)
+        }
         default:
             return state
     }
