@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch, Provider } from "react-redux";
+import { useSelector, useDispatch, Provider, shallowEqual } from "react-redux";
 import ReactDOM from "react-dom/client";
 import { useState } from "react";
 import store from "./store.js";
@@ -32,32 +32,45 @@ const Header = () => {
 }
 
 const TodoList = () => {
-    const todoIdentifiers = useSelector(state => state.todos.map(todo => todo.id))
+    const todoIdentifiers = useSelector(
+        state => state.todos.map(todo => todo.id), shallowEqual
+    )
 
     const renderedListItems = todoIdentifiers.map(id => {
         return <TodoListItem key={id} id={id} />
     })
 
-    return <ul className="todo-list">{renderedListItems}</ul>
+    return <ul className="todo-list" style={{ listStyle: "none" }}>
+        {renderedListItems}
+    </ul>
 }
 
 const selectTodoById = (state, todoId) => {
-    return state.todos.find(todo => todo.id == todoId)
+    return state.todos.find(todo => todo.id === todoId)
 }
 
 const TodoListItem = ({ id }) => {
     const todo = useSelector(state => selectTodoById(state, id))
-    const { text, completed, colour } = todo
+
+    const [completed, setCompleted] = useState(todo.completed)
 
     const dispatch = useDispatch()
 
-    const handleCompletedChanged = () => {
+    const handleCompletedChanged = (e) => {
+        setCompleted(e.target.checked)
         dispatch({ type: "todos/toggled", payload: todo.id })
     }
 
     return (
         <li>
-            <div className="view">{text}</div>
+            <div className="view">
+                <input
+                    type="checkbox"
+                    checked={completed}
+                    onChange={handleCompletedChanged}
+                />
+                {todo.text}
+            </div>
         </li>
     )
 }
