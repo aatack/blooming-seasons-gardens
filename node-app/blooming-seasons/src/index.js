@@ -3,6 +3,7 @@ import { useSelector, useDispatch, Provider, shallowEqual } from "react-redux";
 import ReactDOM from "react-dom/client";
 import { useState } from "react";
 import store from "./store.js";
+import { colourOptionsElements } from "./features/filters.js"
 
 const Header = () => {
     const [text, setText] = useState("")
@@ -53,12 +54,21 @@ const TodoListItem = ({ id }) => {
     const todo = useSelector(state => selectTodoById(state, id))
 
     const [completed, setCompleted] = useState(todo.completed)
+    const [colour, setColour] = useState(todo.colour || "none")
 
     const dispatch = useDispatch()
 
     const handleCompletedChanged = (e) => {
         setCompleted(e.target.checked)
         dispatch({ type: "todos/toggled", payload: todo.id })
+    }
+
+    const handleColourChanged = e => {
+        setColour(e.target.value)
+        dispatch({
+            type: "todos/colourChanged",
+            payload: { id: todo.id, colour: e.target.value }
+        })
     }
 
     return (
@@ -70,6 +80,9 @@ const TodoListItem = ({ id }) => {
                     onChange={handleCompletedChanged}
                 />
                 {todo.text}
+                <select value={colour} onChange={handleColourChanged}>
+                    {colourOptionsElements}
+                </select>
             </div>
         </li>
     )
