@@ -49,9 +49,8 @@ const selectTodoById = (state, todoId) => {
     return state.todos.find(todo => todo.id === todoId)
 }
 
-const TodoListItem = props => {
-    const id = props.id
-    const todo = selectTodoById(store.getState(), id)
+const TodoListItem = ({ id }) => {
+    const todo = useSelector(state => selectTodoById(state, id))
 
     const [completed, setCompleted] = useState(todo.completed)
     const [colour, setColour] = useState(todo.colour || "none")
@@ -88,7 +87,6 @@ const TodoListItem = props => {
                     {colourOptionsElements}
                 </select>
                 <button onClick={handleDeleted}>Delete</button>
-                <p>{todo.completed ? "Done" : "Waiting"} {Math.random()}</p>
             </div>
         </li>
     )
