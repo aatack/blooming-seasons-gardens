@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "Electron app for garden design",
   "main": "main.js",
-  "author": "Alex Atack"
+  "author": "Alex Atack",
+  "devDependencies": {
+    "electron": "^20.0.1"
+  }
 }
