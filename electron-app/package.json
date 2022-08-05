@@ -1,0 +1,7 @@
+{
+  "name": "blooming-seasons-design",
+  "version": "1.0.0",
+  "description": "Electron app for garden design",
+  "main": "main.js",
+  "author": "Alex Atack"
+}
