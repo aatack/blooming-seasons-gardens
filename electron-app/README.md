@@ -12,7 +12,7 @@ This should open a browser window running the app.
 To access the electron interface, run:
 
 ```bash
-npm electron-dev
+npm run electron-dev
 ```
 
 which opens an electron window running the local host address on which the app is running.
