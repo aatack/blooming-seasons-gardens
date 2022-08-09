@@ -3,37 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 const App = () => {
   return (
     <>
-      <p>Testing redux with react and electron</p>
-      <Counter />
-      <Increment />
-      <Decrement />
+      <AddBed />
+      <Garden />
     </>
   );
 };
 
-const Counter = () => {
-  const value = useSelector((state) => state.value);
-  return <p>{value}</p>;
-};
-
-const Increment = () => {
+const AddBed = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch({ type: "incremented" });
+    dispatch({ type: "garden/bed/added" });
   };
 
-  return <button onClick={handleClick}>Increment</button>;
+  return <button onClick={handleClick}>Add Bed</button>;
 };
 
-const Decrement = () => {
-  const dispatch = useDispatch();
-
-  const handleClick = () => {
-    dispatch({ type: "decremented" });
-  };
-
-  return <button onClick={handleClick}>Decrement</button>;
+const Garden = () => {
+  const garden = useSelector((state) => state.garden);
+  return garden.map((bed) => <p key={bed.identifier}>{bed.name}</p>);
 };
 
 export default App;
