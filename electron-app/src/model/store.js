@@ -14,6 +14,12 @@ export const store = configureStore({
               : "Bed " + state.identifier.toString(),
           });
         });
+      case "garden/bed/removed":
+        return produce(state, (draft) => {
+          draft.garden = state.garden.filter(
+            (bed) => bed.identifier !== action.payload
+          );
+        });
       default:
         return state;
     }
