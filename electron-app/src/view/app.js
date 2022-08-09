@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 const App = () => {
   return (
@@ -27,15 +28,30 @@ const Garden = () => {
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
-  const handleClick = () => {
+  const [hovered, setHovered] = useState(false);
+
+  const handleRemoveClick = () => {
     dispatch({ type: "garden/bed/removed", payload: bed.identifier });
   };
 
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
   return (
-    <>
-      <p>{bed.name}</p>
-      <button onClick={handleClick}>Remove</button>
-    </>
+    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <p style={{ display: "inline-block" }}>{bed.name}</p>
+      <button
+        style={{ display: hovered ? "inline-block" : "none" }}
+        onClick={handleRemoveClick}
+      >
+        Remove
+      </button>
+    </div>
   );
 };
 
