@@ -20,6 +20,13 @@ export const store = configureStore({
             (bed) => bed.identifier !== action.payload
           );
         });
+      case "garden/bed/renamed":
+        return produce(state, (draft) => {
+          const bed = draft.garden.find(
+            (b) => b.identifier === action.payload.identifier
+          );
+          bed.name = action.payload.name;
+        });
       default:
         return state;
     }

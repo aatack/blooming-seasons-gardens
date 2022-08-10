@@ -34,6 +34,16 @@ const Bed = ({ bed }) => {
     dispatch({ type: "garden/bed/removed", payload: bed.identifier });
   };
 
+  const handleRenameClick = () => {
+    dispatch({
+      type: "garden/bed/renamed",
+      payload: {
+        identifier: bed.identifier,
+        name: bed.name + "?",
+      },
+    });
+  };
+
   const handleMouseEnter = () => {
     setHovered(true);
   };
@@ -50,6 +60,12 @@ const Bed = ({ bed }) => {
         onClick={handleRemoveClick}
       >
         Remove
+      </button>
+      <button
+        style={{ display: hovered ? "inline-block" : "none" }}
+        onClick={handleRenameClick}
+      >
+        Rename
       </button>
     </div>
   );
