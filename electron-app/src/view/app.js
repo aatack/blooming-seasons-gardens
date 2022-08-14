@@ -1,13 +1,10 @@
-import { useState } from "react";
 import Editor from "./editor";
-import { Modal } from "../model/context";
+import { Modal, useModal } from "../model/context";
 import { Popup } from "./common";
 
 const App = () => {
-  const [modal, setModal] = useState(null);
-
   return (
-    <Modal.Provider value={[modal, setModal]}>
+    <Modal.Provider value={useModal()}>
       <Popup />
       <Editor />
     </Modal.Provider>

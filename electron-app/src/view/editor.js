@@ -31,8 +31,13 @@ const Bed = ({ bed }) => {
     dispatch(removeBed(bed.identifier));
   };
 
-  const handleRenameStart = () => {
-    setModal({ element: <p>Hello world</p> });
+  const handleRename = () => {
+    setModal({
+      element: <p>Rename bed {bed.identifier}</p>,
+      onClose: () => {
+        console.log("Closing rename window for bed", bed.identifier);
+      },
+    });
   };
 
   const handleMouseEnter = () => {
@@ -48,7 +53,7 @@ const Bed = ({ bed }) => {
       <p style={{ display: "inline-block" }}>{bed.name}</p>
 
       {hovered && <button onClick={handleRemoveBed}>Remove</button>}
-      {hovered && <button onClick={handleRenameStart}>Rename</button>}
+      {hovered && <button onClick={handleRename}>Rename</button>}
     </div>
   );
 };
