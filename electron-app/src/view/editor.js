@@ -54,30 +54,14 @@ const Bed = ({ bed }) => {
   return (
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <p style={{ display: "inline-block" }}>{bed.name}</p>
-      <button
-        style={{ display: hovered ? "inline-block" : "none" }}
-        onClick={handleRemoveBed}
-      >
-        Remove
-      </button>
-      <button
-        style={{ display: hovered & !renaming ? "inline-block" : "none" }}
-        onClick={handleRenameStart}
-      >
-        Rename
-      </button>
-      <button
-        style={{ display: renaming ? "inline-block" : "none" }}
-        onClick={handleRenameConfirm}
-      >
-        Confirm Rename
-      </button>
-      <button
-        style={{ display: renaming ? "inline-block" : "none" }}
-        onClick={handleRenameCancel}
-      >
-        Cancel Rename
-      </button>
+      {hovered && <button onClick={handleRemoveBed}>Remove</button>}
+      {hovered && !renaming && (
+        <button onClick={handleRenameStart}>Rename</button>
+      )}
+      {renaming && (
+        <button onClick={handleRenameConfirm}>Confirm Rename</button>
+      )}
+      {renaming && <button onClick={handleRenameCancel}>Cancel Rename</button>}
     </div>
   );
 };
