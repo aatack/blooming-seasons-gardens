@@ -9,7 +9,6 @@ export const Modal = (() => {
     const [modal, privateSetModal] = useState(null);
 
     const publicSetModal = (newModal) => {
-      console.log(typeof newModal, newModal);
       if (modal && modal.onClose) {
         modal.onClose();
       }

@@ -1,26 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
-import { addBed, removeBed, renameBed } from "../model/store";
-import { TextBox } from "./common";
-import { Modal } from "../model/context";
-
-const Editor = () => {
-  const dispatch = useDispatch();
-
-  const handleAddBed = () => {
-    dispatch(addBed());
-  };
-
-  const garden = useSelector((state) => state.garden);
-  return (
-    <div style={{ backgroundColor: "lightGrey", padding: 8 }}>
-      <button onClick={handleAddBed}>Add Bed</button>
-      {garden.map((bed) => (
-        <Bed bed={bed} key={bed.identifier} />
-      ))}
-    </div>
-  );
-};
+import { removeBed, renameBed } from "../../model/store";
+import { TextBox } from "../common";
+import { Modal } from "../../model/context";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -56,8 +38,6 @@ const Bed = ({ bed }) => {
   );
 };
 
-export default Editor;
-
 const RenameBed = ({ bed }) => {
   const dispatch = useDispatch();
   const [_, setModal] = useContext(Modal);
@@ -76,3 +56,5 @@ const RenameBed = ({ bed }) => {
     </>
   );
 };
+
+export default Bed;
