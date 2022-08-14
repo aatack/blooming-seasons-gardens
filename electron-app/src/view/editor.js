@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useState } from "react";
 import { addBed, removeBed, renameBed } from "../model/store";
+import { TextBox } from "./common";
 import { Modal } from "../model/context";
 
 const Editor = () => {
@@ -33,10 +34,7 @@ const Bed = ({ bed }) => {
 
   const handleRename = () => {
     setModal({
-      element: <p>Rename bed {bed.identifier}</p>,
-      onClose: () => {
-        console.log("Closing rename window for bed", bed.identifier);
-      },
+      modal: <RenameBed bed={bed} />,
     });
   };
 
@@ -59,3 +57,22 @@ const Bed = ({ bed }) => {
 };
 
 export default Editor;
+
+const RenameBed = ({ bed }) => {
+  const dispatch = useDispatch();
+  const [_, setModal] = useContext(Modal);
+  const [name, setName] = useState(bed.name);
+
+  const onDone = () => {
+    dispatch(renameBed(bed.identifier, name));
+    setModal();
+  };
+
+  return (
+    <>
+      <p>Rename Bed</p>
+      <TextBox value={name} onChange={setName} />
+      <button onClick={onDone}>Done</button>
+    </>
+  );
+};
