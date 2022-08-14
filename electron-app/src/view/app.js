@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { addBed, removeBed, renameBed } from "../model/store";
 
 const App = () => {
   return (
@@ -12,9 +13,8 @@ const App = () => {
 
 const AddBed = () => {
   const dispatch = useDispatch();
-
   const handleClick = () => {
-    dispatch({ type: "garden/bed/added" });
+    dispatch(addBed());
   };
 
   return <button onClick={handleClick}>Add Bed</button>;
@@ -32,7 +32,7 @@ const Bed = ({ bed }) => {
   const [renaming, setRenaming] = useState(false);
 
   const handleRemoveClick = () => {
-    dispatch({ type: "garden/bed/removed", payload: bed.identifier });
+    dispatch(removeBed(bed.identifier));
   };
 
   const handleRenameStart = () => {
@@ -45,13 +45,7 @@ const Bed = ({ bed }) => {
 
   const handleRenameConfirm = () => {
     setRenaming(false);
-    dispatch({
-      type: "garden/bed/renamed",
-      payload: {
-        identifier: bed.identifier,
-        name: bed.name + ".",
-      },
-    });
+    dispatch(renameBed(bed.identifier, bed.name + "."));
   };
 
   const handleMouseEnter = () => {
