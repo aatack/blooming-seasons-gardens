@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { addBed, removeBed, renameBed } from "../model/store";
+import { Modal } from "../model/context";
 
 const Editor = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Editor = () => {
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
+  const [_, setModal] = useContext(Modal);
   const [hovered, setHovered] = useState(false);
   const [renaming, setRenaming] = useState(false);
 
@@ -31,7 +33,7 @@ const Bed = ({ bed }) => {
   };
 
   const handleRenameStart = () => {
-    setRenaming(true);
+    setModal({ element: <p>Hello world</p> });
   };
 
   const handleRenameCancel = () => {
