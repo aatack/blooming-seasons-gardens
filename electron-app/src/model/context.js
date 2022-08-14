@@ -32,30 +32,10 @@ export const Modal = (() => {
 
     if (modal) {
       return (
-        <div
-          onClick={closeModal}
-          style={{
-            position: "fixed",
-            zIndex: 1,
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            overflow: "auto",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-          }}
-        >
+        <div onClick={closeModal} className="modal-background">
           <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            style={{
-              backgroundColor: "#fefefe",
-              margin: "15% auto",
-              padding: "20px",
-              border: "1px solid #888",
-              width: "80%",
-            }}
+            onClick={(e) => e.stopPropagation()}
+            className="modal-foreground"
           >
             {modal.modal}
           </div>
