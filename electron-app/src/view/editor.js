@@ -24,7 +24,7 @@ const Editor = () => {
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
-  const [_, setModal] = useContext(Modal.Context);
+  const [_, setModal] = useContext(Modal);
   const [hovered, setHovered] = useState(false);
 
   const handleRemoveBed = () => {

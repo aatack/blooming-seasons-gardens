@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Modal } from "../model/context";
 
 export const Popup = () => {
-  const [modal, setModal] = useContext(Modal.Context);
+  const [modal, setModal] = useContext(Modal);
 
   const closeModal = () => {
     setModal(null);

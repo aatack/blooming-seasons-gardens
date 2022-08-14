@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 
-const ModalContext = React.createContext(undefined);
+export const Modal = React.createContext(undefined);
+
+const CachedModalProvider = Modal.Provider;
+
 const useModal = () => {
   const [modal, privateSetModal] = useState(null);
 
@@ -14,13 +17,12 @@ const useModal = () => {
   return [modal, publicSetModal];
 };
 
-export const Modal = {
-  Context: ModalContext,
-  Provider: ({ children }) => {
-    return (
-      <ModalContext.Provider value={useModal()}>
-        {children}
-      </ModalContext.Provider>
-    );
-  },
+const WrappedModalProvider = (props) => {
+  return (
+    <CachedModalProvider value={useModal()}>
+      {props.children}
+    </CachedModalProvider>
+  );
 };
+
+Modal.Provider = WrappedModalProvider;
