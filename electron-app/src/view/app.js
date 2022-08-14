@@ -3,26 +3,25 @@ import { useState } from "react";
 import { addBed, removeBed, renameBed } from "../model/store";
 
 const App = () => {
-  return (
-    <>
-      <AddBed />
-      <Garden />
-    </>
-  );
-};
-
-const AddBed = () => {
-  const dispatch = useDispatch();
-  const handleClick = () => {
-    dispatch(addBed());
-  };
-
-  return <button onClick={handleClick}>Add Bed</button>;
+  return <Garden />;
 };
 
 const Garden = () => {
+  const dispatch = useDispatch();
+
+  const handleAddBed = () => {
+    dispatch(addBed());
+  };
+
   const garden = useSelector((state) => state.garden);
-  return garden.map((bed) => <Bed bed={bed} key={bed.identifier} />);
+  return (
+    <div style={{ backgroundColor: "lightGrey", padding: 8 }}>
+      <button onClick={handleAddBed}>Add Bed</button>
+      {garden.map((bed) => (
+        <Bed bed={bed} key={bed.identifier} />
+      ))}
+    </div>
+  );
 };
 
 const Bed = ({ bed }) => {
