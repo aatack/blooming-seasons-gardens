@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Modal } from "../model/context";
 
 export const Popup = () => {
-  const [modal, setModal] = useContext(Modal);
+  const [modal, setModal] = useContext(Modal.Context);
 
   const closeModal = () => {
     setModal(null);
@@ -24,7 +24,7 @@ export const Popup = () => {
         }}
       >
         <div
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
           }}
           style={{
