@@ -26,7 +26,6 @@ const Bed = ({ bed }) => {
 
   const [_, setModal] = useContext(Modal);
   const [hovered, setHovered] = useState(false);
-  const [renaming, setRenaming] = useState(false);
 
   const handleRemoveBed = () => {
     dispatch(removeBed(bed.identifier));
@@ -34,15 +33,6 @@ const Bed = ({ bed }) => {
 
   const handleRenameStart = () => {
     setModal({ element: <p>Hello world</p> });
-  };
-
-  const handleRenameCancel = () => {
-    setRenaming(false);
-  };
-
-  const handleRenameConfirm = () => {
-    setRenaming(false);
-    dispatch(renameBed(bed.identifier, bed.name + "."));
   };
 
   const handleMouseEnter = () => {
@@ -56,14 +46,9 @@ const Bed = ({ bed }) => {
   return (
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <p style={{ display: "inline-block" }}>{bed.name}</p>
+
       {hovered && <button onClick={handleRemoveBed}>Remove</button>}
-      {hovered && !renaming && (
-        <button onClick={handleRenameStart}>Rename</button>
-      )}
-      {renaming && (
-        <button onClick={handleRenameConfirm}>Confirm Rename</button>
-      )}
-      {renaming && <button onClick={handleRenameCancel}>Cancel Rename</button>}
+      {hovered && <button onClick={handleRenameStart}>Rename</button>}
     </div>
   );
 };
