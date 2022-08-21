@@ -54,7 +54,7 @@ const RenameBedModal = ({ bed }) => {
 
   return (
     <>
-      <p>Rename Bed</p>
+      <h3>Rename Bed</h3>
       <TextBox value={name} onChange={setName} />
       <button onClick={onDone}>Done</button>
       <button onClick={onCancel}>Cancel</button>

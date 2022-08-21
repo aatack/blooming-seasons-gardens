@@ -4,6 +4,7 @@ import { addBed } from "../../model/store";
 import { TextBox } from "../common";
 import { Modal } from "../../model/context";
 import { useState } from "react";
+import Nursery from "./nursery";
 import Bed from "./bed";
 
 const Editor = () => {
@@ -13,10 +14,15 @@ const Editor = () => {
     setModal({ modal: <CreateBedModal /> });
   };
 
+  const handleViewNursery = () => {
+    setModal({ modal: <Nursery /> });
+  };
+
   const garden = useSelector((state) => state.garden);
   return (
     <div style={{ backgroundColor: "lightGrey", padding: 8 }}>
       <button onClick={handleAddBed}>Add Bed</button>
+      <button onClick={handleViewNursery}>View Nursery</button>
       {garden.map((bed) => (
         <Bed bed={bed} key={bed.identifier} />
       ))}
@@ -42,7 +48,7 @@ const CreateBedModal = () => {
 
   return (
     <>
-      <p>Create Bed</p>
+      <h3>Create Bed</h3>
       <TextBox value={name} onChange={setName} />
       <button onClick={onDone}>Done</button>
       <button onClick={onCancel}>Cancel</button>
