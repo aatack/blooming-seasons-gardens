@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
-import { useDispatch } from "react-redux";
 
 export const store = configureStore({
   reducer: (state = { identifier: 0, garden: [], nursery: [] }, action) => {
@@ -34,8 +33,8 @@ export const store = configureStore({
   },
 });
 
-export const addBed = () => {
-  return { type: "garden/bed/added" };
+export const addBed = (name) => {
+  return { type: "garden/bed/added", payload: name };
 };
 
 export const removeBed = (identifier) => {

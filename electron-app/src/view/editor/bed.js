@@ -16,7 +16,7 @@ const Bed = ({ bed }) => {
 
   const handleRename = () => {
     setModal({
-      modal: <RenameBed bed={bed} />,
+      modal: <RenameBedModal bed={bed} />,
     });
   };
 
@@ -38,7 +38,7 @@ const Bed = ({ bed }) => {
   );
 };
 
-const RenameBed = ({ bed }) => {
+const RenameBedModal = ({ bed }) => {
   const dispatch = useDispatch();
   const [_, setModal] = useContext(Modal);
   const [name, setName] = useState(bed.name);
