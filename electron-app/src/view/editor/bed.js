@@ -87,6 +87,7 @@ const RenameBedModal = ({ bed }) => {
 
 const AddPlantModal = ({ bed }) => {
   const modal = useContext(Modal);
+  const dispatch = useDispatch();
 
   const templates = useSelector((state) => state.nursery);
 
@@ -100,9 +101,9 @@ const AddPlantModal = ({ bed }) => {
 
   const onDone = () => {
     if (custom) {
-      addCustomPlant(bed, name);
+      dispatch(addCustomPlant(bed, name));
     } else {
-      addTemplatePlant(bed, template);
+      dispatch(addTemplatePlant(bed, template));
     }
 
     modal.pop();
