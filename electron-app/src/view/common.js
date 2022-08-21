@@ -5,8 +5,8 @@ export const TextBox = (props) => {
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    if (props.onChange) {
-      props.onChange(e.target.value);
+    if (props.setValue) {
+      props.setValue(e.target.value);
     }
   };
 

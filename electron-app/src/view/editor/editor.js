@@ -47,7 +47,7 @@ const CreateBedModal = () => {
   return (
     <>
       <h3>Create Bed</h3>
-      <TextBox value={name} onChange={setName} />
+      <TextBox value={name} setValue={setName} />
       <button onClick={onDone}>Done</button>
       <button onClick={onCancel}>Cancel</button>
     </>

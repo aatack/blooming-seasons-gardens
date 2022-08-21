@@ -43,7 +43,7 @@ const CreateTemplateModal = () => {
   return (
     <>
       <h3>Create Template</h3>
-      <TextBox value={name} onChange={setName} />
+      <TextBox value={name} setValue={setName} />
       <button onClick={onDone}>Done</button>
       <button onClick={onCancel}>Cancel</button>
     </>

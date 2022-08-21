@@ -60,13 +60,13 @@ const EditTemplateModal = ({ template }) => {
       <h3>Edit Template</h3>
 
       <p>Name</p>
-      <TextBox value={name} onChange={setName} />
+      <TextBox value={name} setValue={setName} />
 
       <p>Size</p>
-      <TextBox value={size} onChange={setSize} />
+      <TextBox value={size} setValue={setSize} />
 
       <p>Colour</p>
-      <TextBox value={colour} onChange={setColour} />
+      <TextBox value={colour} setValue={setColour} />
 
       <p />
       <button onClick={onDone}>Done</button>
