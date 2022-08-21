@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
+import example from "./example";
 
 const findByIdentifier = (state, identifier) => {
   for (const bed of state.garden) {
@@ -26,7 +27,7 @@ const findByIdentifier = (state, identifier) => {
 export const store = configureStore({
   // Start the identifier at 1 so we can guarantee the it will never be zero,
   // and can therefore cast identifiers to booleans to see whether they exist
-  reducer: (state = { identifier: 1, garden: [], nursery: [] }, action) => {
+  reducer: (state = example, action) => {
     switch (action.type) {
       case "garden/bed/added":
         return produce(state, (draft) => {
@@ -91,8 +92,6 @@ export const store = configureStore({
             identifier: state.identifier,
             type: "plant",
             position: { x: 0, y: 0 },
-            size: 0.5,
-            colour: "#aabbcc",
           };
           const body = action.payload.templateIdentifier
             ? {
@@ -102,6 +101,8 @@ export const store = configureStore({
                 name: action.payload.name
                   ? action.payload.name
                   : "Plant " + state.identifier.toString(),
+                size: 0.5,
+                colour: "#aabbcc",
               };
 
           bed.elements.push({ ...head, ...body });
