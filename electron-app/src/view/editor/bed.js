@@ -6,7 +6,7 @@ import {
   removeBed,
   renameBed,
 } from "../../model/store";
-import { Checkbox, TextBox, Dropdown } from "../common";
+import { Checkbox, TextBox, Dropdown, space } from "../common";
 import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
 import Plant from "./plant";
@@ -48,9 +48,9 @@ const Bed = ({ bed }) => {
         style={{ backgroundColor: background }}
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
-
-        {hovered && <button onClick={handleRemoveBed}>Remove</button>}
-        {hovered && <button onClick={handleRename}>Rename</button>}
+        &nbsp;
+        {hovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
+        {hovered && space(<button onClick={handleRename}>Rename</button>)}
         {hovered && <button onClick={handleAddPlant}>Add Plant</button>}
       </div>
 

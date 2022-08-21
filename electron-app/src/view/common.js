@@ -92,3 +92,12 @@ export const Dropdown = (props) => {
     </select>
   );
 };
+
+export const space = (element) => {
+  return (
+    <>
+      {element}
+      &nbsp;
+    </>
+  );
+};
