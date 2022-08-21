@@ -27,6 +27,31 @@ export const store = configureStore({
           );
           bed.name = action.payload.name;
         });
+      case "nursery/template/added":
+        return produce(state, (draft) => {
+          draft.identifier += 1;
+          draft.nursery.push({
+            identifier: state.identifier,
+            name: action.payload
+              ? action.payload
+              : "Template " + state.identifier.toString(),
+          });
+        });
+      case "nursery/template/removed":
+        return produce(state, (draft) => {
+          draft.nursery = draft.nursery.filter(
+            (template) => template.identifier !== action.payload
+          );
+        });
+      case "nursery/template/edited":
+        return produce(state, (draft) => {
+          const template = draft.nursery.find(
+            (t) => t.identifier === action.payload.identifier
+          );
+          template.name = action.payload.name;
+          template.size = action.payload.size;
+          template.colour = action.payload.colour;
+        });
       default:
         return state;
     }
