@@ -1,8 +1,32 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
 
+const findByIdentifier = (state, identifier) => {
+  for (const bed of state.garden) {
+    if (bed.identifier === identifier) {
+      return bed;
+    }
+
+    for (const element of bed.elements) {
+      if (element.identifier === identifier) {
+        return element;
+      }
+    }
+  }
+
+  for (const template of state.nursery) {
+    if (template.identifier === identifier) {
+      return template;
+    }
+  }
+
+  return null;
+};
+
 export const store = configureStore({
-  reducer: (state = { identifier: 0, garden: [], nursery: [] }, action) => {
+  // Start the identifier at 1 so we can guarantee the it will never be zero,
+  // and can therefore cast identifiers to booleans to see whether they exist
+  reducer: (state = { identifier: 1, garden: [], nursery: [] }, action) => {
     switch (action.type) {
       case "garden/bed/added":
         return produce(state, (draft) => {
@@ -12,6 +36,7 @@ export const store = configureStore({
             name: action.payload
               ? action.payload
               : "Bed " + state.identifier.toString(),
+            elements: [],
           });
         });
       case "garden/bed/removed":
@@ -20,7 +45,7 @@ export const store = configureStore({
             (bed) => bed.identifier !== action.payload
           );
         });
-      case "garden/bed/renamed":
+      case "garden/bed/renamed": // TODO: make this "edited" instead
         return produce(state, (draft) => {
           const bed = draft.garden.find(
             (b) => b.identifier === action.payload.identifier
@@ -57,6 +82,32 @@ export const store = configureStore({
         });
 
       case "garden/plant/added":
+        return produce(state, (draft) => {
+          draft.identifier += 1;
+          const bed = findByIdentifier(draft, action.payload.bedIdentifier);
+
+          const head = {
+            identifier: state.identifier,
+            type: "plant",
+            position: { x: 0, y: 0 },
+            size: 0.5,
+            colour: "#aabbcc",
+          };
+          const body = action.payload.templateIdentifier
+            ? {
+                template: action.payload.templateIdentifier,
+              }
+            : {
+                name: action.payload.name
+                  ? action.payload.name
+                  : "Plant " + state.identifier.toString(),
+              };
+
+          bed.elements.push({ ...head, ...body });
+        });
+      case "garden/plant/removed":
+        return produce(state, (draft) => {});
+      case "garden/plant/edited":
         return produce(state, (draft) => {});
 
       default:
