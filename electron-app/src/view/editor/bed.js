@@ -1,6 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useState } from "react";
-import { removeBed, renameBed } from "../../model/store";
+import {
+  addCustomPlant,
+  addTemplatePlant,
+  removeBed,
+  renameBed,
+} from "../../model/store";
 import { Checkbox, TextBox, Dropdown } from "../common";
 import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
@@ -87,7 +92,12 @@ const AddPlantModal = ({ bed }) => {
   );
 
   const onDone = () => {
-    // TODO: dispatch
+    if (custom) {
+      addCustomPlant(bed, name);
+    } else {
+      addTemplatePlant(bed, template);
+    }
+
     modal.pop();
   };
 
@@ -119,7 +129,9 @@ const AddPlantModal = ({ bed }) => {
       <br />
       <br />
 
-      <button onClick={onDone}>Done</button>
+      <button onClick={onDone} disabled={!custom && !templatesAvailable}>
+        Done
+      </button>
       <button onClick={onCancel}>Cancel</button>
     </>
   );
