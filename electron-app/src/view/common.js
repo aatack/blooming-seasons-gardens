@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 // TODO: look into React's handling of forms
+// TODO: have all of the widgets take the output of `useState` directly
 
 export const TextBox = (props) => {
   const [value, setValue] = useState(props.value);
@@ -51,4 +52,43 @@ export const ColourPicker = (props) => {
   };
 
   return <input type="color" value={value} onChange={handleChange}></input>;
+};
+
+export const Checkbox = (props) => {
+  const [value, setValue] = useState(props.value);
+
+  const handleChange = (e) => {
+    setValue(e.target.checked);
+    if (props.setValue) {
+      props.setValue(e.target.checked);
+    }
+  };
+
+  return <input type="checkbox" value={value} onChange={handleChange} />;
+};
+
+export const Dropdown = (props) => {
+  // Expects `options` to be an array of objects with `name` and `identifier`
+  // keys
+
+  const [value, setValue] = useState(props.value.name);
+
+  const handleChange = (e) => {
+    const newValue = props.options.find(
+      (option) => option.name == e.target.value
+    );
+    setValue(newValue.name);
+
+    if (props.setValue) {
+      props.setValue(newValue);
+    }
+  };
+
+  return (
+    <select onChange={handleChange} value={value}>
+      {props.options.map((option) => (
+        <option key={option.identifier.toString()}>{option.name}</option>
+      ))}
+    </select>
+  );
 };

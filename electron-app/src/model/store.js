@@ -67,6 +67,7 @@ export const store = configureStore({
         });
       case "nursery/template/removed":
         return produce(state, (draft) => {
+          // TODO: remove dependent elements
           draft.nursery = draft.nursery.filter(
             (template) => template.identifier !== action.payload
           );
