@@ -15,9 +15,7 @@ const Template = ({ template }) => {
   };
 
   const handleEdit = () => {
-    modal.set({
-      modal: <EditTemplateModal template={template} />,
-    });
+    modal.set(<EditTemplateModal template={template} />);
   };
 
   const handleMouseEnter = () => {

@@ -15,9 +15,7 @@ const Bed = ({ bed }) => {
   };
 
   const handleRename = () => {
-    modal.set({
-      modal: <RenameBedModal bed={bed} />,
-    });
+    modal.set(<RenameBedModal bed={bed} />);
   };
 
   const handleMouseEnter = () => {

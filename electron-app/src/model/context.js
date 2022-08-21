@@ -11,23 +11,9 @@ export const Modal = (() => {
     return {
       get: () => (modals.length > 0 ? modals[modals.length - 1] : null),
       set: (modal) => {
-        for (const openModal in modals) {
-          if (openModal.onClose) {
-            openModal.onClose();
-          }
-        }
         setModals(modal ? [modal] : []);
       },
     };
-
-    // const publicSetModal = (newModal) => {
-    //   if (modal && modal.onClose) {
-    //     modal.onClose();
-    //   }
-    //   privateSetModal(newModal);
-    // };
-
-    // return [modal, publicSetModal];
   };
 
   const WrappedProvider = (props) => {
@@ -43,20 +29,13 @@ export const Modal = (() => {
 
     const modal = manager.get();
     if (modal) {
-      if (!modal.modal) {
-        console.warn(
-          "Modal needs to be wrapped in an object with a `modal` key",
-          modal
-        );
-      }
-
       return (
         <div onClick={closeModal} className="modal-background">
           <div
             onClick={(e) => e.stopPropagation()}
             className="modal-foreground"
           >
-            {modal.modal}
+            {modal}
           </div>
         </div>
       );

@@ -11,11 +11,11 @@ const Editor = () => {
   const modal = useContext(Modal);
 
   const handleAddBed = () => {
-    modal.set({ modal: <CreateBedModal /> });
+    modal.set(<CreateBedModal />);
   };
 
   const handleViewNursery = () => {
-    modal.set({ modal: <Nursery /> });
+    modal.set(<Nursery />);
   };
 
   const garden = useSelector((state) => state.garden);
