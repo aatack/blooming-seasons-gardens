@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+// TODO: look into React's handling of forms
+
 export const TextBox = (props) => {
   const [value, setValue] = useState(props.value);
 
@@ -13,9 +15,7 @@ export const TextBox = (props) => {
   return <input value={value} onChange={handleChange}></input>;
 };
 
-export const NumberBox = (props) => {
-  // TODO: look into React's handling of forms
-
+export const NumericTextBox = (props) => {
   const [value, setValue] = useState(props.value.toString());
   const [error, setError] = useState(null);
 
@@ -38,4 +38,17 @@ export const NumberBox = (props) => {
       <input value={value} onChange={handleChange}></input>
     </>
   );
+};
+
+export const ColourPicker = (props) => {
+  const [value, setValue] = useState(props.value);
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    if (props.setValue) {
+      props.setValue(e.target.value);
+    }
+  };
+
+  return <input type="color" value={value} onChange={handleChange}></input>;
 };

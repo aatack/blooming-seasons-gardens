@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
 import { editTemplate, removeTemplate } from "../../model/store";
 import { Modal } from "../../model/context";
-import { NumberBox, TextBox } from "../common";
+import { ColourPicker, NumericTextBox, TextBox } from "../common";
 
 const Template = ({ template }) => {
   const dispatch = useDispatch();
@@ -61,10 +61,10 @@ const EditTemplateModal = ({ template }) => {
       <TextBox value={name} setValue={setName} />
 
       <p>Size</p>
-      <NumberBox value={size} setValue={setSize} />
+      <NumericTextBox value={size} setValue={setSize} />
 
       <p>Colour</p>
-      <TextBox value={colour} setValue={setColour} />
+      <ColourPicker value={colour} setValue={setColour} />
 
       <p />
       <button onClick={onDone}>Done</button>
