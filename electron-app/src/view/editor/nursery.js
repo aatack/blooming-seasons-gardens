@@ -9,10 +9,10 @@ import { useState } from "react";
 
 const Nursery = () => {
   const templates = useSelector((state) => state.nursery);
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
 
   const handleAddTemplate = () => {
-    setModal({ modal: <CreateTemplateModal /> });
+    modal.set({ modal: <CreateTemplateModal /> });
   };
 
   return (
@@ -28,16 +28,16 @@ const Nursery = () => {
 
 const CreateTemplateModal = () => {
   const dispatch = useDispatch();
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
   const [name, setName] = useState("");
 
   const onDone = () => {
     dispatch(addTemplate(name));
-    setModal({ modal: <Nursery /> });
+    modal.set({ modal: <Nursery /> });
   };
 
   const onCancel = () => {
-    setModal({ modal: <Nursery /> });
+    modal.set({ modal: <Nursery /> });
   };
 
   return (

@@ -7,7 +7,7 @@ import { NumberBox, TextBox } from "../common";
 const Template = ({ template }) => {
   const dispatch = useDispatch();
 
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);
 
   const handleRemoveTemplate = () => {
@@ -15,7 +15,7 @@ const Template = ({ template }) => {
   };
 
   const handleEdit = () => {
-    setModal({
+    modal.set({
       modal: <EditTemplateModal template={template} />,
     });
   };
@@ -40,7 +40,7 @@ const Template = ({ template }) => {
 
 const EditTemplateModal = ({ template }) => {
   const dispatch = useDispatch();
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
 
   const [name, setName] = useState(template.name);
   const [size, setSize] = useState(template.size);
@@ -48,11 +48,11 @@ const EditTemplateModal = ({ template }) => {
 
   const onDone = () => {
     dispatch(editTemplate(template.identifier, name, size, colour));
-    setModal();
+    modal.set();
   };
 
   const onCancel = () => {
-    setModal(); // TODO: enable modals to go back
+    modal.set(); // TODO: enable modals to go back
   };
 
   return (

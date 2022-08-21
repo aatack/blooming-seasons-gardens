@@ -7,7 +7,7 @@ import { Modal } from "../../model/context";
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);
 
   const handleRemoveBed = () => {
@@ -15,7 +15,7 @@ const Bed = ({ bed }) => {
   };
 
   const handleRename = () => {
-    setModal({
+    modal.set({
       modal: <RenameBedModal bed={bed} />,
     });
   };
@@ -40,16 +40,16 @@ const Bed = ({ bed }) => {
 
 const RenameBedModal = ({ bed }) => {
   const dispatch = useDispatch();
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
   const [name, setName] = useState(bed.name);
 
   const onDone = () => {
     dispatch(renameBed(bed.identifier, name));
-    setModal();
+    modal.set();
   };
 
   const onCancel = () => {
-    setModal();
+    modal.set();
   };
 
   return (

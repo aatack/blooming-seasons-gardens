@@ -6,16 +6,28 @@ export const Modal = (() => {
   const CachedProvider = Context.Provider;
 
   const useModal = () => {
-    const [modal, privateSetModal] = useState(null);
+    const [modals, setModals] = useState([]);
 
-    const publicSetModal = (newModal) => {
-      if (modal && modal.onClose) {
-        modal.onClose();
-      }
-      privateSetModal(newModal);
+    return {
+      get: () => (modals.length > 0 ? modals[modals.length - 1] : null),
+      set: (modal) => {
+        for (const openModal in modals) {
+          if (openModal.onClose) {
+            openModal.onClose();
+          }
+        }
+        setModals(modal ? [modal] : []);
+      },
     };
 
-    return [modal, publicSetModal];
+    // const publicSetModal = (newModal) => {
+    //   if (modal && modal.onClose) {
+    //     modal.onClose();
+    //   }
+    //   privateSetModal(newModal);
+    // };
+
+    // return [modal, publicSetModal];
   };
 
   const WrappedProvider = (props) => {
@@ -23,12 +35,13 @@ export const Modal = (() => {
   };
 
   const WrappedComponent = () => {
-    const [modal, setModal] = useContext(Context);
+    const manager = useContext(Context);
 
     const closeModal = () => {
-      setModal(null);
+      manager.set();
     };
 
+    const modal = manager.get();
     if (modal) {
       if (!modal.modal) {
         console.warn(

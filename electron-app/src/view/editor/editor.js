@@ -8,14 +8,14 @@ import Nursery from "./nursery";
 import Bed from "./bed";
 
 const Editor = () => {
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
 
   const handleAddBed = () => {
-    setModal({ modal: <CreateBedModal /> });
+    modal.set({ modal: <CreateBedModal /> });
   };
 
   const handleViewNursery = () => {
-    setModal({ modal: <Nursery /> });
+    modal.set({ modal: <Nursery /> });
   };
 
   const garden = useSelector((state) => state.garden);
@@ -32,16 +32,16 @@ const Editor = () => {
 
 const CreateBedModal = () => {
   const dispatch = useDispatch();
-  const [_, setModal] = useContext(Modal);
+  const modal = useContext(Modal);
   const [name, setName] = useState("");
 
   const onDone = () => {
     dispatch(addBed(name));
-    setModal();
+    modal.set();
   };
 
   const onCancel = () => {
-    setModal();
+    modal.set();
   };
 
   return (
