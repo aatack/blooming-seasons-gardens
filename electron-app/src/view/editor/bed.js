@@ -31,7 +31,6 @@ const Bed = ({ bed }) => {
 
   return (
     <div
-      className="bed-editor"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ backgroundColor: background }}

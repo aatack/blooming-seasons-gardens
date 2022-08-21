@@ -27,6 +27,7 @@ export const store = configureStore({
           );
           bed.name = action.payload.name;
         });
+
       case "nursery/template/added":
         return produce(state, (draft) => {
           draft.identifier += 1;
@@ -54,6 +55,10 @@ export const store = configureStore({
           template.size = action.payload.size;
           template.colour = action.payload.colour;
         });
+
+      case "garden/plant/added":
+        return produce(state, (draft) => {});
+
       default:
         return state;
     }
