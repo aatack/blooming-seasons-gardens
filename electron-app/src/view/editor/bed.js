@@ -48,11 +48,16 @@ const RenameBedModal = ({ bed }) => {
     setModal();
   };
 
+  const onCancel = () => {
+    setModal();
+  };
+
   return (
     <>
       <p>Rename Bed</p>
       <TextBox value={name} onChange={setName} />
       <button onClick={onDone}>Done</button>
+      <button onClick={onCancel}>Cancel</button>
     </>
   );
 };
