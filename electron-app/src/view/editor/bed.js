@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { removeBed, renameBed } from "../../model/store";
 import { Checkbox, TextBox, Dropdown } from "../common";
 import { Modal } from "../../model/context";
+import { CreateTemplateModal } from "./nursery";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -75,16 +76,15 @@ const RenameBedModal = ({ bed }) => {
 const AddPlantModal = ({ bed }) => {
   const modal = useContext(Modal);
 
-  // const templates = useSelector((state) => state.nursery);
-  const templates = [
-    { name: "Daffodil", identifier: 6 },
-    { name: "Birch", identifier: 156 },
-    { name: "Acer", identifier: 2 },
-  ];
+  const templates = useSelector((state) => state.nursery);
+
+  const templatesAvailable = templates.length > 0;
 
   const [custom, setCustom] = useState(false);
   const [name, setName] = useState("");
-  const [template, setTemplate] = useState(templates[1]);
+  const [template, setTemplate] = useState(
+    templatesAvailable ? templates[0] : null
+  );
 
   const onDone = () => {
     // TODO: dispatch
@@ -95,14 +95,25 @@ const AddPlantModal = ({ bed }) => {
     modal.pop();
   };
 
+  const createTemplate = () => {
+    modal.put(<CreateTemplateModal />);
+  };
+
   return (
     <>
       <h3>Add Plant</h3>
       <p>Use template?</p>
       <Checkbox value={custom} setValue={setCustom} />
+
       {custom && <TextBox value={name} setValue={setName} />}
-      {!custom && (
+      {!custom && templatesAvailable && (
         <Dropdown options={templates} value={template} setValue={setTemplate} />
+      )}
+      {!custom && !templatesAvailable && (
+        <>
+          <p>No template available.</p>
+          <button onClick={createTemplate}>Create template</button>
+        </>
       )}
 
       <br />

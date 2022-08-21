@@ -15,6 +15,10 @@ const Nursery = () => {
     modal.put(<CreateTemplateModal />);
   };
 
+  const handleClose = () => {
+    modal.pop();
+  };
+
   return (
     <>
       <h1>Nursery</h1>
@@ -22,11 +26,14 @@ const Nursery = () => {
       {templates.map((template) => (
         <Template template={template} key={template.identifier} />
       ))}
+
+      <br />
+      <button onClick={handleClose}>Close</button>
     </>
   );
 };
 
-const CreateTemplateModal = () => {
+export const CreateTemplateModal = () => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const [name, setName] = useState("");
