@@ -105,7 +105,8 @@ export const store = configureStore({
 
           bed.elements.push({ ...head, ...body });
         });
-      case "garden/plant/removed":
+
+      case "garden/element/removed":
         return produce(state, (draft) => {
           for (const bed of draft.garden) {
             if (
@@ -119,7 +120,7 @@ export const store = configureStore({
             }
           }
         });
-      case "garden/plant/edited":
+      case "garden/element/edited":
         return produce(state, (draft) => {});
 
       default:
@@ -180,6 +181,6 @@ export const addCustomPlant = (bed, name) => {
   };
 };
 
-export const removePlant = (plant) => {
-  return { type: "garden/plant/removed", payload: plant.identifier };
+export const removeElement = (element) => {
+  return { type: "garden/element/removed", payload: element.identifier };
 };
