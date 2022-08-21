@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
 import { editTemplate, removeTemplate } from "../../model/store";
 import { Modal } from "../../model/context";
-import { ColourPicker, NumericTextBox, TextBox } from "../common";
+import { ColourPicker, NumericTextBox, space, TextBox } from "../common";
 
 const Template = ({ template }) => {
   const dispatch = useDispatch();
@@ -30,8 +30,8 @@ const Template = ({ template }) => {
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <p style={{ display: "inline-block" }}>{template.name}</p>
 
-      {hovered && <button onClick={handleRemoveTemplate}>Remove</button>}
-      {hovered && <button onClick={handleEdit}>Edit</button>}
+      {hovered && space(<button onClick={handleRemoveTemplate}>Remove</button>)}
+      {hovered && space(<button onClick={handleEdit}>Edit</button>)}
     </div>
   );
 };
@@ -66,9 +66,11 @@ const EditTemplateModal = ({ template }) => {
       <p>Colour</p>
       <ColourPicker value={colour} setValue={setColour} />
 
-      <p />
+      <br />
+      <br />
+
       <button onClick={onDone}>Done</button>
-      <button onClick={onCancel}>Cancel</button>
+      {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
 };

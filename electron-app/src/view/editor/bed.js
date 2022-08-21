@@ -48,10 +48,9 @@ const Bed = ({ bed }) => {
         style={{ backgroundColor: background }}
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
-        &nbsp;
         {hovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
         {hovered && space(<button onClick={handleRename}>Rename</button>)}
-        {hovered && <button onClick={handleAddPlant}>Add Plant</button>}
+        {hovered && space(<button onClick={handleAddPlant}>Add Plant</button>)}
       </div>
 
       <div style={{ marginLeft: "20px" }}>
@@ -79,8 +78,8 @@ const RenameBedModal = ({ bed }) => {
     <>
       <h3>Rename Bed</h3>
       <TextBox value={name} setValue={setName} />
-      <button onClick={onDone}>Done</button>
-      <button onClick={onCancel}>Cancel</button>
+      {space(<button onClick={onDone}>Done</button>)}
+      {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
 };
@@ -140,7 +139,7 @@ const AddPlantModal = ({ bed }) => {
       <button onClick={onDone} disabled={!custom && !templatesAvailable}>
         Done
       </button>
-      <button onClick={onCancel}>Cancel</button>
+      {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
 };

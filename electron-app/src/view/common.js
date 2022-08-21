@@ -96,8 +96,8 @@ export const Dropdown = (props) => {
 export const space = (element) => {
   return (
     <>
-      {element}
       &nbsp;
+      {element}
     </>
   );
 };

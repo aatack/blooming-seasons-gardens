@@ -4,7 +4,7 @@ import { Modal } from "../../model/context";
 import { addTemplate } from "../../model/store";
 import Template from "./template";
 import { useDispatch } from "react-redux";
-import { TextBox } from "../common";
+import { space, TextBox } from "../common";
 import { useState } from "react";
 
 const Nursery = () => {
@@ -52,7 +52,7 @@ export const CreateTemplateModal = () => {
       <h3>Create Template</h3>
       <TextBox value={name} setValue={setName} />
       <button onClick={onDone}>Done</button>
-      <button onClick={onCancel}>Cancel</button>
+      {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
 };
