@@ -35,7 +35,7 @@ export const store = configureStore({
             name: action.payload
               ? action.payload
               : "Template " + state.identifier.toString(),
-            size: "5", // TODO: change sizes to numbers
+            size: 0.5,
             colour: "#aabbcc",
           });
         });
