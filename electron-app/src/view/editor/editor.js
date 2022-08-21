@@ -10,7 +10,6 @@ const Editor = () => {
   const [_, setModal] = useContext(Modal);
 
   const handleAddBed = () => {
-    console.log("Adding bed");
     setModal({ modal: <CreateBedModal /> });
   };
 

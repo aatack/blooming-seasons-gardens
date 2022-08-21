@@ -72,3 +72,23 @@ export const renameBed = (identifier, name) => {
     payload: { identifier: identifier, name: name },
   };
 };
+
+export const addTemplate = (name) => {
+  return { type: "nursery/template/added", payload: name };
+};
+
+export const removeTemplate = (identifier) => {
+  return { type: "nursery/template/removed", payload: identifier };
+};
+
+export const editTemplate = (identifier, name, size, colour) => {
+  return {
+    type: "nursery/template/edited",
+    payload: {
+      identifier: identifier,
+      name: name,
+      size: size,
+      colour: colour,
+    },
+  };
+};
