@@ -30,6 +30,13 @@ export const Modal = (() => {
     };
 
     if (modal) {
+      if (!modal.modal) {
+        console.warn(
+          "Modal needs to be wrapped in an object with a `modal` key",
+          modal
+        );
+      }
+
       return (
         <div onClick={closeModal} className="modal-background">
           <div
