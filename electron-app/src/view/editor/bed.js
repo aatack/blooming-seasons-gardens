@@ -9,6 +9,7 @@ const Bed = ({ bed }) => {
 
   const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);
+  const [background, setBackground] = useState(null);
 
   const handleRemoveBed = () => {
     dispatch(removeBed(bed.identifier));
@@ -20,14 +21,21 @@ const Bed = ({ bed }) => {
 
   const handleMouseEnter = () => {
     setHovered(true);
+    setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
     setHovered(false);
+    setBackground(null);
   };
 
   return (
-    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      className="bed-editor"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ backgroundColor: background }}
+    >
       <p style={{ display: "inline-block" }}>{bed.name}</p>
 
       {hovered && <button onClick={handleRemoveBed}>Remove</button>}
