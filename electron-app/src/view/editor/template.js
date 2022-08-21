@@ -11,7 +11,7 @@ const Template = ({ template }) => {
   const [hovered, setHovered] = useState(false);
 
   const handleRemoveTemplate = () => {
-    dispatch(removeTemplate(template.identifier));
+    dispatch(removeTemplate(template));
   };
 
   const handleEdit = () => {

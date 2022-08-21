@@ -106,7 +106,19 @@ export const store = configureStore({
           bed.elements.push({ ...head, ...body });
         });
       case "garden/plant/removed":
-        return produce(state, (draft) => {});
+        return produce(state, (draft) => {
+          for (const bed of draft.garden) {
+            if (
+              bed.elements.find(
+                (element) => element.identifier === action.payload
+              )
+            ) {
+              bed.elements = bed.elements.filter(
+                (element) => element.identifier !== action.payload
+              );
+            }
+          }
+        });
       case "garden/plant/edited":
         return produce(state, (draft) => {});
 
@@ -120,8 +132,8 @@ export const addBed = (name) => {
   return { type: "garden/bed/added", payload: name };
 };
 
-export const removeBed = (identifier) => {
-  return { type: "garden/bed/removed", payload: identifier };
+export const removeBed = (bed) => {
+  return { type: "garden/bed/removed", payload: bed.identifier };
 };
 
 export const renameBed = (identifier, name) => {
@@ -135,8 +147,8 @@ export const addTemplate = (name) => {
   return { type: "nursery/template/added", payload: name };
 };
 
-export const removeTemplate = (identifier) => {
-  return { type: "nursery/template/removed", payload: identifier };
+export const removeTemplate = (template) => {
+  return { type: "nursery/template/removed", payload: template.identifier };
 };
 
 export const editTemplate = (identifier, name, size, colour) => {
@@ -149,4 +161,25 @@ export const editTemplate = (identifier, name, size, colour) => {
       colour: colour,
     },
   };
+};
+
+export const addTemplatePlant = (bed, template) => {
+  return {
+    type: "garden/plant/added",
+    payload: {
+      bedIdentifier: bed.identifier,
+      templateIdentifier: template.identifier,
+    },
+  };
+};
+
+export const addCustomPlant = (bed, name) => {
+  return {
+    type: "garden/plant/added",
+    payload: { bedIdentifier: bed.identifier, name: name },
+  };
+};
+
+export const removePlant = (plant) => {
+  return { type: "garden/plant/removed", payload: plant.identifier };
 };

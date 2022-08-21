@@ -12,7 +12,7 @@ const Bed = ({ bed }) => {
   const [background, setBackground] = useState(null);
 
   const handleRemoveBed = () => {
-    dispatch(removeBed(bed.identifier));
+    dispatch(removeBed(bed));
   };
 
   const handleRename = () => {
