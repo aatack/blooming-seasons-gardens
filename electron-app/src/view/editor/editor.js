@@ -30,8 +30,6 @@ const Editor = () => {
   );
 };
 
-export default Editor;
-
 const CreateBedModal = () => {
   const dispatch = useDispatch();
   const [_, setModal] = useContext(Modal);
@@ -55,3 +53,5 @@ const CreateBedModal = () => {
     </>
   );
 };
+
+export default Editor;
