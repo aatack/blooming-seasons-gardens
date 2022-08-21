@@ -121,7 +121,13 @@ export const store = configureStore({
           }
         });
       case "garden/element/edited":
-        return produce(state, (draft) => {});
+        return produce(state, (draft) => {
+          const element = findByIdentifier(draft, action.payload.identifier);
+
+          for (const key in action.payload.edits) {
+            element[key] = action.payload.edits[key];
+          }
+        });
 
       default:
         return state;
@@ -183,4 +189,14 @@ export const addCustomPlant = (bed, name) => {
 
 export const removeElement = (element) => {
   return { type: "garden/element/removed", payload: element.identifier };
+};
+
+export const editElement = (element, edits) => {
+  return {
+    type: "garden/element/edited",
+    payload: {
+      identifier: element.identifier,
+      edits: edits,
+    },
+  };
 };
