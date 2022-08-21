@@ -9,6 +9,7 @@ import {
 import { Checkbox, TextBox, Dropdown } from "../common";
 import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
+import Plant from "./plant";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -40,17 +41,23 @@ const Bed = ({ bed }) => {
   };
 
   return (
-    <div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: background }}
-    >
-      <p style={{ display: "inline-block" }}>{bed.name}</p>
+    <>
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={{ backgroundColor: background }}
+      >
+        <p style={{ display: "inline-block" }}>{bed.name}</p>
 
-      {hovered && <button onClick={handleRemoveBed}>Remove</button>}
-      {hovered && <button onClick={handleRename}>Rename</button>}
-      {hovered && <button onClick={handleAddPlant}>Add Plant</button>}
-    </div>
+        {hovered && <button onClick={handleRemoveBed}>Remove</button>}
+        {hovered && <button onClick={handleRename}>Rename</button>}
+        {hovered && <button onClick={handleAddPlant}>Add Plant</button>}
+      </div>
+
+      <div style={{ marginLeft: "20px" }}>
+        {bed.elements.map(renderElement)}
+      </div>
+    </>
   );
 };
 
@@ -135,6 +142,19 @@ const AddPlantModal = ({ bed }) => {
       <button onClick={onCancel}>Cancel</button>
     </>
   );
+};
+
+const renderElement = (element) => {
+  switch (element.type) {
+    case "plant":
+      return <Plant key={element.identifier} plant={element} />;
+    default:
+      console.warning(
+        "Cannot render element with the following type:",
+        element.type
+      );
+      return null;
+  }
 };
 
 export default Bed;
