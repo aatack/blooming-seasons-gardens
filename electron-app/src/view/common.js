@@ -2,6 +2,7 @@ import { useState } from "react";
 
 // TODO: look into React's handling of forms
 // TODO: have all of the widgets take the output of `useState` directly
+// TODO: add labels to each of these
 
 export const TextBox = (props) => {
   const [value, setValue] = useState(props.value);

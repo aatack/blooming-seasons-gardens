@@ -11,7 +11,7 @@ const example = {
           position: { x: 6, y: 1.2 },
           name: "Clover",
           size: 0.005,
-          colour: "0000e3",
+          colour: "#005a00",
         },
         {
           identifier: 6,
