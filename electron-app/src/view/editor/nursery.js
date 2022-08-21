@@ -12,7 +12,7 @@ const Nursery = () => {
   const modal = useContext(Modal);
 
   const handleAddTemplate = () => {
-    modal.set(<CreateTemplateModal />);
+    modal.put(<CreateTemplateModal />);
   };
 
   return (
@@ -33,11 +33,11 @@ const CreateTemplateModal = () => {
 
   const onDone = () => {
     dispatch(addTemplate(name));
-    modal.set(<Nursery />);
+    modal.pop();
   };
 
   const onCancel = () => {
-    modal.set(<Nursery />);
+    modal.pop();
   };
 
   return (

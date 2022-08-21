@@ -15,7 +15,7 @@ const Bed = ({ bed }) => {
   };
 
   const handleRename = () => {
-    modal.set(<RenameBedModal bed={bed} />);
+    modal.put(<RenameBedModal bed={bed} />);
   };
 
   const handleMouseEnter = () => {
@@ -43,11 +43,11 @@ const RenameBedModal = ({ bed }) => {
 
   const onDone = () => {
     dispatch(renameBed(bed.identifier, name));
-    modal.set();
+    modal.pop();
   };
 
   const onCancel = () => {
-    modal.set();
+    modal.pop();
   };
 
   return (

@@ -11,11 +11,11 @@ const Editor = () => {
   const modal = useContext(Modal);
 
   const handleAddBed = () => {
-    modal.set(<CreateBedModal />);
+    modal.put(<CreateBedModal />);
   };
 
   const handleViewNursery = () => {
-    modal.set(<Nursery />);
+    modal.put(<Nursery />);
   };
 
   const garden = useSelector((state) => state.garden);
@@ -37,11 +37,11 @@ const CreateBedModal = () => {
 
   const onDone = () => {
     dispatch(addBed(name));
-    modal.set();
+    modal.pop();
   };
 
   const onCancel = () => {
-    modal.set();
+    modal.pop();
   };
 
   return (

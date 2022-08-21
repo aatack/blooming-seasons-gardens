@@ -9,9 +9,15 @@ export const Modal = (() => {
     const [modals, setModals] = useState([]);
 
     return {
-      get: () => (modals.length > 0 ? modals[modals.length - 1] : null),
-      set: (modal) => {
-        setModals(modal ? [modal] : []);
+      get: () => (modals.length > 0 ? modals[0] : null),
+      put: (modal) => {
+        setModals(modal ? [modal].concat(modals) : modals);
+      },
+      pop: () => {
+        setModals(modals.slice(1));
+      },
+      set: (stack) => {
+        setModals(stack);
       },
     };
   };
@@ -24,7 +30,7 @@ export const Modal = (() => {
     const manager = useContext(Context);
 
     const closeModal = () => {
-      manager.set();
+      manager.set([]);
     };
 
     const modal = manager.get();

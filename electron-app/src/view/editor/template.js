@@ -15,7 +15,7 @@ const Template = ({ template }) => {
   };
 
   const handleEdit = () => {
-    modal.set(<EditTemplateModal template={template} />);
+    modal.put(<EditTemplateModal template={template} />);
   };
 
   const handleMouseEnter = () => {
@@ -46,11 +46,11 @@ const EditTemplateModal = ({ template }) => {
 
   const onDone = () => {
     dispatch(editTemplate(template.identifier, name, size, colour));
-    modal.set();
+    modal.pop();
   };
 
   const onCancel = () => {
-    modal.set(); // TODO: enable modals to go back
+    modal.pop();
   };
 
   return (
