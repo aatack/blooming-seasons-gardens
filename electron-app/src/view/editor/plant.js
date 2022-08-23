@@ -55,6 +55,7 @@ const Plant = ({ plant }) => {
 
 const EditPlantModal = ({ plant }) => {
   const modal = useContext(Modal);
+  const template = useTemplate(plant.template);
 
   const [name, setName] = useState(plant.name);
   const [x, setX] = useState(plant.position.x);
@@ -71,20 +72,27 @@ const EditPlantModal = ({ plant }) => {
     modal.pop();
   };
 
-  // TODO: handle the case where the plant is derived from a template
-
   return (
     <>
       <h3>Edit Plant</h3>
-      <p>Name</p>
-      <TextBox value={name} setValue={setName} />
+      {!template && (
+        <>
+          <p>Name</p>
+          <TextBox value={name} setValue={setName} />
+        </>
+      )}
+      {template && <p>Template: {template.name}</p>}
       <p>Position</p>
       x = <NumericTextBox value={x} setValue={setX} />, y ={" "}
       <NumericTextBox value={y} setValue={setY} />
-      <p>Size</p>
-      <NumericTextBox value={size} setValue={setSize} />
-      <p>Colour</p>
-      <ColourPicker value={colour} setValue={setColour} />
+      {!template && (
+        <>
+          <p>Size</p>
+          <NumericTextBox value={size} setValue={setSize} />
+          <p>Colour</p>
+          <ColourPicker value={colour} setValue={setColour} />
+        </>
+      )}
       <br />
       <br />
       <button onClick={handleDone}>Done</button>
