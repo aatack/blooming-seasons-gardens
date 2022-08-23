@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
 import { ColourPicker, NumericTextBox, space, TextBox } from "../common";
-import { removeElement } from "../../model/store";
+import { editElement, removeElement } from "../../model/store";
 import { Modal } from "../../model/context";
 
 const Plant = ({ plant }) => {
@@ -55,6 +55,7 @@ const Plant = ({ plant }) => {
 
 const EditPlantModal = ({ plant }) => {
   const modal = useContext(Modal);
+  const dispatch = useDispatch();
   const template = useTemplate(plant.template);
 
   const [name, setName] = useState(plant.name);
@@ -64,7 +65,19 @@ const EditPlantModal = ({ plant }) => {
   const [colour, setColour] = useState(plant.colour);
 
   const handleDone = () => {
-    // TODO: dispatch the changes
+    if (template) {
+      dispatch(editElement(plant, { position: { x: x, y: y } }));
+    } else {
+      dispatch(
+        editElement(plant, {
+          position: { x: x, y: y },
+          name: name,
+          size: size,
+          colour: colour,
+        })
+      );
+    }
+
     modal.pop();
   };
 
