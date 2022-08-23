@@ -108,6 +108,19 @@ export const store = configureStore({
           bed.elements.push({ ...head, ...body });
         });
 
+      case "garden/label/added":
+        return produce(state, (draft) => {
+          draft.identifier += 1;
+          const bed = findByIdentifier(draft, action.payload.bedIdentifier);
+
+          bed.elements.push({
+            type: "label",
+            text: action.payload.text,
+            position: { x: 0, y: 0 },
+            size: 12,
+          });
+        });
+
       case "garden/element/removed":
         return produce(state, (draft) => {
           for (const bed of draft.garden) {
