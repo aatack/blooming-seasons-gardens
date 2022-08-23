@@ -114,6 +114,7 @@ export const store = configureStore({
           const bed = findByIdentifier(draft, action.payload.bedIdentifier);
 
           bed.elements.push({
+            identifier: state.identifier,
             type: "label",
             text: action.payload.text,
             position: { x: 0, y: 0 },
@@ -199,6 +200,13 @@ export const addCustomPlant = (bed, name) => {
   return {
     type: "garden/plant/added",
     payload: { bedIdentifier: bed.identifier, name: name },
+  };
+};
+
+export const addLabel = (bed, text) => {
+  return {
+    type: "garden/label/added",
+    payload: { bedIdentifier: bed.identifier, text: text },
   };
 };
 

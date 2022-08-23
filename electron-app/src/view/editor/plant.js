@@ -39,7 +39,7 @@ const Plant = ({ plant }) => {
       style={{ backgroundColor: background }}
     >
       <p style={{ display: "inline-block" }}>
-        {template ? template.name : plant.name}
+        Plant: {template ? template.name : plant.name}
       </p>
       {space(
         <p style={{ display: "inline-block" }}>

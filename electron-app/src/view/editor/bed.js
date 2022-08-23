@@ -10,6 +10,7 @@ import { Checkbox, TextBox, Dropdown, space } from "../common";
 import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
 import Plant from "./plant";
+import Label from "./label";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -148,6 +149,8 @@ const renderElement = (element) => {
   switch (element.type) {
     case "plant":
       return <Plant key={element.identifier} plant={element} />;
+    case "label":
+      return <Label key={element.identifier} label={element} />;
     default:
       console.warning(
         "Cannot render element with the following type:",

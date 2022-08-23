@@ -31,6 +31,12 @@ const example = {
           position: { x: 12.04, y: 7 },
           template: 1,
         },
+        {
+          identifier: 8,
+          type: "label",
+          position: { x: 13, y: 6 },
+          text: "Daffodil",
+        },
       ],
     },
   ],
