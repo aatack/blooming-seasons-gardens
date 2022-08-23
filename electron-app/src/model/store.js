@@ -116,7 +116,9 @@ export const store = configureStore({
           bed.elements.push({
             identifier: state.identifier,
             type: "label",
-            text: action.payload.text,
+            text: action.payload.text
+              ? action.payload.text
+              : "Label " + state.identifier.toString(),
             position: { x: 0, y: 0 },
             size: 12,
           });

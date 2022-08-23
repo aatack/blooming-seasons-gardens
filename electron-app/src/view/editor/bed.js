@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useContext, useState } from "react";
 import {
   addCustomPlant,
+  addLabel,
   addTemplatePlant,
   removeBed,
   renameBed,
@@ -31,6 +32,10 @@ const Bed = ({ bed }) => {
     modal.put(<AddPlantModal bed={bed} />);
   };
 
+  const handleAddLabel = () => {
+    modal.put(<AddLabelModal bed={bed} />);
+  };
+
   const handleMouseEnter = () => {
     setHovered(true);
     setBackground("lightBlue");
@@ -52,6 +57,7 @@ const Bed = ({ bed }) => {
         {hovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
         {hovered && space(<button onClick={handleRename}>Rename</button>)}
         {hovered && space(<button onClick={handleAddPlant}>Add Plant</button>)}
+        {hovered && space(<button onClick={handleAddLabel}>Add Label</button>)}
       </div>
 
       <div style={{ marginLeft: "20px" }}>
@@ -140,6 +146,37 @@ const AddPlantModal = ({ bed }) => {
       <button onClick={onDone} disabled={!custom && !templatesAvailable}>
         Done
       </button>
+      {space(<button onClick={onCancel}>Cancel</button>)}
+    </>
+  );
+};
+
+const AddLabelModal = ({ bed }) => {
+  const modal = useContext(Modal);
+  const dispatch = useDispatch();
+
+  const [text, setText] = useState("");
+
+  const onDone = () => {
+    dispatch(addLabel(bed, text));
+    modal.pop();
+  };
+
+  const onCancel = () => {
+    modal.pop();
+  };
+
+  return (
+    <>
+      <h3>Add Label</h3>
+
+      <p>Text</p>
+      <TextBox value={text} setValue={setText} />
+
+      <br />
+      <br />
+
+      <button onClick={onDone}>Done</button>
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
