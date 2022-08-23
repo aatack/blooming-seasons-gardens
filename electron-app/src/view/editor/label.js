@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { space, TextBox } from "../common";
+import { space, TextBox, NumericTextBox } from "../common";
 import { editElement, removeElement } from "../../model/store";
 import { Modal } from "../../model/context";
 
@@ -36,6 +36,11 @@ const Label = ({ label }) => {
       style={{ backgroundColor: background }}
     >
       <p style={{ display: "inline-block" }}>Label: {label.text}</p>
+      {space(
+        <p style={{ display: "inline-block" }}>
+          (x = {label.position.x}, y = {label.position.y})
+        </p>
+      )}
 
       {hovered && space(<button onClick={handleEdit}>Edit</button>)}
       {hovered && space(<button onClick={handleRemove}>Remove</button>)}
@@ -45,11 +50,14 @@ const Label = ({ label }) => {
 
 const EditLabelModal = ({ label }) => {
   const modal = useContext(Modal);
-  const [text, setText] = useState(label.text);
   const dispatch = useDispatch();
 
+  const [text, setText] = useState(label.text);
+  const [x, setX] = useState(label.position.x);
+  const [y, setY] = useState(label.position.y);
+
   const onDone = () => {
-    dispatch(editElement(label, { text: text }));
+    dispatch(editElement(label, { text: text, position: { x: x, y: y } }));
     modal.pop();
   };
 
@@ -60,13 +68,13 @@ const EditLabelModal = ({ label }) => {
   return (
     <>
       <h3>Edit Label</h3>
-
       <p>Text</p>
       <TextBox value={text} setValue={setText} />
-
+      <p>Position</p>
+      x = <NumericTextBox value={x} setValue={setX} />, y ={" "}
+      <NumericTextBox value={y} setValue={setY} />
       <br />
       <br />
-
       <button onClick={onDone}>Done</button>
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
