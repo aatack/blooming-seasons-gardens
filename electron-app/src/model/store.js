@@ -124,6 +124,20 @@ export const store = configureStore({
           });
         });
 
+      case "garden/arrow/added":
+        return produce(state, (draft) => {
+          draft.identifier += 1;
+          const bed = findByIdentifier(draft, action.payload.bedIdentifier);
+
+          bed.elements.push({
+            identifier: state.identifier,
+            type: "arrow",
+            start: action.payload.start,
+            end: action.payload.end,
+            width: 2,
+          });
+        });
+
       case "garden/element/removed":
         return produce(state, (draft) => {
           for (const bed of draft.garden) {
@@ -209,6 +223,13 @@ export const addLabel = (bed, text) => {
   return {
     type: "garden/label/added",
     payload: { bedIdentifier: bed.identifier, text: text },
+  };
+};
+
+export const addArrow = (bed, start, end) => {
+  return {
+    type: "garden/arrow/added",
+    payload: { bedIdentifier: bed.identifier, start: start, end: end },
   };
 };
 
