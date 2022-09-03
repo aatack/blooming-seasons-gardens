@@ -226,10 +226,14 @@ export const addLabel = (bed, text) => {
   };
 };
 
-export const addArrow = (bed, start, end) => {
+export const addArrow = (bed) => {
   return {
     type: "garden/arrow/added",
-    payload: { bedIdentifier: bed.identifier, start: start, end: end },
+    payload: {
+      bedIdentifier: bed.identifier,
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    },
   };
 };
 

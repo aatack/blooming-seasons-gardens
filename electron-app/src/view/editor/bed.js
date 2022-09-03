@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useState } from "react";
 import {
+  addArrow,
   addCustomPlant,
   addLabel,
   addTemplatePlant,
@@ -37,6 +38,10 @@ const Bed = ({ bed }) => {
     modal.put(<AddLabelModal bed={bed} />);
   };
 
+  const handleAddArrow = () => {
+    dispatch(addArrow(bed));
+  };
+
   const handleMouseEnter = () => {
     setHovered(true);
     setBackground("lightBlue");
@@ -59,6 +64,7 @@ const Bed = ({ bed }) => {
         {hovered && space(<button onClick={handleRename}>Rename</button>)}
         {hovered && space(<button onClick={handleAddPlant}>Add Plant</button>)}
         {hovered && space(<button onClick={handleAddLabel}>Add Label</button>)}
+        {hovered && space(<button onClick={handleAddArrow}>Add Arrow</button>)}
       </div>
 
       <div style={{ marginLeft: "20px" }}>
