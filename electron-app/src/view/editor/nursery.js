@@ -4,7 +4,7 @@ import { Modal } from "../../model/context";
 import { addTemplate } from "../../model/store";
 import Template from "./template";
 import { useDispatch } from "react-redux";
-import { space, TextBox } from "../common";
+import { space, TextBox } from "../common/input";
 import { useState } from "react";
 
 const Nursery = () => {

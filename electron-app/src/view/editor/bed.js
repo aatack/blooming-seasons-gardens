@@ -8,7 +8,7 @@ import {
   removeBed,
   renameBed,
 } from "../../model/store";
-import { Checkbox, TextBox, Dropdown, space } from "../common";
+import { Checkbox, TextBox, Dropdown, space } from "../common/input";
 import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
 import Plant from "./plant";

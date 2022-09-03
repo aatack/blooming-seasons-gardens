@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addBed } from "../../model/store";
-import { space, TextBox } from "../common";
+import { space, TextBox } from "../common/input";
 import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";

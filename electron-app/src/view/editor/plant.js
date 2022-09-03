@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
-import { ColourPicker, NumericTextBox, space, TextBox } from "../common";
+import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
 import { editElement, removeElement } from "../../model/store";
 import { Modal } from "../../model/context";
 

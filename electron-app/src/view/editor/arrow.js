@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { space, NumericTextBox } from "../common";
+import { space, NumericTextBox } from "../common/input";
 import { editElement, removeElement } from "../../model/store";
 import { Modal } from "../../model/context";
 
