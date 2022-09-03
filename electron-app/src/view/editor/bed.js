@@ -12,6 +12,7 @@ import { Modal } from "../../model/context";
 import { CreateTemplateModal } from "./nursery";
 import Plant from "./plant";
 import Label from "./label";
+import Arrow from "./arrow";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -188,8 +189,10 @@ const renderElement = (element) => {
       return <Plant key={element.identifier} plant={element} />;
     case "label":
       return <Label key={element.identifier} label={element} />;
+    case "arrow":
+      return <Arrow key={element.identifier} arrow={element} />;
     default:
-      console.warning(
+      console.warn(
         "Cannot render element with the following type:",
         element.type
       );

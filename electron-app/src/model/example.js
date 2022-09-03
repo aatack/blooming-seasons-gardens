@@ -37,6 +37,13 @@ const example = {
           position: { x: 13, y: 6 },
           text: "Daffodil",
         },
+        {
+          identifier: 9,
+          type: "arrow",
+          start: { x: 11, y: 8 },
+          end: { x: 14, y: 5 },
+          width: 1,
+        },
       ],
     },
   ],
