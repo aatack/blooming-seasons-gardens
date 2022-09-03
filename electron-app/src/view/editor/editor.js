@@ -20,7 +20,15 @@ const Editor = () => {
 
   const garden = useSelector((state) => state.garden);
   return (
-    <div style={{ backgroundColor: "lightGrey", padding: 8 }}>
+    <div
+      style={{
+        backgroundColor: "lightGrey",
+        padding: 8,
+        paddingRight: 0,
+        width: "100%",
+        height: "100%",
+      }}
+    >
       <button onClick={handleAddBed}>Add Bed</button>
       {space(<button onClick={handleViewNursery}>View Nursery</button>)}
       {garden.map((bed) => (
