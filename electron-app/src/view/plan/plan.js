@@ -1,25 +1,17 @@
-import { useState } from "react";
-import { SVGViewer } from "../common/rendering";
+import { Scale, SVGViewer } from "../common/rendering";
+import Bed from "./bed";
+import { useSelector } from "react-redux";
 
 const Plan = () => {
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-
-  const handleWheel = (e) => {
-    console.log("Scrolled", e);
-  };
-
-  const handleMouseMove = (e) => {
-    if (e.buttons == 1) {
-      // Left mouse button held
-      setX(x - e.movementX);
-      setY(y - e.movementY);
-    }
-  };
+  const garden = useSelector((state) => state.garden);
 
   return (
     <SVGViewer style={{ width: "100%", height: "100%" }}>
-      <rect x={100} y={100} width={400} height={200} />
+      <Scale scale={50}>
+        {garden.map((bed) => (
+          <Bed bed={bed} key={bed.identifier} />
+        ))}
+      </Scale>
     </SVGViewer>
   );
 };

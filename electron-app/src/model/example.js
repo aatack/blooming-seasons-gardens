@@ -10,7 +10,7 @@ const example = {
           type: "plant",
           position: { x: 6, y: 1.2 },
           name: "Clover",
-          size: 0.005,
+          size: 0.05,
           colour: "#005a00",
         },
         {
@@ -48,8 +48,8 @@ const example = {
     },
   ],
   nursery: [
-    { identifier: 1, name: "Daffodil", size: 0.05, colour: "#f1b7c2" },
-    { identifier: 2, name: "Tulip", size: 0.02, colour: "#1a5c96" },
+    { identifier: 1, name: "Daffodil", size: 0.5, colour: "#f1b7c2" },
+    { identifier: 2, name: "Tulip", size: 0.2, colour: "#1a5c96" },
   ],
 };
 

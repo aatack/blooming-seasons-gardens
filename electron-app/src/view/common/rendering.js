@@ -61,12 +61,14 @@ export const SVGViewer = ({
   };
 
   const handleWheel = (e) => {
-    const offset = svgElement.current.getBoundingClientRect();
-    zoom(
-      (e.clientX - offset.x) / scale - x,
-      (e.clientY - offset.y) / scale - y,
-      1 - e.deltaY * 0.002
-    );
+    if (!dragging) {
+      const offset = svgElement.current.getBoundingClientRect();
+      zoom(
+        (e.clientX - offset.x) / scale - x,
+        (e.clientY - offset.y) / scale - y,
+        1 - e.deltaY * 0.002
+      );
+    }
   };
 
   return (
