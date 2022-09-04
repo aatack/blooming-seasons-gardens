@@ -23,16 +23,17 @@ const Editor = () => {
     <div
       style={{
         backgroundColor: "lightGrey",
-        padding: "8px -8px 8px 8px",
         width: "100%",
         height: "100%",
       }}
     >
-      <button onClick={handleAddBed}>Add Bed</button>
-      {space(<button onClick={handleViewNursery}>View Nursery</button>)}
-      {garden.map((bed) => (
-        <Bed bed={bed} key={bed.identifier} />
-      ))}
+      <div style={{ padding: 8 }}>
+        <button onClick={handleAddBed}>Add Bed</button>
+        {space(<button onClick={handleViewNursery}>View Nursery</button>)}
+        {garden.map((bed) => (
+          <Bed bed={bed} key={bed.identifier} />
+        ))}
+      </div>
     </div>
   );
 };
