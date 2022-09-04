@@ -55,9 +55,12 @@ const EditLabelModal = ({ label }) => {
   const [text, setText] = useState(label.text);
   const [x, setX] = useState(label.position.x);
   const [y, setY] = useState(label.position.y);
+  const [size, setSize] = useState(label.size);
 
   const onDone = () => {
-    dispatch(editElement(label, { text: text, position: { x: x, y: y } }));
+    dispatch(
+      editElement(label, { text: text, position: { x: x, y: y }, size: size })
+    );
     modal.pop();
   };
 
@@ -73,6 +76,8 @@ const EditLabelModal = ({ label }) => {
       <p>Position</p>
       x = <NumericTextBox value={x} setValue={setX} />, y ={" "}
       <NumericTextBox value={y} setValue={setY} />
+      <p>Size</p>
+      <NumericTextBox value={size} setValue={setSize} />
       <br />
       <br />
       <button onClick={onDone}>Done</button>

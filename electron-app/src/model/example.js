@@ -36,6 +36,7 @@ const example = {
           type: "label",
           position: { x: 13, y: 6 },
           text: "Daffodil",
+          size: 12,
         },
         {
           identifier: 9,
