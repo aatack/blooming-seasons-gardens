@@ -134,7 +134,7 @@ export const store = configureStore({
             type: "arrow",
             start: action.payload.start,
             end: action.payload.end,
-            width: 2,
+            width: 4,
           });
         });
 
