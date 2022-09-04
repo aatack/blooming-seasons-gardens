@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { clamp } from "./maths";
 
 export const SVGViewer = ({
@@ -8,11 +8,13 @@ export const SVGViewer = ({
   initialScale,
   onClick,
 }) => {
+  const svgElement = useRef();
+
   const [x, setX] = useState(initialX || 0);
   const [y, setY] = useState(initialY || 0);
   const [scale, setScale] = useState(initialScale || 1);
 
-  const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
+  const [initialPosition, setInitialPosition] = useState(null);
 
   const [dragX, setDragX] = useState(0);
   const [dragY, setDragY] = useState(0);
@@ -40,6 +42,7 @@ export const SVGViewer = ({
   };
 
   const handleDragStart = (e) => {
+    console.log("Dragging start");
     // Use an empty image as the ghost image that gets displayed during dragging
     // e.dataTransfer.setDragImage(
     //   document.createElement("img"),
@@ -52,13 +55,17 @@ export const SVGViewer = ({
 
     setDragScale(e.ctrlKey);
 
-    setInitialPosition({
-      x: e.clientX,
-      y: e.clientY,
-    });
+    const offset = e.target.getBoundingClientRect();
+    if (initialPosition === null) {
+      setInitialPosition({
+        x: e.clientX - offset.x,
+        y: e.clientY - offset.y,
+      });
+    }
   };
 
   const handleClick = () => {
+    console.log("On click");
     if (onClick) {
       onClick();
     }
@@ -89,6 +96,7 @@ export const SVGViewer = ({
       }
     } else if (dragging) {
       setDragging(false);
+      setInitialPosition(null);
     }
 
     if (dragging) {
@@ -96,17 +104,24 @@ export const SVGViewer = ({
     }
   };
 
+  const handleWheel = (e) => {
+    const offset = svgElement.current.getBoundingClientRect();
+    console.log(e.deltaY);
+    doScale(
+      (e.clientX - offset.x) / scale - x,
+      (e.clientY - offset.y) / scale - y,
+      1 - e.deltaY * 0.002
+    );
+  };
+
   return (
     <div
-      // draggable={true}
-      // onDragStart={handleDragStart}
-      // onDrag={handleDrag}
-      // onDragOver={handleDragOver}
+      onWheel={handleWheel}
       onMouseMove={handleMouseMove}
-      // onClick={handleClick}
+      onClick={handleClick}
       style={{ width: "100%", height: "100%" }}
     >
-      <svg style={{ width: "100%", height: "100%" }}>
+      <svg ref={svgElement} style={{ width: "100%", height: "100%" }}>
         <Scale scale={scale}>
           <Translate x={x} y={y}>
             {children}
