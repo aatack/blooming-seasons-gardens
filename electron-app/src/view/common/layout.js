@@ -13,7 +13,14 @@ export const HorizontalSplit = ({ children, dragWidth, minimumWidth }) => {
 
   const handleDrag = (e) => {
     if (e.clientX) {
-      setWidth(clamp(width - x + e.clientX, minimumWidth, window.innerWidth - minimumWidth));
+      // TODO: stop the mouse from moving away from the drag box at the extremes
+      setWidth(
+        clamp(
+          width - x + e.clientX,
+          minimumWidth,
+          window.innerWidth - minimumWidth
+        )
+      );
       setX(e.clientX);
     }
   };
