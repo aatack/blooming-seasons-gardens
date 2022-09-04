@@ -17,6 +17,22 @@ export const SVGViewer = ({
   const [dragX, setDragX] = useState(0);
   const [dragY, setDragY] = useState(0);
   const [dragScale, setDragScale] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  const doMove = (dx, dy) => {
+    setX(x + dx);
+    setY(y + dy);
+  };
+
+  const doScale = (fixedX, fixedY, zoom) => {
+    const newScale = clamp(scale * zoom, 1 / 100, 100);
+    const actualZoom = newScale / scale;
+
+    setX((fixedX + x) / actualZoom - fixedX);
+    setY((fixedY + y) / actualZoom - fixedY);
+
+    setScale(newScale);
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -25,21 +41,20 @@ export const SVGViewer = ({
 
   const handleDragStart = (e) => {
     // Use an empty image as the ghost image that gets displayed during dragging
-    e.dataTransfer.setDragImage(
-      document.createElement("img"),
-      window.outerWidth,
-      window.outerHeight
-    );
+    // e.dataTransfer.setDragImage(
+    //   document.createElement("img"),
+    //   window.outerWidth,
+    //   window.outerHeight
+    // );
 
     setDragX(e.clientX);
     setDragY(e.clientY);
 
     setDragScale(e.ctrlKey);
 
-    const offset = e.target.getBoundingClientRect();
     setInitialPosition({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
+      x: e.clientX,
+      y: e.clientY,
     });
   };
 
@@ -52,20 +67,13 @@ export const SVGViewer = ({
   const handleDrag = (e) => {
     if (e.clientX !== 0 && e.clientY !== 0) {
       if (dragScale) {
-        const fixedX = initialPosition.x / scale - x;
-        const fixedY = initialPosition.y / scale - y;
-
-        const zoom = 1 + -(e.clientY - dragY) * 0.005;
-        const newScale = clamp(scale * zoom, 1 / 100, 100);
-        const actualZoom = newScale / scale;
-
-        setX((fixedX + x) / actualZoom - fixedX);
-        setY((fixedY + y) / actualZoom - fixedY);
-
-        setScale(newScale);
+        doScale(
+          initialPosition.x / scale - x,
+          initialPosition.y / scale - y,
+          1 + -(e.clientY - dragY) * 0.005
+        );
       } else {
-        setX(x + (e.clientX - dragX) / scale);
-        setY(y + (e.clientY - dragY) / scale);
+        doMove((e.clientX - dragX) / scale, (e.clientY - dragY) / scale);
       }
 
       setDragX(e.clientX);
@@ -73,13 +81,29 @@ export const SVGViewer = ({
     }
   };
 
+  const handleMouseMove = (e) => {
+    if (e.buttons == 1) {
+      if (!dragging) {
+        setDragging(true);
+        handleDragStart(e);
+      }
+    } else if (dragging) {
+      setDragging(false);
+    }
+
+    if (dragging) {
+      handleDrag(e);
+    }
+  };
+
   return (
     <div
-      draggable={true}
-      onDragStart={handleDragStart}
-      onDrag={handleDrag}
-      onDragOver={handleDragOver}
-      onClick={handleClick}
+      // draggable={true}
+      // onDragStart={handleDragStart}
+      // onDrag={handleDrag}
+      // onDragOver={handleDragOver}
+      onMouseMove={handleMouseMove}
+      // onClick={handleClick}
       style={{ width: "100%", height: "100%" }}
     >
       <svg style={{ width: "100%", height: "100%" }}>
