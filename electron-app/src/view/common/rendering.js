@@ -18,6 +18,11 @@ export const SVGViewer = ({
   const [dragY, setDragY] = useState(0);
   const [dragScale, setDragScale] = useState(false);
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
   const handleDragStart = (e) => {
     // Use an empty image as the ghost image that gets displayed during dragging
     e.dataTransfer.setDragImage(
@@ -73,6 +78,7 @@ export const SVGViewer = ({
       draggable={true}
       onDragStart={handleDragStart}
       onDrag={handleDrag}
+      onDragOver={handleDragOver}
       onClick={handleClick}
       style={{ width: "100%", height: "100%" }}
     >
