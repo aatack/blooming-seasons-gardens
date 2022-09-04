@@ -65,7 +65,7 @@ export const HorizontalSplit = ({
         style={{
           position: "fixed",
           height: "100%",
-          left: collapsed ? 0 : width - dragWidth / 2,
+          left: collapsed ? 0 : width - dragWidth,
           width: collapsed ? dragWidth * 2 : dragWidth,
           top: 0,
           cursor: "ew-resize",

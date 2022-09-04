@@ -9,7 +9,7 @@ const App = () => {
       <>
         <Modal.Component />
         <HorizontalSplit
-          dragWidth={6}
+          dragWidth={8}
           minimumWidth={100}
           initialWidth={window.innerWidth * 0.3}
         >
