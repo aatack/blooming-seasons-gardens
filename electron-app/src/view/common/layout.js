@@ -1,6 +1,7 @@
+import { clamp } from "./maths";
 import { useState } from "react";
 
-export const HorizontalSplit = ({ children, dragWidth }) => {
+export const HorizontalSplit = ({ children, dragWidth, minimumWidth }) => {
   const [first, second] = children.props.children;
 
   const [width, setWidth] = useState(window.innerWidth * 0.3);
@@ -12,7 +13,7 @@ export const HorizontalSplit = ({ children, dragWidth }) => {
 
   const handleDrag = (e) => {
     if (e.clientX) {
-      setWidth(width - x + e.clientX);
+      setWidth(clamp(width - x + e.clientX, minimumWidth, window.innerWidth - minimumWidth));
       setX(e.clientX);
     }
   };
