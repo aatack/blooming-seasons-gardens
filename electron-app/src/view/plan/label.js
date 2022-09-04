@@ -1,5 +1,4 @@
 const Label = ({ label }) => {
-  console.log(label);
   return (
     <text
       x={label.position.x}
