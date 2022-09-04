@@ -23,8 +23,7 @@ const Editor = () => {
     <div
       style={{
         backgroundColor: "lightGrey",
-        padding: 8,
-        paddingRight: 0,
+        padding: "8px -8px 8px 8px",
         width: "100%",
         height: "100%",
       }}
