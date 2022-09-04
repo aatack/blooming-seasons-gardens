@@ -1,11 +1,17 @@
 import { clamp } from "./maths";
 import { useState } from "react";
 
-export const HorizontalSplit = ({ children, dragWidth, minimumWidth }) => {
+export const HorizontalSplit = ({
+  children,
+  dragWidth,
+  minimumWidth,
+  initialWidth,
+}) => {
   const [first, second] = children.props.children;
 
-  const [width, setWidth] = useState(window.innerWidth * 0.3);
+  const [width, setWidth] = useState(initialWidth);
   const [x, setX] = useState(null);
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleDragStart = (e) => {
     setX(e.clientX);
@@ -25,24 +31,30 @@ export const HorizontalSplit = ({ children, dragWidth, minimumWidth }) => {
     }
   };
 
+  const handleClick = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
     <>
+      {!collapsed && (
+        <div
+          style={{
+            position: "fixed",
+            height: "100%",
+            left: "0%",
+            width: width,
+            top: "0%",
+          }}
+        >
+          {first}
+        </div>
+      )}
       <div
         style={{
           position: "fixed",
           height: "100%",
-          left: "0%",
-          width: width,
-          top: "0%",
-        }}
-      >
-        {first}
-      </div>
-      <div
-        style={{
-          position: "fixed",
-          height: "100%",
-          left: width,
+          left: collapsed ? 0 : width,
           right: "0%",
           top: 0,
         }}
@@ -53,14 +65,15 @@ export const HorizontalSplit = ({ children, dragWidth, minimumWidth }) => {
         style={{
           position: "fixed",
           height: "100%",
-          left: width - dragWidth / 2,
-          width: dragWidth,
+          left: collapsed ? 0 : width - dragWidth / 2,
+          width: collapsed ? dragWidth * 2 : dragWidth,
           top: 0,
           cursor: "ew-resize",
         }}
         draggable={true}
         onDragStart={handleDragStart}
         onDrag={handleDrag}
+        onClick={handleClick}
       />
     </>
   );

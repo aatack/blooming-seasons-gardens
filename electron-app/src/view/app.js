@@ -8,7 +8,11 @@ const App = () => {
     <Modal.Provider>
       <>
         <Modal.Component />
-        <HorizontalSplit dragWidth={6} minimumWidth={100}>
+        <HorizontalSplit
+          dragWidth={6}
+          minimumWidth={100}
+          initialWidth={window.innerWidth * 0.3}
+        >
           <>
             <Editor />
             <Plan />
