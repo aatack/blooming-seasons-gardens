@@ -6,6 +6,8 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
 import Bed from "./bed";
+import { saveGarden } from "../../storage";
+import ChangeGardenModal from "../change";
 
 const Editor = () => {
   const padding = 8;
@@ -32,7 +34,22 @@ const Editor = () => {
     setHeight(outer.current.clientHeight - inner.current.clientHeight);
   }, []);
 
-  const garden = useSelector((state) => state.garden);
+  // TODO: rename `garden` to `beds` in the data structure
+  const beds = useSelector((state) => state.garden);
+  const path = useSelector((state) => state.path);
+  const garden = useSelector((state) => state);
+
+  const handleSave = () => {
+    if (garden.path) {
+      // TODO: create an automatic name if there isn't one yet
+      saveGarden(garden);
+    }
+  };
+
+  const handleLoad = () => {
+    modal.put(<ChangeGardenModal />);
+  };
+
   return (
     <div
       ref={outer}
@@ -52,6 +69,11 @@ const Editor = () => {
         }}
       >
         <div ref={inner}>
+          <h2>{path ? path : "Unsaved Garden"}</h2>
+          <button onClick={handleSave}>Save</button>
+          {space(<button onClick={handleLoad}>Load</button>)}
+          <br />
+          <br />
           <button onClick={handleAddBed}>Add Bed</button>
           {space(<button onClick={handleViewNursery}>View Nursery</button>)}
           {space(<button onClick={handleSetBackground}>Set Background</button>)}
@@ -66,7 +88,7 @@ const Editor = () => {
             paddingTop: "calc(vw - 100%)",
           }}
         >
-          {garden.map((bed) => (
+          {beds.map((bed) => (
             <Bed bed={bed} key={bed.identifier} />
           ))}
         </div>

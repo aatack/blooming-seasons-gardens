@@ -1,14 +1,12 @@
-export const saveGarden = (identifier, garden) => {
-  console.log(garden);
-  console.log(JSON.stringify(garden));
+export const saveGarden = (garden) => {
   localStorage.setItem(
-    "blooming-seasons/" + identifier,
+    "blooming-seasons/" + garden.path,
     JSON.stringify(garden)
   );
 };
 
-export const loadGarden = (identifier) => {
-  return JSON.parse(localStorage.getItem("blooming-seasons/" + identifier));
+export const loadGarden = (path) => {
+  return JSON.parse(localStorage.getItem("blooming-seasons/" + path));
 };
 
 export const encodeFile = (file) => {
