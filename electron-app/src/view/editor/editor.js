@@ -6,7 +6,7 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
 import Bed from "./bed";
-import { loadGarden, saveGarden, toBase64 } from "../../storage";
+import { loadGarden, saveGarden, encodeFile } from "../../storage";
 
 const Editor = () => {
   const padding = 8;
@@ -58,10 +58,9 @@ const Editor = () => {
       </button>
       <input
         type="file"
-        onChange={async (e) => {
-          const out = await toBase64(e.target.files[0]);
-          setBackground(out);
-        }}
+        onChange={async (e) =>
+          setBackground(await encodeFile(e.target.files[0]))
+        }
       />
 
       {background && <img src={background} />}
