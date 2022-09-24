@@ -10,7 +10,7 @@ const Plan = () => {
     <SVGViewer style={{ width: "100%", height: "100%" }}>
       <Scale scale={50}>
         {background && (
-          <Scale scale={background.scale}>
+          <Scale scale={background.scale * 0.01}>
             <image href={background.image} />
           </Scale>
         )}

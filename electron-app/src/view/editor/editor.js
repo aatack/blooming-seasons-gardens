@@ -1,7 +1,7 @@
 import { useContext, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBed, changeBackground } from "../../model/store";
-import { FileInput, space, TextBox } from "../common/input";
+import { addBed, setBackground, removeBackground } from "../../model/store";
+import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
 import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
@@ -100,12 +100,19 @@ const CreateBedModal = () => {
 };
 
 const SetBackgroundModal = () => {
+  const background = useSelector((state) => state.background);
   const dispatch = useDispatch();
   const modal = useContext(Modal);
-  const [background, setBackground] = useState(null);
 
-  const onDone = async () => {
-    dispatch(await changeBackground(background));
+  const [scale, setScale] = useState(background ? background.scale : 1);
+  const [image, setImage] = useState(background ? background.image : null);
+
+  const handleReset = () => {
+    setImage(null);
+  };
+
+  const onDone = () => {
+    dispatch(image ? setBackground(image, scale) : removeBackground());
     modal.pop();
   };
 
@@ -116,12 +123,23 @@ const SetBackgroundModal = () => {
   return (
     <>
       <h3>Set Background</h3>
-      <FileInput setValue={setBackground} />
+
       <br />
-      <br />
-      {space(
-        <button onClick={onDone}>{background ? "Done" : "Remove"}</button>
+
+      {image ? (
+        <>
+          <img src={image} style={{ width: "60%" }} />
+          <br />
+          Scale:{space(<NumericTextBox value={scale} setValue={setScale} />)}
+          <button onClick={handleReset}>Reset</button>
+        </>
+      ) : (
+        <FileInput setValue={setImage} />
       )}
+
+      <br />
+      <br />
+      {space(<button onClick={onDone}>Done</button>)}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );

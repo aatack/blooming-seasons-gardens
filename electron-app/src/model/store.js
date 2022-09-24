@@ -162,20 +162,13 @@ export const store = configureStore({
           }
         });
 
-      case "garden/background/changed":
+      case "garden/background/set":
         return produce(state, (draft) => {
-          if (action.payload) {
-            if (!draft.background) {
-              draft.background = {
-                image: action.payload,
-                scale: 0.01,
-              };
-            } else {
-              draft.background.image = action.payload;
-            }
-          } else {
-            draft.background = null;
-          }
+          draft.background = action.payload;
+        });
+      case "garden/background/removed":
+        return produce(state, (draft) => {
+          draft.background = null;
         });
 
       default:
@@ -268,10 +261,14 @@ export const editElement = (element, edits) => {
   };
 };
 
-export const changeBackground = async (image) => {
-  // Expects the image to be passed as a file object, but may also be null
+export const setBackground = (image, scale) => {
+  // Expects the image to be passed as a string data URL, but may also be null
   return {
-    type: "garden/background/changed",
-    payload: image ? await encodeFile(image) : null,
+    type: "garden/background/set",
+    payload: { image: image, scale: scale },
   };
+};
+
+export const removeBackground = () => {
+  return { type: "garden/background/removed" };
 };

@@ -96,8 +96,8 @@ export const Dropdown = (props) => {
 };
 
 export const FileInput = ({ setValue }) => {
-  const handleChange = (e) => {
-    setValue(e.target.files[0]);
+  const handleChange = async (e) => {
+    setValue(await encodeFile(e.target.files[0]));
   };
 
   return <input type="file" onChange={handleChange} />;
