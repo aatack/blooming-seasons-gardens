@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
+import { encodeFile } from "../storage";
 import example from "./example";
 
 const findByIdentifier = (state, identifier) => {
@@ -164,7 +165,10 @@ export const store = configureStore({
       case "garden/background/changed":
         return produce(state, (draft) => {
           if (!draft.background) {
-            draft.background = { image: action.payload, width: 10 };
+            draft.background = {
+              image: action.payload,
+              scale: 0.01,
+            };
           } else {
             draft.background.image = action.payload;
           }
@@ -260,10 +264,10 @@ export const editElement = (element, edits) => {
   };
 };
 
-export const changeBackground = (image) => {
-  // Expects a string describing the data URL of the image; see `encodeFile`
+export const changeBackground = async (image) => {
+  // Expects the image to be passed as a file object
   return {
     type: "garden/background/changed",
-    payload: image,
+    payload: await encodeFile(image),
   };
 };

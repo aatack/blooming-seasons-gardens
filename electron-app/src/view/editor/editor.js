@@ -102,10 +102,10 @@ const CreateBedModal = () => {
 const SetBackgroundModal = () => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
-  const [background, setBackground] = useState("");
+  const [background, setBackground] = useState(null);
 
-  const onDone = () => {
-    dispatch(changeBackground(background));
+  const onDone = async () => {
+    dispatch(await changeBackground(background));
     modal.pop();
   };
 
