@@ -9,7 +9,11 @@ const Plan = () => {
   return (
     <SVGViewer style={{ width: "100%", height: "100%" }}>
       <Scale scale={50}>
-        {background && <image href={background.image} />}
+        {background && (
+          <Scale scale={background.scale}>
+            <image href={background.image} />
+          </Scale>
+        )}
 
         {garden.map((bed) => (
           <Bed bed={bed} key={bed.identifier} />

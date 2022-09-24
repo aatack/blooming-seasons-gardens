@@ -119,7 +119,9 @@ const SetBackgroundModal = () => {
       <FileInput setValue={setBackground} />
       <br />
       <br />
-      {space(<button onClick={onDone}>Done</button>)}
+      {space(
+        <button onClick={onDone}>{background ? "Done" : "Remove"}</button>
+      )}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );

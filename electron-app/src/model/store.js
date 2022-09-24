@@ -164,13 +164,17 @@ export const store = configureStore({
 
       case "garden/background/changed":
         return produce(state, (draft) => {
-          if (!draft.background) {
-            draft.background = {
-              image: action.payload,
-              scale: 0.01,
-            };
+          if (action.payload) {
+            if (!draft.background) {
+              draft.background = {
+                image: action.payload,
+                scale: 0.01,
+              };
+            } else {
+              draft.background.image = action.payload;
+            }
           } else {
-            draft.background.image = action.payload;
+            draft.background = null;
           }
         });
 
@@ -265,9 +269,9 @@ export const editElement = (element, edits) => {
 };
 
 export const changeBackground = async (image) => {
-  // Expects the image to be passed as a file object
+  // Expects the image to be passed as a file object, but may also be null
   return {
     type: "garden/background/changed",
-    payload: await encodeFile(image),
+    payload: image ? await encodeFile(image) : null,
   };
 };
