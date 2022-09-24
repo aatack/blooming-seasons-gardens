@@ -7,7 +7,7 @@ import { useState } from "react";
 import defaultGarden from "../model/default";
 import { RenameGardenModal } from "./editor/rename";
 
-const ChangeGardenModal = () => {
+const LoadGardenModal = () => {
   // TODO: re-render whenever the list of current gardens changes
 
   const gardens = listGardens();
@@ -91,4 +91,4 @@ const Garden = ({ path }) => {
   );
 };
 
-export default ChangeGardenModal;
+export default LoadGardenModal;

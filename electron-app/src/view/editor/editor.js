@@ -7,7 +7,7 @@ import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
 import { saveGarden } from "../../storage";
-import ChangeGardenModal from "../change";
+import LoadGardenModal from "../loading";
 import { RenameGardenModal } from "./rename";
 
 const Editor = () => {
@@ -52,7 +52,7 @@ const Editor = () => {
   };
 
   const handleLoad = () => {
-    modal.put(<ChangeGardenModal />);
+    modal.put(<LoadGardenModal />);
   };
 
   return (
