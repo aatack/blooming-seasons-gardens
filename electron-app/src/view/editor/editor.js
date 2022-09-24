@@ -6,6 +6,7 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
 import Bed from "./bed";
+import { loadGarden, saveGarden, toBase64 } from "../../storage";
 
 const Editor = () => {
   const padding = 8;
@@ -28,6 +29,8 @@ const Editor = () => {
     setHeight(outer.current.clientHeight - inner.current.clientHeight);
   }, []);
 
+  const [background, setBackground] = useState(null);
+
   const garden = useSelector((state) => state.garden);
   return (
     <div
@@ -38,7 +41,30 @@ const Editor = () => {
         height: "100%",
       }}
     >
-      <button onClick={() => {}}>Test</button>
+      <button
+        onClick={() => {
+          saveGarden("test", garden);
+        }}
+      >
+        Save
+      </button>
+      <button
+        onClick={() => {
+          const loaded = loadGarden("test");
+          console.log(loaded);
+        }}
+      >
+        Load
+      </button>
+      <input
+        type="file"
+        onChange={async (e) => {
+          const out = await toBase64(e.target.files[0]);
+          setBackground(out);
+        }}
+      />
+
+      {background && <img src={background} />}
 
       <div
         style={{
