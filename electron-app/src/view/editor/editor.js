@@ -38,6 +38,8 @@ const Editor = () => {
         height: "100%",
       }}
     >
+      <button onClick={() => {}}>Test</button>
+
       <div
         style={{
           padding: padding,

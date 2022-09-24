@@ -76,7 +76,7 @@ export const Dropdown = (props) => {
 
   const handleChange = (e) => {
     const newValue = props.options.find(
-      (option) => option.name == e.target.value
+      (option) => option.name === e.target.value
     );
     setValue(newValue.name);
 
