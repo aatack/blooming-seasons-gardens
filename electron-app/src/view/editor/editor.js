@@ -6,7 +6,6 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
 import Bed from "./bed";
-import { loadGarden, saveGarden, encodeFile } from "../../storage";
 
 const Editor = () => {
   const padding = 8;
@@ -25,11 +24,13 @@ const Editor = () => {
     modal.put(<Nursery />);
   };
 
+  const handleSetBackground = () => {
+    modal.put(<SetBackgroundModal />);
+  };
+
   useEffect(() => {
     setHeight(outer.current.clientHeight - inner.current.clientHeight);
   }, []);
-
-  const [background, setBackground] = useState(null);
 
   const garden = useSelector((state) => state.garden);
   return (
@@ -41,30 +42,6 @@ const Editor = () => {
         height: "100%",
       }}
     >
-      <button
-        onClick={() => {
-          saveGarden("test", garden);
-        }}
-      >
-        Save
-      </button>
-      <button
-        onClick={() => {
-          const loaded = loadGarden("test");
-          console.log(loaded);
-        }}
-      >
-        Load
-      </button>
-      <input
-        type="file"
-        onChange={async (e) =>
-          setBackground(await encodeFile(e.target.files[0]))
-        }
-      />
-
-      {background && <img src={background} />}
-
       <div
         style={{
           padding: padding,
@@ -77,6 +54,7 @@ const Editor = () => {
         <div ref={inner}>
           <button onClick={handleAddBed}>Add Bed</button>
           {space(<button onClick={handleViewNursery}>View Nursery</button>)}
+          {space(<button onClick={handleSetBackground}>Set Background</button>)}
         </div>
 
         <div
@@ -115,6 +93,29 @@ const CreateBedModal = () => {
     <>
       <h3>Create Bed</h3>
       <TextBox value={name} setValue={setName} />
+      {space(<button onClick={onDone}>Done</button>)}
+      {space(<button onClick={onCancel}>Cancel</button>)}
+    </>
+  );
+};
+
+const SetBackgroundModal = () => {
+  const dispatch = useDispatch();
+  const modal = useContext(Modal);
+  const [background, setBackground] = useState("");
+
+  const onDone = () => {
+    // dispatch(addBed(name));
+    modal.pop();
+  };
+
+  const onCancel = () => {
+    modal.pop();
+  };
+
+  return (
+    <>
+      <h3>Set Background</h3>
       {space(<button onClick={onDone}>Done</button>)}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
