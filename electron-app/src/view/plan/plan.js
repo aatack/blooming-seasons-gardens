@@ -4,10 +4,13 @@ import { useSelector } from "react-redux";
 
 const Plan = () => {
   const garden = useSelector((state) => state.garden);
+  const background = useSelector((state) => state.background);
 
   return (
     <SVGViewer style={{ width: "100%", height: "100%" }}>
       <Scale scale={50}>
+        {background && <image href={background.image} />}
+
         {garden.map((bed) => (
           <Bed bed={bed} key={bed.identifier} />
         ))}
