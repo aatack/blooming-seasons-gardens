@@ -10,7 +10,7 @@ import {
 } from "../../model/store";
 import { Checkbox, TextBox, Dropdown, space } from "../common/input";
 import { Modal } from "../../model/context";
-import { CreateTemplateModal } from "./nursery";
+import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
 import Label from "./label";
 import Arrow from "./arrow";

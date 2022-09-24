@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
-import { encodeFile } from "../storage";
 import example from "./example";
 
 const findByIdentifier = (state, identifier) => {
@@ -30,6 +29,9 @@ export const store = configureStore({
   // and can therefore cast identifiers to booleans to see whether they exist
   reducer: (state = example, action) => {
     switch (action.type) {
+      case "loaded":
+        return produce(state, (draft) => action.payload);
+
       case "garden/bed/added":
         return produce(state, (draft) => {
           draft.identifier += 1;

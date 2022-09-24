@@ -4,7 +4,7 @@ import { addBed, setBackground, removeBackground } from "../../model/store";
 import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
 import { Modal } from "../../model/context";
 import { useState } from "react";
-import Nursery from "./nursery";
+import Nursery from "../nursery";
 import Bed from "./bed";
 import { saveGarden } from "../../storage";
 import ChangeGardenModal from "../change";
