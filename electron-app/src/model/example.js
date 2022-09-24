@@ -52,6 +52,7 @@ const example = {
     { identifier: 1, name: "Daffodil", size: 0.5, colour: "#f1b7c2" },
     { identifier: 2, name: "Tulip", size: 0.2, colour: "#1a5c96" },
   ],
+  background: null,
 };
 
 export default example;

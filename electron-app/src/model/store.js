@@ -161,6 +161,15 @@ export const store = configureStore({
           }
         });
 
+      case "garden/background/changed":
+        return produce(state, (draft) => {
+          if (!draft.background) {
+            draft.background = { image: action.payload, width: 10 };
+          } else {
+            draft.background.image = action.payload;
+          }
+        });
+
       default:
         return state;
     }
@@ -248,5 +257,13 @@ export const editElement = (element, edits) => {
       identifier: element.identifier,
       edits: edits,
     },
+  };
+};
+
+export const changeBackground = (image) => {
+  // Expects a string describing the data URL of the image; see `encodeFile`
+  return {
+    type: "garden/background/changed",
+    payload: image,
   };
 };
