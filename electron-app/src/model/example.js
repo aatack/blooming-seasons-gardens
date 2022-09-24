@@ -1,5 +1,5 @@
-const example = {
-  path: null,
+const exampleGarden = {
+  path: "Example Garden",
   identifier: 29,
   garden: [
     {
@@ -56,4 +56,4 @@ const example = {
   background: null,
 };
 
-export default example;
+export default exampleGarden;

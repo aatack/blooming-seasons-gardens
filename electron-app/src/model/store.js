@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
-import example from "./example";
+import exampleGarden from "./example";
 
 const findByIdentifier = (state, identifier) => {
   for (const bed of state.garden) {
@@ -27,7 +27,7 @@ const findByIdentifier = (state, identifier) => {
 export const store = configureStore({
   // Start the identifier at 1 so we can guarantee the it will never be zero,
   // and can therefore cast identifiers to booleans to see whether they exist
-  reducer: (state = example, action) => {
+  reducer: (state = exampleGarden, action) => {
     switch (action.type) {
       case "loaded":
         return produce(state, (draft) => action.payload);

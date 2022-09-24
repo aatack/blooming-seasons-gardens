@@ -4,16 +4,23 @@ import { loadGarden, saveGarden, listGardens, deleteGarden } from "../storage";
 import { space } from "./common/input";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import defaultGarden from "../model/default";
+import { RenameGardenModal } from "./editor/rename";
 
 const ChangeGardenModal = () => {
   // TODO: re-render whenever the list of current gardens changes
 
   const gardens = listGardens();
+  const garden = useSelector((state) => state);
   const modal = useContext(Modal);
+  const dispatch = useDispatch();
 
-  // const handleAddTemplate = () => {
-  //   modal.put(<CreateTemplateModal />);
-  // };
+  const handleNew = () => {
+    saveGarden(garden);
+    dispatch({ type: "loaded", payload: defaultGarden });
+    modal.pop();
+    modal.put(<RenameGardenModal garden={{ ...garden, path: null }} />);
+  };
 
   const handleClose = () => {
     modal.pop();
@@ -22,7 +29,7 @@ const ChangeGardenModal = () => {
   return (
     <>
       <h1>Change Garden</h1>
-      {/* <button onClick={handleAddTemplate}>Add Template</button> */}
+      <button onClick={handleNew}>New</button>
       {gardens.map((path) => (
         <Garden path={path} key={path} />
       ))}

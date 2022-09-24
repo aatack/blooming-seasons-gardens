@@ -6,8 +6,9 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
-import { loadGarden, saveGarden } from "../../storage";
+import { saveGarden } from "../../storage";
 import ChangeGardenModal from "../change";
+import { RenameGardenModal } from "./rename";
 
 const Editor = () => {
   const padding = 8;
@@ -169,42 +170,6 @@ const SetBackgroundModal = () => {
       <br />
       <br />
       {space(<button onClick={onDone}>Done</button>)}
-      {space(<button onClick={onCancel}>Cancel</button>)}
-    </>
-  );
-};
-
-const RenameGardenModal = ({ garden }) => {
-  const [path, setPath] = useState(garden.path || "");
-  const dispatch = useDispatch();
-  const modal = useContext(Modal);
-
-  const onDone = () => {
-    saveGarden(garden);
-    const newGarden = { ...garden, path: path };
-    saveGarden(newGarden);
-    dispatch({ type: "loaded", payload: newGarden });
-    modal.pop();
-  };
-
-  const onCancel = () => {
-    modal.pop();
-  };
-
-  return (
-    <>
-      <h3>Rename Garden</h3>
-
-      <TextBox value={path} setValue={setPath} />
-
-      <br />
-      <br />
-
-      {space(
-        <button onClick={onDone} disabled={!path}>
-          Done
-        </button>
-      )}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
