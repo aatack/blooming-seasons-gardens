@@ -1,5 +1,5 @@
 const example = {
-  path: "Examples/Test Garden",
+  path: null,
   identifier: 29,
   garden: [
     {

@@ -6,7 +6,7 @@ import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
-import { saveGarden } from "../../storage";
+import { loadGarden, saveGarden } from "../../storage";
 import ChangeGardenModal from "../change";
 
 const Editor = () => {
@@ -41,9 +41,13 @@ const Editor = () => {
 
   const handleSave = () => {
     if (garden.path) {
-      // TODO: create an automatic name if there isn't one yet
+      // TODO: disable the option to save if the garden has no name
       saveGarden(garden);
     }
+  };
+
+  const handleSaveAs = () => {
+    modal.put(<RenameGardenModal garden={garden} />);
   };
 
   const handleLoad = () => {
@@ -69,8 +73,11 @@ const Editor = () => {
         }}
       >
         <div ref={inner}>
-          <h2>{path ? path : "Unsaved Garden"}</h2>
-          <button onClick={handleSave}>Save</button>
+          <h2>{path ? path : "Unnamed Garden"}</h2>
+          <button onClick={handleSave} disabled={!path}>
+            Save
+          </button>
+          {space(<button onClick={handleSaveAs}>Save As</button>)}
           {space(<button onClick={handleLoad}>Load</button>)}
           <br />
           <br />
@@ -162,6 +169,42 @@ const SetBackgroundModal = () => {
       <br />
       <br />
       {space(<button onClick={onDone}>Done</button>)}
+      {space(<button onClick={onCancel}>Cancel</button>)}
+    </>
+  );
+};
+
+const RenameGardenModal = ({ garden }) => {
+  const [path, setPath] = useState(garden.path || "");
+  const dispatch = useDispatch();
+  const modal = useContext(Modal);
+
+  const onDone = () => {
+    saveGarden(garden);
+    const newGarden = { ...garden, path: path };
+    saveGarden(newGarden);
+    dispatch({ type: "loaded", payload: newGarden });
+    modal.pop();
+  };
+
+  const onCancel = () => {
+    modal.pop();
+  };
+
+  return (
+    <>
+      <h3>Rename Garden</h3>
+
+      <TextBox value={path} setValue={setPath} />
+
+      <br />
+      <br />
+
+      {space(
+        <button onClick={onDone} disabled={!path}>
+          Done
+        </button>
+      )}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );

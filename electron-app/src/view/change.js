@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 
 const ChangeGardenModal = () => {
+  // TODO: re-render whenever the list of current gardens changes
+
   const gardens = listGardens();
   const modal = useContext(Modal);
 
@@ -39,6 +41,7 @@ const Garden = ({ path }) => {
   const [hovered, setHovered] = useState(false);
 
   const handleLoad = () => {
+    // TODO: warn before loading over an unsaved garden
     saveGarden(currentGarden);
     dispatch({ type: "loaded", payload: loadGarden(path) });
     modal.pop();

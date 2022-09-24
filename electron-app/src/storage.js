@@ -11,10 +11,12 @@ export const encodeFile = (file) => {
 };
 
 export const saveGarden = (garden) => {
-  localStorage.setItem(
-    activeGardenPrefix + garden.path,
-    JSON.stringify(garden)
-  );
+  if (garden.path) {
+    localStorage.setItem(
+      activeGardenPrefix + garden.path,
+      JSON.stringify(garden)
+    );
+  }
 };
 
 export const loadGarden = (path) => {
@@ -22,9 +24,12 @@ export const loadGarden = (path) => {
 };
 
 export const deleteGarden = (path) => {
+  // TODO: at some point, deleted gardens will need to be garbage collected
+
   // NOTE: although gardens can be recovered, their original names will not
   //       necessarily be available any more.  Recover manually for now, but in
   //       future force a rename when recovering
+
   localStorage.setItem(deletedGardenPrefix + path, loadGarden(path));
   localStorage.removeItem(activeGardenPrefix + path);
 };
