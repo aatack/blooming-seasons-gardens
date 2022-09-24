@@ -1,7 +1,7 @@
 import { useContext, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addBed } from "../../model/store";
-import { space, TextBox } from "../common/input";
+import { FileInput, space, TextBox } from "../common/input";
 import { Modal } from "../../model/context";
 import { useState } from "react";
 import Nursery from "./nursery";
@@ -105,7 +105,7 @@ const SetBackgroundModal = () => {
   const [background, setBackground] = useState("");
 
   const onDone = () => {
-    // dispatch(addBed(name));
+    console.log(background);
     modal.pop();
   };
 
@@ -116,6 +116,7 @@ const SetBackgroundModal = () => {
   return (
     <>
       <h3>Set Background</h3>
+      <FileInput setValue={setBackground} />
       {space(<button onClick={onDone}>Done</button>)}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>

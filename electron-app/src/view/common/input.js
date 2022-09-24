@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { encodeFile } from "../../storage";
 
 // TODO: look into React's handling of forms
 // TODO: have all of the widgets take the output of `useState` directly
@@ -92,6 +93,14 @@ export const Dropdown = (props) => {
       ))}
     </select>
   );
+};
+
+export const FileInput = ({ setValue }) => {
+  const handleChange = async (e) => {
+    setValue(await encodeFile(e.target.files[0]));
+  };
+
+  return <input type="file" onChange={handleChange} />;
 };
 
 export const space = (element) => {
