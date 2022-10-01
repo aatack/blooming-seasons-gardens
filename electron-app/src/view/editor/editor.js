@@ -56,7 +56,7 @@ const Editor = () => {
   };
 
   const handleExport = () => {
-    modal.put(<ExportModal />);
+    modal.put(<ExportModal garden={garden} />);
   };
 
   return (
@@ -180,12 +180,26 @@ const SetBackgroundModal = () => {
   );
 };
 
-const ExportModal = () => {
+const ExportModal = ({ garden }) => {
   const modal = useContext(Modal);
+  const [exportName, setExportName] = useState(garden.path);
 
   const handleDownloadImage = () => {};
 
-  const handleDownloadData = () => {};
+  const handleDownloadData = () => {
+    const data =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(garden));
+    const downloadAnchorNode = document.createElement("a");
+
+    downloadAnchorNode.setAttribute("href", data);
+    downloadAnchorNode.setAttribute("download", garden.path + ".json");
+
+    document.body.appendChild(downloadAnchorNode); // Required for Firefox
+
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
 
   const onDone = () => {
     modal.pop();
@@ -195,13 +209,21 @@ const ExportModal = () => {
     <>
       <h3>Export</h3>
       <br />
-
-      {space(<button onClick={handleDownloadImage}>Download Image</button>)}
-      {space(<button onClick={handleDownloadData}>Download Data</button>)}
-
+      Export as: <TextBox value={exportName} setValue={setExportName} />
       <br />
       <br />
-
+      {space(
+        <button onClick={handleDownloadImage} disabled={!exportName}>
+          Download Image
+        </button>
+      )}
+      {space(
+        <button onClick={handleDownloadData} disabled={!exportName}>
+          Download Data
+        </button>
+      )}
+      <br />
+      <br />
       {space(<button onClick={onDone}>Done</button>)}
     </>
   );
