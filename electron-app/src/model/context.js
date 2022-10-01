@@ -56,3 +56,29 @@ export const Modal = (() => {
 })();
 
 export const GardenSVG = React.createContext(undefined);
+
+export const Hovered = (() => {
+  const Context = React.createContext(undefined);
+
+  const CachedProvider = Context.Provider;
+
+  const useHovered = () => {
+    const [hovered, setHovered] = useState(null);
+
+    return {
+      matches: (element) => hovered === element.identifier,
+      set: (element) => {
+        setHovered(element.identifier);
+      },
+    };
+  };
+
+  const WrappedProvider = (props) => {
+    return (
+      <CachedProvider value={useHovered()}>{props.children}</CachedProvider>
+    );
+  };
+
+  Context.Provider = WrappedProvider;
+  return Context;
+})();
