@@ -6,7 +6,7 @@ import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
-import { saveGarden } from "../../storage";
+import { downloadText, saveGarden } from "../../storage";
 import LoadGardenModal from "../loading";
 import { RenameGardenModal } from "./rename";
 
@@ -186,22 +186,14 @@ const ExportModal = ({ garden }) => {
   const gardenSVG = useContext(GardenSVG)[0];
 
   const handleDownloadImage = () => {
-    console.log(gardenSVG);
+    // TODO: convert to PDF
+    // TODO: this implementation captures the current positioning of the camera,
+    //       which is undesirable
+    downloadText(gardenSVG.outerHTML, exportName + ".html");
   };
 
   const handleDownloadData = () => {
-    const data =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(garden));
-    const downloadAnchorNode = document.createElement("a");
-
-    downloadAnchorNode.setAttribute("href", data);
-    downloadAnchorNode.setAttribute("download", garden.path + ".json");
-
-    document.body.appendChild(downloadAnchorNode); // Required for Firefox
-
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    downloadText(JSON.stringify(garden), exportName + ".json");
   };
 
   const onDone = () => {
