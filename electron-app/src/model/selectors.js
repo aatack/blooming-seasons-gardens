@@ -8,7 +8,3 @@ export const useTemplate = (identifier) => {
       null
   );
 };
-
-export const useHovered = () => {
-  return useSelector((state) => state.hovered);
-};
