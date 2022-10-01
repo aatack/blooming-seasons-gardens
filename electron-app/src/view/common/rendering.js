@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import { GardenSVG } from "../../model/context";
 import { clamp } from "./maths";
 
 export const SVGViewer = ({
@@ -17,6 +18,8 @@ export const SVGViewer = ({
   const [dragX, setDragX] = useState(0);
   const [dragY, setDragY] = useState(0);
   const [dragging, setDragging] = useState(false);
+
+  const [gardenSVG, setGardenSVG] = useContext(GardenSVG);
 
   const translate = (dx, dy) => {
     setX(x + dx);
@@ -37,6 +40,7 @@ export const SVGViewer = ({
     if (onClick) {
       onClick();
     }
+    setGardenSVG(svgElement.current);
   };
 
   const handleMouseMove = (e) => {

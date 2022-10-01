@@ -2,7 +2,7 @@ import { useContext, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addBed, setBackground, removeBackground } from "../../model/store";
 import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
-import { Modal } from "../../model/context";
+import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
@@ -183,8 +183,11 @@ const SetBackgroundModal = () => {
 const ExportModal = ({ garden }) => {
   const modal = useContext(Modal);
   const [exportName, setExportName] = useState(garden.path);
+  const [gardenSVG, setGardenSVG] = useContext(GardenSVG);
 
-  const handleDownloadImage = () => {};
+  const handleDownloadImage = () => {
+    console.log(gardenSVG);
+  };
 
   const handleDownloadData = () => {
     const data =

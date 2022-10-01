@@ -54,3 +54,5 @@ export const Modal = (() => {
   Context.Component = WrappedComponent;
   return Context;
 })();
+
+export const GardenSVG = React.createContext(undefined);

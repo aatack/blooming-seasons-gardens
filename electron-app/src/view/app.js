@@ -1,24 +1,29 @@
 import Editor from "./editor/editor";
 import Plan from "./plan/plan";
-import { Modal } from "../model/context";
+import { Modal, GardenSVG } from "../model/context";
 import { HorizontalSplit } from "./common/layout";
+import { useState } from "react";
 
 const App = () => {
+  const [gardenSVG, setGardenSVG] = useState(null);
+
   return (
     <Modal.Provider>
-      <>
-        <Modal.Component />
-        <HorizontalSplit
-          dragWidth={8}
-          minimumWidth={100}
-          initialWidth={window.innerWidth * 0.3}
-        >
-          <>
-            <Editor />
-            <Plan />
-          </>
-        </HorizontalSplit>
-      </>
+      <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
+        <>
+          <Modal.Component />
+          <HorizontalSplit
+            dragWidth={8}
+            minimumWidth={100}
+            initialWidth={window.innerWidth * 0.3}
+          >
+            <>
+              <Editor />
+              <Plan />
+            </>
+          </HorizontalSplit>
+        </>
+      </GardenSVG.Provider>
     </Modal.Provider>
   );
 };
