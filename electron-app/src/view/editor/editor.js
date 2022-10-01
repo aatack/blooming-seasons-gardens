@@ -163,7 +163,7 @@ const SetBackgroundModal = () => {
 
       {image ? (
         <>
-          <img src={image} style={{ width: "60%" }} />
+          <img src={image} style={{ width: "60%" }} alt="Preview" />
           <br />
           Scale:{space(<NumericTextBox value={scale} setValue={setScale} />)}
           <button onClick={handleReset}>Reset</button>
@@ -183,7 +183,7 @@ const SetBackgroundModal = () => {
 const ExportModal = ({ garden }) => {
   const modal = useContext(Modal);
   const [exportName, setExportName] = useState(garden.path);
-  const [gardenSVG, setGardenSVG] = useContext(GardenSVG);
+  const gardenSVG = useContext(GardenSVG)[0];
 
   const handleDownloadImage = () => {
     console.log(gardenSVG);
