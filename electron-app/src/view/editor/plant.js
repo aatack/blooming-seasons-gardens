@@ -3,24 +3,24 @@ import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
 import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
 import { editElement, removeElement } from "../../model/store";
-import { Modal } from "../../model/context";
+import { Hovered, Modal } from "../../model/context";
 
 const Plant = ({ plant }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
+  const hovered = useContext(Hovered);
 
   const template = useTemplate(plant.template);
 
-  const [hovered, setHovered] = useState(false);
   const [background, setBackground] = useState(null);
 
   const handleMouseEnter = () => {
-    setHovered(true);
+    hovered.set(plant);
     setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
-    setHovered(false);
+    hovered.set(null);
     setBackground(null);
   };
 
@@ -47,8 +47,10 @@ const Plant = ({ plant }) => {
         </p>
       )}
 
-      {hovered && space(<button onClick={handleEdit}>Edit</button>)}
-      {hovered && space(<button onClick={handleRemove}>Remove</button>)}
+      {hovered.matches(plant) &&
+        space(<button onClick={handleEdit}>Edit</button>)}
+      {hovered.matches(plant) &&
+        space(<button onClick={handleRemove}>Remove</button>)}
     </div>
   );
 };

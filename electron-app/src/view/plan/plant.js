@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { Hovered } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
 
 const Plant = ({ plant }) => {
+  const hovered = useContext(Hovered);
+
   const template = useTemplate(plant.template);
 
   if (template) {
@@ -13,8 +17,8 @@ const Plant = ({ plant }) => {
       cy={plant.position.y}
       r={plant.size}
       fill={plant.colour}
-      stroke="black"
-      strokeWidth={plant.size / 5}
+      stroke={hovered.matches(plant) ? "blue" : "black"}
+      strokeWidth={plant.size / (hovered.matches(plant) ? 3 : 5)}
     />
   );
 };

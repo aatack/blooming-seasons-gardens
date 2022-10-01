@@ -68,7 +68,11 @@ export const Hovered = (() => {
     return {
       matches: (element) => hovered === element.identifier,
       set: (element) => {
-        setHovered(element.identifier);
+        if (element) {
+          setHovered(element.identifier);
+        } else {
+          setHovered(null);
+        }
       },
     };
   };
