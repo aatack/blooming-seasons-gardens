@@ -55,6 +55,10 @@ const Editor = () => {
     modal.put(<LoadGardenModal />);
   };
 
+  const handleExport = () => {
+    modal.put(<ExportModal />);
+  };
+
   return (
     <div
       ref={outer}
@@ -80,6 +84,7 @@ const Editor = () => {
           </button>
           {space(<button onClick={handleSaveAs}>Save As</button>)}
           {space(<button onClick={handleLoad}>Load</button>)}
+          {space(<button onClick={handleExport}>Export</button>)}
           <br />
           <br />
           <button onClick={handleAddBed}>Add Bed</button>
@@ -171,6 +176,33 @@ const SetBackgroundModal = () => {
       <br />
       {space(<button onClick={onDone}>Done</button>)}
       {space(<button onClick={onCancel}>Cancel</button>)}
+    </>
+  );
+};
+
+const ExportModal = () => {
+  const modal = useContext(Modal);
+
+  const handleDownloadImage = () => {};
+
+  const handleDownloadData = () => {};
+
+  const onDone = () => {
+    modal.pop();
+  };
+
+  return (
+    <>
+      <h3>Export</h3>
+      <br />
+
+      {space(<button onClick={handleDownloadImage}>Download Image</button>)}
+      {space(<button onClick={handleDownloadData}>Download Data</button>)}
+
+      <br />
+      <br />
+
+      {space(<button onClick={onDone}>Done</button>)}
     </>
   );
 };
