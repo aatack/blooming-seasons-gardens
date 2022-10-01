@@ -32,6 +32,11 @@ export const store = configureStore({
       case "loaded":
         return produce(state, (draft) => action.payload);
 
+      case "hovered/set":
+        return produce(state, (draft) => {
+          draft.hovered = action.payload;
+        });
+
       case "garden/bed/added":
         return produce(state, (draft) => {
           draft.identifier += 1;
@@ -178,6 +183,10 @@ export const store = configureStore({
     }
   },
 });
+
+export const setHovered = (element) => {
+  return { type: "hovered/set", payload: element.identifier };
+};
 
 export const addBed = (name) => {
   return { type: "garden/bed/added", payload: name };
