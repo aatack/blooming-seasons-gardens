@@ -66,8 +66,9 @@ export const Hovered = (() => {
     const [hovered, setHovered] = useState(null);
 
     return {
-      matches: (element) =>
-        hovered === element.identifier || hovered === element.bedIdentifier,
+      matches: (element, includeParents) =>
+        hovered === element.identifier ||
+        (includeParents && hovered === element.bedIdentifier),
       set: (element) => {
         if (element) {
           setHovered(element.identifier);

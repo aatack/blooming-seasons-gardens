@@ -49,19 +49,24 @@ const Bed = ({ bed }) => {
     hovered.set(null);
   };
 
+  const isHovered = hovered.matches(bed);
+
   return (
     <>
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{ backgroundColor: hovered.matches(bed) ? "lightBlue" : null }}
+        style={{ backgroundColor: isHovered ? "lightBlue" : null }}
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
-        {hovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
-        {hovered && space(<button onClick={handleRename}>Rename</button>)}
-        {hovered && space(<button onClick={handleAddPlant}>Add Plant</button>)}
-        {hovered && space(<button onClick={handleAddLabel}>Add Label</button>)}
-        {hovered && space(<button onClick={handleAddArrow}>Add Arrow</button>)}
+        {isHovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
+        {isHovered && space(<button onClick={handleRename}>Rename</button>)}
+        {isHovered &&
+          space(<button onClick={handleAddPlant}>Add Plant</button>)}
+        {isHovered &&
+          space(<button onClick={handleAddLabel}>Add Label</button>)}
+        {isHovered &&
+          space(<button onClick={handleAddArrow}>Add Arrow</button>)}
       </div>
 
       <div style={{ marginLeft: "20px" }}>

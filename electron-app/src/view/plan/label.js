@@ -12,14 +12,16 @@ const Label = ({ label }) => {
     hovered.set(null);
   };
 
+  const isHovered = hovered.matches(label, true);
+
   return (
     <text
       x={label.position.x}
       y={label.position.y}
       // Scaling by 10 seems to give reasonable default sizes
       fontSize={label.size / 10}
-      fill={hovered.matches(label) ? "blue" : "black"}
-      fontWeight={hovered.matches(label) ? "bold" : "normal"}
+      fill={isHovered ? "blue" : "black"}
+      fontWeight={isHovered ? "bold" : "normal"}
       style={{ userSelect: "none" }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
