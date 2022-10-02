@@ -12,16 +12,12 @@ const Plant = ({ plant }) => {
 
   const template = useTemplate(plant.template);
 
-  const [background, setBackground] = useState(null);
-
   const handleMouseEnter = () => {
     hovered.set(plant);
-    setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
     hovered.set(null);
-    setBackground(null);
   };
 
   const handleEdit = () => {
@@ -36,7 +32,9 @@ const Plant = ({ plant }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: background }}
+      style={{
+        backgroundColor: hovered.matches(plant) ? "lightBlue" : null,
+      }}
     >
       <p style={{ display: "inline-block" }}>
         Plant: {template ? template.name : plant.name}

@@ -11,6 +11,14 @@ const Plant = ({ plant }) => {
     plant = { ...template, ...plant };
   }
 
+  const handleMouseEnter = () => {
+    hovered.set(plant);
+  };
+
+  const handleMouseLeave = () => {
+    hovered.set(null);
+  };
+
   return (
     <circle
       cx={plant.position.x}
@@ -19,6 +27,8 @@ const Plant = ({ plant }) => {
       fill={plant.colour}
       stroke={hovered.matches(plant) ? "blue" : "black"}
       strokeWidth={plant.size / (hovered.matches(plant) ? 3 : 5)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     />
   );
 };
