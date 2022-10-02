@@ -2,22 +2,22 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, TextBox, NumericTextBox } from "../common/input";
 import { editElement, removeElement } from "../../model/store";
-import { Modal } from "../../model/context";
+import { Hovered, Modal } from "../../model/context";
 
 const Label = ({ label }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
+  const hovered = useContext(Hovered);
 
-  const [hovered, setHovered] = useState(false);
   const [background, setBackground] = useState(null);
 
   const handleMouseEnter = () => {
-    setHovered(true);
+    hovered.set(label);
     setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
-    setHovered(false);
+    hovered.set(null);
     setBackground(null);
   };
 
@@ -42,8 +42,10 @@ const Label = ({ label }) => {
         </p>
       )}
 
-      {hovered && space(<button onClick={handleEdit}>Edit</button>)}
-      {hovered && space(<button onClick={handleRemove}>Remove</button>)}
+      {hovered.matches(label) &&
+        space(<button onClick={handleEdit}>Edit</button>)}
+      {hovered.matches(label) &&
+        space(<button onClick={handleRemove}>Remove</button>)}
     </div>
   );
 };
