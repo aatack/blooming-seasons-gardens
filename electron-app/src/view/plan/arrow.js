@@ -4,6 +4,14 @@ import { Hovered } from "../../model/context";
 const Arrow = ({ arrow }) => {
   const hovered = useContext(Hovered);
 
+  const handleMouseEnter = () => {
+    hovered.set(arrow);
+  };
+
+  const handleMouseLeave = () => {
+    hovered.set(null);
+  };
+
   return (
     <line
       x1={arrow.start.x}
@@ -14,6 +22,8 @@ const Arrow = ({ arrow }) => {
       // Scaling by 50 seems to give a reasonable default width; a little bit
       // thicker to highlight it when it's hovered
       strokeWidth={arrow.width / (hovered.matches(arrow) ? 30 : 50)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     />
   );
 };

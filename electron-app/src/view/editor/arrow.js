@@ -9,16 +9,12 @@ const Arrow = ({ arrow }) => {
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
 
-  const [background, setBackground] = useState(null);
-
   const handleMouseEnter = () => {
     hovered.set(arrow);
-    setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
     hovered.set(null);
-    setBackground(null);
   };
 
   const handleEdit = () => {
@@ -33,7 +29,7 @@ const Arrow = ({ arrow }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: background }}
+      style={{ backgroundColor: hovered.matches(arrow) ? "lightBlue" : null }}
     >
       <p style={{ display: "inline-block" }}>Arrow</p>
 
