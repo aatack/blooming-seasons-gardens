@@ -8,6 +8,7 @@ const exampleGarden = {
       elements: [
         {
           identifier: 5,
+          bedIdentifier: 3,
           type: "plant",
           position: { x: 6, y: 1.2 },
           name: "Clover",
@@ -16,6 +17,7 @@ const exampleGarden = {
         },
         {
           identifier: 6,
+          bedIdentifier: 3,
           type: "plant",
           position: { x: -5, y: 4 },
           template: 2,
@@ -28,12 +30,14 @@ const exampleGarden = {
       elements: [
         {
           identifier: 7,
+          bedIdentifier: 4,
           type: "plant",
           position: { x: 12.04, y: 7 },
           template: 1,
         },
         {
           identifier: 8,
+          bedIdentifier: 4,
           type: "label",
           position: { x: 13, y: 6 },
           text: "Daffodil",
@@ -41,6 +45,7 @@ const exampleGarden = {
         },
         {
           identifier: 9,
+          bedIdentifier: 4,
           type: "arrow",
           start: { x: 11, y: 8 },
           end: { x: 14, y: 5 },

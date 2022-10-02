@@ -93,6 +93,7 @@ export const store = configureStore({
 
           const head = {
             identifier: state.identifier,
+            bedIdentifier: action.payload.bedIdentifier,
             type: "plant",
             position: { x: 0, y: 0 },
           };
@@ -118,6 +119,7 @@ export const store = configureStore({
 
           bed.elements.push({
             identifier: state.identifier,
+            bedIdentifier: action.payload.bedIdentifier,
             type: "label",
             text: action.payload.text
               ? action.payload.text
@@ -134,6 +136,7 @@ export const store = configureStore({
 
           bed.elements.push({
             identifier: state.identifier,
+            bedIdentifier: action.payload.bedIdentifier,
             type: "arrow",
             start: action.payload.start,
             end: action.payload.end,

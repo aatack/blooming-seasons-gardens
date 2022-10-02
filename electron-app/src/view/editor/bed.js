@@ -9,7 +9,7 @@ import {
   renameBed,
 } from "../../model/store";
 import { Checkbox, TextBox, Dropdown, space } from "../common/input";
-import { Modal } from "../../model/context";
+import { Modal, Hovered } from "../../model/context";
 import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
 import Label from "./label";
@@ -19,8 +19,7 @@ const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
   const modal = useContext(Modal);
-  const [hovered, setHovered] = useState(false);
-  const [background, setBackground] = useState(null);
+  const hovered = useContext(Hovered);
 
   const handleRemoveBed = () => {
     dispatch(removeBed(bed));
@@ -43,13 +42,11 @@ const Bed = ({ bed }) => {
   };
 
   const handleMouseEnter = () => {
-    setHovered(true);
-    setBackground("lightBlue");
+    hovered.set(bed);
   };
 
   const handleMouseLeave = () => {
-    setHovered(false);
-    setBackground(null);
+    hovered.set(null);
   };
 
   return (
@@ -57,7 +54,7 @@ const Bed = ({ bed }) => {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{ backgroundColor: background }}
+        style={{ backgroundColor: hovered.matches(bed) ? "lightBlue" : null }}
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
         {hovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
