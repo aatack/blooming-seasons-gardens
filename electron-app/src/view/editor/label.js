@@ -9,16 +9,12 @@ const Label = ({ label }) => {
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
 
-  const [background, setBackground] = useState(null);
-
   const handleMouseEnter = () => {
     hovered.set(label);
-    setBackground("lightBlue");
   };
 
   const handleMouseLeave = () => {
     hovered.set(null);
-    setBackground(null);
   };
 
   const handleEdit = () => {
@@ -33,7 +29,7 @@ const Label = ({ label }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: background }}
+      style={{ backgroundColor: hovered.matches(label) ? "lightBlue" : null }}
     >
       <p style={{ display: "inline-block" }}>Label: {label.text}</p>
       {space(
