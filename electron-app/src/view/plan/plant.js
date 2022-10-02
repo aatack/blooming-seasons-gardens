@@ -26,7 +26,7 @@ const Plant = ({ plant }) => {
       cx={plant.position.x}
       cy={plant.position.y}
       r={plant.size}
-      fill={plant.colour}
+      fill={isHovered ? "lightBlue" : plant.colour}
       stroke={isHovered ? "blue" : "black"}
       strokeWidth={plant.size / (isHovered ? 3 : 5)}
       onMouseEnter={handleMouseEnter}
