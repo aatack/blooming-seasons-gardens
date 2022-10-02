@@ -25,7 +25,7 @@ const Plant = ({ plant }) => {
     <circle
       cx={plant.position.x}
       cy={plant.position.y}
-      r={plant.size}
+      r={plant.size / 2} // Size refers to the plant's diameter
       fill={isHovered ? "lightBlue" : plant.colour}
       stroke={isHovered ? "blue" : "black"}
       strokeWidth={plant.size / (isHovered ? 3 : 5)}
