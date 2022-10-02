@@ -17,6 +17,7 @@ const App = () => {
               dragWidth={8}
               minimumWidth={100}
               initialWidth={window.innerWidth * 0.3}
+              toggleKey={32} // Space bar
             >
               <>
                 <Editor />

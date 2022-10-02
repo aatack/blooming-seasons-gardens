@@ -6,6 +6,7 @@ export const HorizontalSplit = ({
   dragWidth,
   minimumWidth,
   initialWidth,
+  toggleKey,
 }) => {
   const [first, second] = children.props.children;
 
@@ -35,8 +36,14 @@ export const HorizontalSplit = ({
     setCollapsed(!collapsed);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.which === toggleKey) {
+      setCollapsed(!collapsed);
+    }
+  };
+
   return (
-    <>
+    <div onKeyDown={handleKeyDown} tabIndex={0}>
       {!collapsed && (
         <div
           style={{
@@ -75,6 +82,6 @@ export const HorizontalSplit = ({
         onDrag={handleDrag}
         onClick={handleClick}
       />
-    </>
+    </div>
   );
 };
