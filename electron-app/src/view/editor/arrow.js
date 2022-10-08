@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, NumericTextBox } from "../common/input";
-import { editElement, removeElement } from "../../model/store";
+import { editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
 
 const Arrow = ({ arrow }) => {

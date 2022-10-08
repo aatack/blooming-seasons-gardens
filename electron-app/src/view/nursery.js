@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useSelector } from "react-redux";
 import { Modal } from "../model/context";
-import { addTemplate } from "../model/store";
+import { addTemplate } from "../model/actions";
 import Template from "./editor/template";
 import { useDispatch } from "react-redux";
 import { space, TextBox } from "./common/input";

@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
-import { editTemplate, removeTemplate } from "../../model/store";
+import { editTemplate, removeTemplate } from "../../model/actions";
 import { Modal } from "../../model/context";
 import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
 

@@ -1,6 +1,6 @@
 import { useContext, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBed, setBackground, removeBackground } from "../../model/store";
+import { addBed, setBackground, removeBackground } from "../../model/actions";
 import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
 import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";

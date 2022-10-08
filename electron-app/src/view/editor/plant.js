@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
 import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
-import { editElement, removeElement } from "../../model/store";
+import { editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
 
 const Plant = ({ plant }) => {

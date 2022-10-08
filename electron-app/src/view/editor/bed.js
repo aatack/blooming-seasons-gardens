@@ -7,7 +7,7 @@ import {
   addTemplatePlant,
   removeBed,
   renameBed,
-} from "../../model/store";
+} from "../../model/actions";
 import { Checkbox, TextBox, Dropdown, space } from "../common/input";
 import { Modal, Hovered } from "../../model/context";
 import { CreateTemplateModal } from "../nursery";
