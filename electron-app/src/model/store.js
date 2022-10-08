@@ -28,6 +28,11 @@ const produceWithHistory = (state, transform) => {
   // TODO: ensure none of the current reducers access the state directly,
   //       assuming it to be distinct from the draft
   return produce(state, (draft) => {
+    if (state.history.index !== null) {
+      draft.history.index = null;
+      draft.history.items.splice(state.history.index);
+    }
+    draft.history.items.push(state.garden);
     transform(draft.garden);
   });
 };
