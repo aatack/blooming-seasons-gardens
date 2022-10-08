@@ -3,7 +3,7 @@ import produce from "immer";
 import exampleGarden from "./example";
 
 const findByIdentifier = (state, identifier) => {
-  for (const bed of state.garden) {
+  for (const bed of state.beds) {
     if (bed.identifier === identifier) {
       return bed;
     }
