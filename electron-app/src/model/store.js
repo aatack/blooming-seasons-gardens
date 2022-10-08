@@ -24,60 +24,68 @@ const findByIdentifier = (state, identifier) => {
   return null;
 };
 
+const produceWithHistory = (state, transform) => {
+  // TODO: ensure none of the current reducers access the state directly,
+  //       assuming it to be distinct from the draft
+  return produce(state, (draft) => {
+    transform(draft.garden);
+  });
+};
+
 export const store = configureStore({
   // Start the identifier at 1 so we can guarantee the it will never be zero,
   // and can therefore cast identifiers to booleans to see whether they exist
   reducer: (state = exampleGarden, action) => {
     switch (action.type) {
       case "loaded":
-        return produce(state, (draft) => action.payload);
+        return produceWithHistory(state, (draft) => action.payload);
 
       case "garden/bed/added":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.identifier += 1;
-          draft.garden.push({
-            identifier: state.identifier,
+          draft.beds.push({
+            identifier: state.garden.identifier,
             name: action.payload
               ? action.payload
-              : "Bed " + state.identifier.toString(),
+              : "Bed " + state.garden.identifier.toString(),
             elements: [],
           });
         });
       case "garden/bed/removed":
-        return produce(state, (draft) => {
-          draft.garden = state.garden.filter(
+        return produceWithHistory(state, (draft) => {
+          draft.beds = state.garden.beds.filter(
             (bed) => bed.identifier !== action.payload
           );
         });
       case "garden/bed/renamed": // TODO: make this "edited" instead
-        return produce(state, (draft) => {
-          const bed = draft.garden.find(
+        return produceWithHistory(state, (draft) => {
+          const bed = draft.beds.find(
             (b) => b.identifier === action.payload.identifier
           );
           bed.name = action.payload.name;
         });
 
       case "nursery/template/added":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.identifier += 1;
           draft.nursery.push({
-            identifier: state.identifier,
+            identifier: state.garden.identifier,
             name: action.payload
               ? action.payload
-              : "Template " + state.identifier.toString(),
+              : "Template " + state.garden.identifier.toString(),
             size: 0.5,
             colour: "#aabbcc",
           });
         });
       case "nursery/template/removed":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           // TODO: remove dependent elements
           draft.nursery = draft.nursery.filter(
             (template) => template.identifier !== action.payload
           );
         });
       case "nursery/template/edited":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           const template = draft.nursery.find(
             (t) => t.identifier === action.payload.identifier
           );
@@ -87,12 +95,12 @@ export const store = configureStore({
         });
 
       case "garden/plant/added":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.identifier += 1;
           const bed = findByIdentifier(draft, action.payload.bedIdentifier);
 
           const head = {
-            identifier: state.identifier,
+            identifier: state.garden.identifier,
             bedIdentifier: action.payload.bedIdentifier,
             type: "plant",
             position: { x: 0, y: 0 },
@@ -104,7 +112,7 @@ export const store = configureStore({
             : {
                 name: action.payload.name
                   ? action.payload.name
-                  : "Plant " + state.identifier.toString(),
+                  : "Plant " + state.garden.identifier.toString(),
                 size: 0.5,
                 colour: "#aabbcc",
               };
@@ -113,29 +121,29 @@ export const store = configureStore({
         });
 
       case "garden/label/added":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.identifier += 1;
           const bed = findByIdentifier(draft, action.payload.bedIdentifier);
 
           bed.elements.push({
-            identifier: state.identifier,
+            identifier: state.garden.identifier,
             bedIdentifier: action.payload.bedIdentifier,
             type: "label",
             text: action.payload.text
               ? action.payload.text
-              : "Label " + state.identifier.toString(),
+              : "Label " + state.garden.identifier.toString(),
             position: { x: 0, y: 0 },
             size: 12,
           });
         });
 
       case "garden/arrow/added":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.identifier += 1;
           const bed = findByIdentifier(draft, action.payload.bedIdentifier);
 
           bed.elements.push({
-            identifier: state.identifier,
+            identifier: state.garden.identifier,
             bedIdentifier: action.payload.bedIdentifier,
             type: "arrow",
             start: action.payload.start,
@@ -145,8 +153,8 @@ export const store = configureStore({
         });
 
       case "garden/element/removed":
-        return produce(state, (draft) => {
-          for (const bed of draft.garden) {
+        return produceWithHistory(state, (draft) => {
+          for (const bed of draft.beds) {
             if (
               bed.elements.find(
                 (element) => element.identifier === action.payload
@@ -159,7 +167,7 @@ export const store = configureStore({
           }
         });
       case "garden/element/edited":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           const element = findByIdentifier(draft, action.payload.identifier);
 
           for (const key in action.payload.edits) {
@@ -168,11 +176,11 @@ export const store = configureStore({
         });
 
       case "garden/background/set":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.background = action.payload;
         });
       case "garden/background/removed":
-        return produce(state, (draft) => {
+        return produceWithHistory(state, (draft) => {
           draft.background = null;
         });
 
