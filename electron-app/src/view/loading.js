@@ -2,16 +2,17 @@ import { Modal } from "../model/context";
 import { useContext } from "react";
 import { loadGarden, saveGarden, listGardens, deleteGarden } from "../storage";
 import { space } from "./common/input";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import defaultGarden from "../model/default";
 import { RenameGardenModal } from "./editor/rename";
+import { useGarden } from "../model/selectors";
 
 const LoadGardenModal = () => {
   // TODO: re-render whenever the list of current gardens changes
 
   const gardens = listGardens();
-  const garden = useSelector((state) => state);
+  const garden = useGarden();
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
@@ -42,7 +43,7 @@ const LoadGardenModal = () => {
 
 const Garden = ({ path }) => {
   const dispatch = useDispatch();
-  const currentGarden = useSelector((state) => state);
+  const currentGarden = useGarden();
 
   const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);

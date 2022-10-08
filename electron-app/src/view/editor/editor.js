@@ -1,5 +1,5 @@
 import { useContext, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addBed, setBackground, removeBackground } from "../../model/actions";
 import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
 import { Modal, GardenSVG } from "../../model/context";
@@ -9,6 +9,12 @@ import Bed from "./bed";
 import { downloadText, saveGarden } from "../../storage";
 import LoadGardenModal from "../loading";
 import { RenameGardenModal } from "./rename";
+import {
+  useBackground,
+  useBeds,
+  useGarden,
+  usePath,
+} from "../../model/selectors";
 
 const Editor = () => {
   const padding = 8;
@@ -36,9 +42,9 @@ const Editor = () => {
   }, []);
 
   // TODO: rename `garden` to `beds` in the data structure
-  const beds = useSelector((state) => state.garden);
-  const path = useSelector((state) => state.path);
-  const garden = useSelector((state) => state);
+  const beds = useBeds();
+  const path = usePath();
+  const garden = useGarden();
 
   const handleSave = () => {
     if (garden.path) {
@@ -135,7 +141,7 @@ const CreateBedModal = () => {
 };
 
 const SetBackgroundModal = () => {
-  const background = useSelector((state) => state.background);
+  const background = useBackground();
   const dispatch = useDispatch();
   const modal = useContext(Modal);
 

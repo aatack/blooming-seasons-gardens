@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { useSelector } from "react-redux";
 import { Modal } from "../model/context";
 import { addTemplate } from "../model/actions";
 import Template from "./editor/template";
 import { useDispatch } from "react-redux";
 import { space, TextBox } from "./common/input";
 import { useState } from "react";
+import { useNursery } from "../model/selectors";
 
 const Nursery = () => {
-  const templates = useSelector((state) => state.nursery);
+  const templates = useNursery();
   const modal = useContext(Modal);
 
   const handleAddTemplate = () => {

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
 import {
   addArrow,
@@ -14,6 +14,7 @@ import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
 import Label from "./label";
 import Arrow from "./arrow";
+import { useNursery } from "../../model/selectors";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -104,7 +105,7 @@ const AddPlantModal = ({ bed }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
-  const templates = useSelector((state) => state.nursery);
+  const templates = useNursery();
 
   const templatesAvailable = templates.length > 0;
 
