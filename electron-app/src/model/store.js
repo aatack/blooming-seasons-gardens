@@ -45,6 +45,19 @@ export const store = configureStore({
       case "loaded":
         return produceWithHistory(state, (draft) => action.payload);
 
+      case "undo":
+        // TODO: assert that the ength of the history items is greater than zero
+        return produce(state, (draft) => {
+          if (state.history.index === null) {
+            draft.history.index = state.history.items.length - 1;
+          } else {
+            draft.history.index--;
+          }
+          draft.garden = draft.history.items[draft.history.index];
+        });
+      case "redo":
+        return produce(state, (draft) => {});
+
       case "garden/bed/added":
         return produceWithHistory(state, (draft) => {
           draft.identifier += 1;

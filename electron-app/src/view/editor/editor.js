@@ -25,6 +25,8 @@ const Editor = () => {
 
   const [height, setHeight] = useState(0);
 
+  const dispatch = useDispatch();
+
   const handleAddBed = () => {
     modal.put(<CreateBedModal />);
   };
@@ -65,6 +67,10 @@ const Editor = () => {
     modal.put(<ExportModal garden={garden} />);
   };
 
+  const handleUndo = () => {
+    dispatch({ type: "undo" });
+  };
+
   return (
     <div
       ref={outer}
@@ -91,6 +97,7 @@ const Editor = () => {
           {space(<button onClick={handleSaveAs}>Save As</button>)}
           {space(<button onClick={handleLoad}>Load</button>)}
           {space(<button onClick={handleExport}>Export</button>)}
+          {space(<button onClick={handleUndo}>Undo</button>)}
           <br />
           <br />
           <button onClick={handleAddBed}>Add Bed</button>
