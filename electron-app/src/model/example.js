@@ -62,7 +62,14 @@ const exampleGarden = {
     background: null,
   },
   history: {
+    // Points to the index, within the items below, of the currently inspected
+    // garden state.  If the index is `null`, we are up to date and therefore
+    // the current state has not yet been added to the history's items
     index: null,
+
+    // Only stores garden states that have been superseded by another, ie. the
+    // most up-to-date garden state is not in the list of items unless we are
+    // accessing the history directly
     items: [],
   },
 };
