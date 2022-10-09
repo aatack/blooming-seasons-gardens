@@ -14,6 +14,7 @@ import {
   useBeds,
   useGarden,
   usePath,
+  useUndoAvailable,
 } from "../../model/selectors";
 
 const Editor = () => {
@@ -26,6 +27,7 @@ const Editor = () => {
   const [height, setHeight] = useState(0);
 
   const dispatch = useDispatch();
+  const undoAvaliable = useUndoAvailable();
 
   const handleAddBed = () => {
     modal.put(<CreateBedModal />);
@@ -97,7 +99,11 @@ const Editor = () => {
           {space(<button onClick={handleSaveAs}>Save As</button>)}
           {space(<button onClick={handleLoad}>Load</button>)}
           {space(<button onClick={handleExport}>Export</button>)}
-          {space(<button onClick={handleUndo}>Undo</button>)}
+          {space(
+            <button onClick={handleUndo} disabled={!undoAvaliable}>
+              Undo
+            </button>
+          )}
           <br />
           <br />
           <button onClick={handleAddBed}>Add Bed</button>

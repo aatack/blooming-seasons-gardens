@@ -29,3 +29,11 @@ export const usePath = () => {
 export const useBackground = () => {
   return useSelector((state) => state.garden.background);
 };
+
+export const useUndoAvailable = () => {
+  return useSelector(
+    (state) =>
+      state.history.items.length > 0 &&
+      (state.history.index > 0 || state.history.index === null)
+  );
+};
