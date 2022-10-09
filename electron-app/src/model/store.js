@@ -106,6 +106,11 @@ export const store = configureStore({
           draft.garden = draft.history.items[draft.history.index];
         });
 
+      case "garden/renamed":
+        return produceWithHistory(state, (draft) => {
+          draft.path = action.payload;
+        });
+
       case "garden/bed/added":
         return produceWithHistory(state, (draft) => {
           draft.identifier += 1;

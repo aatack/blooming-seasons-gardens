@@ -8,7 +8,7 @@ import Nursery from "../nursery";
 import Bed from "./bed";
 import { downloadText, saveGarden } from "../../storage";
 import ChooseGarden from "../loading/choose";
-import { RenameGardenModal } from "../loading/rename";
+import { RenameGardenModal } from "./rename";
 import {
   useBackground,
   useBeds,
@@ -59,7 +59,7 @@ const Editor = () => {
     }
   };
 
-  const handleSaveAs = () => {
+  const handleRename = () => {
     modal.put(<RenameGardenModal garden={garden} />);
   };
 
@@ -102,7 +102,7 @@ const Editor = () => {
           <button onClick={handleSave} disabled={!path}>
             Save
           </button>
-          {space(<button onClick={handleSaveAs}>Save As</button>)}
+          {space(<button onClick={handleRename}>Rename</button>)}
           {space(<button onClick={handleLoad}>Load</button>)}
           {space(<button onClick={handleExport}>Export</button>)}
           {space(

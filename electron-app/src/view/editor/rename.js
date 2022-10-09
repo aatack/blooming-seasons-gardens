@@ -11,11 +11,8 @@ export const RenameGardenModal = ({ garden }) => {
   const modal = useContext(Modal);
 
   const onDone = () => {
-    saveGarden(garden);
-    const newGarden = { ...garden, path: path };
-    saveGarden(newGarden);
-    dispatch({ type: "loaded", payload: newGarden });
-    modal.set([]);
+    dispatch({ type: "garden/renamed", payload: path });
+    modal.pop();
   };
 
   const onCancel = () => {
