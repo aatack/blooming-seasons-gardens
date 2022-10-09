@@ -52,9 +52,14 @@ export const store = configureStore({
         return produceWithHistory(state, (draft) => action.payload);
 
       case "workspace/created":
+        // Overrides the current garden; should only be used after pushing the
+        // current garden, ie. from the choose garden screen
         return produce(state, (draft) => {
           draft.workspace.identifier += 1;
-          draft.workspace.gardens.push(emptyGarden(state.workspace.identifier));
+          draft.garden = emptyGarden(
+            state.workspace.identifier,
+            action.payload
+          );
         });
       case "workspace/pushed":
         return produce(state, (draft) => {

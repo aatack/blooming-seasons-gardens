@@ -1,8 +1,10 @@
-const emptyGarden = (workspaceIdentifier) => {
+const emptyGarden = (workspaceIdentifier, name) => {
   return {
-    path: "",
-    identifier: 1, // Counter for identifiers assigned to elements
-    workspaceIdentifier: workspaceIdentifier, // Identifier of this garden within the workspace
+    path: name,
+    // Counter for identifiers assigned to elements
+    identifier: 1,
+    // Identifier of this garden within the workspace
+    workspaceIdentifier: workspaceIdentifier,
     beds: [],
     nursery: [],
     background: null,

@@ -18,6 +18,10 @@ export const useGarden = () => {
   return useSelector((state) => state.garden);
 };
 
+export const useGardens = () => {
+  return useSelector((state) => state.workspace.gardens);
+};
+
 export const useBeds = () => {
   return useSelector((state) => state.garden.beds);
 };

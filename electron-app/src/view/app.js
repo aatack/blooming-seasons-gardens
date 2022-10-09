@@ -4,7 +4,7 @@ import { Modal, GardenSVG, Hovered } from "../model/context";
 import { HorizontalSplit } from "./common/layout";
 import { useState } from "react";
 import { useGarden } from "../model/selectors";
-import LoadGardenModal from "./loading";
+import ChooseGarden from "./loading/choose";
 
 const App = () => {
   const [gardenSVG, setGardenSVG] = useState(null);
@@ -16,11 +16,11 @@ const App = () => {
       <Modal.Provider>
         <Hovered.Provider>
           <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
+            <Modal.Component />
             {garden === null ? (
-              <LoadGardenModal />
+              <ChooseGarden />
             ) : (
               <>
-                <Modal.Component />
                 <HorizontalSplit
                   dragWidth={8}
                   minimumWidth={100}

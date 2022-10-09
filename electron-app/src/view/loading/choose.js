@@ -1,42 +1,39 @@
-import { Modal } from "../model/context";
+import { Modal } from "../../model/context";
 import { useContext } from "react";
-import { loadGarden, saveGarden, listGardens, deleteGarden } from "../storage";
-import { space } from "./common/input";
+import {
+  loadGarden,
+  saveGarden,
+  listGardens,
+  deleteGarden,
+} from "../../storage";
+import { space } from "../common/input";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import defaultGarden from "../model/default";
-import { RenameGardenModal } from "./editor/rename";
-import { useGarden } from "../model/selectors";
+import defaultGarden from "../../model/default";
+import { NewGardenModal } from "./new";
+import { useGarden, useGardens } from "../../model/selectors";
 
-const LoadGardenModal = () => {
+const ChooseGarden = () => {
   // TODO: re-render whenever the list of current gardens changes
 
-  const gardens = listGardens();
-  const garden = useGarden();
+  const gardens = useGardens();
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
   const handleNew = () => {
-    saveGarden(garden);
-    dispatch({ type: "loaded", payload: defaultGarden });
-    modal.pop();
-    modal.put(<RenameGardenModal garden={{ ...garden, path: null }} />);
-  };
-
-  const handleClose = () => {
-    modal.pop();
+    console.log("Putting modal");
+    modal.put(<NewGardenModal />);
   };
 
   return (
     <>
       <h1>Choose Garden</h1>
-      <button onClick={handleNew}>New</button>
-      {gardens.map((path) => (
-        <Garden path={path} key={path} />
-      ))}
-
       <br />
-      <button onClick={handleClose}>Close</button>
+      <button onClick={handleNew}>New</button>
+      <br />
+      {gardens.map((garden) => (
+        <Garden path={garden.path} key={garden.workspaceIdentifier} />
+      ))}
     </>
   );
 };
@@ -92,4 +89,4 @@ const Garden = ({ path }) => {
   );
 };
 
-export default LoadGardenModal;
+export default ChooseGarden;

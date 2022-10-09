@@ -7,8 +7,8 @@ import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
 import { downloadText, saveGarden } from "../../storage";
-import LoadGardenModal from "../loading";
-import { RenameGardenModal } from "./rename";
+import ChooseGarden from "../loading/choose";
+import { RenameGardenModal } from "../loading/rename";
 import {
   useBackground,
   useBeds,
@@ -64,7 +64,7 @@ const Editor = () => {
   };
 
   const handleLoad = () => {
-    modal.put(<LoadGardenModal />);
+    modal.put(<ChooseGarden />);
   };
 
   const handleExport = () => {
