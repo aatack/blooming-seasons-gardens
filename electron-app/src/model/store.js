@@ -48,7 +48,7 @@ export const store = configureStore({
   // and can therefore cast identifiers to booleans to see whether they exist
   reducer: (state = exampleGarden, action) => {
     switch (action.type) {
-      case "loaded":
+      case "initialised":
         return produceWithHistory(state, (draft) => action.payload);
 
       case "workspace/created":
