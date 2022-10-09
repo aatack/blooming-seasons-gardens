@@ -29,7 +29,7 @@ const LoadGardenModal = () => {
 
   return (
     <>
-      <h1>Change Garden</h1>
+      <h1>Choose Garden</h1>
       <button onClick={handleNew}>New</button>
       {gardens.map((path) => (
         <Garden path={path} key={path} />
