@@ -60,6 +60,9 @@ export const store = configureStore({
             state.workspace.identifier,
             action.payload
           );
+
+          draft.history.items = [draft.garden];
+          draft.history.index = 0;
         });
       case "workspace/pushed":
         return produce(state, (draft) => {
@@ -75,6 +78,9 @@ export const store = configureStore({
           draft.workspace.gardens = draft.workspace.gardens.filter(
             (garden) => garden.workspaceIdentifier !== action.payload
           );
+
+          draft.history.items = [draft.garden];
+          draft.history.index = 0;
         });
       case "workspace/deleted":
         return produce(state, (draft) => {
