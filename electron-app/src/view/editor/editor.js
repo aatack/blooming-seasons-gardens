@@ -73,6 +73,10 @@ const Editor = () => {
     dispatch({ type: "undo" });
   };
 
+  const handleRedo = () => {
+    dispatch({ type: "redo" });
+  };
+
   return (
     <div
       ref={outer}
@@ -104,6 +108,7 @@ const Editor = () => {
               Undo
             </button>
           )}
+          {space(<button onClick={handleRedo}>Redo</button>)}
           <br />
           <br />
           <button onClick={handleAddBed}>Add Bed</button>
