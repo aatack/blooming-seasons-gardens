@@ -1,7 +1,8 @@
 const exampleGarden = {
   garden: {
     path: "Example Garden",
-    identifier: 29,
+    identifier: 29, // Counter for identifiers assigned to elements
+    workspaceIdentifier: 1, // Identifier of this garden within the workspace
     beds: [
       {
         identifier: 3,
@@ -74,6 +75,24 @@ const exampleGarden = {
     // array should never be empty, so will have the current state added to it
     // before any changes take place, since it is initialised as empty.
     items: [],
+  },
+  workspace: {
+    identifier: 1, // Next identifier to be assigned to a garden
+    gardens: [
+      /* 
+      
+      List of saved garden objects something like the following:
+      
+      {
+        identifier: int,
+        garden: Garden (see above),
+        deleted: bool
+      }
+
+      It might be useful to enforce that there are no duplicate paths.
+
+      */
+    ],
   },
 };
 
