@@ -19,9 +19,11 @@ export const useGarden = () => {
 };
 
 export const useGardens = () => {
-  return useSelector((state) =>
-    state.workspace.gardens.filter((garden) => !garden.deleted)
-  );
+  return useSelector((state) => {
+    const gardens = state.workspace.gardens.filter((garden) => !garden.deleted);
+    gardens.sort((left, right) => left.path.localeCompare(right.path));
+    return gardens;
+  });
 };
 
 export const useBeds = () => {
