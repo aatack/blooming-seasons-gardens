@@ -6,8 +6,7 @@ import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
-import { downloadText, saveGarden } from "../../storage";
-import ChooseGarden from "../loading/choose";
+import { downloadText } from "../../storage";
 import { RenameGardenModal } from "./rename";
 import {
   useBackground,
@@ -17,6 +16,7 @@ import {
   useRedoAvailable,
   useUndoAvailable,
 } from "../../model/selectors";
+import { storeData } from "../../model/store";
 
 const Editor = () => {
   const padding = 8;
@@ -53,10 +53,7 @@ const Editor = () => {
   const garden = useGarden();
 
   const handleSave = () => {
-    if (garden.path) {
-      // TODO: disable the option to save if the garden has no name
-      saveGarden(garden);
-    }
+    storeData();
   };
 
   const handleRename = () => {

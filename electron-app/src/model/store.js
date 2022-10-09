@@ -3,6 +3,16 @@ import produce from "immer";
 import emptyGarden from "./empty";
 import exampleGarden from "./example";
 
+const storageKey = "blooming-seasons-stored-data";
+
+export const storeData = () => {
+  localStorage.setItem(storageKey, JSON.stringify(store.getState()));
+};
+
+export const loadData = () => {
+  return JSON.parse(localStorage.getItem(storageKey));
+};
+
 const findByIdentifier = (state, identifier) => {
   for (const bed of state.beds) {
     if (bed.identifier === identifier) {
@@ -46,7 +56,7 @@ const produceWithHistory = (state, transform) => {
 export const store = configureStore({
   // Start the identifier at 1 so we can guarantee the it will never be zero,
   // and can therefore cast identifiers to booleans to see whether they exist
-  reducer: (state = exampleGarden, action) => {
+  reducer: (state = loadData(), action) => {
     switch (action.type) {
       case "initialised":
         return produceWithHistory(state, (draft) => action.payload);

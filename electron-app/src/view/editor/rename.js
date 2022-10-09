@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { TextBox, space } from "../common/input";
 import { useContext } from "react";
-import { saveGarden } from "../../storage";
 
 export const RenameGardenModal = ({ garden }) => {
   const [path, setPath] = useState(garden.path || "");
