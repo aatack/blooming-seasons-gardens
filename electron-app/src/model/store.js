@@ -71,9 +71,9 @@ export const store = configureStore({
         });
       case "workspace/copied":
         return produce(state, (draft) => {
-          const gardenNames = state.workspace.gardens.map(
-            (garden) => garden.path
-          );
+          const gardenNames = state.workspace.gardens
+            .filter((garden) => !garden.deleted)
+            .map((garden) => garden.path);
           const garden = state.workspace.gardens.find(
             (garden) => garden.workspaceIdentifier === action.payload
           );

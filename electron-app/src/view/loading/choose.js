@@ -1,23 +1,16 @@
 import { Modal } from "../../model/context";
 import { useContext } from "react";
-import {
-  loadGarden,
-  saveGarden,
-  listGardens,
-  deleteGarden,
-} from "../../storage";
 import { space } from "../common/input";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { NewGardenModal } from "./new";
-import { useGarden, useGardenNames, useGardens } from "../../model/selectors";
+import { useGardens } from "../../model/selectors";
 
 const ChooseGarden = () => {
   // TODO: re-render whenever the list of current gardens changes
 
   const gardens = useGardens();
   const modal = useContext(Modal);
-  const dispatch = useDispatch();
 
   const handleNew = () => {
     modal.put(<NewGardenModal />);
@@ -43,8 +36,6 @@ const ChooseGarden = () => {
 const Garden = ({ path, identifier }) => {
   const dispatch = useDispatch();
 
-  const gardenNames = useGardenNames();
-
   const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);
 
@@ -58,7 +49,8 @@ const Garden = ({ path, identifier }) => {
   };
 
   const handleDelete = () => {
-    // deleteGarden(path);
+    // TODO: confirm with the user before deleting
+    dispatch({ type: "workspace/deleted", payload: identifier });
   };
 
   const handleMouseEnter = () => {

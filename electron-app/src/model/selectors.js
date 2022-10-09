@@ -19,12 +19,8 @@ export const useGarden = () => {
 };
 
 export const useGardens = () => {
-  return useSelector((state) => state.workspace.gardens);
-};
-
-export const useGardenNames = () => {
   return useSelector((state) =>
-    state.workspace.gardens.map((garden) => garden.path)
+    state.workspace.gardens.filter((garden) => !garden.deleted)
   );
 };
 
