@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
+import defaultState from "./default";
 import emptyGarden from "./empty";
-import exampleGarden from "./example";
 
 const storageKey = "blooming-seasons-stored-data";
 
@@ -10,7 +10,12 @@ export const storeData = () => {
 };
 
 export const loadData = () => {
-  return JSON.parse(localStorage.getItem(storageKey));
+  return JSON.parse(localStorage.getItem(storageKey)) || defaultState;
+};
+
+export const purgeData = () => {
+  // NOTE: not actually used anywhere; just for convenience
+  localStorage.setItem(storageKey, null);
 };
 
 const findByIdentifier = (state, identifier) => {
