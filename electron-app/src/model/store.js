@@ -58,13 +58,14 @@ export const store = configureStore({
           draft.garden = draft.history.items[draft.history.index];
         });
       case "redo":
-        // TODO: assert that the history index is non-`null`
+        // TODO: assert that the history index strictly less than the current
+        //       length of the items array minus one
         return produce(state, (draft) => {
           draft.history.index++;
           if (draft.history.index >= draft.history.items.length) {
-            draft.history.index = null;
+            draft.history.index = draft.history.items.length - 1;
           }
-          draft.garden = draft.history.items[draft.index];
+          draft.garden = draft.history.items[draft.history.index];
         });
 
       case "garden/bed/added":

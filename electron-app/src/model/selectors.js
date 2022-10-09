@@ -31,9 +31,11 @@ export const useBackground = () => {
 };
 
 export const useUndoAvailable = () => {
+  return useSelector((state) => state.history.index > 0);
+};
+
+export const useRedoAvailable = () => {
   return useSelector(
-    (state) =>
-      state.history.items.length > 0 &&
-      (state.history.index > 0 || state.history.index === null)
+    (state) => state.history.index < (state.history.items.length || 1) - 1
   );
 };

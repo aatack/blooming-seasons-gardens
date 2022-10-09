@@ -14,6 +14,7 @@ import {
   useBeds,
   useGarden,
   usePath,
+  useRedoAvailable,
   useUndoAvailable,
 } from "../../model/selectors";
 
@@ -28,6 +29,7 @@ const Editor = () => {
 
   const dispatch = useDispatch();
   const undoAvaliable = useUndoAvailable();
+  const redoAvailable = useRedoAvailable();
 
   const handleAddBed = () => {
     modal.put(<CreateBedModal />);
@@ -108,7 +110,11 @@ const Editor = () => {
               Undo
             </button>
           )}
-          {space(<button onClick={handleRedo}>Redo</button>)}
+          {space(
+            <button onClick={handleRedo} disabled={!redoAvailable}>
+              Redo
+            </button>
+          )}
           <br />
           <br />
           <button onClick={handleAddBed}>Add Bed</button>
