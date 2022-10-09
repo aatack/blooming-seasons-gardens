@@ -28,12 +28,16 @@ const produceWithHistory = (state, transform) => {
   // TODO: ensure none of the current reducers access the state directly,
   //       assuming it to be distinct from the draft
   return produce(state, (draft) => {
-    if (state.history.index !== null) {
-      draft.history.index = null;
-      draft.history.items.splice(state.history.index);
+    if (!state.history.items.length) {
+      draft.history.index = 0;
+      draft.history.items = [state.garden];
     }
-    draft.history.items.push(state.garden);
+
     transform(draft.garden);
+
+    draft.history.index++;
+    draft.history.items.splice(draft.history.index + 1);
+    draft.history.items.push(draft.garden);
   });
 };
 
@@ -46,11 +50,9 @@ export const store = configureStore({
         return produceWithHistory(state, (draft) => action.payload);
 
       case "undo":
-        // TODO: assert that the ength of the history items is greater than zero
+        // TODO: assert that the ;ength of the history items is above zero
         return produce(state, (draft) => {
-          if (state.history.index === null) {
-            draft.history.index = state.history.items.length - 1;
-          } else {
+          if (draft.history.index > 0) {
             draft.history.index--;
           }
           draft.garden = draft.history.items[draft.history.index];

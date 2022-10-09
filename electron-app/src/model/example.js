@@ -63,13 +63,16 @@ const exampleGarden = {
   },
   history: {
     // Points to the index, within the items below, of the currently inspected
-    // garden state.  If the index is `null`, we are up to date and therefore
-    // the current state has not yet been added to the history's items
-    index: null,
+    // garden state
+    index: 0,
 
-    // Only stores garden states that have been superseded by another, ie. the
-    // most up-to-date garden state is not in the list of items unless we are
-    // accessing the history directly
+    // Stores all previous iterations of the garden (within the current session)
+    // in an array.  The one currently displayed is almost always the one within
+    // this list at the index described above, with the excetpion of transitory
+    // states (eg. when a value is changed continuously but will ultimately be
+    // viewed as a single action for the purposes of undoing).  In theory the
+    // array should never be empty, so will have the current state added to it
+    // before any changes take place, since it is initialised as empty.
     items: [],
   },
 };
