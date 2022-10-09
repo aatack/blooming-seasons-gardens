@@ -1,5 +1,6 @@
 import { clamp } from "./maths";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export const HorizontalSplit = ({
   children,
@@ -13,6 +14,8 @@ export const HorizontalSplit = ({
   const [width, setWidth] = useState(initialWidth);
   const [x, setX] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleDragStart = (e) => {
     setX(e.clientX);
@@ -39,6 +42,14 @@ export const HorizontalSplit = ({
   const handleKeyDown = (e) => {
     if (e.which === toggleKey) {
       setCollapsed(!collapsed);
+    }
+
+    if (e.code === "KeyZ" && e.ctrlKey) {
+      dispatch({ type: "undo" });
+    }
+
+    if (e.code === "KeyY" && e.ctrlKey) {
+      dispatch({ type: "redo" });
     }
   };
 
