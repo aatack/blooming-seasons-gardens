@@ -35,8 +35,9 @@ const produceWithHistory = (state, transform) => {
 
     transform(draft.garden);
 
-    draft.history.index++;
+    // Clear out any "alternative timelines"
     draft.history.items.splice(draft.history.index + 1);
+    draft.history.index++;
     draft.history.items.push(draft.garden);
   });
 };
@@ -61,10 +62,13 @@ export const store = configureStore({
         // TODO: assert that the history index strictly less than the current
         //       length of the items array minus one
         return produce(state, (draft) => {
+          const length = draft.history.items.length || 1;
+
           draft.history.index++;
-          if (draft.history.index >= draft.history.items.length) {
-            draft.history.index = draft.history.items.length - 1;
+          if (draft.history.index >= length) {
+            draft.history.index = length - 1;
           }
+
           draft.garden = draft.history.items[draft.history.index];
         });
 
