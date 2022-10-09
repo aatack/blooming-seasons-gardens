@@ -1,5 +1,9 @@
 # Blooming Seasons Design Studio
 
+## Setup
+
+From this folder, run `npm install`.
+
 ## Development
 
 To start the development server, run:
