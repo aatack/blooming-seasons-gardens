@@ -64,7 +64,7 @@ const Editor = () => {
   };
 
   const handleLoad = () => {
-    modal.put(<ChooseGarden />);
+    dispatch({ type: "workspace/pushed" });
   };
 
   const handleExport = () => {

@@ -69,10 +69,33 @@ export const store = configureStore({
           draft.workspace.gardens.push(state.garden);
           draft.garden = null;
         });
+      case "workspace/copied":
+        return produce(state, (draft) => {
+          const gardenNames = state.workspace.gardens.map(
+            (garden) => garden.path
+          );
+          const garden = state.workspace.gardens.find(
+            (garden) => garden.workspaceIdentifier === action.payload
+          );
+
+          var index = 1;
+          var attempt = `${garden.path} (copy ${index})`;
+          while (gardenNames.indexOf(attempt) !== -1) {
+            index++;
+            attempt = `${garden.path} (copy ${index})`;
+          }
+
+          draft.workspace.identifier += 1;
+          draft.workspace.gardens.push({
+            ...garden,
+            path: attempt,
+            workspaceIdentifier: state.workspace.identifier,
+          });
+        });
       case "workspace/pulled":
         return produce(state, (draft) => {
           // Pop the active garden out of the workspace
-          draft.garden = state.workspace.find(
+          draft.garden = state.workspace.gardens.find(
             (garden) => garden.workspaceIdentifier === action.payload
           );
           draft.workspace.gardens = draft.workspace.gardens.filter(

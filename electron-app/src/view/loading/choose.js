@@ -9,9 +9,8 @@ import {
 import { space } from "../common/input";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import defaultGarden from "../../model/default";
 import { NewGardenModal } from "./new";
-import { useGarden, useGardens } from "../../model/selectors";
+import { useGarden, useGardenNames, useGardens } from "../../model/selectors";
 
 const ChooseGarden = () => {
   // TODO: re-render whenever the list of current gardens changes
@@ -21,7 +20,6 @@ const ChooseGarden = () => {
   const dispatch = useDispatch();
 
   const handleNew = () => {
-    console.log("Putting modal");
     modal.put(<NewGardenModal />);
   };
 
@@ -32,42 +30,35 @@ const ChooseGarden = () => {
       <button onClick={handleNew}>New</button>
       <br />
       {gardens.map((garden) => (
-        <Garden path={garden.path} key={garden.workspaceIdentifier} />
+        <Garden
+          path={garden.path}
+          identifier={garden.workspaceIdentifier}
+          key={garden.workspaceIdentifier}
+        />
       ))}
     </>
   );
 };
 
-const Garden = ({ path }) => {
+const Garden = ({ path, identifier }) => {
   const dispatch = useDispatch();
-  const currentGarden = useGarden();
+
+  const gardenNames = useGardenNames();
 
   const modal = useContext(Modal);
   const [hovered, setHovered] = useState(false);
 
   const handleLoad = () => {
-    // TODO: warn before loading over an unsaved garden
-    saveGarden(currentGarden);
-    dispatch({ type: "loaded", payload: loadGarden(path) });
+    dispatch({ type: "workspace/pulled", payload: identifier });
     modal.pop();
   };
 
   const handleCopy = () => {
-    const gardens = listGardens();
-
-    var index = 1;
-    var attempt = `${path} (copy ${index})`;
-    while (gardens.indexOf(attempt) !== -1) {
-      index++;
-      attempt = `${path} (copy ${index})`;
-    }
-
-    const gg = { ...currentGarden, path: attempt };
-    saveGarden(gg);
+    dispatch({ type: "workspace/copied", payload: identifier });
   };
 
   const handleDelete = () => {
-    deleteGarden(path);
+    // deleteGarden(path);
   };
 
   const handleMouseEnter = () => {

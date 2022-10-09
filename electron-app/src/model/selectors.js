@@ -22,6 +22,12 @@ export const useGardens = () => {
   return useSelector((state) => state.workspace.gardens);
 };
 
+export const useGardenNames = () => {
+  return useSelector((state) =>
+    state.workspace.gardens.map((garden) => garden.path)
+  );
+};
+
 export const useBeds = () => {
   return useSelector((state) => state.garden.beds);
 };
