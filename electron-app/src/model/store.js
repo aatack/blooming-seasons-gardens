@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
+import emptyGarden from "./empty";
 import exampleGarden from "./example";
 
 const findByIdentifier = (state, identifier) => {
@@ -49,6 +50,34 @@ export const store = configureStore({
     switch (action.type) {
       case "loaded":
         return produceWithHistory(state, (draft) => action.payload);
+
+      case "workspace/created":
+        return produce(state, (draft) => {
+          draft.workspace.identifier += 1;
+          draft.workspace.gardens.push(emptyGarden(state.workspace.identifier));
+        });
+      case "workspace/pushed":
+        return produce(state, (draft) => {
+          draft.workspace.gardens.push(state.garden);
+          draft.garden = null;
+        });
+      case "workspace/pulled":
+        return produce(state, (draft) => {
+          // Pop the active garden out of the workspace
+          draft.garden = state.workspace.find(
+            (garden) => garden.workspaceIdentifier === action.payload
+          );
+          draft.workspace.gardens = draft.workspace.gardens.filter(
+            (garden) => garden.workspaceIdentifier !== action.payload
+          );
+        });
+      case "workspace/deleted":
+        return produce(state, (draft) => {
+          const garden = draft.workspace.gardens.find(
+            (garden) => garden.workspaceIdentifier === action.payload
+          );
+          garden.deleted = true;
+        });
 
       case "undo":
         // TODO: assert that the ;ength of the history items is above zero

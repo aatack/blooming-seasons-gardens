@@ -77,21 +77,10 @@ const exampleGarden = {
     items: [],
   },
   workspace: {
-    identifier: 1, // Next identifier to be assigned to a garden
+    identifier: 2, // Next identifier to be assigned to a garden
     gardens: [
-      /* 
-      
-      List of saved garden objects something like the following:
-      
-      {
-        identifier: int,
-        garden: Garden (see above),
-        deleted: bool
-      }
-
-      It might be useful to enforce that there are no duplicate paths.
-
-      */
+      // List of saved garden objects in the format described above.
+      // It might be useful to enforce that there are no duplicate paths
     ],
   },
 };
