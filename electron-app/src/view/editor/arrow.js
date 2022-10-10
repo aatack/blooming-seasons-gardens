@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, NumericTextBox } from "../common/input";
-import { editElement, removeElement } from "../../model/actions";
+import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
 
 const Arrow = ({ arrow }) => {
@@ -25,6 +25,10 @@ const Arrow = ({ arrow }) => {
     dispatch(removeElement(arrow));
   };
 
+  const handleCopy = () => {
+    dispatch(copyElement(arrow));
+  };
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -37,6 +41,8 @@ const Arrow = ({ arrow }) => {
         space(<button onClick={handleEdit}>Edit</button>)}
       {hovered.matches(arrow) &&
         space(<button onClick={handleRemove}>Remove</button>)}
+      {hovered.matches(arrow) &&
+        space(<button onClick={handleCopy}>Copy</button>)}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, TextBox, NumericTextBox } from "../common/input";
-import { editElement, removeElement } from "../../model/actions";
+import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
 
 const Label = ({ label }) => {
@@ -25,6 +25,10 @@ const Label = ({ label }) => {
     dispatch(removeElement(label));
   };
 
+  const handleCopy = () => {
+    dispatch(copyElement(label));
+  };
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -42,6 +46,8 @@ const Label = ({ label }) => {
         space(<button onClick={handleEdit}>Edit</button>)}
       {hovered.matches(label) &&
         space(<button onClick={handleRemove}>Remove</button>)}
+      {hovered.matches(label) &&
+        space(<button onClick={handleCopy}>Copy</button>)}
     </div>
   );
 };
