@@ -25,3 +25,49 @@ Changes to the source code should update that display live (upon saving).
 ## References
 
 The initial project setup was done by following [a guide](https://medium.com/folkdevelopers/the-ultimate-guide-to-electron-with-react-8df8d73f4c97) and then removing all the boilerplate that wasn't strictly necessary.
+
+## Feature requests
+
+- [x] `from black import main`
+- [x] Bed -> edit -> says "edit plant"
+- [x] Can only load PNG
+- [x] Popups appear on the wrong screen
+- [x] Make a copy of a plant for bulk creation
+  - Actually applies to any element
+- [x] Plant sizes need to refer to their diameters
+- [x] Beter colour picker
+- [ ] Import images for plants
+  - [ ] Work out why the tickbox isn't picking up the right initial value
+- [x] See the colour of a plant when picking it
+- [ ] Open the existing garden at a default location
+- [ ] Automatically save every minute
+- [ ] Thinner outline for plants and editable
+- [x] Increase popup size
+- [x] Plants should derive properties from the nursery always
+- [ ] Text bigger in the editor
+- [ ] Display plant sizes alongside coordinates
+- [ ] Select and move with the arrow keys
+- [x] Movement sensitivity changes with zoom level
+- [x] Nursery terminology: template and instance
+- [x] Make whole plant light up blue
+- [x] **Undo**
+- [ ] Show plant preview in the list of plants in the nursery
+- [ ] Sort plants within a bed by name, and then by x-coordinate
+- [x] Make editor width draggable
+- [ ] Make text font selectable
+  - [ ] Spectral
+  - [ ] Arial
+- [ ] Make open nursery for labels
+  - [ ] Or, alternatively, click on a button to make a label for an existing plant
+- [ ] Highlight everything in a bed when mousing over its collapsible area
+- [x] Reverse highlighting: light up in editor when moused over in plan
+- [ ] Line breaks in labels
+- [ ] Centralise labels
+- [ ] Ability to add rectangles
+- [ ] Checkbox that enables beds to be hidden temporarily
+- [x] Hotkey for hiding the editor
+  - Went with space in the end (keycode 32)
+- [ ] Tabs: mood board, garden
+- [ ] Snap to centre
+- [ ] Invert the truthiness of the tickbox for selecting the template to use
+  - [ ] Better yet, don't use a tickbox at all: just have a "custom" option
