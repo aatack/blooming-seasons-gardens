@@ -289,6 +289,21 @@ export const store = configureStore({
             element[key] = action.payload.edits[key];
           }
         });
+      case "garden/element/copied":
+        return produceWithHistory(state, (draft) => {
+          for (const bed of draft.beds) {
+            const element = bed.elements.find(
+              (element) => element.identifier === action.payload
+            );
+            if (element) {
+              draft.identifier += 1;
+              bed.elements.push({
+                ...element,
+                identifier: state.garden.identifier,
+              });
+            }
+          }
+        });
 
       case "garden/background/set":
         return produceWithHistory(state, (draft) => {

@@ -28,6 +28,10 @@ const Plant = ({ plant }) => {
     dispatch(removeElement(plant));
   };
 
+  const handleCopy = () => {
+    dispatch({ type: "garden/element/copied", payload: plant.identifier });
+  };
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -49,6 +53,8 @@ const Plant = ({ plant }) => {
         space(<button onClick={handleEdit}>Edit</button>)}
       {hovered.matches(plant) &&
         space(<button onClick={handleRemove}>Remove</button>)}
+      {hovered.matches(plant) &&
+        space(<button onClick={handleCopy}>Copy</button>)}
     </div>
   );
 };
