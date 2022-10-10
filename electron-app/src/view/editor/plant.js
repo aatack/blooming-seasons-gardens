@@ -76,7 +76,7 @@ const EditPlantModal = ({ plant }) => {
   const [y, setY] = useState(plant.position.y);
   const [size, setSize] = useState(plant.size);
 
-  const [useColour, setUseColour] = useState(plant.setUseColour);
+  const [useColour, setUseColour] = useState(plant.useColour);
   const [colour, setColour] = useState(plant.colour);
   const [icon, setIcon] = useState(plant.icon);
 
@@ -91,6 +91,7 @@ const EditPlantModal = ({ plant }) => {
           size: size,
           colour: colour,
           icon: icon,
+          useColour: useColour,
         })
       );
     }
@@ -161,12 +162,13 @@ const IconPicker = ({
   };
 
   const handleReset = () => {
-    setImage(null);
+    wrappedSetImage(null);
   };
 
   return (
     <>
       <p>Use colour?</p>
+      {/* TODO: work out why this doesn't display the right value on startup */}
       <Checkbox value={useColour} setValue={setUseColour} />
       {useColour && (
         <>
