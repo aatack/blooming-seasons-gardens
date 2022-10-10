@@ -1,3 +1,35 @@
+export const undo = () => {
+  return { type: "undo" };
+};
+
+export const redo = () => {
+  return { type: "redo" };
+};
+
+export const workspacePushed = () => {
+  return { type: "workspace/pushed" };
+};
+
+export const workspacePulled = (identifier) => {
+  return { type: "workspace/pulled", payload: identifier };
+};
+
+export const workspaceCopied = (identifier) => {
+  return { type: "workspace/copied", payload: identifier };
+};
+
+export const workspaceDeleted = (identifier) => {
+  return { type: "workspace/deleted", payload: identifier };
+};
+
+export const workspaceCreated = (path) => {
+  return { type: "workspace/created", payload: path };
+};
+
+export const renameGarden = (newName) => {
+  return { type: "garden/renamed", payload: newName };
+};
+
 export const addBed = (name) => {
   return { type: "garden/bed/added", payload: name };
 };
@@ -79,6 +111,13 @@ export const editElement = (element, edits) => {
       identifier: element.identifier,
       edits: edits,
     },
+  };
+};
+
+export const copyElement = (element) => {
+  return {
+    type: "garden/element/copied",
+    payload: element.identifier,
   };
 };
 

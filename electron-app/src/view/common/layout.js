@@ -1,6 +1,7 @@
 import { clamp } from "./maths";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { redo, undo } from "../../model/actions";
 
 export const HorizontalSplit = ({
   children,
@@ -45,11 +46,11 @@ export const HorizontalSplit = ({
     }
 
     if (e.code === "KeyZ" && e.ctrlKey) {
-      dispatch({ type: "undo" });
+      dispatch(undo());
     }
 
     if (e.code === "KeyY" && e.ctrlKey) {
-      dispatch({ type: "redo" });
+      dispatch(redo());
     }
   };
 

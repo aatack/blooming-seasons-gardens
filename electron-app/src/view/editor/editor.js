@@ -1,6 +1,13 @@
 import { useContext, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addBed, setBackground, removeBackground } from "../../model/actions";
+import {
+  addBed,
+  setBackground,
+  removeBackground,
+  workspacePushed,
+  undo,
+  redo,
+} from "../../model/actions";
 import { FileInput, NumericTextBox, space, TextBox } from "../common/input";
 import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";
@@ -61,7 +68,7 @@ const Editor = () => {
   };
 
   const handleLoad = () => {
-    dispatch({ type: "workspace/pushed" });
+    dispatch(workspacePushed());
   };
 
   const handleExport = () => {
@@ -69,11 +76,11 @@ const Editor = () => {
   };
 
   const handleUndo = () => {
-    dispatch({ type: "undo" });
+    dispatch(undo());
   };
 
   const handleRedo = () => {
-    dispatch({ type: "redo" });
+    dispatch(redo());
   };
 
   return (

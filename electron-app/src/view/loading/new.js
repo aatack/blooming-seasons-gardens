@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { TextBox, space } from "../common/input";
 import { useContext } from "react";
+import { workspaceCreated } from "../../model/actions";
 
 export const NewGardenModal = () => {
   const [path, setPath] = useState("");
@@ -10,7 +11,7 @@ export const NewGardenModal = () => {
   const modal = useContext(Modal);
 
   const onDone = () => {
-    dispatch({ type: "workspace/created", payload: path });
+    dispatch(workspaceCreated(path));
     modal.set([]);
   };
 

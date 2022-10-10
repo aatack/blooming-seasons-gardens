@@ -5,6 +5,11 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { NewGardenModal } from "./new";
 import { useGardens } from "../../model/selectors";
+import {
+  workspaceCopied,
+  workspaceDeleted,
+  workspacePulled,
+} from "../../model/actions";
 
 const ChooseGarden = () => {
   // TODO: re-render whenever the list of current gardens changes
@@ -40,17 +45,17 @@ const Garden = ({ path, identifier }) => {
   const [hovered, setHovered] = useState(false);
 
   const handleLoad = () => {
-    dispatch({ type: "workspace/pulled", payload: identifier });
+    dispatch(workspacePulled(identifier));
     modal.pop();
   };
 
   const handleCopy = () => {
-    dispatch({ type: "workspace/copied", payload: identifier });
+    dispatch(workspaceCopied(identifier));
   };
 
   const handleDelete = () => {
     // TODO: confirm with the user before deleting
-    dispatch({ type: "workspace/deleted", payload: identifier });
+    dispatch(workspaceDeleted(identifier));
   };
 
   const handleMouseEnter = () => {

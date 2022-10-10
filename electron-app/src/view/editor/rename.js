@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { TextBox, space } from "../common/input";
 import { useContext } from "react";
+import { renameGarden } from "../../model/actions";
 
 export const RenameGardenModal = ({ garden }) => {
   const [path, setPath] = useState(garden.path || "");
@@ -10,7 +11,7 @@ export const RenameGardenModal = ({ garden }) => {
   const modal = useContext(Modal);
 
   const onDone = () => {
-    dispatch({ type: "garden/renamed", payload: path });
+    dispatch(renameGarden(path));
     modal.pop();
   };
 
