@@ -1,7 +1,14 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
-import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
+import {
+  Checkbox,
+  ColourPicker,
+  FileInput,
+  NumericTextBox,
+  space,
+  TextBox,
+} from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
 
@@ -68,7 +75,10 @@ const EditPlantModal = ({ plant }) => {
   const [x, setX] = useState(plant.position.x);
   const [y, setY] = useState(plant.position.y);
   const [size, setSize] = useState(plant.size);
+
+  const [useColour, setUseColour] = useState(plant.setUseColour);
   const [colour, setColour] = useState(plant.colour);
+  const [icon, setIcon] = useState(plant.icon);
 
   const handleDone = () => {
     if (template) {
@@ -80,6 +90,7 @@ const EditPlantModal = ({ plant }) => {
           name: name,
           size: size,
           colour: colour,
+          icon: icon,
         })
       );
     }
@@ -108,14 +119,79 @@ const EditPlantModal = ({ plant }) => {
         <>
           <p>Size</p>
           <NumericTextBox value={size} setValue={setSize} />
-          <p>Colour</p>
-          <ColourPicker value={colour} setValue={setColour} />
+          <IconPicker
+            colour={colour}
+            setColour={setColour}
+            icon={icon}
+            setIcon={setIcon}
+            useColour={useColour}
+            setUseColour={setUseColour}
+          />
         </>
       )}
       <br />
       <br />
       <button onClick={handleDone}>Done</button>
       {space(<button onClick={handleCancel}>Cancel</button>)}
+    </>
+  );
+};
+
+const IconPicker = ({
+  colour,
+  setColour,
+  icon,
+  setIcon,
+  useColour,
+  setUseColour,
+}) => {
+  const [scale, setScale] = useState(icon.scale);
+  const [image, setImage] = useState(icon.image);
+
+  // TODO: surely there's a neater way than this...?
+
+  const wrappedSetScale = (newScale) => {
+    setScale(newScale);
+    setIcon({ ...icon, scale: newScale });
+  };
+
+  const wrappedSetImage = (newImage) => {
+    setImage(newImage);
+    setIcon({ ...icon, image: newImage });
+  };
+
+  const handleReset = () => {
+    setImage(null);
+  };
+
+  return (
+    <>
+      <p>Use colour?</p>
+      <Checkbox value={useColour} setValue={setUseColour} />
+      {useColour && (
+        <>
+          <p>Colour</p>
+          <ColourPicker value={colour} setValue={setColour} />
+        </>
+      )}
+      {!useColour && (
+        <>
+          <p>Icon</p>
+          {image ? (
+            <>
+              <img src={image} style={{ width: "60%" }} alt="Preview" />
+              <br />
+              Scale:
+              {space(
+                <NumericTextBox value={scale} setValue={wrappedSetScale} />
+              )}
+              <button onClick={handleReset}>Reset</button>
+            </>
+          ) : (
+            <FileInput setValue={wrappedSetImage} />
+          )}
+        </>
+      )}
     </>
   );
 };

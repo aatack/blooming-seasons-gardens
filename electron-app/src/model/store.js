@@ -190,6 +190,13 @@ export const store = configureStore({
               : "Template " + state.garden.identifier.toString(),
             size: 0.5,
             colour: "#aabbcc",
+            icon: {
+              image: null,
+              scale: 1,
+              x: 0,
+              y: 0,
+            },
+            useColour: true,
           });
         });
       case "nursery/template/removed":
@@ -230,6 +237,13 @@ export const store = configureStore({
                   : "Plant " + state.garden.identifier.toString(),
                 size: 0.5,
                 colour: "#aabbcc",
+                icon: {
+                  image: null,
+                  scale: 1,
+                  x: 0,
+                  y: 0,
+                },
+                useColour: true,
               };
 
           bed.elements.push({ ...head, ...body });
