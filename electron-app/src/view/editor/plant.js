@@ -78,6 +78,7 @@ const EditPlantModal = ({ plant }) => {
   const [size, setSize] = useState(plant.size);
 
   const [iconMode, setIconMode] = useState(plant.iconMode);
+  const [iconColour, setIconColour] = useState(plant.iconColour);
 
   const handleDone = () => {
     if (template) {
@@ -89,6 +90,7 @@ const EditPlantModal = ({ plant }) => {
           name: name,
           size: size,
           iconMode: iconMode,
+          iconColour: iconColour,
         })
       );
     }
@@ -126,7 +128,9 @@ const EditPlantModal = ({ plant }) => {
               { name: "Image", key: "image", value: "colour" },
             ]}
           />
-          {iconMode === "colour" && <p>TODO</p>}
+          {iconMode === "colour" && (
+            <ColourPicker value={iconColour} setValue={setIconColour} />
+          )}
           {iconMode === "image" && <p>TODO</p>}
         </>
       )}
