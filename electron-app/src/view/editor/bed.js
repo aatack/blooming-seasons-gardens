@@ -144,7 +144,7 @@ const AddPlantModal = ({ bed }) => {
         <Dropdown
           options={templates.map((t) => ({
             key: t.identifier,
-            value: t.identifier,
+            value: t,
             name: t.name,
           }))}
           value={template}

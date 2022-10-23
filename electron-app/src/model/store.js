@@ -230,6 +230,8 @@ export const store = configureStore({
             type: "plant",
             position: { x: 0, y: 0 },
           };
+
+          console.log(action.payload);
           const body = action.payload.templateIdentifier
             ? {
                 template: action.payload.templateIdentifier,
