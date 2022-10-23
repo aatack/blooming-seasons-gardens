@@ -8,6 +8,7 @@ export const SVGViewer = ({
   initialY,
   initialScale,
   onClick,
+  isGardenSVG,
 }) => {
   const svgElement = useRef();
 
@@ -21,9 +22,40 @@ export const SVGViewer = ({
 
   const setGardenSVG = useContext(GardenSVG)[1];
 
+  const handleWheel = (e) => {
+    if (!dragging) {
+      const offset = svgElement.current.getBoundingClientRect();
+      zoom(
+        (e.clientX - offset.x) / scale - x,
+        (e.clientY - offset.y) / scale - y,
+        1 - e.deltaY * 0.002
+      );
+    }
+  };
+
   useEffect(() => {
-    setGardenSVG(svgElement.current);
-  });
+    if (isGardenSVG) {
+      setGardenSVG(svgElement.current);
+    }
+
+    const cancelWheel = (e) => {
+      e.preventDefault();
+    };
+
+    // By default, React uses passive event handlers, which are not allowed to
+    // stop propgagation.  So we have to use the ref to attach the `onWheel`
+    // handler to the SVG element
+    if (svgElement && svgElement.current) {
+      svgElement.current.addEventListener("wheel", cancelWheel, {
+        passive: false,
+      });
+      return () => {
+        if (svgElement.current) {
+          svgElement.current.removeEventListener("wheel", cancelWheel);
+        }
+      };
+    }
+  }, []);
 
   const translate = (dx, dy) => {
     setX(x + dx);
@@ -67,25 +99,17 @@ export const SVGViewer = ({
     }
   };
 
-  const handleWheel = (e) => {
-    if (!dragging) {
-      const offset = svgElement.current.getBoundingClientRect();
-      zoom(
-        (e.clientX - offset.x) / scale - x,
-        (e.clientY - offset.y) / scale - y,
-        1 - e.deltaY * 0.002
-      );
-    }
-  };
-
   return (
     <div
       onClick={handleClick}
       onMouseMove={handleMouseMove}
-      onWheel={handleWheel}
       style={{ width: "100%", height: "100%" }}
     >
-      <svg ref={svgElement} style={{ width: "100%", height: "100%" }}>
+      <svg
+        ref={svgElement}
+        style={{ width: "100%", height: "100%" }}
+        onWheel={handleWheel}
+      >
         <Scale scale={scale}>
           <Translate x={x} y={y}>
             {children}

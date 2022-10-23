@@ -12,6 +12,7 @@ import {
 } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal } from "../../model/context";
+import { SVGViewer } from "../common/rendering";
 
 const Plant = ({ plant }) => {
   const dispatch = useDispatch();
@@ -144,7 +145,9 @@ const EditPlantModal = ({ plant }) => {
               <p>Icon</p>
               {iconImage ? (
                 <>
-                  <img src={iconImage} style={{ width: "60%" }} alt="Preview" />
+                  <SVGViewer isGardenSVG={false}>
+                    <image href={iconImage} />
+                  </SVGViewer>
                   <br />
                   Scale:
                   {space(
