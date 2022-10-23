@@ -4,6 +4,7 @@ import { useTemplate } from "../../model/selectors";
 import {
   Checkbox,
   ColourPicker,
+  Dropdown,
   FileInput,
   NumericTextBox,
   space,
@@ -76,9 +77,7 @@ const EditPlantModal = ({ plant }) => {
   const [y, setY] = useState(plant.position.y);
   const [size, setSize] = useState(plant.size);
 
-  const [useColour, setUseColour] = useState(plant.useColour);
-  const [colour, setColour] = useState(plant.colour);
-  const [icon, setIcon] = useState(plant.icon);
+  const [iconMode, setIconMode] = useState(plant.iconMode);
 
   const handleDone = () => {
     if (template) {
@@ -89,9 +88,7 @@ const EditPlantModal = ({ plant }) => {
           position: { x: x, y: y },
           name: name,
           size: size,
-          colour: colour,
-          icon: icon,
-          useColour: useColour,
+          iconMode: iconMode,
         })
       );
     }
@@ -120,13 +117,17 @@ const EditPlantModal = ({ plant }) => {
         <>
           <p>Size</p>
           <NumericTextBox value={size} setValue={setSize} />
-          <IconPicker
-            colour={colour}
-            setColour={setColour}
-            icon={icon}
-            setIcon={setIcon}
-            useColour={useColour}
-            setUseColour={setUseColour}
+          <p>Icon mode</p>
+          <Dropdown
+            value={iconMode}
+            setValue={setIconMode}
+            options={[
+              { name: "Colour", identifier: "colour" },
+              {
+                name: "Image",
+                identifier: "image",
+              },
+            ]}
           />
         </>
       )}
