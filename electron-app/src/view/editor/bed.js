@@ -141,7 +141,15 @@ const AddPlantModal = ({ bed }) => {
 
       {custom && <TextBox value={name} setValue={setName} />}
       {!custom && templatesAvailable && (
-        <Dropdown options={templates} value={template} setValue={setTemplate} />
+        <Dropdown
+          options={templates.map((t) => ({
+            key: t.identifier,
+            value: t.identifier,
+            name: t.name,
+          }))}
+          value={template}
+          setValue={setTemplate}
+        />
       )}
       {!custom && !templatesAvailable && (
         <>

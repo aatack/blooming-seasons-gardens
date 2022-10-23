@@ -189,14 +189,12 @@ export const store = configureStore({
               ? action.payload
               : "Template " + state.garden.identifier.toString(),
             size: 0.5,
-            colour: "#aabbcc",
-            icon: {
-              image: null,
-              scale: 1,
-              x: 0,
-              y: 0,
-            },
-            useColour: true,
+            iconMode: "colour",
+            iconColour: "#aabbcc",
+            iconImage: null,
+            iconScale: 1,
+            iconX: 0,
+            iconY: 0,
           });
         });
       case "nursery/template/removed":
@@ -213,7 +211,12 @@ export const store = configureStore({
           );
           template.name = action.payload.name;
           template.size = action.payload.size;
-          template.colour = action.payload.colour;
+          template.iconMode = action.payload.iconMode;
+          template.iconColour = action.payload.iconColour;
+          template.iconImage = action.payload.iconImage;
+          template.iconScale = action.payload.iconScale;
+          template.iconX = action.payload.iconX;
+          template.iconY = action.payload.iconY;
         });
 
       case "garden/plant/added":

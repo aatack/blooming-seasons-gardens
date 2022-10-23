@@ -70,10 +70,10 @@ export const Checkbox = (props) => {
 };
 
 export const Dropdown = (props) => {
-  // Expects `options` to be an array of objects with `name` and `identifier`
-  // keys
+  // Expects `options` to be an array of objects with `key`, `value`, and
+  // `identifier` properties
 
-  const [value, setValue] = useState(props.value.name);
+  const [value, setValue] = useState(props.value);
 
   const handleChange = (e) => {
     const newValue = props.options.find(
@@ -82,14 +82,14 @@ export const Dropdown = (props) => {
     setValue(newValue.name);
 
     if (props.setValue) {
-      props.setValue(newValue);
+      props.setValue(newValue.value);
     }
   };
 
   return (
     <select onChange={handleChange} value={value}>
       {props.options.map((option) => (
-        <option key={option.identifier.toString()}>{option.name}</option>
+        <option key={option.key}>{option.name}</option>
       ))}
     </select>
   );

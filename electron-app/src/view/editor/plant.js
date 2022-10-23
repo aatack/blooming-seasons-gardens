@@ -122,13 +122,12 @@ const EditPlantModal = ({ plant }) => {
             value={iconMode}
             setValue={setIconMode}
             options={[
-              { name: "Colour", identifier: "colour" },
-              {
-                name: "Image",
-                identifier: "image",
-              },
+              { name: "Colour", key: "colour", value: "colour" },
+              { name: "Image", key: "image", value: "colour" },
             ]}
           />
+          {iconMode === "colour" && <p>TODO</p>}
+          {iconMode === "image" && <p>TODO</p>}
         </>
       )}
       <br />
