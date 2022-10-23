@@ -24,12 +24,12 @@ const Plant = ({ plant }) => {
 
   return (
     <>
-      {plant.useColour ? (
+      {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
           cy={plant.position.y}
           r={plant.size / 2} // Size refers to the plant's diameter
-          fill={isHovered ? "lightBlue" : plant.colour}
+          fill={isHovered ? "lightBlue" : plant.iconColour}
           stroke={isHovered ? "blue" : "black"}
           strokeWidth={plant.size / (isHovered ? 3 : 5)}
           onMouseEnter={handleMouseEnter}
@@ -38,7 +38,7 @@ const Plant = ({ plant }) => {
       ) : (
         <>
           <Translate x={plant.position.x} y={plant.position.y}>
-            <image href={plant.icon.image} />
+            <image href={plant.iconImage} />
           </Translate>
         </>
       )}

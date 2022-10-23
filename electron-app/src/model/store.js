@@ -236,14 +236,12 @@ export const store = configureStore({
                   ? action.payload.name
                   : "Plant " + state.garden.identifier.toString(),
                 size: 0.5,
-                colour: "#aabbcc",
-                icon: {
-                  image: null,
-                  scale: 1,
-                  x: 0,
-                  y: 0,
-                },
-                useColour: true,
+                iconMode: "colour",
+                iconColour: "#aabbcc",
+                iconImage: null,
+                iconScale: 1,
+                iconX: 0,
+                iconY: 0,
               };
 
           bed.elements.push({ ...head, ...body });
