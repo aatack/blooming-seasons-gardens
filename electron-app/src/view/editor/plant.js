@@ -79,6 +79,8 @@ const EditPlantModal = ({ plant }) => {
 
   const [iconMode, setIconMode] = useState(plant.iconMode);
   const [iconColour, setIconColour] = useState(plant.iconColour);
+  const [iconImage, setIconImage] = useState(plant.iconImage);
+  const [iconScale, setIconScale] = useState(plant.iconScale);
 
   const handleDone = () => {
     if (template) {
@@ -91,6 +93,8 @@ const EditPlantModal = ({ plant }) => {
           size: size,
           iconMode: iconMode,
           iconColour: iconColour,
+          iconImage: iconImage,
+          iconScale: iconScale,
         })
       );
     }
@@ -100,6 +104,10 @@ const EditPlantModal = ({ plant }) => {
 
   const handleCancel = () => {
     modal.pop();
+  };
+
+  const handleResetImage = () => {
+    setIconImage(null);
   };
 
   return (
@@ -125,13 +133,30 @@ const EditPlantModal = ({ plant }) => {
             setValue={setIconMode}
             options={[
               { name: "Colour", key: "colour", value: "colour" },
-              { name: "Image", key: "image", value: "colour" },
+              { name: "Image", key: "image", value: "image" },
             ]}
           />
           {iconMode === "colour" && (
             <ColourPicker value={iconColour} setValue={setIconColour} />
           )}
-          {iconMode === "image" && <p>TODO</p>}
+          {iconMode === "image" && (
+            <>
+              <p>Icon</p>
+              {iconImage ? (
+                <>
+                  <img src={iconImage} style={{ width: "60%" }} alt="Preview" />
+                  <br />
+                  Scale:
+                  {space(
+                    <NumericTextBox value={iconScale} setValue={setIconScale} />
+                  )}
+                  <button onClick={handleResetImage}>Reset</button>
+                </>
+              ) : (
+                <FileInput setValue={setIconImage} />
+              )}
+            </>
+          )}
         </>
       )}
       <br />
