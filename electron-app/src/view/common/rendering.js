@@ -15,8 +15,12 @@ export const SVGViewer = ({
   initialScale,
   onClick,
   isGardenSVG,
+  scrollSensitivity,
 }) => {
   // Children should always be wrapped in a React `<> </>` wrapper
+  if (!scrollSensitivity) {
+    scrollSensitivity = 0.002;
+  }
 
   const svgElement = useRef();
 
@@ -36,7 +40,7 @@ export const SVGViewer = ({
       zoom(
         (e.clientX - offset.x) / scale - x,
         (e.clientY - offset.y) / scale - y,
-        1 - e.deltaY * 0.002
+        1 - e.deltaY * scrollSensitivity
       );
     }
   };

@@ -163,7 +163,7 @@ const EditPlantModal = ({ plant }) => {
                     marginBottom: "10px",
                   }}
                 >
-                  <SVGViewer isGardenSVG={false}>
+                  <SVGViewer isGardenSVG={false} scrollSensitivity={0.0008}>
                     <>
                       <image href={iconImage} />
                       <StaticSVG>
