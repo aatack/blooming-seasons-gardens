@@ -2,6 +2,12 @@ import { useContext, useRef, useState, useEffect } from "react";
 import { GardenSVG } from "../../model/context";
 import { clamp } from "./maths";
 
+export const StaticSVG = ({ children }) => {
+  // Any elements wrapped in this will not be affected by scales or translations
+  // applied by the SVG viewer
+  return <g className="static-svg">{children}</g>;
+};
+
 export const SVGViewer = ({
   children,
   initialX,
@@ -10,6 +16,8 @@ export const SVGViewer = ({
   onClick,
   isGardenSVG,
 }) => {
+  // Children should always be wrapped in a React `<> </>` wrapper
+
   const svgElement = useRef();
 
   const [x, setX] = useState(initialX || 0);
@@ -99,6 +107,17 @@ export const SVGViewer = ({
     }
   };
 
+  const isStatic = (child) => {
+    if (child && child.type && child.type.name) {
+      return child.type.name;
+    } else {
+      return null;
+    }
+  };
+
+  const dynamicChildren = children.props.children.filter((c) => !isStatic(c));
+  const staticChildren = children.props.children.filter(isStatic);
+
   return (
     <div
       onClick={handleClick}
@@ -112,9 +131,11 @@ export const SVGViewer = ({
       >
         <Scale scale={scale}>
           <Translate x={x} y={y}>
-            {children}
+            {dynamicChildren}
           </Translate>
         </Scale>
+
+        {staticChildren}
       </svg>
     </div>
   );
