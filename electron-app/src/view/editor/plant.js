@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTemplate } from "../../model/selectors";
 import {
-  Checkbox,
   ColourPicker,
   Dropdown,
   FileInput,
@@ -82,6 +81,8 @@ const EditPlantModal = ({ plant }) => {
   const [iconColour, setIconColour] = useState(plant.iconColour);
   const [iconImage, setIconImage] = useState(plant.iconImage);
   const [iconScale, setIconScale] = useState(plant.iconScale);
+  const [iconX, setIconX] = useState(plant.iconX);
+  const [iconY, setIconY] = useState(plant.iconY);
 
   const handleDone = () => {
     if (template) {
@@ -96,6 +97,8 @@ const EditPlantModal = ({ plant }) => {
           iconColour: iconColour,
           iconImage: iconImage,
           iconScale: iconScale,
+          iconX: iconX,
+          iconY: iconY,
         })
       );
     }
@@ -109,6 +112,12 @@ const EditPlantModal = ({ plant }) => {
 
   const handleResetImage = () => {
     setIconImage(null);
+  };
+
+  const handleResetPositioning = () => {
+    setIconScale(1);
+    setIconX(0);
+    setIconY(0);
   };
 
   return (
@@ -142,24 +151,43 @@ const EditPlantModal = ({ plant }) => {
           )}
           {iconMode === "image" && (
             <>
-              <p>Icon</p>
+              <p>
+                Drag the image to position it inside the circle. Use the scroll
+                wheel to resize it.
+              </p>
               {iconImage ? (
-                <>
+                <div
+                  style={{
+                    height: "240px",
+                    width: "240px",
+                    marginBottom: "10px",
+                  }}
+                >
                   <SVGViewer isGardenSVG={false}>
                     <>
                       <image href={iconImage} />
                       <StaticSVG>
-                        <circle cx={10} cy={10} r={5} />
+                        <circle
+                          cx={120}
+                          cy={120}
+                          r={100}
+                          fill="none"
+                          stroke="grey"
+                          strokeWidth={1}
+                        />
                       </StaticSVG>
                     </>
                   </SVGViewer>
                   <br />
-                  Scale:
+                  <button onClick={handleResetImage}>Reset image</button>
                   {space(
-                    <NumericTextBox value={iconScale} setValue={setIconScale} />
+                    <button onClick={handleResetPositioning}>
+                      Reset positioning
+                    </button>
                   )}
-                  <button onClick={handleResetImage}>Reset</button>
-                </>
+                  <br />
+                  <br />
+                </div>
               ) : (
                 <FileInput setValue={setIconImage} />
               )}
