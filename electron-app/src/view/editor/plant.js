@@ -120,6 +120,10 @@ const EditPlantModal = ({ plant }) => {
     setIconY(0);
   };
 
+  const bindX = useState(0)
+  const bindY = useState(0)
+  const bindScale = useState(1)
+
   return (
     <>
       <h3>Edit Plant</h3>
@@ -163,7 +167,8 @@ const EditPlantModal = ({ plant }) => {
                     marginBottom: "10px",
                   }}
                 >
-                  <SVGViewer isGardenSVG={false} scrollSensitivity={0.0008}>
+                  <SVGViewer isGardenSVG={false} scrollSensitivity={0.0008}
+                    bindX={bindX} bindY={bindY} bindScale={bindScale}>
                     <>
                       <image href={iconImage} />
                       <StaticSVG>

@@ -10,12 +10,12 @@ export const StaticSVG = ({ children }) => {
 
 export const SVGViewer = ({
   children,
-  initialX,
-  initialY,
-  initialScale,
   onClick,
   isGardenSVG,
   scrollSensitivity,
+  bindX,
+  bindY,
+  bindScale,
 }) => {
   // Children should always be wrapped in a React `<> </>` wrapper
   if (!scrollSensitivity) {
@@ -24,9 +24,9 @@ export const SVGViewer = ({
 
   const svgElement = useRef();
 
-  const [x, setX] = useState(initialX || 0);
-  const [y, setY] = useState(initialY || 0);
-  const [scale, setScale] = useState(initialScale || 1);
+  const [x, setX] = bindX;
+  const [y, setY] = bindY;
+  const [scale, setScale] = bindScale;
 
   const [dragX, setDragX] = useState(0);
   const [dragY, setDragY] = useState(0);
