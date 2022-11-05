@@ -71,3 +71,8 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] Snap to centre
 - [ ] Invert the truthiness of the tickbox for selecting the template to use
   - [ ] Better yet, don't use a tickbox at all: just have a "custom" option
+
+### Others
+
+- [ ] Make sure the plant's outer rendered radius (ie. including stroke width) matches its given radius when not using an icon
+  - [ ] Also when the stroke thickness increases as it's hovered
