@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Hovered } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
-import { Translate } from "../common/rendering";
+import { Scale, Translate } from "../common/rendering";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
@@ -36,9 +36,36 @@ const Plant = ({ plant }) => {
           onMouseLeave={handleMouseLeave}
         />
       ) : (
+        // When scaling and positioning the image, the user moves it into a
+        // circle with a radius of 100 units positioned at (120, 120).  So to
+        // properly render it here, we apply the transforms that they saved, and
+        // then perform those that would move that circle to one centred at
+        // (0, 0) with a radius matching that specified for the plant
         <>
           <Translate x={plant.position.x} y={plant.position.y}>
-            <image href={plant.iconImage} />
+
+            {/* TODO: combine the various nested transforms into one */}
+            <Scale scale={0.01 * (plant.size / 2)}>
+              <Translate x={-120} y={-120}>
+
+                <Scale scale={plant.iconScale}>
+                  <Translate x={plant.iconX} y={plant.iconY}>
+                    <image href={plant.iconImage} />
+                  </Translate>
+                </Scale>
+
+                <circle
+                  cx={120}
+                  cy={120}
+                  r={100}
+                  fill="none"
+                  stroke="grey"
+                  strokeWidth={1}
+                />
+
+              </Translate>
+            </Scale>
+
           </Translate>
         </>
       )}

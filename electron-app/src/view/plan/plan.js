@@ -9,7 +9,7 @@ const Plan = () => {
 
   const bindX = useState(0);
   const bindY = useState(0);
-  const bindScale = useState(1);
+  const bindScale = useState(100);
 
   return (
     <SVGViewer
