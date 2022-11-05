@@ -54,15 +54,6 @@ const Plant = ({ plant }) => {
                   </Translate>
                 </Scale>
 
-                <circle
-                  cx={120}
-                  cy={120}
-                  r={100}
-                  fill="none"
-                  stroke="grey"
-                  strokeWidth={1}
-                />
-
               </Translate>
             </Scale>
 
