@@ -80,9 +80,9 @@ const EditPlantModal = ({ plant }) => {
   const [iconMode, setIconMode] = useState(plant.iconMode);
   const [iconColour, setIconColour] = useState(plant.iconColour);
   const [iconImage, setIconImage] = useState(plant.iconImage);
-  const [iconScale, setIconScale] = useState(plant.iconScale);
   const [iconX, setIconX] = useState(plant.iconX);
   const [iconY, setIconY] = useState(plant.iconY);
+  const [iconScale, setIconScale] = useState(plant.iconScale);
 
   const handleDone = () => {
     if (template) {
@@ -119,10 +119,6 @@ const EditPlantModal = ({ plant }) => {
     setIconX(0);
     setIconY(0);
   };
-
-  const bindX = useState(0)
-  const bindY = useState(0)
-  const bindScale = useState(1)
 
   return (
     <>
@@ -167,8 +163,13 @@ const EditPlantModal = ({ plant }) => {
                     marginBottom: "10px",
                   }}
                 >
-                  <SVGViewer isGardenSVG={false} scrollSensitivity={0.0008}
-                    bindX={bindX} bindY={bindY} bindScale={bindScale}>
+                  <SVGViewer
+                    isGardenSVG={false}
+                    scrollSensitivity={0.0008}
+                    bindX={[iconX, setIconX]}
+                    bindY={[iconY, setIconY]}
+                    bindScale={[iconScale, setIconScale]}
+                  >
                     <>
                       <image href={iconImage} />
                       <StaticSVG>
