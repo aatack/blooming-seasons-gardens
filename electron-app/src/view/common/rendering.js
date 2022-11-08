@@ -112,18 +112,15 @@ export const SVGViewer = ({
   };
 
   const isStatic = (child) => {
-    return false;
     if (child && child.type && child.type.name) {
-      return child.type.name;
+      return child.type.name == "StaticSVG";
     } else {
-      return null;
+      return false;
     }
   };
 
   const dynamicChildren = children.props.children.filter((c) => !isStatic(c));
   const staticChildren = children.props.children.filter(isStatic);
-
-  console.log(dynamicChildren.length, staticChildren.length);
 
   return (
     <div
