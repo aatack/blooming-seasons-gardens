@@ -20,15 +20,15 @@ const Plan = () => {
       bindScale={bindScale}
     >
       <Scale scale={50}>
-        {beds.map((bed) => (
-          <Bed bed={bed} key={bed.identifier} />
-        ))}
-
         {background && (
           <Scale scale={background.scale * 0.01}>
             <image href={background.image} />
           </Scale>
         )}
+
+        {beds.map((bed) => (
+          <Bed bed={bed} key={bed.identifier} />
+        ))}
       </Scale>
     </SVGViewer>
   );
