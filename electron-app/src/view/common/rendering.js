@@ -113,7 +113,7 @@ export const SVGViewer = ({
 
   const isStatic = (child) => {
     if (child && child.type && child.type.name) {
-      return child.type.name == "StaticSVG";
+      return child.type.name === "StaticSVG";
     } else {
       return false;
     }
