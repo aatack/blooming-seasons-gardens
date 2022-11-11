@@ -53,14 +53,12 @@ export const removeTemplate = (template) => {
   return { type: "nursery/template/removed", payload: template.identifier };
 };
 
-export const editTemplate = (identifier, name, size, colour) => {
+export const editTemplate = (identifier, edits) => {
   return {
     type: "nursery/template/edited",
     payload: {
       identifier: identifier,
-      name: name,
-      size: size,
-      colour: colour,
+      edits: edits,
     },
   };
 };
