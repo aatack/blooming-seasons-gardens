@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { Hovered } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
 import { Scale, Translate } from "../common/rendering";
+import { useId } from "react";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
+  const clipPathIdentifier = useId();
 
   const template = useTemplate(plant.template);
 
@@ -42,14 +44,14 @@ const Plant = ({ plant }) => {
         // then perform those that would move that circle to one centred at
         // (0, 0) with a radius matching that specified for the plant
         <>
-          <clipPath id="plantMask">
+          <clipPath id={clipPathIdentifier}>
             <circle
               cx={plant.position.x}
               cy={plant.position.y}
               r={plant.size / 2}
             />
           </clipPath>
-          <g clipPath="url(#plantMask)">
+          <g clipPath={`url(#${clipPathIdentifier})`}>
             <Translate x={plant.position.x} y={plant.position.y}>
               {/* TODO: combine the various nested transforms into one */}
               <Scale scale={0.01 * (plant.size / 2)}>
