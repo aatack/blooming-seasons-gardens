@@ -47,35 +47,35 @@ const Plant = ({ plant }) => {
               cx={plant.position.x}
               cy={plant.position.y}
               r={plant.size / 2}
-              />
+            />
           </clipPath>
-              <g clipPath="url(#plantMask)">
+          <g clipPath="url(#plantMask)">
+            <Translate x={plant.position.x} y={plant.position.y}>
+              {/* TODO: combine the various nested transforms into one */}
+              <Scale scale={0.01 * (plant.size / 2)}>
+                <Translate x={-120} y={-120}>
+                  <Scale scale={plant.iconScale}>
+                    <Translate x={plant.iconX} y={plant.iconY}>
+                      <image href={plant.iconImage} />
+                    </Translate>
+                  </Scale>
+                </Translate>
+              </Scale>
+            </Translate>
 
-          <Translate x={plant.position.x} y={plant.position.y}>
-            {/* TODO: combine the various nested transforms into one */}
-            <Scale scale={0.01 * (plant.size / 2)}>
-              <Translate x={-120} y={-120}>
-                <Scale scale={plant.iconScale}>
-                  <Translate x={plant.iconX} y={plant.iconY}>
-                    <image href={plant.iconImage}  />
-                  </Translate>
-                </Scale>
-              </Translate>
-            </Scale>
-          </Translate>
-
-          <circle
-            cx={plant.position.x}
-            cy={plant.position.y}
-            r={plant.size / 2} // Size refers to the plant's diameter
-            // If fill or stroke are `none` then mouseover does not work
-            fill="rgba(0, 0, 0, 0)"
-            stroke={isHovered ? "blue" : "rgba(0, 0, 0, 0)"}
-            strokeWidth={plant.size / 5}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          />
-        </g></>
+            <circle
+              cx={plant.position.x}
+              cy={plant.position.y}
+              r={plant.size / 2} // Size refers to the plant's diameter
+              // If fill or stroke are `none` then mouseover does not work
+              fill="rgba(0, 0, 0, 0)"
+              stroke={isHovered ? "blue" : "rgba(0, 0, 0, 0)"}
+              strokeWidth={plant.size / 5}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
+          </g>
+        </>
       )}
     </>
   );
