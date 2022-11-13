@@ -36,8 +36,8 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - Actually applies to any element
 - [x] Plant sizes need to refer to their diameters
 - [x] Beter colour picker
-- [ ] Import images for plants
-  - [ ] Work out why the tickbox isn't picking up the right initial value
+- [x] Import images for plants
+  - [x] Work out why the tickbox isn't picking up the right initial value
 - [x] See the colour of a plant when picking it
 - [ ] Open the existing garden at a default location
 - [ ] Automatically save every minute
@@ -59,6 +59,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - [ ] Arial
 - [ ] Make open nursery for labels
   - [ ] Or, alternatively, click on a button to make a label for an existing plant
+  - [ ] Presumably it would also be useful to be able to attach arrows to things, or at least make their start and end positions relative (eg. start is one unit below a particular plant)
 - [ ] Highlight everything in a bed when mousing over its collapsible area
 - [x] Reverse highlighting: light up in editor when moused over in plan
 - [ ] Line breaks in labels
@@ -69,10 +70,10 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - Went with space in the end (keycode 32)
 - [ ] Tabs: mood board, garden
 - [ ] Snap to centre
-- [ ] Invert the truthiness of the tickbox for selecting the template to use
-  - [ ] Better yet, don't use a tickbox at all: just have a "custom" option
 
 ### Others
 
 - [ ] Make sure the plant's outer rendered radius (ie. including stroke width) matches its given radius when not using an icon
   - [ ] Also when the stroke thickness increases as it's hovered
+- [ ] Invert the truthiness of the tickbox for selecting the template to use
+  - [ ] Better yet, don't use a tickbox at all: just have a "custom" option
