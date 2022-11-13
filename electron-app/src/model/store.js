@@ -209,14 +209,10 @@ export const store = configureStore({
           const template = draft.nursery.find(
             (t) => t.identifier === action.payload.identifier
           );
-          template.name = action.payload.name;
-          template.size = action.payload.size;
-          template.iconMode = action.payload.iconMode;
-          template.iconColour = action.payload.iconColour;
-          template.iconImage = action.payload.iconImage;
-          template.iconScale = action.payload.iconScale;
-          template.iconX = action.payload.iconX;
-          template.iconY = action.payload.iconY;
+
+          for (const key in action.payload.edits) {
+            template[key] = action.payload.edits[key];
+          }
         });
 
       case "garden/plant/added":
