@@ -42,7 +42,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Open the existing garden at a default location
   - This does sort of already happen, since the currently opened garden is part of the data structure that gets saved to local storage
   - Once saving is done every minute, this should be fine
-- [ ] Automatically save every minute
+- [x] Automatically save every minute
 - [ ] Thinner outline for plants and editable
 - [x] Increase popup size
 - [x] Plants should derive properties from the nursery always
@@ -80,3 +80,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] Invert the truthiness of the tickbox for selecting the template to use
   - [ ] Better yet, don't use a tickbox at all: just have a "custom" option
 - [ ] Save when the page closes
+- [ ] Limit the length of the undo history when the garden is loaded/saved
