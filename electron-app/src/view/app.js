@@ -2,14 +2,22 @@ import Editor from "./editor/editor";
 import Plan from "./plan/plan";
 import { Modal, GardenSVG, Hovered } from "../model/context";
 import { HorizontalSplit } from "./common/layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGarden } from "../model/selectors";
 import ChooseGarden from "./loading/choose";
+import { storeData } from "../model/store";
 
 const App = () => {
   const [gardenSVG, setGardenSVG] = useState(null);
 
   const garden = useGarden();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      storeData();
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
