@@ -12,11 +12,20 @@ const App = () => {
 
   const garden = useGarden();
 
+  const handleClose = () => {
+    storeData();
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       storeData();
     }, 60 * 1000);
-    return () => clearInterval(interval);
+    window.addEventListener("beforeunload", handleClose);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("beforeunload", handleClose);
+    };
   }, []);
 
   return (
