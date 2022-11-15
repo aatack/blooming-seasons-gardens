@@ -30,10 +30,11 @@ const Plant = ({ plant }) => {
         <circle
           cx={plant.position.x}
           cy={plant.position.y}
-          r={plant.size / 2} // Size refers to the plant's diameter
+          // Size refers to the plant's diameter
+          r={plant.size / 2 - plant.border / 2}
           fill={isHovered ? "lightBlue" : plant.iconColour}
           stroke={isHovered ? "blue" : "black"}
-          strokeWidth={plant.size / (isHovered ? 3 : 5)}
+          strokeWidth={plant.border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         />

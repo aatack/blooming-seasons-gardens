@@ -129,7 +129,7 @@ export const store = configureStore({
         });
 
       case "undo":
-        // TODO: assert that the ;ength of the history items is above zero
+        // TODO: assert that the length of the history items is above zero
         return produce(state, (draft) => {
           if (draft.history.index > 0) {
             draft.history.index--;
@@ -189,6 +189,7 @@ export const store = configureStore({
               ? action.payload
               : "Template " + state.garden.identifier.toString(),
             size: 0.5,
+            border: 0.02,
             iconMode: "colour",
             iconColour: "#aabbcc",
             iconImage: null,
@@ -236,6 +237,7 @@ export const store = configureStore({
                   ? action.payload.name
                   : "Plant " + state.garden.identifier.toString(),
                 size: 0.5,
+                border: 0.02,
                 iconMode: "colour",
                 iconColour: "#aabbcc",
                 iconImage: null,
