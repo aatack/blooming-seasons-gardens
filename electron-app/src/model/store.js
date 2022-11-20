@@ -64,7 +64,7 @@ export const store = configureStore({
   reducer: (state = null, action) => {
     switch (action.type) {
       case "initialised":
-        return produceWithHistory(state, (draft) => action.payload);
+        return action.payload;
 
       case "workspace/created":
         // Overrides the current garden; should only be used after pushing the

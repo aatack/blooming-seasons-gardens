@@ -6,11 +6,15 @@ import { useEffect, useState } from "react";
 import { useGarden, useLoaded } from "../model/selectors";
 import ChooseGarden from "./loading/choose";
 import { storeData } from "../model/store";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  const dispatch = useDispatch();
+
   const [gardenSVG, setGardenSVG] = useState(null);
 
   const garden = useGarden();
+  console.log(garden);
   const loaded = useLoaded();
 
   const handleClose = () => {
@@ -27,6 +31,12 @@ const App = () => {
       clearInterval(interval);
       window.removeEventListener("beforeunload", handleClose);
     };
+  }, []);
+
+  useEffect(() => {
+    fetch("/data")
+      .then((response) => response.json())
+      .then((data) => dispatch({ type: "initialised", payload: data.message }));
   }, []);
 
   return (
