@@ -3,7 +3,7 @@ import Plan from "./plan/plan";
 import { Modal, GardenSVG, Hovered } from "../model/context";
 import { HorizontalSplit } from "./common/layout";
 import { useEffect, useState } from "react";
-import { useGarden } from "../model/selectors";
+import { useGarden, useLoaded } from "../model/selectors";
 import ChooseGarden from "./loading/choose";
 import { storeData } from "../model/store";
 
@@ -11,6 +11,7 @@ const App = () => {
   const [gardenSVG, setGardenSVG] = useState(null);
 
   const garden = useGarden();
+  const loaded = useLoaded();
 
   const handleClose = () => {
     storeData();
@@ -34,7 +35,9 @@ const App = () => {
         <Hovered.Provider>
           <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
             <Modal.Component />
-            {garden === null ? (
+            {!loaded ? (
+              <p>Loading saved data from disk...</p>
+            ) : garden === null ? (
               <ChooseGarden />
             ) : (
               <>

@@ -14,8 +14,12 @@ export const useTemplate = (identifier) => {
   );
 };
 
+export const useLoaded = () => {
+  return useSelector((state) => state !== null);
+};
+
 export const useGarden = () => {
-  return useSelector((state) => state.garden);
+  return useSelector((state) => state === null ? null : state.garden);
 };
 
 export const useGardens = () => {

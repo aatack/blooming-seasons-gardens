@@ -61,7 +61,7 @@ const produceWithHistory = (state, transform) => {
 export const store = configureStore({
   // Start the identifier at 1 so we can guarantee the it will never be zero,
   // and can therefore cast identifiers to booleans to see whether they exist
-  reducer: (state = loadData(), action) => {
+  reducer: (state = null, action) => {
     switch (action.type) {
       case "initialised":
         return produceWithHistory(state, (draft) => action.payload);
