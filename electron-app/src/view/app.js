@@ -5,8 +5,26 @@ import { HorizontalSplit } from "./common/layout";
 import { useEffect, useState } from "react";
 import { useGarden, useLoaded } from "../model/selectors";
 import ChooseGarden from "./loading/choose";
-import { storeData } from "../model/store";
+import { store, storeData } from "../model/store";
 import { useDispatch } from "react-redux";
+
+const saveData = () => {
+  (async () => {
+    const rawResponse = await fetch("/save", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(store.getState()),
+    });
+
+    const status = await rawResponse.json();
+    if (status !== 200) {
+      console.error("Error saving to disk");
+    }
+  })();
+};
 
 const App = () => {
   const dispatch = useDispatch();
@@ -16,24 +34,20 @@ const App = () => {
   const garden = useGarden();
   const loaded = useLoaded();
 
-  const handleClose = () => {
-    storeData();
-  };
-
   useEffect(() => {
     const interval = setInterval(() => {
-      storeData();
+      saveData();
     }, 60 * 1000);
-    window.addEventListener("beforeunload", handleClose);
+    window.addEventListener("beforeunload", saveData);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener("beforeunload", handleClose);
+      window.removeEventListener("beforeunload", saveData);
     };
   }, []);
 
   useEffect(() => {
-    fetch("/load-data")
+    fetch("/load")
       .then((response) => response.json())
       .then((data) => dispatch({ type: "initialised", payload: data.message }));
   }, []);
