@@ -82,6 +82,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] Save when the page closes
 - [ ] Limit the length of the undo history when the garden is loaded/saved
 - [ ] Split up the project structure in accordance with the example given [here](https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/)
+- [ ] When designating clip paths, use the plant's identifier instead of the react-generated identifier
 
 ### Bugs
 
