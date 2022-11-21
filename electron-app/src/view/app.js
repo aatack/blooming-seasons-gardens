@@ -13,7 +13,7 @@ const saveData = () => {
     // TODO: clear the state's history
     const state = store.getState();
     if (!state.garden) {
-      console.error("Potentially saving empty data")
+      console.error("Potentially saving empty data");
     }
 
     const rawResponse = await fetch("/save", {
