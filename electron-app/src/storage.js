@@ -1,3 +1,29 @@
+import { store } from "./model/store";
+
+export const saveData = () => {
+  (async () => {
+    // TODO: clear the state's history
+    const state = store.getState();
+    if (!state.garden) {
+      console.error("Potentially saving empty data");
+    }
+
+    const rawResponse = await fetch("/save", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(state),
+    });
+
+    const status = await rawResponse.json();
+    if (status !== 200) {
+      console.error("Error saving to disk");
+    }
+  })();
+};
+
 export const encodeFile = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

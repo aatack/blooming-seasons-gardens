@@ -5,32 +5,8 @@ import { HorizontalSplit } from "./common/layout";
 import { useEffect, useState } from "react";
 import { useGarden, useLoaded } from "../model/selectors";
 import ChooseGarden from "./loading/choose";
-import { store, storeData } from "../model/store";
 import { useDispatch } from "react-redux";
-
-const saveData = () => {
-  (async () => {
-    // TODO: clear the state's history
-    const state = store.getState();
-    if (!state.garden) {
-      console.error("Potentially saving empty data");
-    }
-
-    const rawResponse = await fetch("/save", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(state),
-    });
-
-    const status = await rawResponse.json();
-    if (status !== 200) {
-      console.error("Error saving to disk");
-    }
-  })();
-};
+import { saveData } from "../storage";
 
 const App = () => {
   const dispatch = useDispatch();

@@ -13,7 +13,7 @@ import { Modal, GardenSVG } from "../../model/context";
 import { useState } from "react";
 import Nursery from "../nursery";
 import Bed from "./bed";
-import { downloadText } from "../../storage";
+import { downloadText, saveData } from "../../storage";
 import { RenameGardenModal } from "./rename";
 import {
   useBackground,
@@ -23,7 +23,6 @@ import {
   useRedoAvailable,
   useUndoAvailable,
 } from "../../model/selectors";
-import { storeData } from "../../model/store";
 
 const Editor = () => {
   const padding = 8;
@@ -60,7 +59,7 @@ const Editor = () => {
   const garden = useGarden();
 
   const handleSave = () => {
-    storeData();
+    saveData();
   };
 
   const handleRename = () => {
