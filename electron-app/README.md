@@ -89,3 +89,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] When a template is in image mode, loading up its editor defaults to colour mode instead
   - Presumably this is something to do with the dropdown component not setting its initial value properly
   - The rest of the editor's content does load properly, so the state is definitely being saved as it should
+- [ ] For some reason, an empty JSON is sometimes saved to the backend
