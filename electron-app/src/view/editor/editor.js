@@ -33,7 +33,6 @@ const Editor = () => {
   const inner = useRef(null);
 
   const [height, setHeight] = useState(0);
-  const [message, setMessage] = useState("Waiting");
 
   const dispatch = useDispatch();
   const undoAvaliable = useUndoAvailable();
@@ -53,12 +52,6 @@ const Editor = () => {
 
   useEffect(() => {
     setHeight(outer.current.clientHeight - inner.current.clientHeight);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api")
-      .then((response) => response.json())
-      .then((data) => setMessage(JSON.stringify(data)));
   }, []);
 
   // TODO: rename `garden` to `beds` in the data structure
@@ -110,7 +103,6 @@ const Editor = () => {
       >
         <div ref={inner}>
           <h2>{path ? path : "Unnamed Garden"}</h2>
-          <p>{message}</p>
           <button onClick={handleSave} disabled={!path}>
             Save
           </button>

@@ -14,7 +14,6 @@ const App = () => {
   const [gardenSVG, setGardenSVG] = useState(null);
 
   const garden = useGarden();
-  console.log(garden);
   const loaded = useLoaded();
 
   const handleClose = () => {
@@ -34,7 +33,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    fetch("/data")
+    fetch("/load-data")
       .then((response) => response.json())
       .then((data) => dispatch({ type: "initialised", payload: data.message }));
   }, []);

@@ -5,7 +5,7 @@ const PORT = 3001;
 
 const app = express();
 
-app.get("/data", (req, res) => {
+app.get("/load-data", (req, res) => {
   res.json({
     message: JSON.parse(fs.readFileSync("data/saved-data.json").toString()),
   });
