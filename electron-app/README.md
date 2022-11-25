@@ -43,7 +43,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - This does sort of already happen, since the currently opened garden is part of the data structure that gets saved to local storage
   - Once saving is done every minute, this should be fine
 - [x] Automatically save every minute
-- [ ] Thinner outline for plants and editable
+- [x] Thinner outline for plants and editable
 - [x] Increase popup size
 - [x] Plants should derive properties from the nursery always
 - [ ] Text bigger in the editor
