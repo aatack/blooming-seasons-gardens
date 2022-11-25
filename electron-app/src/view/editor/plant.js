@@ -53,7 +53,8 @@ const Plant = ({ plant }) => {
       </p>
       {space(
         <p style={{ display: "inline-block" }}>
-          (x = {plant.position.x}, y = {plant.position.y})
+          (x = {plant.position.x}, y = {plant.position.y}) (
+          {template ? template.size : plant.size}m)
         </p>
       )}
 
