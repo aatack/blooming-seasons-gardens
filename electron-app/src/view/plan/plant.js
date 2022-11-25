@@ -69,11 +69,12 @@ const Plant = ({ plant }) => {
             <circle
               cx={plant.position.x}
               cy={plant.position.y}
-              r={plant.size / 2} // Size refers to the plant's diameter
+              // Size refers to the plant's diameter
+              r={plant.size / 2 - plant.border / 2}
               // If fill or stroke are `none` then mouseover does not work
               fill="rgba(0, 0, 0, 0)"
               stroke={isHovered ? "blue" : "rgba(0, 0, 0, 0)"}
-              strokeWidth={plant.size / 5}
+              strokeWidth={plant.border}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             />
