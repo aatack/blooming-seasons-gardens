@@ -78,10 +78,14 @@ const EditArrowModal = ({ arrow }) => {
     <>
       <h3>Edit Label</h3>
       <p>Start</p>
-      x = <NumericTextBox value={startX} setValue={setStartX} />, y ={" "}
+      <p>x = </p>
+      <NumericTextBox value={startX} setValue={setStartX} />
+      <p>y = </p>
       <NumericTextBox value={startY} setValue={setStartY} />
       <p>End</p>
-      x = <NumericTextBox value={endX} setValue={setEndX} />, y ={" "}
+      <p>x = </p>
+      <NumericTextBox value={endX} setValue={setEndX} />
+      <p>y =</p>
       <NumericTextBox value={endY} setValue={setEndY} />
       <p>Width</p>
       <NumericTextBox value={width} setValue={setWidth} />

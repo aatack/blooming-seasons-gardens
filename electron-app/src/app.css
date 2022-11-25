@@ -16,3 +16,15 @@
     border: 1px solid #888;
     width: 50%;
 }
+
+p, button, input, select {
+    font-size: 1.3em;
+}
+
+h3 {
+    font-size: 1.7em;
+}
+
+h2 {
+    font-size: 1.8em;
+}

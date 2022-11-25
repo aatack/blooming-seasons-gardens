@@ -133,7 +133,9 @@ const EditPlantModal = ({ plant }) => {
       )}
       {template && <p>Template: {template.name}</p>}
       <p>Position</p>
-      x = <NumericTextBox value={x} setValue={setX} />, y ={" "}
+      <p>x =</p>
+      <NumericTextBox value={x} setValue={setX} />
+      <p>y =</p>
       <NumericTextBox value={y} setValue={setY} />
       {!template && (
         <>

@@ -78,7 +78,9 @@ const EditLabelModal = ({ label }) => {
       <p>Text</p>
       <TextBox value={text} setValue={setText} />
       <p>Position</p>
-      x = <NumericTextBox value={x} setValue={setX} />, y ={" "}
+      <p>x =</p>
+      <NumericTextBox value={x} setValue={setX} />
+      <p>y =</p>
       <NumericTextBox value={y} setValue={setY} />
       <p>Size</p>
       <NumericTextBox value={size} setValue={setSize} />
