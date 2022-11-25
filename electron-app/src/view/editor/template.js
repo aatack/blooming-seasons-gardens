@@ -44,6 +44,7 @@ const EditTemplateModal = ({ template }) => {
 
   const [name, setName] = useState(template.name);
   const [size, setSize] = useState(template.size);
+  const [border, setBorder] = useState(template.border)
 
   const [iconMode, setIconMode] = useState(template.iconMode);
   const [iconColour, setIconColour] = useState(template.iconColour);
@@ -57,6 +58,7 @@ const EditTemplateModal = ({ template }) => {
       editTemplate(template.identifier, {
         name: name,
         size: size,
+        border: border,
         iconMode: iconMode,
         iconColour: iconColour,
         iconImage: iconImage,
@@ -94,6 +96,8 @@ const EditTemplateModal = ({ template }) => {
       )}
       <p>Size</p>
       <NumericTextBox value={size} setValue={setSize} />
+      <p>Border</p>
+      <NumericTextBox value={border} setValue={setBorder} />
       <p>Icon mode</p>
       <Dropdown
         value={iconMode}
