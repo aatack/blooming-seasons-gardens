@@ -38,45 +38,6 @@ const Template = ({ template }) => {
   );
 };
 
-const OldEditTemplateModal = ({ template }) => {
-  const dispatch = useDispatch();
-  const modal = useContext(Modal);
-
-  const [name, setName] = useState(template.name);
-  const [size, setSize] = useState(template.size);
-  const [colour, setColour] = useState(template.colour);
-
-  const onDone = () => {
-    dispatch(editTemplate(template.identifier, name, size, colour));
-    modal.pop();
-  };
-
-  const onCancel = () => {
-    modal.pop();
-  };
-
-  return (
-    <>
-      <h3>Edit Template</h3>
-
-      <p>Name</p>
-      <TextBox value={name} setValue={setName} />
-
-      <p>Size</p>
-      <NumericTextBox value={size} setValue={setSize} />
-
-      <p>Colour</p>
-      <ColourPicker value={colour} setValue={setColour} />
-
-      <br />
-      <br />
-
-      <button onClick={onDone}>Done</button>
-      {space(<button onClick={onCancel}>Cancel</button>)}
-    </>
-  );
-};
-
 const EditTemplateModal = ({ template }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
