@@ -24,17 +24,20 @@ const Plant = ({ plant }) => {
 
   const isHovered = hovered.matches(plant, true);
 
+  // Size refers to the plant's diameter
+  const radius = plant.size / 2;
+  const border = plant.border > radius ? radius : plant.border;
+
   return (
     <>
       {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
           cy={plant.position.y}
-          // Size refers to the plant's diameter
-          r={plant.size / 2 - plant.border / 2}
+          r={radius - border / 2}
           fill={isHovered ? "lightBlue" : plant.iconColour}
           stroke={isHovered ? "blue" : "black"}
-          strokeWidth={plant.border}
+          strokeWidth={border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         />
@@ -69,12 +72,11 @@ const Plant = ({ plant }) => {
             <circle
               cx={plant.position.x}
               cy={plant.position.y}
-              // Size refers to the plant's diameter
-              r={plant.size / 2 - plant.border / 2}
+              r={radius - border / 2}
               // If fill or stroke are `none` then mouseover does not work
               fill="rgba(0, 0, 0, 0)"
               stroke={isHovered ? "blue" : "rgba(0, 0, 0, 0)"}
-              strokeWidth={plant.border}
+              strokeWidth={border}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             />

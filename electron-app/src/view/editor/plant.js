@@ -76,6 +76,7 @@ const EditPlantModal = ({ plant }) => {
   const [x, setX] = useState(plant.position.x);
   const [y, setY] = useState(plant.position.y);
   const [size, setSize] = useState(plant.size);
+  const [border, setBorder] = useState(plant.border);
 
   const [iconMode, setIconMode] = useState(plant.iconMode);
   const [iconColour, setIconColour] = useState(plant.iconColour);
@@ -93,6 +94,7 @@ const EditPlantModal = ({ plant }) => {
           position: { x: x, y: y },
           name: name,
           size: size,
+          border: border,
           iconMode: iconMode,
           iconColour: iconColour,
           iconImage: iconImage,
@@ -137,6 +139,8 @@ const EditPlantModal = ({ plant }) => {
         <>
           <p>Size</p>
           <NumericTextBox value={size} setValue={setSize} />
+          <p>Border</p>
+          <NumericTextBox value={border} setValue={setBorder} />
           <p>Icon mode</p>
           <Dropdown
             value={iconMode}
