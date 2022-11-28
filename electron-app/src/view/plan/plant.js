@@ -24,12 +24,17 @@ const Plant = ({ plant }) => {
     hovered.set(null);
   };
 
+  const handleClick = () => {
+    selected.set(plant);
+  };
+
   const isHovered = hovered.matches(plant, true);
   const isSelected = selected.matches(plant, true);
 
   // Size refers to the plant's diameter
   const radius = plant.size / 2;
-  const border = plant.border > radius ? radius : plant.border;
+  const border =
+    (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
 
   return (
     <>
@@ -45,6 +50,7 @@ const Plant = ({ plant }) => {
           strokeWidth={border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
         />
       ) : (
         // When scaling and positioning the image, the user moves it into a
@@ -90,6 +96,7 @@ const Plant = ({ plant }) => {
               strokeWidth={border}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              onClick={handleClick}
             />
           </g>
         </>
