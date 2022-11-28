@@ -2,12 +2,14 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, NumericTextBox } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
-import { Hovered, Modal } from "../../model/context";
+import { Hovered, Modal, Selected } from "../../model/context";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Arrow = ({ arrow }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
 
   const handleMouseEnter = () => {
     hovered.set(arrow);
@@ -15,6 +17,10 @@ const Arrow = ({ arrow }) => {
 
   const handleMouseLeave = () => {
     hovered.set(null);
+  };
+
+  const handleClick = () => {
+    selected.set(arrow);
   };
 
   const handleEdit = () => {
@@ -33,7 +39,14 @@ const Arrow = ({ arrow }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: hovered.matches(arrow) ? "lightBlue" : null }}
+      onClick={handleClick}
+      style={{
+        backgroundColor: hovered.matches(arrow)
+          ? HOVERED_COLOUR
+          : selected.matches(arrow)
+          ? SELECTED_COLOUR
+          : null,
+      }}
     >
       <p style={{ display: "inline-block" }}>Arrow</p>
 

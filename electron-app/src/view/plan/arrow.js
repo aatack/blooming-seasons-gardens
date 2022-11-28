@@ -1,8 +1,10 @@
 import { useContext } from "react";
-import { Hovered } from "../../model/context";
+import { Hovered, Selected } from "../../model/context";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Arrow = ({ arrow }) => {
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
 
   const handleMouseEnter = () => {
     hovered.set(arrow);
@@ -12,7 +14,12 @@ const Arrow = ({ arrow }) => {
     hovered.set(null);
   };
 
+  const handleClick = () => {
+    selected.set(arrow);
+  };
+
   const isHovered = hovered.matches(arrow, true);
+  const isSelected = selected.matches(arrow, true);
 
   return (
     <line
@@ -20,12 +27,15 @@ const Arrow = ({ arrow }) => {
       x2={arrow.end.x}
       y1={arrow.start.y}
       y2={arrow.end.y}
-      stroke={isHovered ? "blue" : "black"}
+      stroke={
+        isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
+      }
       // Scaling by 50 seems to give a reasonable default width; a little bit
       // thicker to highlight it when it's hovered
       strokeWidth={arrow.width / (isHovered ? 30 : 50)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     />
   );
 };
