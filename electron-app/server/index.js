@@ -30,6 +30,10 @@ app.get("/load", (request, response) => {
 });
 
 app.post("/save", (request, response) => {
+  if (!fs.existsSync("data/")) {
+    fs.mkdirSync("data/");
+  }
+
   fs.writeFileSync("data/store.json", JSON.stringify(request.body));
   response.send(200);
 });
