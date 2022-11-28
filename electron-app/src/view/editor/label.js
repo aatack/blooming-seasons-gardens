@@ -2,12 +2,14 @@ import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { space, TextBox, NumericTextBox } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
-import { Hovered, Modal } from "../../model/context";
+import { Hovered, Modal, Selected } from "../../model/context";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Label = ({ label }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
 
   const handleMouseEnter = () => {
     hovered.set(label);
@@ -15,6 +17,10 @@ const Label = ({ label }) => {
 
   const handleMouseLeave = () => {
     hovered.set(null);
+  };
+
+  const handleClick = () => {
+    selected.set(label);
   };
 
   const handleEdit = () => {
@@ -33,7 +39,14 @@ const Label = ({ label }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: hovered.matches(label) ? "lightBlue" : null }}
+      onClick={handleClick}
+      style={{
+        backgroundColor: hovered.matches(label)
+          ? HOVERED_COLOUR
+          : selected.matches(label)
+          ? SELECTED_COLOUR
+          : null,
+      }}
     >
       <p style={{ display: "inline-block" }}>Label: {label.text}</p>
       {space(
