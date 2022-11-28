@@ -10,13 +10,14 @@ import {
   TextBox,
 } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
-import { Hovered, Modal } from "../../model/context";
+import { Hovered, Modal, Selected } from "../../model/context";
 import { StaticSVG, SVGViewer } from "../common/rendering";
 
 const Plant = ({ plant }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
 
   const template = useTemplate(plant.template);
 
@@ -26,6 +27,10 @@ const Plant = ({ plant }) => {
 
   const handleMouseLeave = () => {
     hovered.set(null);
+  };
+
+  const handleClick = () => {
+    selected.set(plant);
   };
 
   const handleEdit = () => {
@@ -44,8 +49,13 @@ const Plant = ({ plant }) => {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
       style={{
-        backgroundColor: hovered.matches(plant) ? "lightBlue" : null,
+        backgroundColor: selected.matches(plant)
+          ? "red"
+          : hovered.matches(plant)
+          ? "lightBlue"
+          : null,
       }}
     >
       <p style={{ display: "inline-block" }}>

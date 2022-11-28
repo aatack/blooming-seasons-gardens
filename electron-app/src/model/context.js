@@ -88,3 +88,35 @@ export const Hovered = (() => {
   Context.Provider = WrappedProvider;
   return Context;
 })();
+
+export const Selected = (() => {
+  const Context = React.createContext(undefined);
+
+  const CachedProvider = Context.Provider;
+
+  const useSelected = () => {
+    const [selected, setSelected] = useState(null);
+
+    return {
+      matches: (element, includeParents) =>
+        selected === element.identifier ||
+        (includeParents && selected === element.bedIdentifier),
+      set: (element) => {
+        if (element) {
+          setSelected(element.identifier);
+        } else {
+          setSelected(null);
+        }
+      },
+    };
+  };
+
+  const WrappedProvider = (props) => {
+    return (
+      <CachedProvider value={useSelected()}>{props.children}</CachedProvider>
+    );
+  };
+
+  Context.Provider = WrappedProvider;
+  return Context;
+})();

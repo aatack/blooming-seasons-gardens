@@ -1,6 +1,6 @@
 import Editor from "./editor/editor";
 import Plan from "./plan/plan";
-import { Modal, GardenSVG, Hovered } from "../model/context";
+import { Modal, GardenSVG, Hovered, Selected } from "../model/context";
 import { HorizontalSplit } from "./common/layout";
 import { useEffect, useState } from "react";
 import { useGarden, useLoaded } from "../model/selectors";
@@ -37,30 +37,32 @@ const App = () => {
   return (
     <>
       <Modal.Provider>
-        <Hovered.Provider>
-          <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
-            <Modal.Component />
-            {!loaded ? (
-              <p>Loading saved data from disk...</p>
-            ) : garden === null ? (
-              <ChooseGarden />
-            ) : (
-              <>
-                <HorizontalSplit
-                  dragWidth={8}
-                  minimumWidth={100}
-                  initialWidth={window.innerWidth * 0.3}
-                  toggleKey={32} // Space bar
-                >
-                  <>
-                    <Editor />
-                    <Plan />
-                  </>
-                </HorizontalSplit>
-              </>
-            )}
-          </GardenSVG.Provider>
-        </Hovered.Provider>
+        <Selected.Provider>
+          <Hovered.Provider>
+            <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
+              <Modal.Component />
+              {!loaded ? (
+                <p>Loading saved data from disk...</p>
+              ) : garden === null ? (
+                <ChooseGarden />
+              ) : (
+                <>
+                  <HorizontalSplit
+                    dragWidth={8}
+                    minimumWidth={100}
+                    initialWidth={window.innerWidth * 0.3}
+                    toggleKey={32} // Space bar
+                  >
+                    <>
+                      <Editor />
+                      <Plan />
+                    </>
+                  </HorizontalSplit>
+                </>
+              )}
+            </GardenSVG.Provider>
+          </Hovered.Provider>
+        </Selected.Provider>
       </Modal.Provider>
     </>
   );

@@ -1,11 +1,12 @@
 import { useContext } from "react";
-import { Hovered } from "../../model/context";
+import { Hovered, Selected } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
 import { Scale, Translate } from "../common/rendering";
 import { useId } from "react";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
   const clipPathIdentifier = useId();
 
   const template = useTemplate(plant.template);
@@ -23,6 +24,7 @@ const Plant = ({ plant }) => {
   };
 
   const isHovered = hovered.matches(plant, true);
+  const isSelected = selected.matches(plant, true);
 
   // Size refers to the plant's diameter
   const radius = plant.size / 2;
@@ -35,8 +37,8 @@ const Plant = ({ plant }) => {
           cx={plant.position.x}
           cy={plant.position.y}
           r={radius - border / 2}
-          fill={isHovered ? "lightBlue" : plant.iconColour}
-          stroke={isHovered ? "blue" : "black"}
+          fill={plant.iconColour}
+          stroke={isSelected ? "blue" : isHovered ? "lightBlue" : "black"}
           strokeWidth={border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -75,7 +77,13 @@ const Plant = ({ plant }) => {
               r={radius - border / 2}
               // If fill or stroke are `none` then mouseover does not work
               fill="rgba(0, 0, 0, 0)"
-              stroke={isHovered ? "blue" : "rgba(0, 0, 0, 0)"}
+              stroke={
+                isSelected
+                  ? "blue"
+                  : isHovered
+                  ? "lightBlue"
+                  : "rgba(0, 0, 0, 0)"
+              }
               strokeWidth={border}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
