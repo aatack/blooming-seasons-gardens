@@ -3,6 +3,7 @@ import { Hovered, Selected } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
 import { Scale, Translate } from "../common/rendering";
 import { useId } from "react";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
@@ -38,7 +39,9 @@ const Plant = ({ plant }) => {
           cy={plant.position.y}
           r={radius - border / 2}
           fill={plant.iconColour}
-          stroke={isSelected ? "blue" : isHovered ? "lightBlue" : "black"}
+          stroke={
+            isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
+          }
           strokeWidth={border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -78,10 +81,10 @@ const Plant = ({ plant }) => {
               // If fill or stroke are `none` then mouseover does not work
               fill="rgba(0, 0, 0, 0)"
               stroke={
-                isSelected
-                  ? "blue"
-                  : isHovered
-                  ? "lightBlue"
+                isHovered
+                  ? HOVERED_COLOUR
+                  : isSelected
+                  ? SELECTED_COLOUR
                   : "rgba(0, 0, 0, 0)"
               }
               strokeWidth={border}

@@ -12,6 +12,7 @@ import {
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal, Selected } from "../../model/context";
 import { StaticSVG, SVGViewer } from "../common/rendering";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Plant = ({ plant }) => {
   const dispatch = useDispatch();
@@ -51,10 +52,10 @@ const Plant = ({ plant }) => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       style={{
-        backgroundColor: selected.matches(plant)
-          ? "red"
-          : hovered.matches(plant)
-          ? "lightBlue"
+        backgroundColor: hovered.matches(plant)
+          ? HOVERED_COLOUR
+          : selected.matches(plant)
+          ? SELECTED_COLOUR
           : null,
       }}
     >
