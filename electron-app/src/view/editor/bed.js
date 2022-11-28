@@ -9,18 +9,20 @@ import {
   renameBed,
 } from "../../model/actions";
 import { Checkbox, TextBox, Dropdown, space } from "../common/input";
-import { Modal, Hovered } from "../../model/context";
+import { Modal, Hovered, Selected } from "../../model/context";
 import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
 import Label from "./label";
 import Arrow from "./arrow";
 import { useNursery } from "../../model/selectors";
+import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
 
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
+  const selected = useContext(Selected);
 
   const handleRemoveBed = () => {
     dispatch(removeBed(bed));
@@ -50,14 +52,26 @@ const Bed = ({ bed }) => {
     hovered.set(null);
   };
 
+  const handleClick = () => {
+    selected.set(bed);
+  };
+
   const isHovered = hovered.matches(bed);
+  const isSelected = selected.matches(bed);
 
   return (
     <>
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{ backgroundColor: isHovered ? "lightBlue" : null }}
+        onClick={handleClick}
+        style={{
+          backgroundColor: isHovered
+            ? HOVERED_COLOUR
+            : isSelected
+            ? SELECTED_COLOUR
+            : null,
+        }}
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
         {isHovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
