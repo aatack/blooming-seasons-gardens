@@ -23,6 +23,7 @@ const Arrow = ({ arrow }) => {
 
   return (
     <line
+      className="blooming-seasons-gardens-element"
       x1={arrow.start.x}
       x2={arrow.end.x}
       y1={arrow.start.y}

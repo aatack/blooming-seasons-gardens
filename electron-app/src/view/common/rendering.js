@@ -84,9 +84,9 @@ export const SVGViewer = ({
     setScale(newScale);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (onClick) {
-      onClick();
+      onClick(e);
     }
   };
 

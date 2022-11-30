@@ -24,8 +24,9 @@ const Plant = ({ plant }) => {
     hovered.set(null);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     selected.set(plant);
+    e.preventDefault();
   };
 
   const isHovered = hovered.matches(plant, true);
@@ -37,7 +38,7 @@ const Plant = ({ plant }) => {
     (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
 
   return (
-    <>
+    <g className="blooming-seasons-gardens-element">
       {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
@@ -101,7 +102,7 @@ const Plant = ({ plant }) => {
           </g>
         </>
       )}
-    </>
+    </g>
   );
 };
 

@@ -23,6 +23,7 @@ const Label = ({ label }) => {
 
   return (
     <text
+      className="blooming-seasons-gardens-element"
       x={label.position.x}
       y={label.position.y}
       // Scaling by 10 seems to give reasonable default sizes

@@ -1,15 +1,36 @@
 import { useBackground, useBeds } from "../../model/selectors";
 import { Scale, SVGViewer } from "../common/rendering";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Bed from "./bed";
+import { Selected } from "../../model/context";
 
 const Plan = () => {
   const beds = useBeds();
   const background = useBackground();
 
+  const selected = useContext(Selected);
+
   const bindX = useState(0);
   const bindY = useState(0);
   const bindScale = useState(100);
+
+  const handleClick = (e) => {
+    var handled = false;
+
+    for (const element of e.nativeEvent.path) {
+      const className = element.className;
+      if (
+        className &&
+        className.baseVal == "blooming-seasons-gardens-element"
+      ) {
+        handled = true;
+      }
+    }
+
+    if (!handled) {
+      selected.set(null);
+    }
+  };
 
   return (
     <SVGViewer
@@ -18,6 +39,7 @@ const Plan = () => {
       bindX={bindX}
       bindY={bindY}
       bindScale={bindScale}
+      onClick={handleClick}
     >
       <Scale scale={50}>
         {background && (
