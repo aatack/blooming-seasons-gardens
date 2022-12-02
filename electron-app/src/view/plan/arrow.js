@@ -14,8 +14,9 @@ const Arrow = ({ arrow }) => {
     hovered.set(null);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     selected.set(arrow);
+    e.preventDefault();
   };
 
   const isHovered = hovered.matches(arrow, true);
@@ -23,7 +24,6 @@ const Arrow = ({ arrow }) => {
 
   return (
     <line
-      className="blooming-seasons-gardens-element"
       x1={arrow.start.x}
       x2={arrow.end.x}
       y1={arrow.start.y}

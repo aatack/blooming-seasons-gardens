@@ -14,8 +14,9 @@ const Label = ({ label }) => {
     hovered.set(null);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     selected.set(label);
+    e.preventDefault();
   };
 
   const isHovered = hovered.matches(label, true);
@@ -23,7 +24,6 @@ const Label = ({ label }) => {
 
   return (
     <text
-      className="blooming-seasons-gardens-element"
       x={label.position.x}
       y={label.position.y}
       // Scaling by 10 seems to give reasonable default sizes

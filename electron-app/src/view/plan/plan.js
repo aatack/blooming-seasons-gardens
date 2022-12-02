@@ -14,22 +14,8 @@ const Plan = () => {
   const bindY = useState(0);
   const bindScale = useState(100);
 
-  const handleClick = (e) => {
-    var handled = false;
-
-    for (const element of e.nativeEvent.path) {
-      const className = element.className;
-      if (
-        className &&
-        className.baseVal == "blooming-seasons-gardens-element"
-      ) {
-        handled = true;
-      }
-    }
-
-    if (!handled) {
-      selected.set(null);
-    }
+  const handleClick = () => {
+    selected.set(null);
   };
 
   return (

@@ -38,7 +38,7 @@ const Plant = ({ plant }) => {
     (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
 
   return (
-    <g className="blooming-seasons-gardens-element">
+    <g>
       {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
