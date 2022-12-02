@@ -164,3 +164,28 @@ export const Rotate = ({ radians, children }) => {
 export const Scale = ({ scale, children }) => {
   return <g transform={`scale(${scale})`}>{children}</g>;
 };
+
+export const ClickGroup = ({ onClick, children }) => {
+  // Ensures an `onClick` event is only fired for events during which the mouse
+  // has not moved
+  const [clickData, setClickData] = useState(null);
+
+  const handleMouseDown = (e) => {
+    setClickData({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUp = (e) => {
+    if (clickData && clickData.x === e.clientX && clickData.y === e.clientY) {
+      onClick(e);
+      e.preventDefault();
+      e.stopPropagation()
+    }
+    setClickData();
+  };
+
+  return (
+    <g onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+      {children}
+    </g>
+  );
+};

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Hovered, Selected } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
-import { Scale, Translate } from "../common/rendering";
+import { ClickGroup, Scale, Translate } from "../common/rendering";
 import { useId } from "react";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
@@ -24,9 +24,8 @@ const Plant = ({ plant }) => {
     hovered.set(null);
   };
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     selected.set(plant);
-    e.preventDefault();
   };
 
   const isHovered = hovered.matches(plant, true);
@@ -38,7 +37,7 @@ const Plant = ({ plant }) => {
     (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
 
   return (
-    <g>
+    <ClickGroup onClick={handleClick}>
       {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
@@ -51,7 +50,6 @@ const Plant = ({ plant }) => {
           strokeWidth={border}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
         />
       ) : (
         // When scaling and positioning the image, the user moves it into a
@@ -97,12 +95,11 @@ const Plant = ({ plant }) => {
               strokeWidth={border}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onClick={handleClick}
             />
           </g>
         </>
       )}
-    </g>
+    </ClickGroup>
   );
 };
 
