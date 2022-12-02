@@ -84,12 +84,6 @@ export const SVGViewer = ({
     setScale(newScale);
   };
 
-  const handleClick = (e) => {
-    if (onClick) {
-      onClick(e);
-    }
-  };
-
   const handleMouseMove = (e) => {
     if (e.buttons === 1) {
       if (!dragging) {
@@ -111,6 +105,19 @@ export const SVGViewer = ({
     }
   };
 
+  const handleMouseDown = (e) => {
+    // Stop text elsewhere in the document from being selected when the mouse
+    // is dragged outside the bounds of the viewer
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const handleMouseUp = (e) => {
+    if (!dragging && onClick) {
+      onClick(e);
+    }
+  };
+
   const isStatic = (child) => {
     if (child && child.type && child.type.name) {
       return child.type.name === "StaticSVG";
@@ -124,7 +131,8 @@ export const SVGViewer = ({
 
   return (
     <div
-      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
       style={{ width: "100%", height: "100%" }}
     >
