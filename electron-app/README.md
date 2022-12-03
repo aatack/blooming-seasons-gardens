@@ -93,3 +93,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - The rest of the editor's content does load properly, so the state is definitely being saved as it should
 - [ ] For some reason, an empty JSON is sometimes saved to the backend
 - [ ] Only exclude delect clicks if they move more than eg. two pixels, rather than if they move at all, to make it a little less brittle
+- [ ] Keyboard shortcuts don't work until the editor has been focused

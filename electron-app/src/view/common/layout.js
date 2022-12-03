@@ -1,7 +1,7 @@
 import { clamp } from "./maths";
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { redo, undo } from "../../model/actions";
+import { editElement, redo, undo } from "../../model/actions";
 import { useElement } from "../../model/selectors";
 import { Selected } from "../../model/context";
 
@@ -57,7 +57,33 @@ export const HorizontalSplit = ({
       dispatch(redo());
     }
 
-    if (e.code === "ArrowLeft") {
+    if (selectedElement) {
+      var dx = 0;
+      var dy = 0;
+
+      if (e.code === "ArrowLeft") {
+        dx = -1;
+      }
+      if (e.code === "ArrowRight") {
+        dx = 1;
+      }
+      if (e.code === "ArrowUp") {
+        dy = -1;
+      }
+      if (e.code === "ArrowDown") {
+        dy = 1;
+      }
+
+      if (selectedElement.position && (dx !== 0 || dy !== 0)) {
+        const position = selectedElement.position;
+        const step = 0.1;
+
+        dispatch(
+          editElement(selectedElement, {
+            position: { x: position.x + dx * step, y: position.y + dy * step },
+          })
+        );
+      }
     }
   };
 
