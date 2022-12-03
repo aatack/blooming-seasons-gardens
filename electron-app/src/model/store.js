@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import produce from "immer";
 import emptyGarden from "./empty";
 
-const findByIdentifier = (state, identifier) => {
+export const findByIdentifier = (state, identifier) => {
   for (const bed of state.beds) {
     if (bed.identifier === identifier) {
       return bed;

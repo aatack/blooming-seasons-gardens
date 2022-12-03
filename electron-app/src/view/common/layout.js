@@ -1,7 +1,9 @@
 import { clamp } from "./maths";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { redo, undo } from "../../model/actions";
+import { useElement } from "../../model/selectors";
+import { Selected } from "../../model/context";
 
 export const HorizontalSplit = ({
   children,
@@ -15,6 +17,8 @@ export const HorizontalSplit = ({
   const [width, setWidth] = useState(initialWidth);
   const [x, setX] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
+
+  const selectedElement = useElement(useContext(Selected).get());
 
   const dispatch = useDispatch();
 
@@ -51,6 +55,9 @@ export const HorizontalSplit = ({
 
     if (e.code === "KeyY" && e.ctrlKey) {
       dispatch(redo());
+    }
+
+    if (e.code === "ArrowLeft") {
     }
   };
 

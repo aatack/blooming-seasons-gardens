@@ -108,6 +108,7 @@ export const Selected = (() => {
           setSelected(null);
         }
       },
+      get: () => selected,
     };
   };
 

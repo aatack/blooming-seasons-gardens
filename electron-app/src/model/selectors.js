@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { findByIdentifier } from "./store";
 
 export const useNursery = () => {
   return useSelector((state) => state.garden.nursery);
@@ -14,12 +15,20 @@ export const useTemplate = (identifier) => {
   );
 };
 
+export const useElement = (identifier) => {
+  return useSelector((state) => {
+    return identifier === null
+      ? null
+      : findByIdentifier(state.garden, identifier);
+  });
+};
+
 export const useLoaded = () => {
   return useSelector((state) => state !== null);
 };
 
 export const useGarden = () => {
-  return useSelector((state) => state === null ? null : state.garden);
+  return useSelector((state) => (state === null ? null : state.garden));
 };
 
 export const useGardens = () => {
