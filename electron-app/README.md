@@ -92,3 +92,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - Presumably this is something to do with the dropdown component not setting its initial value properly
   - The rest of the editor's content does load properly, so the state is definitely being saved as it should
 - [ ] For some reason, an empty JSON is sometimes saved to the backend
+- [ ] Only exclude delect clicks if they move more than eg. two pixels, rather than if they move at all, to make it a little less brittle
