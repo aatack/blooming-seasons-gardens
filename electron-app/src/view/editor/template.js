@@ -5,6 +5,7 @@ import { Modal } from "../../model/context";
 import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
 import { Dropdown, FileInput } from "../common/input";
 import { SVGViewer, StaticSVG } from "../common/rendering";
+import { PlantSVG } from "../plan/plant";
 
 const Template = ({ template }) => {
   const dispatch = useDispatch();
@@ -28,9 +29,21 @@ const Template = ({ template }) => {
     setHovered(false);
   };
 
+  const previewSize = 30;
+
   return (
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <p style={{ display: "inline-block" }}>{template.name}</p>
+      <svg style={{ width: `${previewSize}px`, height: `${previewSize}px` }}>
+        <PlantSVG
+          plant={{
+            ...template,
+            position: { x: previewSize / 2, y: previewSize / 2 },
+            size: previewSize,
+            border: (template.border / template.size) * previewSize,
+          }}
+        />
+      </svg>
+      {space(<p style={{ display: "inline-block" }}>{template.name}</p>)}
 
       {hovered && space(<button onClick={handleRemoveTemplate}>Remove</button>)}
       {hovered && space(<button onClick={handleEdit}>Edit</button>)}
@@ -44,7 +57,7 @@ const EditTemplateModal = ({ template }) => {
 
   const [name, setName] = useState(template.name);
   const [size, setSize] = useState(template.size);
-  const [border, setBorder] = useState(template.border)
+  const [border, setBorder] = useState(template.border);
 
   const [iconMode, setIconMode] = useState(template.iconMode);
   const [iconColour, setIconColour] = useState(template.iconColour);

@@ -38,14 +38,10 @@ const Plant = ({ plant }) => {
   );
 };
 
-export const PlantSVG = ({ plant, isHovered, isSelected, radius, border }) => {
+export const PlantSVG = ({ plant, isHovered, isSelected }) => {
   // Size refers to the plant's diameter
-  if (!radius) {
-    radius = plant.size / 2;
-  }
-  if (!border) {
-    border = plant.border * (isSelected ? 2 : 1);
-  }
+  const radius = plant.size / 2;
+  var border = plant.border * (isSelected ? 2 : 1);
   if (border > radius) {
     border = radius;
   }

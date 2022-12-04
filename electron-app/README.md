@@ -54,7 +54,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Nursery terminology: template and instance
 - [x] Make whole plant light up blue
 - [x] **Undo**
-- [ ] Show plant preview in the list of plants in the nursery
+- [x] Show plant preview in the list of plants in the nursery
 - [ ] Sort plants within a bed by name, and then by x-coordinate
 - [x] Make editor width draggable
 - [ ] Make text font selectable
