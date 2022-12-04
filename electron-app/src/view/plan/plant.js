@@ -2,13 +2,11 @@ import { useContext } from "react";
 import { Hovered, Selected } from "../../model/context";
 import { useTemplate } from "../../model/selectors";
 import { ClickGroup, Scale, Translate } from "../common/rendering";
-import { useId } from "react";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
   const selected = useContext(Selected);
-  const clipPathIdentifier = useId();
 
   const template = useTemplate(plant.template);
 
@@ -34,27 +32,18 @@ const Plant = ({ plant }) => {
   return (
     <g onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <ClickGroup onClick={handleClick}>
-        <PlantSVG
-          plant={plant}
-          isHovered={isHovered}
-          isSelected={isSelected}
-          clipPathIdentifier={clipPathIdentifier}
-        />
+        <PlantSVG plant={plant} isHovered={isHovered} isSelected={isSelected} />
       </ClickGroup>
     </g>
   );
 };
 
-export const PlantSVG = ({
-  plant,
-  isHovered,
-  isSelected,
-  clipPathIdentifier,
-}) => {
+export const PlantSVG = ({ plant, isHovered, isSelected }) => {
   // Size refers to the plant's diameter
   const radius = plant.size / 2;
   const border =
     (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
+  const clipPathIdentifier = plant.identifier;
 
   return (
     <>
@@ -68,8 +57,6 @@ export const PlantSVG = ({
             isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
           }
           strokeWidth={border}
-          // onMouseEnter={handleMouseEnter}
-          // onMouseLeave={handleMouseLeave}
         />
       ) : (
         // When scaling and positioning the image, the user moves it into a
@@ -113,8 +100,6 @@ export const PlantSVG = ({
                   : "rgba(0, 0, 0, 0)"
               }
               strokeWidth={border}
-              // onMouseEnter={handleMouseEnter}
-              // onMouseLeave={handleMouseLeave}
             />
           </g>
         </>
