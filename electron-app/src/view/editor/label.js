@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { space, TextBox, NumericTextBox } from "../common/input";
+import { space, TextBox, NumericTextBox, Dropdown } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal, Selected } from "../../model/context";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
@@ -73,10 +73,16 @@ const EditLabelModal = ({ label }) => {
   const [x, setX] = useState(label.position.x);
   const [y, setY] = useState(label.position.y);
   const [size, setSize] = useState(label.size);
+  const [font, setFont] = useState(label.font);
 
   const onDone = () => {
     dispatch(
-      editElement(label, { text: text, position: { x: x, y: y }, size: size })
+      editElement(label, {
+        text: text,
+        position: { x: x, y: y },
+        size: size,
+        font: font,
+      })
     );
     modal.pop();
   };
@@ -97,6 +103,15 @@ const EditLabelModal = ({ label }) => {
       <NumericTextBox value={y} setValue={setY} />
       <p>Size</p>
       <NumericTextBox value={size} setValue={setSize} />
+      <p>Font</p>
+      <Dropdown
+        value={font}
+        setValue={setFont}
+        options={[
+          { name: "Arial", key: "Arial", value: "Arial" },
+          { name: "Spectral", key: "Spectral", value: "Spectral" },
+        ]}
+      />
       <br />
       <br />
       <button onClick={onDone}>Done</button>

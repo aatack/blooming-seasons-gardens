@@ -247,6 +247,7 @@ export const store = configureStore({
               : "Label " + state.garden.identifier.toString(),
             position: { x: 0, y: 0 },
             size: 12,
+            font: "Arial",
           });
         });
 

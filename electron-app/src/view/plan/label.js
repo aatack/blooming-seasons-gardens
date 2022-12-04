@@ -32,7 +32,7 @@ const Label = ({ label }) => {
         fill={
           isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
         }
-        style={{ userSelect: "none", fontFamily: "Spectral" }}
+        style={{ userSelect: "none", fontFamily: label.font }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

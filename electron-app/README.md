@@ -57,9 +57,9 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Show plant preview in the list of plants in the nursery
 - [x] Sort plants within a bed by name, and then by x-coordinate
 - [x] Make editor width draggable
-- [ ] Make text font selectable
-  - [ ] Spectral
-  - [ ] Arial
+- [x] Make text font selectable
+  - [x] Spectral
+  - [x] Arial
 - [ ] Make open nursery for labels
   - [ ] Or, alternatively, click on a button to make a label for an existing plant
   - [ ] Presumably it would also be useful to be able to attach arrows to things, or at least make their start and end positions relative (eg. start is one unit below a particular plant)
