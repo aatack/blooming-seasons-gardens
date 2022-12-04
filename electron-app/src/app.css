@@ -28,3 +28,9 @@ h3 {
 h2 {
     font-size: 1.8em;
 }
+
+@font-face {
+    font-family: "Spectral";
+    src: local("Spectral-Regular"),
+      url("./fonts/Spectral-Regular.ttf") format("truetype");
+  }
