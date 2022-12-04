@@ -49,7 +49,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Text bigger in the editor
   - Probably sufficient to just zoom in, though added something to the default CSS anyway
 - [x] Display plant sizes alongside coordinates
-- [ ] Select and move with the arrow keys
+- [x] Select and move with the arrow keys
 - [x] Movement sensitivity changes with zoom level
 - [x] Nursery terminology: template and instance
 - [x] Make whole plant light up blue

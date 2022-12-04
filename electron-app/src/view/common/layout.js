@@ -76,7 +76,7 @@ export const HorizontalSplit = ({
 
       if (selectedElement.position && (dx !== 0 || dy !== 0)) {
         const position = selectedElement.position;
-        const step = 0.1;
+        const step = e.ctrlKey ? 0.5 : e.shiftKey ? 0.02 : 0.1;
 
         dispatch(
           editElement(selectedElement, {
