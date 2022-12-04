@@ -38,12 +38,17 @@ const Plant = ({ plant }) => {
   );
 };
 
-export const PlantSVG = ({ plant, isHovered, isSelected }) => {
+export const PlantSVG = ({ plant, isHovered, isSelected, radius, border }) => {
   // Size refers to the plant's diameter
-  const radius = plant.size / 2;
-  const border =
-    (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
-  const clipPathIdentifier = plant.identifier;
+  if (!radius) {
+    radius = plant.size / 2;
+  }
+  if (!border) {
+    border = plant.border * (isSelected ? 2 : 1);
+  }
+  if (border > radius) {
+    border = radius;
+  }
 
   return (
     <>
@@ -65,17 +70,13 @@ export const PlantSVG = ({ plant, isHovered, isSelected }) => {
         // then perform those that would move that circle to one centred at
         // (0, 0) with a radius matching that specified for the plant
         <>
-          <clipPath id={clipPathIdentifier}>
-            <circle
-              cx={plant.position.x}
-              cy={plant.position.y}
-              r={plant.size / 2}
-            />
+          <clipPath id={plant.identifier}>
+            <circle cx={plant.position.x} cy={plant.position.y} r={radius} />
           </clipPath>
-          <g clipPath={`url(#${clipPathIdentifier})`}>
+          <g clipPath={`url(#${plant.identifier})`}>
             <Translate x={plant.position.x} y={plant.position.y}>
               {/* TODO: combine the various nested transforms into one */}
-              <Scale scale={0.01 * (plant.size / 2)}>
+              <Scale scale={0.01 * radius}>
                 <Translate x={-120} y={-120}>
                   <Scale scale={plant.iconScale}>
                     <Translate x={plant.iconX} y={plant.iconY}>
