@@ -3,7 +3,13 @@ import { store } from "./model/store";
 export const saveData = () => {
   (async () => {
     // TODO: clear the state's history
-    const state = store.getState();
+    const state = {
+      ...store.getState(),
+      history: {
+        index: 0,
+        items: [],
+      },
+    };
     if (!state.garden) {
       console.error("Potentially saving empty data");
     }
