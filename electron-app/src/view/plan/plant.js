@@ -31,13 +31,33 @@ const Plant = ({ plant }) => {
   const isHovered = hovered.matches(plant, true);
   const isSelected = selected.matches(plant, true);
 
+  return (
+    <g onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <ClickGroup onClick={handleClick}>
+        <PlantSVG
+          plant={plant}
+          isHovered={isHovered}
+          isSelected={isSelected}
+          clipPathIdentifier={clipPathIdentifier}
+        />
+      </ClickGroup>
+    </g>
+  );
+};
+
+export const PlantSVG = ({
+  plant,
+  isHovered,
+  isSelected,
+  clipPathIdentifier,
+}) => {
   // Size refers to the plant's diameter
   const radius = plant.size / 2;
   const border =
     (plant.border > radius ? radius : plant.border) * (isSelected ? 2 : 1);
 
   return (
-    <ClickGroup onClick={handleClick}>
+    <>
       {plant.iconMode === "colour" ? (
         <circle
           cx={plant.position.x}
@@ -48,8 +68,8 @@ const Plant = ({ plant }) => {
             isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
           }
           strokeWidth={border}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          // onMouseEnter={handleMouseEnter}
+          // onMouseLeave={handleMouseLeave}
         />
       ) : (
         // When scaling and positioning the image, the user moves it into a
@@ -93,13 +113,13 @@ const Plant = ({ plant }) => {
                   : "rgba(0, 0, 0, 0)"
               }
               strokeWidth={border}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              // onMouseEnter={handleMouseEnter}
+              // onMouseLeave={handleMouseLeave}
             />
           </g>
         </>
       )}
-    </ClickGroup>
+    </>
   );
 };
 
