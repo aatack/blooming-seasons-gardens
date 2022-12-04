@@ -19,6 +19,7 @@ import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
+  const nursery = useNursery();
 
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
@@ -59,6 +60,38 @@ const Bed = ({ bed }) => {
   const isHovered = hovered.matches(bed);
   const isSelected = selected.matches(bed);
 
+  const sortedElements = [...bed.elements].sort((left, right) => {
+    const stats = (element) => {
+      return {
+        name:
+          element.type === "plant"
+            ? element.template
+              ? nursery.find(
+                  (template) => template.identifier === element.template
+                ).name
+              : element.name
+            : element.type === "label"
+            ? element.text
+            : "_" + element.type,
+        position:
+          element.type === "arrow" ? element.start.x : element.position.x,
+      };
+    };
+
+    const leftStats = stats(left);
+    const rightStats = stats(right);
+
+    if (leftStats.name === rightStats.name) {
+      if (leftStats.position === rightStats.name) {
+        return left.identifier < right.identifier ? -1 : 1;
+      } else {
+        return leftStats.position < rightStats.position ? -1 : 1;
+      }
+    } else {
+      return leftStats.name < rightStats.name ? -1 : 1;
+    }
+  });
+
   return (
     <>
       <div
@@ -85,7 +118,7 @@ const Bed = ({ bed }) => {
       </div>
 
       <div style={{ marginLeft: "20px" }}>
-        {bed.elements.map(renderElement)}
+        {sortedElements.map(renderElement)}
       </div>
     </>
   );

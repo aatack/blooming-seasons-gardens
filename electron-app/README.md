@@ -55,7 +55,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Make whole plant light up blue
 - [x] **Undo**
 - [x] Show plant preview in the list of plants in the nursery
-- [ ] Sort plants within a bed by name, and then by x-coordinate
+- [x] Sort plants within a bed by name, and then by x-coordinate
 - [x] Make editor width draggable
 - [ ] Make text font selectable
   - [ ] Spectral
@@ -94,3 +94,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] For some reason, an empty JSON is sometimes saved to the backend
 - [ ] Only exclude delect clicks if they move more than eg. two pixels, rather than if they move at all, to make it a little less brittle
 - [ ] Keyboard shortcuts don't work until the editor has been focused
+- [ ] Numbers should be rounded when they are programmatically updated
