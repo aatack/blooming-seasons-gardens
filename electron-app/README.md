@@ -95,3 +95,4 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] Only exclude delect clicks if they move more than eg. two pixels, rather than if they move at all, to make it a little less brittle
 - [ ] Keyboard shortcuts don't work until the editor has been focused
 - [ ] Numbers should be rounded when they are programmatically updated
+- [ ] Somehow prevent multiple tabs' being open from overwriting each others' saves
