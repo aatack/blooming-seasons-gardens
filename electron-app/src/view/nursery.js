@@ -9,7 +9,6 @@ import { useNursery } from "../model/selectors";
 
 const Nursery = () => {
   const templates = useNursery();
-  console.log(templates);
   const modal = useContext(Modal);
 
   const handleAddTemplate = () => {

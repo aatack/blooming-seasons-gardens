@@ -2,11 +2,17 @@ import Plant from "./plant";
 import Label from "./label";
 import Arrow from "./arrow";
 import { Translate } from "../common/rendering";
+import { expandTemplate, useNursery } from "../../model/selectors";
 
 const Bed = ({ bed }) => {
+  const nursery = useNursery();
+  const elements = bed.elements.map((element) =>
+    expandTemplate(element, nursery)
+  );
+
   return (
     <Translate x={bed.x || 0} y={bed.y || 0}>
-      {bed.elements.map(renderElement)}
+      {elements.map(renderElement)}
     </Translate>
   );
 };

@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useTemplate } from "../../model/selectors";
 import {
   ColourPicker,
   Dropdown,
@@ -19,8 +18,6 @@ const Plant = ({ plant }) => {
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
   const selected = useContext(Selected);
-
-  const template = useTemplate(plant.template);
 
   const handleMouseEnter = () => {
     hovered.set(plant);
@@ -59,13 +56,10 @@ const Plant = ({ plant }) => {
           : null,
       }}
     >
-      <p style={{ display: "inline-block" }}>
-        Plant: {template ? template.name : plant.name}
-      </p>
+      <p style={{ display: "inline-block" }}>Plant: {plant.name}</p>
       {space(
         <p style={{ display: "inline-block" }}>
-          (x = {plant.position.x}, y = {plant.position.y}) (
-          {template ? template.size : plant.size}m)
+          (x = {plant.position.x}, y = {plant.position.y}) ({plant.size}m)
         </p>
       )}
 
@@ -82,7 +76,6 @@ const Plant = ({ plant }) => {
 export const EditPlantModal = ({ plant }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
-  const template = useTemplate(plant.template);
 
   const [name, setName] = useState(plant.name);
   const [x, setX] = useState(plant.position ? plant.position.x : 0);
@@ -98,7 +91,7 @@ export const EditPlantModal = ({ plant }) => {
   const [iconScale, setIconScale] = useState(plant.iconScale);
 
   const handleDone = () => {
-    if (template) {
+    if (plant.template) {
       dispatch(editElement(plant, { position: { x: x, y: y } }));
     } else {
       dispatch(
@@ -137,13 +130,13 @@ export const EditPlantModal = ({ plant }) => {
   return (
     <>
       <h3>Edit Plant</h3>
-      {!template && (
+      {!plant.template && (
         <>
           <p>Name</p>
           <TextBox value={name} setValue={setName} />
         </>
       )}
-      {template && <p>Template: {template.name}</p>}
+      {plant.template && <p>Template: {plant.template.name}</p>}
       {plant.position && (
         <>
           <p>Position</p>
@@ -153,7 +146,7 @@ export const EditPlantModal = ({ plant }) => {
           <NumericTextBox value={y} setValue={setY} />
         </>
       )}
-      {!template && (
+      {!plant.template && (
         <>
           <p>Size</p>
           <NumericTextBox value={size} setValue={setSize} />

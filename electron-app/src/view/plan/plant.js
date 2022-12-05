@@ -1,18 +1,11 @@
 import { useContext } from "react";
 import { Hovered, Selected } from "../../model/context";
-import { useTemplate } from "../../model/selectors";
 import { ClickGroup, Scale, Translate } from "../common/rendering";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Plant = ({ plant }) => {
   const hovered = useContext(Hovered);
   const selected = useContext(Selected);
-
-  const template = useTemplate(plant.template);
-
-  if (template) {
-    plant = { ...template, ...plant };
-  }
 
   const handleMouseEnter = () => {
     hovered.set(plant);
