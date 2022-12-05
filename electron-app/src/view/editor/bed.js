@@ -15,7 +15,7 @@ import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
 import Label from "./label";
 import Arrow from "./arrow";
-import { useNursery } from "../../model/selectors";
+import { useNursery, expandTemplate } from "../../model/selectors";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
 const Bed = ({ bed }) => {
@@ -61,37 +61,35 @@ const Bed = ({ bed }) => {
   const isHovered = hovered.matches(bed);
   const isSelected = selected.matches(bed);
 
-  const sortedElements = [...bed.elements].sort((left, right) => {
-    const stats = (element) => {
-      return {
-        name:
-          element.type === "plant"
-            ? element.template
-              ? nursery.find(
-                  (template) => template.identifier === element.template
-                ).name
-              : element.name
-            : element.type === "label"
-            ? element.text
-            : "_" + element.type,
-        position:
-          element.type === "arrow" ? element.start.x : element.position.x,
+  const elements = bed.elements
+    .map((element) => expandTemplate(element, nursery))
+    .sort((left, right) => {
+      const stats = (element) => {
+        return {
+          name:
+            element.type === "plant"
+              ? element.name
+              : element.type === "label"
+              ? element.text
+              : "_" + element.type,
+          position:
+            element.type === "arrow" ? element.start.x : element.position.x,
+        };
       };
-    };
 
-    const leftStats = stats(left);
-    const rightStats = stats(right);
+      const leftStats = stats(left);
+      const rightStats = stats(right);
 
-    if (leftStats.name === rightStats.name) {
-      if (leftStats.position === rightStats.name) {
-        return left.identifier < right.identifier ? -1 : 1;
+      if (leftStats.name === rightStats.name) {
+        if (leftStats.position === rightStats.name) {
+          return left.identifier < right.identifier ? -1 : 1;
+        } else {
+          return leftStats.position < rightStats.position ? -1 : 1;
+        }
       } else {
-        return leftStats.position < rightStats.position ? -1 : 1;
+        return leftStats.name < rightStats.name ? -1 : 1;
       }
-    } else {
-      return leftStats.name < rightStats.name ? -1 : 1;
-    }
-  });
+    });
 
   return (
     <>
@@ -118,9 +116,7 @@ const Bed = ({ bed }) => {
           space(<button onClick={handleAddArrow}>Add Arrow</button>)}
       </div>
 
-      <div style={{ marginLeft: "20px" }}>
-        {sortedElements.map(renderElement)}
-      </div>
+      <div style={{ marginLeft: "20px" }}>{elements.map(renderElement)}</div>
     </>
   );
 };

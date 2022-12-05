@@ -5,6 +5,18 @@ export const useNursery = () => {
   return useSelector((state) => state.garden.nursery);
 };
 
+export const expandTemplate = (element, nursery) => {
+  if (element.template) {
+    const template = nursery.find(
+      (template) => template.identifier === element.template
+    );
+    // Template goes first so its identifier is overwritten by the element's
+    return { ...template, ...element };
+  } else {
+    return element;
+  }
+};
+
 export const useTemplate = (identifier) => {
   // Returns `null` (not `undefined`) if no template is in use
   return useSelector(
