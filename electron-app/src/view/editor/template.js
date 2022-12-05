@@ -1,12 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useContext, useState } from "react";
-import { editTemplate, removeTemplate } from "../../model/actions";
+import { removeTemplate } from "../../model/actions";
 import { Modal } from "../../model/context";
-import { ColourPicker, NumericTextBox, space, TextBox } from "../common/input";
-import { Dropdown, FileInput } from "../common/input";
-import { SVGViewer, StaticSVG } from "../common/rendering";
 import { PlantSVG } from "../plan/plant";
 import { EditPlantModal } from "./plant";
+import { EditLabelModal } from "./label";
+import { space } from "../common/input";
 
 const Template = ({ template }) => {
   const dispatch = useDispatch();
@@ -24,6 +23,7 @@ const Template = ({ template }) => {
         modal.put(<EditPlantModal plant={template} />);
         break;
       case "label":
+        modal.put(<EditLabelModal label={template} />);
         break;
       default:
         console.error(`Unknown template type: ${template.type}`);
@@ -65,3 +65,5 @@ const Template = ({ template }) => {
     </div>
   );
 };
+
+export default Template;

@@ -4,6 +4,7 @@ import { space, TextBox, NumericTextBox, Dropdown } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal, Selected } from "../../model/context";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
+import { useTemplate } from "../../model/selectors";
 
 const Label = ({ label }) => {
   const dispatch = useDispatch();
@@ -65,25 +66,31 @@ const Label = ({ label }) => {
   );
 };
 
-const EditLabelModal = ({ label }) => {
+export const EditLabelModal = ({ label }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
+  const template = useTemplate(label.template);
 
   const [text, setText] = useState(label.text);
-  const [x, setX] = useState(label.position.x);
-  const [y, setY] = useState(label.position.y);
+  const [x, setX] = useState(label.position ? label.position.x : 0);
+  const [y, setY] = useState(label.position ? label.position.y : 0);
   const [size, setSize] = useState(label.size);
   const [font, setFont] = useState(label.font);
 
   const onDone = () => {
-    dispatch(
-      editElement(label, {
-        text: text,
-        position: { x: x, y: y },
-        size: size,
-        font: font,
-      })
-    );
+    if (template) {
+      dispatch(editElement(label, { position: { x: x, y: y } }));
+    } else {
+      dispatch(
+        editElement(label, {
+          text: text,
+          position: label.position ? { x: x, y: y } : undefined,
+          size: size,
+          font: font,
+        })
+      );
+    }
+
     modal.pop();
   };
 
@@ -94,24 +101,36 @@ const EditLabelModal = ({ label }) => {
   return (
     <>
       <h3>Edit Label</h3>
-      <p>Text</p>
-      <TextBox value={text} setValue={setText} />
-      <p>Position</p>
-      <p>x =</p>
-      <NumericTextBox value={x} setValue={setX} />
-      <p>y =</p>
-      <NumericTextBox value={y} setValue={setY} />
-      <p>Size</p>
-      <NumericTextBox value={size} setValue={setSize} />
-      <p>Font</p>
-      <Dropdown
-        value={font}
-        setValue={setFont}
-        options={[
-          { name: "Arial", key: "Arial", value: "Arial" },
-          { name: "Spectral", key: "Spectral", value: "Spectral" },
-        ]}
-      />
+      {!template && (
+        <>
+          <p>Text</p>
+          <TextBox value={text} setValue={setText} />
+        </>
+      )}
+      {label.position && (
+        <>
+          <p>Position</p>
+          <p>x =</p>
+          <NumericTextBox value={x} setValue={setX} />
+          <p>y =</p>
+          <NumericTextBox value={y} setValue={setY} />
+        </>
+      )}
+      {!template && (
+        <>
+          <p>Size</p>
+          <NumericTextBox value={size} setValue={setSize} />
+          <p>Font</p>
+          <Dropdown
+            value={font}
+            setValue={setFont}
+            options={[
+              { name: "Arial", key: "Arial", value: "Arial" },
+              { name: "Spectral", key: "Spectral", value: "Spectral" },
+            ]}
+          />
+        </>
+      )}
       <br />
       <br />
       <button onClick={onDone}>Done</button>
