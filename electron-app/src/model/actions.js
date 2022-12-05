@@ -45,8 +45,18 @@ export const renameBed = (identifier, name) => {
   };
 };
 
-export const addTemplate = (name) => {
-  return { type: "nursery/template/added", payload: name };
+export const addPlantTemplate = (name) => {
+  return {
+    type: "nursery/template/added",
+    payload: { type: "plant", name: name },
+  };
+};
+
+export const addLabelTemplate = (text) => {
+  return {
+    type: "nursery/template/added",
+    payload: { type: "label", text: text },
+  };
 };
 
 export const removeTemplate = (template) => {

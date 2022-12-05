@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Modal } from "../model/context";
-import { addTemplate } from "../model/actions";
+import { addPlantTemplate, addLabelTemplate } from "../model/actions";
 import Template from "./editor/template";
 import { useDispatch } from "react-redux";
-import { space, TextBox } from "./common/input";
+import { Dropdown, space, TextBox } from "./common/input";
 import { useState } from "react";
 import { useNursery } from "../model/selectors";
 
@@ -36,10 +36,23 @@ const Nursery = () => {
 export const CreateTemplateModal = () => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
+
+  const [type, setType] = useState("plant");
   const [name, setName] = useState("");
 
   const onDone = () => {
-    dispatch(addTemplate(name));
+    console.log(type);
+    switch (type) {
+      case "plant":
+        addPlantTemplate(name);
+        break;
+      case "label":
+        addLabelTemplate(name);
+        break;
+      default:
+        console.error(`Unknown template type: ${type}`);
+    }
+
     modal.pop();
   };
 
@@ -50,6 +63,14 @@ export const CreateTemplateModal = () => {
   return (
     <>
       <h3>Create Template</h3>
+      <Dropdown
+        value={type}
+        setValue={setType}
+        options={[
+          { name: "Plant", key: "plant", value: "plant" },
+          { name: "Label", key: "label", value: "label" },
+        ]}
+      />
       <TextBox value={name} setValue={setName} />
       <button onClick={onDone}>Done</button>
       {space(<button onClick={onCancel}>Cancel</button>)}

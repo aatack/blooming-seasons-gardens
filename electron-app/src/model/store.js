@@ -169,17 +169,7 @@ export const store = configureStore({
           draft.identifier += 1;
           draft.nursery.push({
             identifier: state.garden.identifier,
-            name: action.payload
-              ? action.payload
-              : "Template " + state.garden.identifier.toString(),
-            size: 0.5,
-            border: 0.02,
-            iconMode: "colour",
-            iconColour: "#aabbcc",
-            iconImage: null,
-            iconScale: 1,
-            iconX: 0,
-            iconY: 0,
+            ...action.payload,
           });
         });
       case "nursery/template/removed":
