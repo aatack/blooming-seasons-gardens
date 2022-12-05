@@ -228,17 +228,25 @@ export const store = configureStore({
           draft.identifier += 1;
           const bed = findByIdentifier(draft, action.payload.bedIdentifier);
 
-          bed.elements.push({
+          const head = {
             identifier: state.garden.identifier,
             bedIdentifier: action.payload.bedIdentifier,
             type: "label",
-            text: action.payload.text
-              ? action.payload.text
-              : "Label " + state.garden.identifier.toString(),
             position: { x: 0, y: 0 },
-            size: 12,
-            font: "Arial",
-          });
+          };
+
+          const body = action.payload.templateIdentifier
+            ? {
+                template: action.payload.templateIdentifier,
+              }
+            : {
+                text: action.payload.text,
+                position: { x: 0, y: 0 },
+                size: 12,
+                font: "Arial",
+              };
+
+          bed.elements.push({ ...head, ...body });
         });
 
       case "garden/arrow/added":

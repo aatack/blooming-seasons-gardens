@@ -101,7 +101,17 @@ export const addCustomPlant = (bed, name) => {
   };
 };
 
-export const addLabel = (bed, text) => {
+export const addTemplateLabel = (bed, template) => {
+  return {
+    type: "garden/label/added",
+    payload: {
+      bedIdentifier: bed.identifier,
+      templateIdentifier: template.identifier,
+    },
+  };
+};
+
+export const addCustomLabel = (bed, text) => {
   return {
     type: "garden/label/added",
     payload: { bedIdentifier: bed.identifier, text: text },

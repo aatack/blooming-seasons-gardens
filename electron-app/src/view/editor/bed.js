@@ -3,7 +3,8 @@ import { useContext, useState } from "react";
 import {
   addArrow,
   addCustomPlant,
-  addLabel,
+  addCustomLabel,
+  addTemplateLabel,
   addTemplatePlant,
   removeBed,
   renameBed,
@@ -152,7 +153,9 @@ const AddPlantModal = ({ bed }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
-  const templates = useNursery();
+  const templates = useNursery().filter(
+    (template) => template.type === "plant"
+  );
 
   const templatesAvailable = templates.length > 0;
 
@@ -220,10 +223,25 @@ const AddLabelModal = ({ bed }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
+  const templates = useNursery().filter(
+    (template) => template.type === "label"
+  );
+
+  const templatesAvailable = templates.length > 0;
+
+  const [custom, setCustom] = useState(false);
   const [text, setText] = useState("");
+  const [template, setTemplate] = useState(
+    templatesAvailable ? templates[0] : null
+  );
 
   const onDone = () => {
-    dispatch(addLabel(bed, text));
+    if (custom) {
+      dispatch(addCustomLabel(bed, text));
+    } else {
+      dispatch(addTemplateLabel(bed, template));
+    }
+
     modal.pop();
   };
 
@@ -231,17 +249,41 @@ const AddLabelModal = ({ bed }) => {
     modal.pop();
   };
 
+  const createTemplate = () => {
+    modal.put(<CreateTemplateModal />);
+  };
+
   return (
     <>
-      <h3>Add Label</h3>
+      <h3>Add Plant</h3>
+      <p>Use template?</p>
+      <Checkbox value={custom} setValue={setCustom} />
 
-      <p>Text</p>
-      <TextBox value={text} setValue={setText} />
+      {custom && <TextBox value={text} setValue={setText} />}
+      {!custom && templatesAvailable && (
+        <Dropdown
+          options={templates.map((t) => ({
+            key: t.identifier,
+            value: t,
+            name: t.name,
+          }))}
+          value={template}
+          setValue={setTemplate}
+        />
+      )}
+      {!custom && !templatesAvailable && (
+        <>
+          <p>No template available.</p>
+          <button onClick={createTemplate}>Create template</button>
+        </>
+      )}
 
       <br />
       <br />
 
-      <button onClick={onDone}>Done</button>
+      <button onClick={onDone} disabled={!custom && !templatesAvailable}>
+        Done
+      </button>
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>
   );
