@@ -79,14 +79,14 @@ const Plant = ({ plant }) => {
   );
 };
 
-const EditPlantModal = ({ plant }) => {
+export const EditPlantModal = ({ plant }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
   const template = useTemplate(plant.template);
 
   const [name, setName] = useState(plant.name);
-  const [x, setX] = useState(plant.position.x);
-  const [y, setY] = useState(plant.position.y);
+  const [x, setX] = useState(plant.position ? plant.position.x : 0);
+  const [y, setY] = useState(plant.position ? plant.position.y : 0);
   const [size, setSize] = useState(plant.size);
   const [border, setBorder] = useState(plant.border);
 
@@ -103,7 +103,7 @@ const EditPlantModal = ({ plant }) => {
     } else {
       dispatch(
         editElement(plant, {
-          position: { x: x, y: y },
+          position: plant.position ? { x: x, y: y } : undefined,
           name: name,
           size: size,
           border: border,
@@ -144,11 +144,15 @@ const EditPlantModal = ({ plant }) => {
         </>
       )}
       {template && <p>Template: {template.name}</p>}
-      <p>Position</p>
-      <p>x =</p>
-      <NumericTextBox value={x} setValue={setX} />
-      <p>y =</p>
-      <NumericTextBox value={y} setValue={setY} />
+      {plant.position && (
+        <>
+          <p>Position</p>
+          <p>x =</p>
+          <NumericTextBox value={x} setValue={setX} />
+          <p>y =</p>
+          <NumericTextBox value={y} setValue={setY} />
+        </>
+      )}
       {!template && (
         <>
           <p>Size</p>

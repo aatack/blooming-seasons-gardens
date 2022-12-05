@@ -41,7 +41,6 @@ export const CreateTemplateModal = () => {
   const [name, setName] = useState("");
 
   const onDone = () => {
-    console.log(type);
     switch (type) {
       case "plant":
         dispatch(addPlantTemplate(name));
