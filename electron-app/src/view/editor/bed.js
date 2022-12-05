@@ -265,7 +265,7 @@ const AddLabelModal = ({ bed }) => {
           options={templates.map((t) => ({
             key: t.identifier,
             value: t,
-            name: t.name,
+            name: t.text,
           }))}
           value={template}
           setValue={setTemplate}
