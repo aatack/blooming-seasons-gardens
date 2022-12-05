@@ -4,7 +4,6 @@ import { space, TextBox, NumericTextBox, Dropdown } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal, Selected } from "../../model/context";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
-import { useTemplate } from "../../model/selectors";
 
 const Label = ({ label }) => {
   const dispatch = useDispatch();
@@ -69,7 +68,6 @@ const Label = ({ label }) => {
 export const EditLabelModal = ({ label }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
-  const template = useTemplate(label.template);
 
   const [text, setText] = useState(label.text);
   const [x, setX] = useState(label.position ? label.position.x : 0);
@@ -78,7 +76,7 @@ export const EditLabelModal = ({ label }) => {
   const [font, setFont] = useState(label.font);
 
   const onDone = () => {
-    if (template) {
+    if (label.template) {
       dispatch(editElement(label, { position: { x: x, y: y } }));
     } else {
       dispatch(
@@ -101,7 +99,7 @@ export const EditLabelModal = ({ label }) => {
   return (
     <>
       <h3>Edit Label</h3>
-      {!template && (
+      {!label.template && (
         <>
           <p>Text</p>
           <TextBox value={text} setValue={setText} />
@@ -116,7 +114,7 @@ export const EditLabelModal = ({ label }) => {
           <NumericTextBox value={y} setValue={setY} />
         </>
       )}
-      {!template && (
+      {!label.template && (
         <>
           <p>Size</p>
           <NumericTextBox value={size} setValue={setSize} />

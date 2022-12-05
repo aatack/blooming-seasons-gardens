@@ -60,10 +60,10 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Make text font selectable
   - [x] Spectral
   - [x] Arial
-- [ ] Make open nursery for labels
+- [x] Make open nursery for labels
   - [ ] Or, alternatively, click on a button to make a label for an existing plant
   - [ ] Presumably it would also be useful to be able to attach arrows to things, or at least make their start and end positions relative (eg. start is one unit below a particular plant)
-- [ ] Highlight everything in a bed when mousing over its collapsible area
+- [x] Highlight everything in a bed when mousing over its collapsible area
 - [x] Reverse highlighting: light up in editor when moused over in plan
 - [ ] Line breaks in labels
 - [ ] Centralise labels

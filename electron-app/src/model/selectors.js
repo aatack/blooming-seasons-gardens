@@ -17,16 +17,6 @@ export const expandTemplate = (element, nursery) => {
   }
 };
 
-export const useTemplate = (identifier) => {
-  // Returns `null` (not `undefined`) if no template is in use
-  return useSelector(
-    (state) =>
-      state.garden.nursery.find(
-        (template) => template.identifier === identifier
-      ) || null
-  );
-};
-
 export const useElement = (identifier) => {
   return useSelector((state) => {
     return identifier === null
