@@ -33,17 +33,23 @@ const Template = ({ template }) => {
 
   return (
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <svg style={{ width: `${previewSize}px`, height: `${previewSize}px` }}>
-        <PlantSVG
-          plant={{
-            ...template,
-            position: { x: previewSize / 2, y: previewSize / 2 },
-            size: previewSize,
-            border: (template.border / template.size) * previewSize,
-          }}
-        />
-      </svg>
-      {space(<p style={{ display: "inline-block" }}>{template.name}</p>)}
+      {template.type === "plant" && (
+        <svg style={{ width: `${previewSize}px`, height: `${previewSize}px` }}>
+          <PlantSVG
+            plant={{
+              ...template,
+              position: { x: previewSize / 2, y: previewSize / 2 },
+              size: previewSize,
+              border: (template.border / template.size) * previewSize,
+            }}
+          />
+        </svg>
+      )}
+      {space(
+        <p style={{ display: "inline-block" }}>
+          {template.name || template.text}
+        </p>
+      )}
 
       {hovered && space(<button onClick={handleRemoveTemplate}>Remove</button>)}
       {hovered && space(<button onClick={handleEdit}>Edit</button>)}

@@ -48,14 +48,25 @@ export const renameBed = (identifier, name) => {
 export const addPlantTemplate = (name) => {
   return {
     type: "nursery/template/added",
-    payload: { type: "plant", name: name },
+    payload: {
+      type: "plant",
+      name: name,
+      size: 0.5,
+      border: 0.02,
+      iconMode: "colour",
+      iconColour: "#aabbcc",
+      iconImage: null,
+      iconScale: 1,
+      iconX: 0,
+      iconY: 0,
+    },
   };
 };
 
 export const addLabelTemplate = (text) => {
   return {
     type: "nursery/template/added",
-    payload: { type: "label", text: text },
+    payload: { type: "label", text: text, size: 12, font: "Arial" },
   };
 };
 

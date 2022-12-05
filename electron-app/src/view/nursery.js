@@ -44,10 +44,10 @@ export const CreateTemplateModal = () => {
     console.log(type);
     switch (type) {
       case "plant":
-        addPlantTemplate(name);
+        dispatch(addPlantTemplate(name));
         break;
       case "label":
-        addLabelTemplate(name);
+        dispatch(addLabelTemplate(name));
         break;
       default:
         console.error(`Unknown template type: ${type}`);
