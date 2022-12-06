@@ -27,6 +27,7 @@ const Label = ({ label }) => {
   return (
     <ClickGroup onClick={handleClick}>
       <text
+        textAnchor="middle"
         x={label.position.x}
         y={label.position.y}
         // Scaling by 10 seems to give reasonable default sizes

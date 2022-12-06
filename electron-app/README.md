@@ -35,7 +35,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Make a copy of a plant for bulk creation
   - Actually applies to any element
 - [x] Plant sizes need to refer to their diameters
-- [x] Beter colour picker
+- [x] Better colour picker
 - [x] Import images for plants
   - [x] Work out why the tickbox isn't picking up the right initial value
 - [x] See the colour of a plant when picking it
@@ -65,8 +65,8 @@ The initial project setup was done by following [a guide](https://medium.com/fol
   - [ ] Presumably it would also be useful to be able to attach arrows to things, or at least make their start and end positions relative (eg. start is one unit below a particular plant)
 - [x] Highlight everything in a bed when mousing over its collapsible area
 - [x] Reverse highlighting: light up in editor when moused over in plan
-- [ ] Line breaks in labels
-- [ ] Centralise labels
+- [x] Line breaks in labels
+- [x] Centralise labels
 - [ ] Ability to add rectangles
 - [ ] Checkbox that enables beds to be hidden temporarily
 - [x] Hotkey for hiding the editor
