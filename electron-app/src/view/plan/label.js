@@ -22,7 +22,7 @@ const Label = ({ label }) => {
   const isHovered = hovered.matches(label, true);
   const isSelected = selected.matches(label, true);
 
-  const lines = label.text.split("\\");
+  const lines = label.text.split("\n");
 
   return (
     <ClickGroup onClick={handleClick}>

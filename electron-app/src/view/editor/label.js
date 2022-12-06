@@ -102,7 +102,7 @@ export const EditLabelModal = ({ label }) => {
       {!label.template && (
         <>
           <p>Text</p>
-          <TextBox value={text} setValue={setText} />
+          <TextBox value={text} setValue={setText} longForm={true} />
         </>
       )}
       {label.position && (

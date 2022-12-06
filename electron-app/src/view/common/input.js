@@ -15,7 +15,11 @@ export const TextBox = (props) => {
     }
   };
 
-  return <input value={value} onChange={handleChange}></input>;
+  if (props.longForm) {
+    return <textarea value={value} onChange={handleChange} />;
+  } else {
+    return <input value={value} onChange={handleChange}></input>;
+  }
 };
 
 export const NumericTextBox = (props) => {
