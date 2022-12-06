@@ -22,6 +22,8 @@ const Label = ({ label }) => {
   const isHovered = hovered.matches(label, true);
   const isSelected = selected.matches(label, true);
 
+  const lines = [label.text];
+
   return (
     <ClickGroup onClick={handleClick}>
       <text
@@ -36,7 +38,11 @@ const Label = ({ label }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {label.text}
+        {lines.map((line) => (
+          <tspan x="0" dy="1.2em">
+            {line}
+          </tspan>
+        ))}
       </text>
     </ClickGroup>
   );
