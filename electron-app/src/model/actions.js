@@ -129,6 +129,18 @@ export const addArrow = (bed) => {
   };
 };
 
+export const addRectangle = (bed) => {
+  return {
+    type: "garden/rectangle/added",
+    payload: {
+      bedIdentifier: bed.identifier,
+      position: { x: 0.0, y: 0.0 },
+      size: { width: 1.0, height: 1.0 },
+      colour: "#ffffff",
+    },
+  };
+};
+
 export const removeElement = (element) => {
   return { type: "garden/element/removed", payload: element.identifier };
 };

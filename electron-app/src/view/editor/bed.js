@@ -8,6 +8,7 @@ import {
   addTemplatePlant,
   removeBed,
   renameBed,
+  addRectangle,
 } from "../../model/actions";
 import { Checkbox, TextBox, Dropdown, space } from "../common/input";
 import { Modal, Hovered, Selected } from "../../model/context";
@@ -44,6 +45,10 @@ const Bed = ({ bed }) => {
 
   const handleAddArrow = () => {
     dispatch(addArrow(bed));
+  };
+
+  const handleAddRectangle = () => {
+    module.put(addRectangle(bed));
   };
 
   const handleMouseEnter = () => {
@@ -114,6 +119,8 @@ const Bed = ({ bed }) => {
           space(<button onClick={handleAddLabel}>Add Label</button>)}
         {isHovered &&
           space(<button onClick={handleAddArrow}>Add Arrow</button>)}
+        {isHovered &&
+          space(<button onClick={handleAddRectangle}>Add Rectangle</button>)}
       </div>
 
       <div style={{ marginLeft: "20px" }}>{elements.map(renderElement)}</div>
