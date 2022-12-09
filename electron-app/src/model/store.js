@@ -264,6 +264,21 @@ export const store = configureStore({
           });
         });
 
+      case "garden/rectangle/added":
+        return produceWithHistory(state, (draft) => {
+          draft.identifier += 1;
+          const bed = findByIdentifier(draft, action.payload.bedIdentifier);
+
+          bed.elements.push({
+            identifier: state.garden.identifier,
+            bedIdentifier: action.payload.bedIdentifier,
+            type: "rectangle",
+            position: action.payload.position,
+            size: action.payload.size,
+            colour: action.payload.colour,
+          });
+        });
+
       case "garden/element/removed":
         return produceWithHistory(state, (draft) => {
           for (const bed of draft.beds) {
