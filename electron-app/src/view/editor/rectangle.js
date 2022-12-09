@@ -1,18 +1,18 @@
 import { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
-import { space, NumericTextBox } from "../common/input";
+import { space, NumericTextBox, ColourPicker } from "../common/input";
 import { copyElement, editElement, removeElement } from "../../model/actions";
 import { Hovered, Modal, Selected } from "../../model/context";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
 
-const Arrow = ({ arrow }) => {
+const Rectangle = ({ rectangle }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
   const selected = useContext(Selected);
 
   const handleMouseEnter = () => {
-    hovered.set(arrow);
+    hovered.set(rectangle);
   };
 
   const handleMouseLeave = () => {
@@ -20,19 +20,19 @@ const Arrow = ({ arrow }) => {
   };
 
   const handleClick = () => {
-    selected.set(arrow);
+    selected.set(rectangle);
   };
 
   const handleEdit = () => {
-    modal.put(<EditArrowModal arrow={arrow} />);
+    modal.put(<EditRectangleModal rectangle={rectangle} />);
   };
 
   const handleRemove = () => {
-    dispatch(removeElement(arrow));
+    dispatch(removeElement(rectangle));
   };
 
   const handleCopy = () => {
-    dispatch(copyElement(arrow));
+    dispatch(copyElement(rectangle));
   };
 
   return (
@@ -41,43 +41,43 @@ const Arrow = ({ arrow }) => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       style={{
-        backgroundColor: hovered.matches(arrow)
+        backgroundColor: hovered.matches(rectangle)
           ? HOVERED_COLOUR
-          : selected.matches(arrow)
+          : selected.matches(rectangle)
           ? SELECTED_COLOUR
           : null,
       }}
     >
-      <p style={{ display: "inline-block" }}>Arrow</p>
+      <p style={{ display: "inline-block" }}>Rectangle</p>
 
-      {hovered.matches(arrow) &&
+      {hovered.matches(rectangle) &&
         space(<button onClick={handleEdit}>Edit</button>)}
-      {hovered.matches(arrow) &&
+      {hovered.matches(rectangle) &&
         space(<button onClick={handleRemove}>Remove</button>)}
-      {hovered.matches(arrow) &&
+      {hovered.matches(rectangle) &&
         space(<button onClick={handleCopy}>Copy</button>)}
     </div>
   );
 };
 
-const EditArrowModal = ({ arrow }) => {
+const EditRectangleModal = ({ rectangle: rectangle }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
-  const [startX, setStartX] = useState(arrow.start.x);
-  const [startY, setStartY] = useState(arrow.start.y);
+  const [x, setX] = useState(rectangle.position.x);
+  const [y, setY] = useState(rectangle.position.y);
 
-  const [endX, setEndX] = useState(arrow.end.x);
-  const [endY, setEndY] = useState(arrow.end.y);
+  const [width, setWidth] = useState(rectangle.size.width);
+  const [height, setHeight] = useState(rectangle.size.height);
 
-  const [width, setWidth] = useState(arrow.width);
+  const [colour, setColour] = useState(rectangle.colour);
 
   const onDone = () => {
     dispatch(
-      editElement(arrow, {
-        start: { x: startX, y: startY },
-        end: { x: endX, y: endY },
-        width: width,
+      editElement(rectangle, {
+        position: { x: x, y: y },
+        size: { width: width, width: height },
+        colour: colour,
       })
     );
     modal.pop();
@@ -89,19 +89,19 @@ const EditArrowModal = ({ arrow }) => {
 
   return (
     <>
-      <h3>Edit Arrow</h3>
-      <p>Start</p>
+      <h3>Edit Rectangle</h3>
+      <p>Position</p>
       <p>x = </p>
-      <NumericTextBox value={startX} setValue={setStartX} />
+      <NumericTextBox value={x} setValue={setX} />
       <p>y = </p>
-      <NumericTextBox value={startY} setValue={setStartY} />
-      <p>End</p>
-      <p>x = </p>
-      <NumericTextBox value={endX} setValue={setEndX} />
-      <p>y =</p>
-      <NumericTextBox value={endY} setValue={setEndY} />
-      <p>Width</p>
+      <NumericTextBox value={y} setValue={setY} />
+      <p>Size</p>
+      <p>Width = </p>
       <NumericTextBox value={width} setValue={setWidth} />
+      <p>Height =</p>
+      <NumericTextBox value={height} setValue={setHeight} />
+      <p>Colour</p>
+      <ColourPicker value={colour} setValue={setColour} />
       <br />
       <br />
       <button onClick={onDone}>Done</button>
@@ -110,4 +110,4 @@ const EditArrowModal = ({ arrow }) => {
   );
 };
 
-export default Arrow;
+export default Rectangle;

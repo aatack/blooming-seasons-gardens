@@ -18,6 +18,7 @@ import Label from "./label";
 import Arrow from "./arrow";
 import { useNursery, expandTemplate } from "../../model/selectors";
 import { HOVERED_COLOUR, SELECTED_COLOUR } from "../../constants";
+import Rectangle from "./rectangle";
 
 const Bed = ({ bed }) => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const Bed = ({ bed }) => {
   };
 
   const handleAddRectangle = () => {
-    module.put(addRectangle(bed));
+    dispatch(addRectangle(bed));
   };
 
   const handleMouseEnter = () => {
@@ -300,6 +301,8 @@ const renderElement = (element) => {
       return <Label key={element.identifier} label={element} />;
     case "arrow":
       return <Arrow key={element.identifier} arrow={element} />;
+    case "rectangle":
+      return <Rectangle key={element.identifier} rectangle={element} />;
     default:
       console.warn(
         "Cannot render element with the following type:",
