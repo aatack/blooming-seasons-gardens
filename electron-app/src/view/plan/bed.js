@@ -3,6 +3,7 @@ import Label from "./label";
 import Arrow from "./arrow";
 import { Translate } from "../common/rendering";
 import { expandTemplate, useNursery } from "../../model/selectors";
+import Rectangle from "./rectangle";
 
 const Bed = ({ bed }) => {
   const nursery = useNursery();
@@ -25,6 +26,8 @@ const renderElement = (element) => {
       return <Label key={element.identifier} label={element} />;
     case "arrow":
       return <Arrow key={element.identifier} arrow={element} />;
+    case "rectangle":
+      return <Rectangle key={element.identifier} rectangle={element} />;
     default:
       console.warn(
         "Cannot render element with the following type:",

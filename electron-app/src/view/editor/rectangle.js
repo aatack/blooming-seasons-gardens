@@ -60,7 +60,7 @@ const Rectangle = ({ rectangle }) => {
   );
 };
 
-const EditRectangleModal = ({ rectangle: rectangle }) => {
+const EditRectangleModal = ({ rectangle }) => {
   const modal = useContext(Modal);
   const dispatch = useDispatch();
 
@@ -76,7 +76,7 @@ const EditRectangleModal = ({ rectangle: rectangle }) => {
     dispatch(
       editElement(rectangle, {
         position: { x: x, y: y },
-        size: { width: width, width: height },
+        size: { width: width, height: height },
         colour: colour,
       })
     );
