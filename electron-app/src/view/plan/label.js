@@ -39,8 +39,8 @@ const Label = ({ label }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {lines.map((line) => (
-          <tspan x={label.position.x} dy="1.2em">
+        {lines.map((line, index) => (
+          <tspan x={label.position.x} dy="1.2em" key={index}>
             {line}
           </tspan>
         ))}
