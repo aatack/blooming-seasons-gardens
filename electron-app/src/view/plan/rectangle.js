@@ -29,7 +29,15 @@ const Rectangle = ({ rectangle }) => {
         y={rectangle.position.y}
         width={rectangle.size.width}
         height={rectangle.size.height}
-        style={{ fill: rectangle.colour }}
+        style={{
+          fill: isHovered
+            ? HOVERED_COLOUR
+            : isSelected
+            ? SELECTED_COLOUR
+            : rectangle.colour,
+        }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       />
     </ClickGroup>
   );
