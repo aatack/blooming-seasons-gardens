@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { editElement, redo, undo } from "../../model/actions";
 import { useElement } from "../../model/selectors";
 import { Selected } from "../../model/context";
+import { PlanX, PlanY, PlanScale } from "../../model/context";
 
 export const HorizontalSplit = ({
   children,
@@ -19,6 +20,10 @@ export const HorizontalSplit = ({
   const [collapsed, setCollapsed] = useState(false);
 
   const selectedElement = useElement(useContext(Selected).get());
+
+  const [_x, setPlanX] = useContext(PlanX);
+  const [_y, setPlanY] = useContext(PlanY);
+  const [_scale, setPlanScale] = useContext(PlanScale);
 
   const dispatch = useDispatch();
 
@@ -55,6 +60,12 @@ export const HorizontalSplit = ({
 
     if (e.code === "KeyY" && e.ctrlKey) {
       dispatch(redo());
+    }
+
+    if (e.code === "KeyH") {
+      setPlanX(0);
+      setPlanY(0);
+      setPlanScale(100);
     }
 
     if (selectedElement) {
