@@ -54,7 +54,16 @@ const Editor = () => {
   }, []);
 
   // TODO: rename `garden` to `beds` in the data structure
-  const beds = useBeds();
+  const beds = useBeds()
+    .slice()
+    .sort((left, right) => {
+      if (left.order === right.order) {
+        // Identifiers should never be equal
+        return left.identifier < right.identifier ? -1 : 1;
+      } else {
+        return left.order < right.order ? -1 : 1;
+      }
+    });
   const path = usePath();
   const garden = useGarden();
 
