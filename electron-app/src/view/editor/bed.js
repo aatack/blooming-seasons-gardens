@@ -7,10 +7,16 @@ import {
   addTemplateLabel,
   addTemplatePlant,
   removeBed,
-  renameBed,
+  editBed,
   addRectangle,
 } from "../../model/actions";
-import { Checkbox, TextBox, Dropdown, space } from "../common/input";
+import {
+  Checkbox,
+  TextBox,
+  Dropdown,
+  space,
+  NumericTextBox,
+} from "../common/input";
 import { Modal, Hovered, Selected } from "../../model/context";
 import { CreateTemplateModal } from "../nursery";
 import Plant from "./plant";
@@ -32,8 +38,8 @@ const Bed = ({ bed }) => {
     dispatch(removeBed(bed));
   };
 
-  const handleRename = () => {
-    modal.put(<RenameBedModal bed={bed} />);
+  const handleEdit = () => {
+    modal.put(<EditBedModal bed={bed} />);
   };
 
   const handleAddPlant = () => {
@@ -113,7 +119,7 @@ const Bed = ({ bed }) => {
       >
         <p style={{ display: "inline-block" }}>{bed.name}</p>
         {isHovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
-        {isHovered && space(<button onClick={handleRename}>Rename</button>)}
+        {isHovered && space(<button onClick={handleEdit}>Edit</button>)}
         {isHovered &&
           space(<button onClick={handleAddPlant}>Add Plant</button>)}
         {isHovered &&
@@ -129,13 +135,14 @@ const Bed = ({ bed }) => {
   );
 };
 
-const RenameBedModal = ({ bed }) => {
+const EditBedModal = ({ bed }) => {
   const dispatch = useDispatch();
   const modal = useContext(Modal);
   const [name, setName] = useState(bed.name);
+  const [order, setOrder] = useState(bed.order);
 
   const onDone = () => {
-    dispatch(renameBed(bed.identifier, name));
+    dispatch(editBed(bed.identifier, name, order));
     modal.pop();
   };
 
@@ -145,8 +152,15 @@ const RenameBedModal = ({ bed }) => {
 
   return (
     <>
-      <h3>Rename Bed</h3>
+      <h3>Edit Bed</h3>
+      <p>Name</p>
       <TextBox value={name} setValue={setName} />
+      <p>Order</p>
+      <NumericTextBox value={order} setValue={setOrder} />
+
+      <br />
+      <br />
+
       {space(<button onClick={onDone}>Done</button>)}
       {space(<button onClick={onCancel}>Cancel</button>)}
     </>

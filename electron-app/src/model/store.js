@@ -148,6 +148,7 @@ export const store = configureStore({
               ? action.payload
               : "Bed " + state.garden.identifier.toString(),
             elements: [],
+            order: 0,
           });
         });
       case "garden/bed/removed":
@@ -156,12 +157,13 @@ export const store = configureStore({
             (bed) => bed.identifier !== action.payload
           );
         });
-      case "garden/bed/renamed": // TODO: make this "edited" instead
+      case "garden/bed/edited":
         return produceWithHistory(state, (draft) => {
           const bed = draft.beds.find(
             (b) => b.identifier === action.payload.identifier
           );
           bed.name = action.payload.name;
+          bed.order = action.payload.order;
         });
 
       case "nursery/template/added":

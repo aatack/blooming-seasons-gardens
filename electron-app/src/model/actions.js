@@ -38,10 +38,10 @@ export const removeBed = (bed) => {
   return { type: "garden/bed/removed", payload: bed.identifier };
 };
 
-export const renameBed = (identifier, name) => {
+export const editBed = (identifier, name, order) => {
   return {
-    type: "garden/bed/renamed",
-    payload: { identifier: identifier, name: name },
+    type: "garden/bed/edited",
+    payload: { identifier: identifier, name: name, order: order },
   };
 };
 

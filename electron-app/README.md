@@ -85,6 +85,8 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [ ] Split up the project structure in accordance with the example given [here](https://www.freecodecamp.org/news/how-to-create-a-react-app-with-a-node-backend-the-complete-guide/)
 - [ ] When designating clip paths, use the plant's identifier instead of the react-generated identifier
 - [ ] Make the start and end points of arrows selectable separately
+- [ ] There's currently no way of controlling the render order, so rectangles may be placed in front of things that they should not be covering
+  - [ ] Give beds an "order" property, by which they are sorted
 
 ### Bugs
 
