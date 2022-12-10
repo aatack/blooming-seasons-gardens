@@ -24,17 +24,12 @@ const Rectangle = ({ rectangle }) => {
 
   return (
     <ClickGroup onClick={handleClick}>
-      <line
-        x1={rectangle.position.x}
-        y1={rectangle.position.y}
-        x2={rectangle.size.width}
-        y2={rectangle.size.height}
-        stroke={
-          isHovered ? HOVERED_COLOUR : isSelected ? SELECTED_COLOUR : "black"
-        }
-        strokeWidth={1}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+      <rect
+        x={rectangle.position.x}
+        y={rectangle.position.y}
+        width={rectangle.size.width}
+        height={rectangle.size.height}
+        style={{ fill: rectangle.colour }}
       />
     </ClickGroup>
   );
