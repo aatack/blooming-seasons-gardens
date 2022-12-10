@@ -42,7 +42,16 @@ export const useGardens = () => {
 };
 
 export const useBeds = () => {
-  return useSelector((state) => state.garden.beds);
+  return useSelector((state) => state.garden.beds)
+    .slice()
+    .sort((left, right) => {
+      if (left.order === right.order) {
+        // Identifiers should never be equal
+        return left.identifier < right.identifier ? -1 : 1;
+      } else {
+        return left.order < right.order ? -1 : 1;
+      }
+    });
 };
 
 export const usePath = () => {
