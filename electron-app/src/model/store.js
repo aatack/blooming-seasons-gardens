@@ -165,6 +165,13 @@ export const store = configureStore({
           bed.name = action.payload.name;
           bed.order = action.payload.order;
         });
+      case "garden/bed/hidden":
+        return produceWithHistory(state, (draft) => {
+          const bed = draft.beds.find(
+            (b) => b.identifier === action.payload.identifier
+          );
+          bed.hidden = action.payload.hidden;
+        });
 
       case "nursery/template/added":
         return produceWithHistory(state, (draft) => {

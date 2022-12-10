@@ -34,9 +34,11 @@ const Plan = () => {
           </Scale>
         )}
 
-        {beds.map((bed) => (
-          <Bed bed={bed} key={bed.identifier} />
-        ))}
+        {beds
+          .filter((bed) => !bed.hidden)
+          .map((bed) => (
+            <Bed bed={bed} key={bed.identifier} />
+          ))}
       </Scale>
     </SVGViewer>
   );

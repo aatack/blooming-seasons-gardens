@@ -9,6 +9,7 @@ import {
   removeBed,
   editBed,
   addRectangle,
+  hideBed,
 } from "../../model/actions";
 import {
   Checkbox,
@@ -33,6 +34,8 @@ const Bed = ({ bed }) => {
   const modal = useContext(Modal);
   const hovered = useContext(Hovered);
   const selected = useContext(Selected);
+
+  const [hidden, setHidden] = useState(bed.hidden);
 
   const handleRemoveBed = () => {
     dispatch(removeBed(bed));
@@ -68,6 +71,16 @@ const Bed = ({ bed }) => {
 
   const handleClick = () => {
     selected.set(bed);
+  };
+
+  const handleHidden = (h) => {
+    if (h) {
+      setHidden(true);
+      dispatch(hideBed(bed.identifier, true));
+    } else {
+      setHidden(false);
+      dispatch(hideBed(bed.identifier, false));
+    }
   };
 
   const isHovered = hovered.matches(bed);
@@ -117,6 +130,7 @@ const Bed = ({ bed }) => {
             : null,
         }}
       >
+        <Checkbox value={hidden} setValue={handleHidden} />
         <p style={{ display: "inline-block" }}>{bed.name}</p>
         {isHovered && space(<button onClick={handleRemoveBed}>Remove</button>)}
         {isHovered && space(<button onClick={handleEdit}>Edit</button>)}
@@ -130,7 +144,9 @@ const Bed = ({ bed }) => {
           space(<button onClick={handleAddRectangle}>Add Rectangle</button>)}
       </div>
 
-      <div style={{ marginLeft: "20px" }}>{elements.map(renderElement)}</div>
+      {!bed.hidden && (
+        <div style={{ marginLeft: "20px" }}>{elements.map(renderElement)}</div>
+      )}
     </>
   );
 };

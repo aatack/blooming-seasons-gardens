@@ -45,6 +45,13 @@ export const editBed = (identifier, name, order) => {
   };
 };
 
+export const hideBed = (identifier, hidden) => {
+  return {
+    type: "garden/bed/hidden",
+    payload: { identifier: identifier, hidden: hidden },
+  };
+};
+
 export const addPlantTemplate = (name) => {
   return {
     type: "nursery/template/added",

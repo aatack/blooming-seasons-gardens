@@ -68,7 +68,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Line breaks in labels
 - [x] Centralise labels
 - [x] Ability to add rectangles
-- [ ] Checkbox that enables beds to be hidden temporarily
+- [x] Checkbox that enables beds to be hidden temporarily
 - [x] Hotkey for hiding the editor
   - Went with space in the end (keycode 32)
 - [ ] Tabs: mood board, garden
