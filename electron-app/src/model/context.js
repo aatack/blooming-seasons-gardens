@@ -121,3 +121,7 @@ export const Selected = (() => {
   Context.Provider = WrappedProvider;
   return Context;
 })();
+
+export const PlanX = React.createContext(undefined);
+export const PlanY = React.createContext(undefined);
+export const PlanScale = React.createContext(undefined);

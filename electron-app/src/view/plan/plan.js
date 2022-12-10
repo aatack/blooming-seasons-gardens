@@ -2,7 +2,7 @@ import { useBackground, useBeds } from "../../model/selectors";
 import { Scale, SVGViewer } from "../common/rendering";
 import { useContext, useState } from "react";
 import Bed from "./bed";
-import { Selected } from "../../model/context";
+import { PlanScale, PlanX, PlanY, Selected } from "../../model/context";
 
 const Plan = () => {
   const beds = useBeds();
@@ -10,9 +10,9 @@ const Plan = () => {
 
   const selected = useContext(Selected);
 
-  const bindX = useState(0);
-  const bindY = useState(0);
-  const bindScale = useState(100);
+  const bindX = useContext(PlanX);
+  const bindY = useContext(PlanY);
+  const bindScale = useContext(PlanScale);
 
   const handleClick = () => {
     selected.set(null);

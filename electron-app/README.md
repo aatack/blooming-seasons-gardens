@@ -71,7 +71,7 @@ The initial project setup was done by following [a guide](https://medium.com/fol
 - [x] Checkbox that enables beds to be hidden temporarily
 - [x] Hotkey for hiding the editor
   - Went with space in the end (keycode 32)
-- [ ] Tabs: mood board, garden
+- ~~[ ] Tabs: mood board, garden~~
 - [ ] Snap to centre
 
 ### Others

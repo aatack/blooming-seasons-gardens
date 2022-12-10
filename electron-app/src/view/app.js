@@ -1,6 +1,14 @@
 import Editor from "./editor/editor";
 import Plan from "./plan/plan";
-import { Modal, GardenSVG, Hovered, Selected } from "../model/context";
+import {
+  Modal,
+  GardenSVG,
+  Hovered,
+  Selected,
+  PlanX,
+  PlanY,
+  PlanScale,
+} from "../model/context";
 import { HorizontalSplit } from "./common/layout";
 import { useEffect, useState } from "react";
 import { useGarden, useLoaded } from "../model/selectors";
@@ -36,34 +44,40 @@ const App = () => {
 
   return (
     <>
-      <Modal.Provider>
-        <Selected.Provider>
-          <Hovered.Provider>
-            <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
-              <Modal.Component />
-              {!loaded ? (
-                <p>Loading saved data from disk...</p>
-              ) : garden === null ? (
-                <ChooseGarden />
-              ) : (
-                <>
-                  <HorizontalSplit
-                    dragWidth={8}
-                    minimumWidth={100}
-                    initialWidth={window.innerWidth * 0.3}
-                    toggleKey={32} // Space bar
-                  >
-                    <>
-                      <Editor />
-                      <Plan />
-                    </>
-                  </HorizontalSplit>
-                </>
-              )}
-            </GardenSVG.Provider>
-          </Hovered.Provider>
-        </Selected.Provider>
-      </Modal.Provider>
+      <PlanScale.Provider value={useState(100)}>
+        <PlanY.Provider value={useState(0)}>
+          <PlanX.Provider value={useState(0)}>
+            <Modal.Provider>
+              <Selected.Provider>
+                <Hovered.Provider>
+                  <GardenSVG.Provider value={[gardenSVG, setGardenSVG]}>
+                    <Modal.Component />
+                    {!loaded ? (
+                      <p>Loading saved data from disk...</p>
+                    ) : garden === null ? (
+                      <ChooseGarden />
+                    ) : (
+                      <>
+                        <HorizontalSplit
+                          dragWidth={8}
+                          minimumWidth={100}
+                          initialWidth={window.innerWidth * 0.3}
+                          toggleKey={32} // Space bar
+                        >
+                          <>
+                            <Editor />
+                            <Plan />
+                          </>
+                        </HorizontalSplit>
+                      </>
+                    )}
+                  </GardenSVG.Provider>
+                </Hovered.Provider>
+              </Selected.Provider>
+            </Modal.Provider>
+          </PlanX.Provider>
+        </PlanY.Provider>
+      </PlanScale.Provider>
     </>
   );
 };
