@@ -66,8 +66,8 @@ class Editor extends StatelessWidget {
   }
 }
 
-class Collapsible extends StatelessWidget {
-  const Collapsible({
+class Collapsible extends StatefulWidget {
+  Collapsible({
     super.key,
     required this.child,
   });
@@ -75,7 +75,29 @@ class Collapsible extends StatelessWidget {
   final Widget child;
 
   @override
+  State<Collapsible> createState() => _CollapsibleState();
+}
+
+class _CollapsibleState extends State<Collapsible> {
+  bool _collapsed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return child;
+    List<Widget> children = [
+      ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _collapsed = !_collapsed;
+          });
+        },
+        child: const Text("Expand"),
+      )
+    ];
+
+    if (!_collapsed) {
+      children.add(widget.child);
+    }
+
+    return Column(mainAxisSize: MainAxisSize.min, children: children);
   }
 }
