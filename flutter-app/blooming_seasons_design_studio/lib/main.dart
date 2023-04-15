@@ -1,4 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:io';
+
+import 'package:blooming_seasons_design_studio/models.dart' show GardenState;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,95 +15,98 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: MainScreen(),
+    return BlocProvider<GardenState>(
+      create: (context) => GardenState(),
+      child: MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: Text(Directory.current.toString()),
+          ),
         ),
       ),
     );
   }
 }
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+// class MainScreen extends StatelessWidget {
+//   const MainScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Planner(),
-        Editor(),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       children: [
+//         Planner(),
+//         Editor(),
+//       ],
+//     );
+//   }
+// }
 
-class Planner extends StatelessWidget {
-  const Planner({
-    super.key,
-  });
+// class Planner extends StatelessWidget {
+//   const Planner({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Placeholder();
+//   }
+// }
 
-class Editor extends StatelessWidget {
-  const Editor({
-    super.key,
-  });
+// class Editor extends StatelessWidget {
+//   const Editor({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 0.25,
-      heightFactor: 1.0,
-      child: ListView(
-        children: [
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return FractionallySizedBox(
+//       widthFactor: 0.25,
+//       heightFactor: 1.0,
+//       child: ListView(
+//         children: [
+//           Collapsible(child: Placeholder()),
+//           Collapsible(child: Placeholder()),
+//           Collapsible(child: Placeholder()),
+//           Collapsible(child: Placeholder()),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-class Collapsible extends StatefulWidget {
-  Collapsible({
-    super.key,
-    required this.child,
-  });
+// class Collapsible extends StatefulWidget {
+//   Collapsible({
+//     super.key,
+//     required this.child,
+//   });
 
-  final Widget child;
+//   final Widget child;
 
-  @override
-  State<Collapsible> createState() => _CollapsibleState();
-}
+//   @override
+//   State<Collapsible> createState() => _CollapsibleState();
+// }
 
-class _CollapsibleState extends State<Collapsible> {
-  bool _collapsed = false;
+// class _CollapsibleState extends State<Collapsible> {
+//   bool _collapsed = false;
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> children = [
-      ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _collapsed = !_collapsed;
-          });
-        },
-        child: const Text("Expand"),
-      )
-    ];
+//   @override
+//   Widget build(BuildContext context) {
+//     List<Widget> children = [
+//       ElevatedButton(
+//         onPressed: () {
+//           setState(() {
+//             _collapsed = !_collapsed;
+//           });
+//         },
+//         child: const Text("Expand"),
+//       )
+//     ];
 
-    if (!_collapsed) {
-      children.add(widget.child);
-    }
+//     if (!_collapsed) {
+//       children.add(widget.child);
+//     }
 
-    return Column(mainAxisSize: MainAxisSize.min, children: children);
-  }
-}
+//     return Column(mainAxisSize: MainAxisSize.min, children: children);
+//   }
+// }

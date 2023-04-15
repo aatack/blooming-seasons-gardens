@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' show Image;
 import 'package:flutter/material.dart' show Color;
 
-class State extends Cubit<Garden?> {
-  State() : super(null);
+class GardenState extends Cubit<Garden?> {
+  GardenState() : super(null);
 }
 
 class Garden {
