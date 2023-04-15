@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'dart:ffi';
 
-import 'package:image/image.dart' as img;
-import 'package:flutter/material.dart';
+import 'package:image/image.dart' show Image;
+import 'package:flutter/material.dart' hide Image;
 
 class Garden {
   const Garden(this._beds, this._nursery);
@@ -62,7 +62,7 @@ class PlantBorder {
 class PlantImage {
   const PlantImage(this.image, this.x, this.y, this.scale);
 
-  final img.Image image;
+  final Image image;
   final Float x;
   final Float y;
   final Float scale;
