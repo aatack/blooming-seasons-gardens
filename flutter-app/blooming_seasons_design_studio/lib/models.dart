@@ -14,13 +14,13 @@ class Garden {
   UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
 }
 
-class Positioned<T> {
+class Positioned<E> {
   const Positioned(this.id, this.x, this.y, this.element);
 
   final Int id;
   final Float x;
   final Float y;
-  final T element;
+  final E element;
 }
 
 class Template {
