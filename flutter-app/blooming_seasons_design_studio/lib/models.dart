@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' show Image;
@@ -22,16 +21,16 @@ class Garden {
 class Positioned<E> {
   const Positioned(this.id, this.x, this.y, this.element);
 
-  final Int id;
-  final Float x;
-  final Float y;
+  final int id;
+  final double x;
+  final double y;
   final E element;
 }
 
 class Template {
   const Template(this.id, this.plant);
 
-  final Int id;
+  final int id;
   final Plant plant;
 }
 
@@ -48,7 +47,7 @@ class Plant {
 
   final String name;
 
-  final Float size;
+  final double size;
 
   final PlantType plantType;
   final PlantBorder? border;
@@ -60,7 +59,7 @@ enum PlantType { border, image }
 class PlantBorder {
   const PlantBorder(this.thickness, this.colour);
 
-  final Float thickness;
+  final double thickness;
   final Color colour;
 }
 
@@ -68,21 +67,21 @@ class PlantImage {
   const PlantImage(this.image, this.x, this.y, this.scale);
 
   final Image image;
-  final Float x;
-  final Float y;
-  final Float scale;
+  final double x;
+  final double y;
+  final double scale;
 }
 
 class Label {
   const Label(this.text, this.size);
 
   final String text;
-  final Float size;
+  final double size;
 }
 
 class Arrow {
   const Arrow(this.x, this.y);
 
-  final Float x;
-  final Float y;
+  final double x;
+  final double y;
 }
