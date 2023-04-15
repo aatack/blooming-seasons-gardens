@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
-
-import 'package:blooming_seasons_design_studio/models.dart' show GardenState;
+import 'package:blooming_seasons_design_studio/models.dart'
+    show Garden, GardenState;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,11 +15,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<GardenState>(
-      create: (context) => GardenState(),
+      create: (_) => GardenState(),
       child: MaterialApp(
         home: Scaffold(
           body: Center(
-            child: Text(Directory.current.toString()),
+            child: BlocBuilder<GardenState, Garden?>(
+              builder: (context, state) => Text(state.toString()),
+            ),
           ),
         ),
       ),
