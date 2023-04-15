@@ -1,8 +1,13 @@
 import 'dart:collection';
 import 'dart:ffi';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' show Image;
 import 'package:flutter/material.dart' show Color;
+
+class State extends Cubit<Garden?> {
+  State() : super(null);
+}
 
 class Garden {
   const Garden(this._beds, this._nursery);
