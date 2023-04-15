@@ -7,8 +7,8 @@ class Garden {
   final List<Bed> _beds;
   UnmodifiableListView<Bed> get beds => UnmodifiableListView(_beds);
 
-  final List<Plant> _nursery;
-  UnmodifiableListView<Plant> get nursery => UnmodifiableListView(_nursery);
+  final List<Template> _nursery;
+  UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
 }
 
 class Element<T> {
@@ -20,17 +20,35 @@ class Element<T> {
   final T element;
 }
 
-class Plant {
-  const Plant(this.id, this.name);
+class Template {
+  const Template(this.id, this.plant);
 
   final Int id;
+  final Plant plant;
+}
+
+class Bed {
+  const Bed(this._elements);
+
+  final List<Element> _elements;
+  UnmodifiableListView<Element> get elements => UnmodifiableListView(_elements);
+}
+
+class Plant {
+  const Plant(this.name);
+
   final String name;
 }
 
-class Bed {}
+class Label {
+  const Label(this.text);
 
-class PlantInstance {}
+  final String text;
+}
 
-class Label {}
+class Arrow {
+  const Arrow(this.x, this.y);
 
-class Arrow {}
+  final Float x;
+  final Float y;
+}
