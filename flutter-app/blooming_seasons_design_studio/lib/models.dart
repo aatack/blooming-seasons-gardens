@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:image/image.dart' show Image;
-import 'package:flutter/material.dart' hide Image;
+import 'package:flutter/material.dart' show Color;
 
 class Garden {
   const Garden(this._beds, this._nursery);
