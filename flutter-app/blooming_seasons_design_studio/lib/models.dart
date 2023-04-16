@@ -27,6 +27,12 @@ class Garden {
 class Positioned<E> {
   const Positioned(this.id, this.x, this.y, this.element);
 
+  Positioned.empty(Garden garden, E newElement)
+      : id = garden.currentID,
+        x = 0.0,
+        y = 0.0,
+        element = newElement;
+
   final int id;
   final double x;
   final double y;
