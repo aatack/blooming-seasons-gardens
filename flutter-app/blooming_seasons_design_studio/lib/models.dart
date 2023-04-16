@@ -11,11 +11,17 @@ class GardenState extends Cubit<Garden?> {
 class Garden {
   const Garden(this._beds, this._nursery);
 
+  Garden.empty()
+      : _beds = [],
+        _nursery = [];
+
   final List<Positioned<Bed>> _beds;
   UnmodifiableListView<Positioned<Bed>> get beds => UnmodifiableListView(_beds);
 
   final List<Template> _nursery;
   UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
+
+  final int currentID = 1;
 }
 
 class Positioned<E> {
