@@ -15,8 +15,8 @@ class Garden {
       : _beds = [],
         _nursery = [];
 
-  final List<Positioned<Bed>> _beds;
-  UnmodifiableListView<Positioned<Bed>> get beds => UnmodifiableListView(_beds);
+  final List<Instance<Bed>> _beds;
+  UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
 
   final List<Template> _nursery;
   UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
@@ -24,10 +24,10 @@ class Garden {
   final int currentID = 1;
 }
 
-class Positioned<E> {
-  const Positioned(this.id, this.x, this.y, this.element);
+class Instance<E> {
+  const Instance(this.id, this.x, this.y, this.element);
 
-  Positioned.empty(Garden garden, E newElement)
+  Instance.empty(Garden garden, E newElement)
       : id = garden.currentID,
         x = 0.0,
         y = 0.0,
@@ -49,8 +49,8 @@ class Template {
 class Bed {
   const Bed(this._elements);
 
-  final List<Positioned> _elements;
-  UnmodifiableListView<Positioned> get elements =>
+  final List<Instance> _elements;
+  UnmodifiableListView<Instance> get elements =>
       UnmodifiableListView(_elements);
 }
 
