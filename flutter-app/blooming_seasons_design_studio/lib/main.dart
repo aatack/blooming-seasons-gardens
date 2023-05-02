@@ -32,35 +32,46 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BlocBuilder<GardenState, Garden?>(
-            builder: (context, state) => Text(state.toString()),
-          ),
-          ElevatedButton(
-            child: const Text("Start"),
-            onPressed: () {
-              context.read<GardenState>().initialise("Test");
-            },
-          ),
-        ],
-      ),
+    return BlocBuilder<GardenState, Garden?>(
+      builder: (context, state) {
+        if (state == null) {
+          return SelectGardenScreen();
+        } else {
+          return Text(state.name);
+        }
+      },
     );
   }
 }
 
-class CreateGardenScreen extends StatelessWidget {
-  const CreateGardenScreen({super.key});
+class SelectGardenScreen extends StatefulWidget {
+  const SelectGardenScreen({super.key});
+
+  @override
+  State<SelectGardenScreen> createState() => _SelectGardenScreenState();
+}
+
+class _SelectGardenScreenState extends State<SelectGardenScreen> {
+  final _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text("Create new garden"),
+        children: [
+          TextField(
+            controller: _textController,
+            decoration: InputDecoration(
+              labelText: 'Create new garden',
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<GardenState>().initialise(_textController.text);
+            },
+            child: Text("Create"),
+          )
         ],
       ),
     );
