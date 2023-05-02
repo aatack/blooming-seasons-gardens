@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const AppWrapper());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class AppWrapper extends StatelessWidget {
+  const AppWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +19,32 @@ class MainApp extends StatelessWidget {
       home: BlocProvider<GardenState>(
         create: (_) => GardenState(),
         child: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BlocBuilder<GardenState, Garden?>(
-                  builder: (context, state) => Text(state.toString()),
-                ),
-                ElevatedButton(
-                  child: Text("Start"),
-                  onPressed: () {
-                    context.read<GardenState>().initialise();
-                  },
-                ),
-              ],
-            ),
-          ),
+          body: App(),
         ),
+      ),
+    );
+  }
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BlocBuilder<GardenState, Garden?>(
+            builder: (context, state) => Text(state.toString()),
+          ),
+          ElevatedButton(
+            child: Text("Start"),
+            onPressed: () {
+              context.read<GardenState>().initialise();
+            },
+          ),
+        ],
       ),
     );
   }
