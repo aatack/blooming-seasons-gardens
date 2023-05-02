@@ -6,6 +6,10 @@ import 'package:flutter/material.dart' show Color;
 
 class GardenState extends Cubit<Garden?> {
   GardenState() : super(null);
+
+  void initialise() {
+    emit(Garden.empty());
+  }
 }
 
 class Garden {

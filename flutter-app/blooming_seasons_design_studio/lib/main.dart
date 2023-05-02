@@ -14,22 +14,29 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BlocProvider<GardenState>(
-          create: (_) => GardenState(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: BlocBuilder<GardenState, Garden?>(
+    return MaterialApp(
+      title: "Blooming Seasons Design Studio",
+      home: BlocProvider<GardenState>(
+        create: (_) => GardenState(),
+        child: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BlocBuilder<GardenState, Garden?>(
                   builder: (context, state) => Text(state.toString()),
                 ),
-              ),
+                ElevatedButton(
+                  child: Text("Start"),
+                  onPressed: () {
+                    context.read<GardenState>().initialise();
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        Text("Start"),
-      ],
+      ),
     );
   }
 }
