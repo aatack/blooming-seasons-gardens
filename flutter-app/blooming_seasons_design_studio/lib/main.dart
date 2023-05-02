@@ -52,27 +52,42 @@ class SelectGardenScreen extends StatefulWidget {
 }
 
 class _SelectGardenScreenState extends State<SelectGardenScreen> {
-  final _textController = TextEditingController();
+  String _newGardenName = "";
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: _textController,
-            decoration: InputDecoration(
-              labelText: 'Create new garden',
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 400),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              constraints: BoxConstraints(maxWidth: 300),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'New garden',
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _newGardenName = value;
+                  });
+                },
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<GardenState>().initialise(_textController.text);
-            },
-            child: Text("Create"),
-          )
-        ],
+            SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: _newGardenName.isNotEmpty
+                    ? () {
+                        context.read<GardenState>().initialise(_newGardenName);
+                      }
+                    : null,
+                child: Text("Create"),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
