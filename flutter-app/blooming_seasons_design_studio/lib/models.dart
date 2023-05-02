@@ -9,11 +9,12 @@ class GardenState extends Cubit<Garden?> {
 }
 
 class Garden {
-  const Garden(this._beds, this._nursery);
+  const Garden(this._beds, this._nursery, this.currentID);
 
   Garden.empty()
       : _beds = [],
-        _nursery = [];
+        _nursery = [],
+        currentID = 1;
 
   final List<Instance<Bed>> _beds;
   UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
@@ -21,7 +22,11 @@ class Garden {
   final List<Template> _nursery;
   UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
 
-  final int currentID = 1;
+  final int currentID;
+
+  Garden incrementID() {
+    return Garden(_beds, _nursery, currentID + 1);
+  }
 }
 
 class Instance<E> {
