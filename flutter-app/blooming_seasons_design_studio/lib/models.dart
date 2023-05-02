@@ -7,18 +7,21 @@ import 'package:flutter/material.dart' show Color;
 class GardenState extends Cubit<Garden?> {
   GardenState() : super(null);
 
-  void initialise() {
-    emit(Garden.empty());
+  void initialise(String name) {
+    emit(Garden.blank(name));
   }
 }
 
 class Garden {
-  const Garden(this._beds, this._nursery, this.currentID);
+  const Garden(this.name, this._beds, this._nursery, this.currentID);
 
-  Garden.empty()
-      : _beds = [],
+  Garden.blank(String blankName)
+      : name = blankName,
+        _beds = [],
         _nursery = [],
         currentID = 1;
+
+  final String name;
 
   final List<Instance<Bed>> _beds;
   UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
@@ -29,14 +32,14 @@ class Garden {
   final int currentID;
 
   Garden incrementID() {
-    return Garden(_beds, _nursery, currentID + 1);
+    return Garden(name, _beds, _nursery, currentID + 1);
   }
 }
 
 class Instance<E> {
   const Instance(this.id, this.x, this.y, this.element);
 
-  Instance.empty(Garden garden, E newElement)
+  Instance.blank(Garden garden, E newElement)
       : id = garden.currentID,
         x = 0.0,
         y = 0.0,

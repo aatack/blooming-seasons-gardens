@@ -3,6 +3,7 @@
 import 'package:blooming_seasons_design_studio/models.dart'
     show Garden, GardenState;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
@@ -39,11 +40,27 @@ class App extends StatelessWidget {
             builder: (context, state) => Text(state.toString()),
           ),
           ElevatedButton(
-            child: Text("Start"),
+            child: const Text("Start"),
             onPressed: () {
-              context.read<GardenState>().initialise();
+              context.read<GardenState>().initialise("Test");
             },
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class CreateGardenScreen extends StatelessWidget {
+  const CreateGardenScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text("Create new garden"),
         ],
       ),
     );
