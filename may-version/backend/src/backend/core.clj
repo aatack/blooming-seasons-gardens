@@ -1,10 +1,15 @@
 (ns backend.core
-  (:require [ring.middleware.reload :refer [wrap-reload]]
+  (:require [clojure.string :refer [split]]
             [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [response]]))
 
 (defn handler [request]
-  (response (str request)))
+  (let [segments (filter not-empty (split (:uri request) #"/"))]
+    (response
+     (cond
+       (= segments ["gardens"]) "gardens"
+       :else (str "not known" segments)))))
 
 (def app
   (wrap-reload #'handler))
