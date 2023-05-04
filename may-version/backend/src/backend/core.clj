@@ -4,6 +4,9 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [bad-request]]))
 
+;; List of characters that are reserved in HTTP URIs or Windows or Linux file paths
+(def reserved-characters ":/?&=<>\"/\\|*.\0 ")
+
 (defn list-gardens []
   {:status 200
    :headers {"Content-Type" "text/plain"}
@@ -15,6 +18,7 @@
    :body (str ["get-garden" name])})
 
 (defn save-garden [name content]
+  (spit (str "database/gardens/" name ".json") content)
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body (str ["put-garden" name content])})
