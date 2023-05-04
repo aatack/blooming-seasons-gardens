@@ -2,9 +2,9 @@
   (:require [clojure.string :refer [split]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
-            [ring.util.response :refer [status content-type bad-request]]))
+            [ring.util.response :refer [bad-request]]))
 
-(defn list-garden []
+(defn list-gardens []
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body "list-gardens"})
@@ -33,18 +33,18 @@
   (let [segments (filter not-empty (split (:uri request) #"/"))]
     (cond
       (= segments ["inspect"]) (bad-request (str request))
-      (= segments ["garden" "list"]) (list-garden)
-      (and (= (take 2 segments) ["garden" "get"])
+      (= segments ["gardens" "list"]) (list-gardens)
+      (and (= (take 2 segments) ["gardens" "get"])
            (= (count segments) 3)) (get-garden (last segments))
-      (and (= (take 2 segments) ["garden" "save"])
+      (and (= (take 2 segments) ["gardens" "save"])
            (= (count segments) 3)) (save-garden (last segments) (:body request))
-      (and (= (take 2 segments) ["garden" "delete"])
+      (and (= (take 2 segments) ["gardens" "delete"])
            (= (count segments) 3)) (delete-garden (last segments))
-      (and (= (take 2 segments) ["garden" "rename"])
+      (and (= (take 2 segments) ["gardens" "rename"])
            (= (count segments) 4)) (let [arguments (drop 2 segments)]
                                      (rename-garden (first arguments)
                                                     (second arguments)))
-      :else (bad-request (apply str "not-found: " segments)))))
+      :else (bad-request (str "not-found: " (apply vector segments))))))
 
 (def app
   (wrap-reload #'handler))
