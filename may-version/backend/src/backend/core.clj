@@ -18,10 +18,12 @@
    :body (str ["get-garden" name])})
 
 (defn save-garden [name content]
-  (spit (str "database/gardens/" name ".json") content)
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body (str ["put-garden" name content])})
+  (try
+    (spit (str "database/gardens/" name ".json") content)
+    {:status 200}
+    (catch Exception _
+      {:status 500}))
+)
 
 (defn delete-garden [name]
   {:status 200
