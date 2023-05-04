@@ -4,7 +4,7 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.util.response :refer [status content-type bad-request]]))
 
-(defn list-gardens []
+(defn list-garden []
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body "list-gardens"})
@@ -14,7 +14,7 @@
    :headers {"Content-Type" "text/plain"}
    :body (str ["get-garden" name])})
 
-(defn put-garden [name content]
+(defn save-garden [name content]
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body (str ["put-garden" name content])})
@@ -33,12 +33,17 @@
   (let [segments (filter not-empty (split (:uri request) #"/"))]
     (cond
       (= segments ["inspect"]) (bad-request (str request))
-      (and (= segments ["garden"])
-           (= (:request-method request) :get)
-           (= (count segments) 1)) (list-gardens)
-      (and (= (first segments) "garden")
-           (= (:request-method request) :get)
-           (= (count segments) 2)) (get-garden (second segments))
+      (= segments ["garden" "list"]) (list-garden)
+      (and (= (take 2 segments) ["garden" "get"])
+           (= (count segments) 3)) (get-garden (last segments))
+      (and (= (take 2 segments) ["garden" "save"])
+           (= (count segments) 3)) (save-garden (last segments) (:body request))
+      (and (= (take 2 segments) ["garden" "delete"])
+           (= (count segments) 3)) (delete-garden (last segments))
+      (and (= (take 2 segments) ["garden" "rename"])
+           (= (count segments) 4)) (let [arguments (drop 2 segments)]
+                                     (rename-garden (first arguments)
+                                                    (second arguments)))
       :else (bad-request (apply str "not-found: " segments)))))
 
 (def app
