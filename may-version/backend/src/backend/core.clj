@@ -8,8 +8,9 @@
   (let [segments (filter not-empty (split (:uri request) #"/"))]
     (response
      (cond
+       (= segments ["inspect"]) (str request)
        (= segments ["gardens"]) "gardens"
-       :else (str "not known" segments)))))
+       :else (str "not known" segments request)))))
 
 (def app
   (wrap-reload #'handler))
