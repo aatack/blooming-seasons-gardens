@@ -37,12 +37,17 @@
 (defn delete-garden [name]
   (io/delete-file (str database name ".json"))
   {:status 200
-   :headers {"Content-Type" "text/plain"}})
+   :headers {"Content-Type" "text/plain"}
+   :body (str "Deleted " name)})
 
 (defn rename-garden [old-name new-name]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body (str ["rename-garden" old-name new-name])})
+  (let [success (.renameTo (io/file (str database old-name ".json"))
+                           (io/file (str database new-name ".json")))]
+    (if success
+      {:status 200
+       :headers {"Content-Type" "text/plain"}
+       :body (str "Renamed " old-name " to " new-name)}
+      (bad-request (str "Could not rename " old-name " to " new-name)))))
 
 (defn handler [request]
   (let [segments (filter not-empty (split (:uri request) #"/"))]
