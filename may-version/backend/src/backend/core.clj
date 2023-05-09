@@ -2,15 +2,25 @@
   (:require [clojure.string :refer [split]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
-            [ring.util.response :refer [bad-request]]))
+            [ring.util.response :refer [bad-request]]
+            [clojure.java.io :as io]))
 
 ;; List of characters that are reserved in HTTP URIs or Windows or Linux file paths
 (def reserved-characters ":/?&=<>\"/\\|*.\0 ")
 
+(def database "database/gardens/")
+
 (defn list-gardens []
   {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body "list-gardens"})
+   :headers {"Content-Type" "application/json"}
+   :body (->> (io/file database)
+              file-seq
+              (filter #(.isFile %))
+              (map #(.getName %))
+              (map #(drop-last 5 %))
+              (map #(apply str %))
+              (apply vector)
+              str)})
 
 (defn get-garden [name]
   {:status 200
@@ -19,11 +29,10 @@
 
 (defn save-garden [name content]
   (try
-    (spit (str "database/gardens/" name ".json") content)
+    (spit (str database name ".json") content)
     {:status 200}
     (catch Exception _
-      {:status 500}))
-)
+      {:status 500})))
 
 (defn delete-garden [name]
   {:status 200
