@@ -3,7 +3,6 @@
 import 'package:blooming_seasons_design_studio/models.dart'
     show Garden, GardenState;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
@@ -37,10 +36,21 @@ class App extends StatelessWidget {
         if (state == null) {
           return SelectGardenScreen();
         } else {
-          return Text(state.name);
+          return EditGardenScreen(garden: state);
         }
       },
     );
+  }
+}
+
+class EditGardenScreen extends StatelessWidget {
+  final Garden garden;
+
+  const EditGardenScreen({super.key, required this.garden});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(garden.name);
   }
 }
 
