@@ -35,9 +35,9 @@
       {:status 500})))
 
 (defn delete-garden [name]
+  (io/delete-file (str database name ".json"))
   {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body (str ["delete-garden" name])})
+   :headers {"Content-Type" "text/plain"}})
 
 (defn rename-garden [old-name new-name]
   {:status 200
