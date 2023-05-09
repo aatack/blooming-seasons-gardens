@@ -25,7 +25,7 @@
 (defn get-garden [name]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body (str ["get-garden" name])})
+   :body (slurp (str database name ".json"))})
 
 (defn save-garden [name content]
   (try
