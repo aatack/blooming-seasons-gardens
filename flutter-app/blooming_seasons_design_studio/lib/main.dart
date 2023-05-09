@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:blooming_seasons_design_studio/models.dart'
-    show Garden, GardenState;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'models/garden.dart' show GardenState, Garden;
 
 void main() {
   runApp(const AppWrapper());
