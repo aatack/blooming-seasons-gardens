@@ -1,5 +1,5 @@
-import 'package:blooming_seasons_design_studio/widgets/screens/editor.dart';
-import 'package:blooming_seasons_design_studio/widgets/screens/picker.dart';
+import 'package:blooming_seasons_design_studio/widgets/screens/editing.dart';
+import 'package:blooming_seasons_design_studio/widgets/screens/picking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,9 +13,9 @@ class App extends StatelessWidget {
     return BlocBuilder<GardenState, Garden?>(
       builder: (context, state) {
         if (state == null) {
-          return GardenPicker();
+          return PickGarden();
         } else {
-          return GardenEditor(garden: state);
+          return EditGarden(garden: state);
         }
       },
     );

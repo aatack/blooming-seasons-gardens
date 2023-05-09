@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../models/garden.dart';
 
-class GardenEditor extends StatelessWidget {
+class EditGarden extends StatelessWidget {
   final Garden garden;
 
-  const GardenEditor({super.key, required this.garden});
+  const EditGarden({super.key, required this.garden});
 
   @override
   Widget build(BuildContext context) {

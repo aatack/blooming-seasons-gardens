@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/garden.dart';
 
-class GardenPicker extends StatefulWidget {
-  const GardenPicker({super.key});
+class PickGarden extends StatefulWidget {
+  const PickGarden({super.key});
 
   @override
-  State<GardenPicker> createState() => _GardenPickerState();
+  State<PickGarden> createState() => _PickGardenState();
 }
 
-class _GardenPickerState extends State<GardenPicker> {
+class _PickGardenState extends State<PickGarden> {
   String _newGardenName = "";
 
   @override
