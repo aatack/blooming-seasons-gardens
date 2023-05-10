@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import '../../models/garden.dart';
 
@@ -13,7 +14,13 @@ class PickGarden extends StatelessWidget {
     return Center(
       child: Container(
         constraints: BoxConstraints(maxWidth: 400),
-        child: NewGarden(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            NewGarden(),
+            LoadGarden(),
+          ],
+        ),
       ),
     );
   }
@@ -60,5 +67,31 @@ class _NewGardenState extends State<NewGarden> {
         )
       ],
     );
+  }
+}
+
+class LoadGarden extends StatelessWidget {
+  const LoadGarden({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String>(
+        future: test(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Text(snapshot.toString());
+          } else if (snapshot.hasError) {
+            return Text("Failed to load gardens");
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
+  }
+
+  Future<String> test() async {
+    final response = await http.get(Uri.parse("localhost:3000/"));
+    return response.body;
   }
 }
