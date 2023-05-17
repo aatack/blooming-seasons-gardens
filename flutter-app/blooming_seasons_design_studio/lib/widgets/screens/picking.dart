@@ -15,7 +15,7 @@ class PickGarden extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 400),
+        constraints: BoxConstraints(maxWidth: 400, maxHeight: 200),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,21 +80,22 @@ class LoadGarden extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
-        future: existingGardens(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: snapshot.data!
-                  .map((name) => LoadGardenItem(name: name))
-                  .toList(),
-            );
-          } else if (snapshot.hasError) {
-            return Text("Failed to load gardens");
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+      future: existingGardens(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: snapshot.data!
+                .map((name) => LoadGardenItem(name: name))
+                .toList(),
+          );
+        } else if (snapshot.hasError) {
+          return Text("Failed to load gardens");
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
   }
 
   Future<List<String>> existingGardens() async {
