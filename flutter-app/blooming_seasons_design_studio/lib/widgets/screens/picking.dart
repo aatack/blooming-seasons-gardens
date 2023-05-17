@@ -131,24 +131,22 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 5),
-      child: Container(
-        child: InkWell(
-          onHover: (hovered) {
-            setState(() {
-              _hovered = hovered;
-            });
-          },
-          onTap: () {},
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 20),
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: _hovered ? Colors.blue : Colors.lightBlue[50],
-            ),
-            child: Text(
-              widget.name,
-            ),
+      child: InkWell(
+        onHover: (hovered) {
+          setState(() {
+            _hovered = hovered;
+          });
+        },
+        onTap: () {},
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 20),
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: _hovered ? Colors.blue : Colors.lightBlue[50],
+          ),
+          child: Text(
+            widget.name,
           ),
         ),
       ),
