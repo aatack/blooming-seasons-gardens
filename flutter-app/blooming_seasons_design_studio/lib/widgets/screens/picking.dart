@@ -143,10 +143,12 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: _hovered ? Colors.blue : Colors.lightBlue[50],
+            color: _hovered ? Colors.blue[300] : Colors.lightBlue[50],
           ),
           child: Text(
             widget.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
