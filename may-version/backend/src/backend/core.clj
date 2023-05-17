@@ -4,7 +4,8 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.util.response :refer [bad-request]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [cheshire.core :refer [generate-string]]))
 
 ;; List of characters that are reserved in HTTP URIs or Windows or Linux file paths
 (def reserved-characters ":/?&=<>\"/\\|*.\0 ")
@@ -21,7 +22,7 @@
               (map #(drop-last 5 %))
               (map #(apply str %))
               (apply vector)
-              str)})
+              generate-string)})
 
 (defn get-garden [name]
   {:status 200
