@@ -140,9 +140,12 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           },
           onTap: () {},
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 40),
+            duration: const Duration(milliseconds: 20),
             padding: EdgeInsets.all(8),
-            color: _hovered ? Colors.blue : Colors.lightBlue[50],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: _hovered ? Colors.blue : Colors.lightBlue[50],
+            ),
             child: Text(
               widget.name,
             ),
