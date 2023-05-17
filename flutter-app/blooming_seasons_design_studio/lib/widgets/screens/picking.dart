@@ -79,11 +79,11 @@ class LoadGarden extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
+    return FutureBuilder<List<String>>(
         future: existingGardens(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(jsonDecode(snapshot.data!).toString());
+            return Text(snapshot.data.toString());
           } else if (snapshot.hasError) {
             return Text("Failed to load gardens");
           } else {
@@ -92,9 +92,20 @@ class LoadGarden extends StatelessWidget {
         });
   }
 
-  Future<String> existingGardens() async {
+  Future<List<String>> existingGardens() async {
     final response =
         await http.get(Uri.parse("http://localhost:3000/gardens/list"));
-    return response.body;
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse is List<dynamic>) {
+        return List<String>.from(jsonResponse);
+      } else {
+        throw FormatException(
+            "Response was not formatted as a list of strings");
+      }
+    } else {
+      throw Exception("Could not load existing gardens");
+    }
   }
 }
