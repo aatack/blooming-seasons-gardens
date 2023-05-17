@@ -115,21 +115,36 @@ class LoadGarden extends StatelessWidget {
   }
 }
 
-class LoadGardenItem extends StatelessWidget {
+class LoadGardenItem extends StatefulWidget {
   final String name;
 
   const LoadGardenItem({super.key, required this.name});
+
+  @override
+  State<LoadGardenItem> createState() => _LoadGardenItemState();
+}
+
+class _LoadGardenItemState extends State<LoadGardenItem> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 5),
       child: Container(
-        padding: EdgeInsets.all(8),
-        color: Colors.blue,
         child: InkWell(
-          child: Text(
-            name,
+          onHover: (hovered) {
+            setState(() {
+              _hovered = hovered;
+            });
+          },
+          onTap: () {},
+          child: Container(
+            padding: EdgeInsets.all(8),
+            color: _hovered ? Colors.blue : Colors.lightBlue[50],
+            child: Text(
+              widget.name,
+            ),
           ),
         ),
       ),
