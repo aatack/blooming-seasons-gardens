@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [ring/ring "1.8.0"]
                  [ring/ring-jetty-adapter "1.8.2"]
-                 [ring/ring-devel "1.8.2"]]
+                 [ring/ring-devel "1.8.2"]
+                 [ring-cors "0.1.13"]]
   :main ^:skip-aot backend.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

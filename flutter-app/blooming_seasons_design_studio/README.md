@@ -6,6 +6,7 @@ Flutter-based frontend for the blooming seasons design studio; works with the Cl
 
 In VSCode, run the debugger (F5 by default).
 Changes should cause a reload automatically.
+Use the "toggle status bar visibility" command if the orange bar gets annoying.
 
 ## Troubleshooting
 

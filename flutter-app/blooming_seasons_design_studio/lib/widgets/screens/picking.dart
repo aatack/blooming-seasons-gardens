@@ -83,7 +83,8 @@ class LoadGarden extends StatelessWidget {
           if (snapshot.hasData) {
             return Text(snapshot.toString());
           } else if (snapshot.hasError) {
-            return Text("Failed to load gardens");
+            // return Text("Failed to load gardens");
+            return Text(snapshot.toString());
           } else {
             return CircularProgressIndicator();
           }
@@ -91,7 +92,13 @@ class LoadGarden extends StatelessWidget {
   }
 
   Future<String> test() async {
-    final response = await http.get(Uri.parse("localhost:3000/"));
+    final uri = Uri.parse("http://0.0.0.0:3000");
+    // final uri = Uri.http("localhost:3000", "/inspect");
+    final response = await http.get(uri, headers: {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    });
     return response.body;
   }
 }

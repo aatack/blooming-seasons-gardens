@@ -2,6 +2,7 @@
   (:require [clojure.string :refer [split]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.reload :refer [wrap-reload]]
+            [ring.middleware.cors :refer [wrap-cors]]
             [ring.util.response :refer [bad-request]]
             [clojure.java.io :as io]))
 
@@ -49,7 +50,7 @@
        :body (str "Renamed " old-name " to " new-name)}
       (bad-request (str "Could not rename " old-name " to " new-name)))))
 
-(defn handler [request]
+(defn routes [request]
   (let [segments (filter not-empty (split (:uri request) #"/"))]
     (cond
       (= segments ["inspect"]) (bad-request (str request))
@@ -66,8 +67,11 @@
                                                     (second arguments)))
       :else (bad-request (str "not-found: " (apply vector segments))))))
 
-(def app
-  (wrap-reload #'handler))
+(def handler (->
+              routes
+              wrap-reload
+              (wrap-cors :access-control-allow-origin #"http://example.com"
+                         :access-control-allow-methods [:get :put :post :delete])))
 
 (defn -main []
-  (run-jetty app {:port 3000}))
+  (run-jetty handler {:port 3000}))
