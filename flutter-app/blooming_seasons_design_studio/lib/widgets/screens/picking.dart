@@ -139,7 +139,8 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
             });
           },
           onTap: () {},
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 40),
             padding: EdgeInsets.all(8),
             color: _hovered ? Colors.blue : Colors.lightBlue[50],
             child: Text(
