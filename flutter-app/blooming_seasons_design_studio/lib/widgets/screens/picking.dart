@@ -21,7 +21,7 @@ class PickGarden extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             NewGarden(),
-            SizedBox(height: 20),
+            SizedBox(height: 25),
             LoadGarden(),
           ],
         ),
@@ -75,9 +75,7 @@ class _NewGardenState extends State<NewGarden> {
 }
 
 class LoadGarden extends StatelessWidget {
-  const LoadGarden({
-    super.key,
-  });
+  const LoadGarden({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +85,9 @@ class LoadGarden extends StatelessWidget {
           if (snapshot.hasData) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: snapshot.data!.map((garden) => Text(garden)).toList(),
+              children: snapshot.data!
+                  .map((name) => LoadGardenItem(name: name))
+                  .toList(),
             );
           } else if (snapshot.hasError) {
             return Text("Failed to load gardens");
@@ -112,5 +112,19 @@ class LoadGarden extends StatelessWidget {
     } else {
       throw Exception("Could not load existing gardens");
     }
+  }
+}
+
+class LoadGardenItem extends StatelessWidget {
+  final String name;
+
+  const LoadGardenItem({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 10),
+      child: Text(name),
+    );
   }
 }
