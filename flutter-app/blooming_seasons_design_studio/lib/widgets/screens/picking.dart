@@ -84,7 +84,7 @@ class LoadGarden extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: snapshot.data!
                   .map((name) => LoadGardenItem(name: name))
                   .toList(),
@@ -123,8 +123,16 @@ class LoadGardenItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 10),
-      child: Text(name),
+      padding: EdgeInsets.only(bottom: 5),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        color: Colors.blue,
+        child: InkWell(
+          child: Text(
+            name,
+          ),
+        ),
+      ),
     );
   }
 }
