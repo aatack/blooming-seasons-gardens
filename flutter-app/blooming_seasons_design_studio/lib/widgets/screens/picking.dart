@@ -133,6 +133,7 @@ class LoadGardenItem extends StatefulWidget {
 
 class _LoadGardenItemState extends State<LoadGardenItem> {
   bool _hovered = false;
+  bool _clicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -144,13 +145,25 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
             _hovered = hovered;
           });
         },
+        onTapDown: (_) {
+          setState(() {
+            _clicked = true;
+          });
+        },
+        onTapUp: (_) {
+          setState(() {
+            _clicked = false;
+          });
+        },
         onTap: () {},
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: _hovered ? Colors.blue[300] : Colors.lightBlue[50],
+            color: _clicked
+                ? Colors.blue
+                : (_hovered ? Colors.blue[300] : Colors.lightBlue[50]),
           ),
           child: Text(
             widget.name,
