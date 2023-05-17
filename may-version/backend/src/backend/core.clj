@@ -70,7 +70,7 @@
 (def handler (->
               routes
               wrap-reload
-              (wrap-cors :access-control-allow-origin #"http://example.com"
+              (wrap-cors :access-control-allow-origin #"http://localhost:51287"
                          :access-control-allow-methods [:get :put :post :delete])))
 
 (defn -main []

@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -78,27 +80,21 @@ class LoadGarden extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-        future: test(),
+        future: existingGardens(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(snapshot.toString());
+            return Text(jsonDecode(snapshot.data!).toString());
           } else if (snapshot.hasError) {
-            // return Text("Failed to load gardens");
-            return Text(snapshot.toString());
+            return Text("Failed to load gardens");
           } else {
             return CircularProgressIndicator();
           }
         });
   }
 
-  Future<String> test() async {
-    final uri = Uri.parse("http://0.0.0.0:3000");
-    // final uri = Uri.http("localhost:3000", "/inspect");
-    final response = await http.get(uri, headers: {
-      "Access-Control-Allow-Origin": "*",
-      'Content-Type': 'application/json',
-      'Accept': '*/*'
-    });
+  Future<String> existingGardens() async {
+    final response =
+        await http.get(Uri.parse("http://localhost:3000/gardens/list"));
     return response.body;
   }
 }
