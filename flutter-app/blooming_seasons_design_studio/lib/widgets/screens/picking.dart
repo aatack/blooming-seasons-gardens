@@ -18,8 +18,10 @@ class PickGarden extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             NewGarden(),
+            SizedBox(height: 20),
             LoadGarden(),
           ],
         ),
@@ -83,7 +85,10 @@ class LoadGarden extends StatelessWidget {
         future: existingGardens(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(snapshot.data.toString());
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: snapshot.data!.map((garden) => Text(garden)).toList(),
+            );
           } else if (snapshot.hasError) {
             return Text("Failed to load gardens");
           } else {
