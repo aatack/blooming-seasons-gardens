@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../models/garden.dart' show GardenState;
 import '../../models/loading.dart' show LoadingState;
+import '../../models/modals.dart';
 import '../providers/loading.dart';
 
 class PickGarden extends StatelessWidget {
@@ -161,7 +162,12 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
         },
         onTap: () {
           context.read<LoadingState>().setLoading("Loading ${widget.name}...");
-          loadGarden(widget.name, context.read<GardenState>());
+          loadGarden(
+            widget.name,
+            context.read<GardenState>(),
+            context.read<ModalsState>(),
+            context.read<LoadingState>(),
+          );
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
@@ -182,21 +188,23 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
     );
   }
 
-  Future<void> loadGarden(String name, GardenState garden) async {
+  Future<void> loadGarden(String name, GardenState garden, ModalsState modals,
+      LoadingState loading) async {
     final escapedName = name; // TODO: escape the name properly
     try {
       final response = await http
           .get(Uri.parse("http://localhost:3000/gardens/get/$escapedName"));
 
       if (response.statusCode == 200) {
+        loading.setFinished();
         garden.initialise(response.body);
       } else {
-        print(
-          "Error from server: ${response.body}",
-        ); // TODO: show an error modal
+        loading.setFinished();
+        modals.add(Text("Error from server: ${response.body}"));
       }
     } catch (e) {
-      print("Error from client: $e"); // TODO: show an error modal
+      loading.setFinished();
+      modals.add(Text("Error from client: $e"));
     }
   }
 }

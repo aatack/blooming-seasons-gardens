@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ModalsState extends Cubit<List<Widget>> {
   ModalsState() : super([]);
 
-  void append(Widget widget) {
+  void add(Widget widget) {
     final List<Widget> updatedState = List.from(state);
     updatedState.add(widget);
     emit(updatedState);
