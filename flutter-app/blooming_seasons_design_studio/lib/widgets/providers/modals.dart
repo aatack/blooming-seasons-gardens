@@ -12,7 +12,28 @@ class ModalsProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ModalsState>(
       create: (_) => ModalsState(),
-      child: child,
+      child: BlocBuilder<ModalsState, List<Widget>>(
+        builder: (context, state) {
+          if (state.isEmpty) {
+            return child;
+          } else {
+            return Stack(
+              children: [
+                child,
+                Scaffold(
+                  backgroundColor: Colors.grey[700]!.withOpacity(0.5),
+                  body: Center(
+                    child: Container(
+                      color: Colors.white,
+                      child: state.last,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }
