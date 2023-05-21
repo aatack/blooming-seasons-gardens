@@ -161,9 +161,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
         },
         onTap: () {
           context.read<Loading>().setLoading("Loading ${widget.name}...");
-
-          // TODO: asynchronously load the garden, and remove the loading
-          //       spinner when done
+          loadGarden(widget.name, context.read<GardenState>());
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
@@ -182,5 +180,23 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
         ),
       ),
     );
+  }
+
+  Future<void> loadGarden(String name, GardenState garden) async {
+    final escapedName = name; // TODO: escape the name properly
+    try {
+      final response = await http
+          .get(Uri.parse("http://localhost:3000/gardens/get/$escapedName"));
+
+      if (response.statusCode == 200) {
+        garden.initialise(response.body);
+      } else {
+        print(
+          "Error from server: ${response.body}",
+        ); // TODO: show an error modal
+      }
+    } catch (e) {
+      print("Error from client: $e"); // TODO: show an error modal
+    }
   }
 }
