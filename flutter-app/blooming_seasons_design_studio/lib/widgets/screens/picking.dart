@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:blooming_seasons_design_studio/models/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -13,18 +14,25 @@ class PickGarden extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 400),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            NewGarden(),
-            SizedBox(height: 25),
-            LoadGarden(),
-          ],
-        ),
+    return BlocProvider<Loading>(
+      create: (_) => Loading(),
+      child: BlocBuilder<Loading, bool>(
+        builder: (context, state) {
+          return Center(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 400),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  NewGarden(),
+                  SizedBox(height: 25),
+                  LoadGarden(),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
