@@ -3,21 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/loading.dart';
 
-class LoadingBuilder extends StatelessWidget {
-  final Widget Function(BuildContext) builder;
+class LoadingWrapper extends StatelessWidget {
+  final Widget child;
 
-  const LoadingBuilder({super.key, required this.builder});
+  const LoadingWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: does this need to be done dynamically by a builder or can
-    //       we just pass a widget directly?
     return BlocProvider<Loading>(
       create: (_) => Loading(),
       child: BlocBuilder<Loading, String?>(
         builder: (context, state) {
           if (state == null) {
-            return builder(context);
+            return child;
           } else {
             return _LoadingIndicator(message: state);
           }

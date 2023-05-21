@@ -15,8 +15,8 @@ class PickGarden extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoadingBuilder(
-      builder: (context) => Center(
+    return LoadingWrapper(
+      child: Center(
         child: Container(
           constraints: BoxConstraints(maxWidth: 400),
           child: Column(
