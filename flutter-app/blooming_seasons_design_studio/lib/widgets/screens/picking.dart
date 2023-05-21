@@ -18,20 +18,33 @@ class PickGarden extends StatelessWidget {
       create: (_) => Loading(),
       child: BlocBuilder<Loading, bool>(
         builder: (context, state) {
-          return Center(
-            child: Container(
-              constraints: BoxConstraints(maxWidth: 400),
+          if (!state) {
+            return Center(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 400),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    NewGarden(),
+                    SizedBox(height: 25),
+                    LoadGarden(),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  NewGarden(),
+                  CircularProgressIndicator(),
                   SizedBox(height: 25),
-                  LoadGarden(),
+                  Text("Loading garden..."),
                 ],
               ),
-            ),
-          );
+            );
+          }
         },
       ),
     );
@@ -163,7 +176,9 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
             _clicked = false;
           });
         },
-        onTap: () {},
+        onTap: () {
+          context.read<Loading>().setLoading();
+        },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
           padding: EdgeInsets.all(8),
