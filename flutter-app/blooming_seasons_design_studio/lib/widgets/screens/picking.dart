@@ -84,7 +84,7 @@ class LoadGarden extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
-            constraints: BoxConstraints(maxHeight: 250),
+            height: 250,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
