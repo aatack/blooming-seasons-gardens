@@ -178,10 +178,22 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                 ? Colors.blue
                 : (_hovered ? Colors.blue[300] : Colors.lightBlue[50]),
           ),
-          child: Text(
-            widget.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          child: Stack(
+            children: [
+              Text(
+                widget.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (_hovered)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    height: 20,
+                    child: Icon(Icons.delete),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
