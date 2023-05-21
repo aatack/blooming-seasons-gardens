@@ -10,6 +10,8 @@ class LoadingBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: does this need to be done dynamically by a builder or can
+    //       we just pass a widget directly?
     return BlocProvider<Loading>(
       create: (_) => Loading(),
       child: BlocBuilder<Loading, String?>(
@@ -17,7 +19,7 @@ class LoadingBuilder extends StatelessWidget {
           if (state == null) {
             return builder(context);
           } else {
-            return LoadingIndicator(message: state);
+            return _LoadingIndicator(message: state);
           }
         },
       ),
@@ -25,10 +27,10 @@ class LoadingBuilder extends StatelessWidget {
   }
 }
 
-class LoadingIndicator extends StatelessWidget {
+class _LoadingIndicator extends StatelessWidget {
   final String message;
 
-  const LoadingIndicator({super.key, required this.message});
+  const _LoadingIndicator({required this.message});
 
   @override
   Widget build(BuildContext context) {

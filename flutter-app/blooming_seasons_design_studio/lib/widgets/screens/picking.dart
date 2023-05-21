@@ -15,31 +15,20 @@ class PickGarden extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: wrap all of this in a custom builder
-
-    return BlocProvider<Loading>(
-      create: (_) => Loading(),
-      child: BlocBuilder<Loading, String?>(
-        builder: (context, state) {
-          if (state == null) {
-            return Center(
-              child: Container(
-                constraints: BoxConstraints(maxWidth: 400),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    NewGarden(),
-                    SizedBox(height: 25),
-                    LoadGarden(),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            return LoadingIndicator(message: state);
-          }
-        },
+    return LoadingBuilder(
+      builder: (context) => Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              NewGarden(),
+              SizedBox(height: 25),
+              LoadGarden(),
+            ],
+          ),
+        ),
       ),
     );
   }
