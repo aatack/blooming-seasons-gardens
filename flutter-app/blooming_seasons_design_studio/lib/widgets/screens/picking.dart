@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/garden.dart' show GardenState;
-import '../../models/loading.dart' show Loading;
+import '../../models/loading.dart' show LoadingState;
 import '../loading.dart' show LoadingProvider;
 
 class PickGarden extends StatelessWidget {
@@ -160,7 +160,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           });
         },
         onTap: () {
-          context.read<Loading>().setLoading("Loading ${widget.name}...");
+          context.read<LoadingState>().setLoading("Loading ${widget.name}...");
           loadGarden(widget.name, context.read<GardenState>());
         },
         child: AnimatedContainer(

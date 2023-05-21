@@ -10,9 +10,9 @@ class LoadingProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<Loading>(
-      create: (_) => Loading(),
-      child: BlocBuilder<Loading, String?>(
+    return BlocProvider<LoadingState>(
+      create: (_) => LoadingState(),
+      child: BlocBuilder<LoadingState, String?>(
         builder: (context, state) {
           if (state == null) {
             return child;
