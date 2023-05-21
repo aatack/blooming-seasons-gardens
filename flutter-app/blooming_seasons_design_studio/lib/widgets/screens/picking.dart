@@ -96,8 +96,7 @@ class LoadGarden extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text(
-              "Failed to load gardens:\n\n" + snapshot.stackTrace.toString());
+          return Text("Failed to load gardens:\n\n${snapshot.stackTrace}");
         } else {
           return CircularProgressIndicator();
         }
