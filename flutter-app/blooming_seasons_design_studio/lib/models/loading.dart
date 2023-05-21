@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Loading extends Cubit<bool> {
-  Loading() : super(false);
+class Loading extends Cubit<String?> {
+  Loading() : super(null);
 
-  void setLoading() {
-    emit(true);
+  void setLoading(String message) {
+    emit(message);
   }
 
-  void setNotLoading() {
-    emit(false);
+  void setFinished() {
+    emit(null);
   }
 }

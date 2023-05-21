@@ -8,17 +8,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/garden.dart';
+import '../loading.dart';
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // TODO: wrap all of this in a custom builder
+
     return BlocProvider<Loading>(
       create: (_) => Loading(),
-      child: BlocBuilder<Loading, bool>(
+      child: BlocBuilder<Loading, String?>(
         builder: (context, state) {
-          if (!state) {
+          if (state == null) {
             return Center(
               child: Container(
                 constraints: BoxConstraints(maxWidth: 400),
@@ -34,16 +37,7 @@ class PickGarden extends StatelessWidget {
               ),
             );
           } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 25),
-                  Text("Loading garden..."),
-                ],
-              ),
-            );
+            return LoadingMessage(message: state);
           }
         },
       ),
@@ -177,7 +171,10 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           });
         },
         onTap: () {
-          context.read<Loading>().setLoading();
+          context.read<Loading>().setLoading("Loading ${widget.name}...");
+
+          // TODO: asynchronously load the garden, and remove the loading
+          //       spinner when done
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
