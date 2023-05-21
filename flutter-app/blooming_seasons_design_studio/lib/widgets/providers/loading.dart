@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/loading.dart';
+import '../../models/loading.dart';
 
 class LoadingProvider extends StatelessWidget {
   final Widget child;

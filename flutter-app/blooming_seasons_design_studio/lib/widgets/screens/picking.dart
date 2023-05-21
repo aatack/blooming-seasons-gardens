@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../models/garden.dart' show GardenState;
 import '../../models/loading.dart' show LoadingState;
-import '../loading.dart' show LoadingProvider;
+import '../providers/loading.dart';
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});

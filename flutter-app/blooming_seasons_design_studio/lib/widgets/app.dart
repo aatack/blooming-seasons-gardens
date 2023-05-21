@@ -1,8 +1,8 @@
-import 'package:blooming_seasons_design_studio/widgets/modals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/garden.dart';
+import 'providers/modals.dart';
 import 'screens/editing.dart';
 import 'screens/picking.dart';
 

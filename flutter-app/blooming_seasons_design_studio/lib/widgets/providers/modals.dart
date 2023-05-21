@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/modals.dart';
+import '../../models/modals.dart';
 
 class ModalsProvider extends StatelessWidget {
   final Widget child;
