@@ -37,7 +37,7 @@ class PickGarden extends StatelessWidget {
               ),
             );
           } else {
-            return LoadingMessage(message: state);
+            return LoadingIndicator(message: state);
           }
         },
       ),
