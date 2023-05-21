@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'models/garden.dart' show GardenState;
+import 'models/modals.dart';
 import 'widgets/app.dart';
 
 void main() {
@@ -15,10 +16,13 @@ class AppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Blooming Seasons Design Studio",
-      home: BlocProvider<GardenState>(
-        create: (_) => GardenState(),
-        child: const Scaffold(
-          body: App(),
+      home: BlocProvider<ModalsState>(
+        create: (_) => ModalsState(),
+        child: BlocProvider<GardenState>(
+          create: (_) => GardenState(),
+          child: const Scaffold(
+            body: App(),
+          ),
         ),
       ),
     );
