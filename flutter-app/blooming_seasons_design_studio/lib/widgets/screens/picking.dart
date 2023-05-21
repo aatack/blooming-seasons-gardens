@@ -2,20 +2,20 @@
 
 import 'dart:convert';
 
-import 'package:blooming_seasons_design_studio/models/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import '../../models/garden.dart';
-import '../loading.dart';
+import '../../models/garden.dart' show GardenState;
+import '../../models/loading.dart' show Loading;
+import '../loading.dart' show LoadingProvider;
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return LoadingWrapper(
+    return LoadingProvider(
       child: Center(
         child: Container(
           constraints: BoxConstraints(maxWidth: 400),
@@ -87,7 +87,7 @@ class LoadGarden extends StatelessWidget {
       future: existingGardens(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Container(
+          return SizedBox(
             height: 250,
             child: SingleChildScrollView(
               child: Column(

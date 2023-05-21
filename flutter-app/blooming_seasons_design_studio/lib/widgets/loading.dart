@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/loading.dart';
 
-class LoadingWrapper extends StatelessWidget {
+class LoadingProvider extends StatelessWidget {
   final Widget child;
 
-  const LoadingWrapper({super.key, required this.child});
+  const LoadingProvider({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
