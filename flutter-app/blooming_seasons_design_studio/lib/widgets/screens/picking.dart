@@ -142,6 +142,9 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: determine this dynamically from the text element
+    const double height = 20;
+
     return Container(
       padding: EdgeInsets.only(bottom: 5),
       child: InkWell(
@@ -178,22 +181,25 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                 ? Colors.blue
                 : (_hovered ? Colors.blue[300] : Colors.lightBlue[50]),
           ),
-          child: Stack(
-            children: [
-              Text(
-                widget.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (_hovered)
+          child: SizedBox(
+            height: height,
+            child: Stack(
+              children: [
                 Align(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                    height: 20,
-                    child: Icon(Icons.delete),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-            ],
+                if (_hovered)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.delete, size: height),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
