@@ -80,6 +80,8 @@ class _NewGardenState extends State<NewGarden> {
 }
 
 class LoadGarden extends StatefulWidget {
+  // TODO: move this state into the `GardenState`, and rename it to `AppState`
+
   const LoadGarden({super.key});
 
   @override
