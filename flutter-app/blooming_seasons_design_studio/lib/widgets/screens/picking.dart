@@ -79,37 +79,56 @@ class _NewGardenState extends State<NewGarden> {
   }
 }
 
-class LoadGarden extends StatelessWidget {
+class LoadGarden extends StatefulWidget {
   const LoadGarden({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: existingGardens(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return SizedBox(
-            height: 250,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: snapshot.data!
-                    .map((name) => LoadGardenItem(name: name))
-                    .toList(),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text("Failed to load gardens:\n\n${snapshot.stackTrace}");
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
-    );
+  State<LoadGarden> createState() => _LoadGardenState();
+}
+
+class _LoadGardenState extends State<LoadGarden> {
+  List<String>? _gardens;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (_gardens == null) {
+      _refreshGardens().then((data) {
+        setState(() {
+          _gardens = data;
+          _error = null;
+        });
+      }).catchError((error) {
+        setState(() {
+          _gardens = null;
+          _error = "Failed to load gardens: ${error.toString()}";
+        });
+      });
+    }
   }
 
-  Future<List<String>> existingGardens() async {
+  @override
+  Widget build(BuildContext context) {
+    if (_gardens != null) {
+      return SizedBox(
+        height: 250,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children:
+                _gardens!.map((name) => LoadGardenItem(name: name)).toList(),
+          ),
+        ),
+      );
+    } else {
+      return Text(_error.toString());
+    }
+  }
+
+  Future<List<String>> _refreshGardens() async {
     final response =
         await http.get(Uri.parse("http://localhost:3000/gardens/list"));
 
