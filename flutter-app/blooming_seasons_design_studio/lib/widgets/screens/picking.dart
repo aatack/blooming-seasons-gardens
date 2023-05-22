@@ -196,7 +196,31 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                 if (_hovered)
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Icon(Icons.delete, size: height),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _HoverableWidget(
+                          icon: Icons.edit,
+                          height: height,
+                          onTap: () {
+                            context
+                                .read<ModalsState>()
+                                .add(Text("Edited ${widget.name}"));
+                          },
+                        ),
+                        SizedBox(width: 8),
+                        _HoverableWidget(
+                          icon: Icons.delete,
+                          height: height,
+                          onTap: () {
+                            context
+                                .read<ModalsState>()
+                                .add(Text("Deleted ${widget.name}"));
+                          },
+                        ),
+                        SizedBox(width: 8),
+                      ],
+                    ),
                   ),
               ],
             ),
@@ -224,5 +248,58 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
       loading.setFinished();
       modals.add(Text("Error from client: $e"));
     }
+  }
+}
+
+class _HoverableWidget extends StatefulWidget {
+  const _HoverableWidget(
+      {required this.icon, required this.height, required this.onTap});
+
+  final IconData icon;
+  final double height;
+  final void Function() onTap;
+
+  @override
+  State<_HoverableWidget> createState() => _HoverableWidgetState();
+}
+
+class _HoverableWidgetState extends State<_HoverableWidget> {
+  bool _hovered = false;
+  bool _clicked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          _clicked = true;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _clicked = false;
+        });
+      },
+      onTap: () {
+        widget.onTap();
+      },
+      child: MouseRegion(
+        onEnter: (_) {
+          setState(() {
+            _hovered = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            _hovered = false;
+          });
+        },
+        child: Icon(
+          widget.icon,
+          color: (_hovered && !_clicked) ? Colors.grey[700] : Colors.white,
+          size: widget.height,
+        ),
+      ),
+    );
   }
 }
