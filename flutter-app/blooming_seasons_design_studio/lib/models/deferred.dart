@@ -1,6 +1,6 @@
 class Deferred<Data> {
   Data? _value;
-  Exception? _error;
+  Object? _error;
   bool _loading = false;
 
   Deferred._(this._value, this._error, this._loading);
@@ -9,7 +9,7 @@ class Deferred<Data> {
     return Deferred._(value, null, false);
   }
 
-  factory Deferred.error(Exception error) {
+  factory Deferred.error(Object error) {
     return Deferred._(null, error, false);
   }
 
@@ -23,7 +23,7 @@ class Deferred<Data> {
 
   Result handle<Result>({
     required Result Function(Data) value,
-    required Result Function(Exception) error,
+    required Result Function(Object) error,
     required Result Function() loading,
     required Result Function() empty,
   }) {
@@ -36,5 +36,19 @@ class Deferred<Data> {
     } else {
       return empty();
     }
+  }
+}
+
+Future<void> populate<Data>({
+  required Future<Data> Function() get,
+  required void Function(Deferred<Data>) set,
+}) async {
+  set(Deferred.loading());
+
+  try {
+    final data = await get();
+    set(Deferred.value(data));
+  } catch (error) {
+    set(Deferred.error(error));
   }
 }
