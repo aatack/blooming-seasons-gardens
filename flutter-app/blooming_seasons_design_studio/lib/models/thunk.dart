@@ -50,18 +50,18 @@ class Thunk<Data> {
         return empty();
     }
   }
-}
 
-Future<void> populate<Data>({
-  required Future<Data> Function() get,
-  required void Function(Thunk<Data>) set,
-}) async {
-  set(Thunk.loading());
+  static Future<void> populate<Data>({
+    required Future<Data> Function() get,
+    required void Function(Thunk<Data>) set,
+  }) async {
+    set(Thunk.loading());
 
-  try {
-    final data = await get();
-    set(Thunk.data(data));
-  } catch (error) {
-    set(Thunk.error(error));
+    try {
+      final data = await get();
+      set(Thunk.data(data));
+    } catch (error) {
+      set(Thunk.error(error));
+    }
   }
 }
