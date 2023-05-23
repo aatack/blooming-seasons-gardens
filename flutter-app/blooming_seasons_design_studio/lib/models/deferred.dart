@@ -5,7 +5,7 @@ class Deferred<Data> {
 
   Deferred._(this._value, this._error, this._loading);
 
-  factory Deferred.value(T value) {
+  factory Deferred.value(Data value) {
     return Deferred._(value, null, false);
   }
 
