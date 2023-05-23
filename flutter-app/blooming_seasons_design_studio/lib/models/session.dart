@@ -61,6 +61,9 @@ class SessionState extends Cubit<Session> {
             emit(Session(state.availableGardens, Thunk.error(error)));
           }
         }, loading: () {
+          // TODO: potentially show the loading indicator in a modal, such
+          //       that stateful widgets maintain their state while the
+          //       garden loads (in case it fails to load properly)
           emit(Session(state.availableGardens, Thunk.loading()));
         });
       },

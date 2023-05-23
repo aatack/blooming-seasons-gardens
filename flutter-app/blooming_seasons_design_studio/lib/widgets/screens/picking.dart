@@ -1,9 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
 import '../../models/modals.dart';
 import '../../models/session.dart';
@@ -17,13 +14,13 @@ class PickGarden extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 400),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            NewGarden(),
-            SizedBox(height: 25),
+            const NewGarden(),
+            const SizedBox(height: 25),
             BlocSelector<SessionState, Session, Thunk<List<String>>>(
               selector: (state) => state.availableGardens,
               builder: (context, gardens) => LoadGarden(gardens: gardens),
@@ -51,9 +48,9 @@ class _NewGardenState extends State<NewGarden> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          constraints: BoxConstraints(maxWidth: 300),
+          constraints: const BoxConstraints(maxWidth: 300),
           child: TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'New garden',
             ),
             onChanged: (value) {
@@ -63,7 +60,7 @@ class _NewGardenState extends State<NewGarden> {
             },
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: ElevatedButton(
             onPressed: _newGardenName.isNotEmpty
@@ -73,7 +70,7 @@ class _NewGardenState extends State<NewGarden> {
                         .createAndLoadNewGarden(_newGardenName);
                   }
                 : null,
-            child: Text("Create"),
+            child: const Text("Create"),
           ),
         )
       ],
@@ -99,7 +96,7 @@ class LoadGarden extends StatelessWidget {
           ),
         ),
         error: (error) => ErrorIndicator(message: error.toString()),
-        loading: () => Align(
+        loading: () => const Align(
           alignment: Alignment.topCenter,
           child: LoadingIndicator(message: "Loading gardens"),
         ),
@@ -127,7 +124,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
     const double height = 20;
 
     return Container(
-      padding: EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.only(bottom: 5),
       child: InkWell(
         onHover: (hovered) {
           setState(() {
@@ -151,7 +148,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: _clicked
@@ -185,7 +182,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                                 .add(Text("Edited ${widget.name}"));
                           },
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         _HoverableWidget(
                           icon: Icons.delete,
                           height: height,
@@ -195,7 +192,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                                 .add(Text("Deleted ${widget.name}"));
                           },
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                       ],
                     ),
                   ),
