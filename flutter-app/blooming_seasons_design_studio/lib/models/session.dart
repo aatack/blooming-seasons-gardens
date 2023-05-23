@@ -1,16 +1,18 @@
 import 'dart:convert';
 
+import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/indicators/error.dart';
 import 'garden.dart';
 import 'thunk.dart';
 
 class SessionState extends Cubit<Session> {
   SessionState() : super(Session(Thunk.empty(), Thunk.empty()));
 
-  void loadAvailableGardens() {
+  void loadGardens() {
     Thunk.populate(
       get: () async {
         final response =
@@ -28,11 +30,38 @@ class SessionState extends Cubit<Session> {
           throw Exception("Could not load existing gardens");
         }
       },
-      set: (data) => emit(Session(data, state.currentGarden)),
+      set: (result) => emit(Session(result, state.currentGarden)),
     );
   }
 
-  void loadAvailableGarden(String name) {}
+  void loadGarden(String name, ModalsState modals) {
+    Thunk.populate(
+      get: () async {
+        try {
+          final response = await http
+              .get(Uri.parse("http://localhost:3000/gardens/get/$name"));
+
+          if (response.statusCode == 200) {
+            return Garden.blank(response.body);
+          } else {
+            throw "Error from server: ${response.body}";
+          }
+        } catch (error) {
+          throw "Error from client: $error";
+        }
+      },
+      set: (result) {
+        result.handle(data: (data) {
+          emit(Session(state.availableGardens, Thunk.data(data)));
+        }, error: (error) {
+          modals.add(ErrorIndicator(message: result.toString()));
+          emit(Session(state.availableGardens, Thunk.empty()));
+        }, loading: () {
+          emit(Session(state.availableGardens, Thunk.loading()));
+        });
+      },
+    );
+  }
 
   void createAndLoadNewGarden(String name) {}
 }

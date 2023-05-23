@@ -19,7 +19,7 @@ class AppWrapper extends StatelessWidget {
       home: BlocProvider<SessionState>(
         create: (_) {
           final state = SessionState();
-          state.loadAvailableGardens();
+          state.loadGardens();
           return state;
         },
         child: const Scaffold(

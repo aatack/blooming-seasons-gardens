@@ -145,11 +145,9 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           });
         },
         onTap: () {
-          loadGarden(
-            widget.name,
-            context.read<SessionState>(),
-            context.read<ModalsState>(),
-          );
+          context
+              .read<SessionState>()
+              .loadGarden(widget.name, context.read<ModalsState>());
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
@@ -207,24 +205,6 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
         ),
       ),
     );
-  }
-
-  Future<void> loadGarden(
-      String name, SessionState session, ModalsState modals) async {
-    final escapedName = name; // TODO: escape the name properly
-    try {
-      final response = await http
-          .get(Uri.parse("http://localhost:3000/gardens/get/$escapedName"));
-
-      if (response.statusCode == 200) {
-        // garden.initialise(response.body);
-      } else {
-        modals.add(
-            ErrorIndicator(message: "Error from server: ${response.body}"));
-      }
-    } catch (e) {
-      modals.add(ErrorIndicator(message: "Error from client: $e"));
-    }
   }
 }
 

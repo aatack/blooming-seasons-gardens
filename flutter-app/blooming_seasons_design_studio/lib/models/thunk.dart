@@ -31,6 +31,7 @@ class Thunk<Data> {
     return const Thunk._(null, null, _State.empty);
   }
 
+  get isError => _state == _State.error;
   get isEmpty => _state == _State.empty;
 
   Result handle<Result>({
