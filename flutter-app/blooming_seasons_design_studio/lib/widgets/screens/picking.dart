@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../../models/modals.dart';
 import '../../models/session.dart';
 import '../../models/thunk.dart';
+import '../indicators/error.dart';
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});
@@ -99,7 +100,7 @@ class LoadGarden extends StatelessWidget {
             children: data.map((name) => LoadGardenItem(name: name)).toList(),
           ),
         ),
-        error: (error) => Text(error.toString()),
+        error: (error) => ErrorIndicator(message: error.toString()),
         loading: () => Align(
           alignment: Alignment.topCenter,
           child: LoadingIndicator(message: "Loading gardens"),
