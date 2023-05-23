@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,12 +17,10 @@ class ModalsWrapper extends StatelessWidget {
       create: (_) => ModalsState(),
       child: BlocBuilder<ModalsState, List<Widget>>(
         builder: (context, state) {
-          if (state.isEmpty) {
-            return child;
-          } else {
-            return Stack(
-              children: [
-                child,
+          return Stack(
+            children: [
+              child,
+              if (state.isNotEmpty)
                 GestureDetector(
                   onTap: () {
                     context.read<ModalsState>().clear();
@@ -42,9 +39,8 @@ class ModalsWrapper extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            );
-          }
+            ],
+          );
         },
       ),
     );
