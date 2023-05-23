@@ -115,23 +115,6 @@ class LoadGarden extends StatelessWidget {
       ),
     );
   }
-
-  Future<List<String>> _refreshGardens() async {
-    final response =
-        await http.get(Uri.parse("http://localhost:3000/gardens/list"));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse is List<dynamic>) {
-        return List<String>.from(jsonResponse);
-      } else {
-        throw FormatException(
-            "Response was not formatted as a list of strings");
-      }
-    } else {
-      throw Exception("Could not load existing gardens");
-    }
-  }
 }
 
 class LoadGardenItem extends StatefulWidget {

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,8 +13,20 @@ class SessionState extends Cubit<Session> {
   void loadAvailableGardens() {
     Thunk.populate(
       get: () async {
-        await Future.delayed(const Duration(seconds: 2));
-        return [""];
+        final response =
+            await http.get(Uri.parse("http://localhost:3000/gardens/list"));
+
+        if (response.statusCode == 200) {
+          final jsonResponse = jsonDecode(response.body);
+          if (jsonResponse is List<dynamic>) {
+            return List<String>.from(jsonResponse);
+          } else {
+            throw const FormatException(
+                "Response was not formatted as a list of strings");
+          }
+        } else {
+          throw Exception("Could not load existing gardens");
+        }
       },
       set: (data) => emit(Session(data, state.currentGarden)),
     );
