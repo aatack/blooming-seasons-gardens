@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/modals.dart';
 
-class ModalsProvider extends StatelessWidget {
+class ModalsWrapper extends StatelessWidget {
   final Widget child;
 
-  const ModalsProvider({super.key, required this.child});
+  const ModalsWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
