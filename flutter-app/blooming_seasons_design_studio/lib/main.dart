@@ -18,7 +18,11 @@ class AppWrapper extends StatelessWidget {
     return MaterialApp(
       title: "Blooming Seasons Design Studio",
       home: BlocProvider<SessionState>(
-        create: (_) => SessionState(),
+        create: (_) {
+          final state = SessionState();
+          state.loadAvailableGardens();
+          return state;
+        },
         child: const Scaffold(
           body: ModalsWrapper(
             child: App(),
