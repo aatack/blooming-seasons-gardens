@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' show Image;
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart' show Color, immutable;
 
 class GardenState extends Cubit<Garden?> {
   GardenState() : super(null);
@@ -12,6 +12,7 @@ class GardenState extends Cubit<Garden?> {
   }
 }
 
+@immutable
 class Garden {
   const Garden(this.name, this._beds, this._nursery, this.currentID);
 

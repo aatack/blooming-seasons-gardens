@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum _State {
   data,
   error,
@@ -5,27 +7,28 @@ enum _State {
   empty,
 }
 
-class Deferred<Data> {
+@immutable
+class Thunk<Data> {
   final Data? _data;
   final Object? _error;
   final _State _state;
 
-  const Deferred._(this._data, this._error, this._state);
+  const Thunk._(this._data, this._error, this._state);
 
-  factory Deferred.data(Data data) {
-    return Deferred._(data, null, _State.data);
+  factory Thunk.data(Data data) {
+    return Thunk._(data, null, _State.data);
   }
 
-  factory Deferred.error(Object error) {
-    return Deferred._(null, error, _State.error);
+  factory Thunk.error(Object error) {
+    return Thunk._(null, error, _State.error);
   }
 
-  factory Deferred.loading() {
-    return const Deferred._(null, null, _State.loading);
+  factory Thunk.loading() {
+    return const Thunk._(null, null, _State.loading);
   }
 
-  factory Deferred.empty() {
-    return const Deferred._(null, null, _State.empty);
+  factory Thunk.empty() {
+    return const Thunk._(null, null, _State.empty);
   }
 
   get isEmpty => _state == _State.empty;
@@ -51,14 +54,14 @@ class Deferred<Data> {
 
 Future<void> populate<Data>({
   required Future<Data> Function() get,
-  required void Function(Deferred<Data>) set,
+  required void Function(Thunk<Data>) set,
 }) async {
-  set(Deferred.loading());
+  set(Thunk.loading());
 
   try {
     final data = await get();
-    set(Deferred.data(data));
+    set(Thunk.data(data));
   } catch (error) {
-    set(Deferred.error(error));
+    set(Thunk.error(error));
   }
 }
