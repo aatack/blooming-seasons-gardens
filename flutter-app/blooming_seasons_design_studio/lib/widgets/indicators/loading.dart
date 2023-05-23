@@ -9,6 +9,7 @@ class LoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           const CircularProgressIndicator(),
           const SizedBox(height: 25),

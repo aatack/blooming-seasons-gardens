@@ -34,7 +34,7 @@ class SessionState extends Cubit<Session> {
     );
   }
 
-  void loadGarden(String name, ModalsState modals) {
+  void loadGarden(String name, ModalsState? modals) {
     Thunk.populate(
       get: () async {
         try {
@@ -54,8 +54,12 @@ class SessionState extends Cubit<Session> {
         result.handle(data: (data) {
           emit(Session(state.availableGardens, Thunk.data(data)));
         }, error: (error) {
-          modals.add(ErrorIndicator(message: result.toString()));
-          emit(Session(state.availableGardens, Thunk.empty()));
+          if (modals != null) {
+            modals.add(ErrorIndicator(message: error.toString()));
+            emit(Session(state.availableGardens, Thunk.empty()));
+          } else {
+            emit(Session(state.availableGardens, Thunk.error(error)));
+          }
         }, loading: () {
           emit(Session(state.availableGardens, Thunk.loading()));
         });

@@ -1,9 +1,9 @@
+import 'package:blooming_seasons_design_studio/widgets/indicators/error.dart';
+import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/garden.dart';
 import '../models/session.dart';
-import 'screens/editing.dart';
 import 'screens/picking.dart';
 
 class App extends StatelessWidget {
@@ -16,7 +16,14 @@ class App extends StatelessWidget {
         if (session.currentGarden.isEmpty) {
           return const PickGarden();
         } else {
-          return EditGarden(garden: Garden.blank("Placeholder"));
+          return session.currentGarden.handle(
+            data: (data) => Text(data.name),
+            error: (error) => ErrorIndicator(message: error.toString()),
+            loading: () => const Center(
+              child: LoadingIndicator(message: "Loading garden"),
+            ),
+            empty: () => const PickGarden(),
+          );
         }
       },
     );
