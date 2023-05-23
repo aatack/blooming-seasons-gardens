@@ -1,16 +1,7 @@
 import 'dart:collection';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' show Image;
 import 'package:flutter/material.dart' show Color, immutable;
-
-class GardenState extends Cubit<Garden?> {
-  GardenState() : super(null);
-
-  void initialise(String name) {
-    emit(Garden.blank(name));
-  }
-}
 
 @immutable
 class Garden {

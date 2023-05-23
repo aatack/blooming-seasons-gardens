@@ -16,6 +16,10 @@ class SessionState extends Cubit<Session> {
       set: (data) => emit(Session(data, state.currentGarden)),
     );
   }
+
+  void loadAvailableGarden(String name) {}
+
+  void createAndLoadNewGarden(String name) {}
 }
 
 @immutable
@@ -25,5 +29,3 @@ class Session {
 
   const Session(this.availableGardens, this.currentGarden);
 }
-
-final x = Session(Thunk.empty(), Thunk.empty());

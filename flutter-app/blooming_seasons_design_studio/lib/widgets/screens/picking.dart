@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import '../../models/garden.dart' show GardenState;
-import '../../models/loading.dart' show LoadingState;
 import '../../models/modals.dart';
+import '../../models/session.dart';
 import '../providers/loading.dart';
 
 class PickGarden extends StatelessWidget {
@@ -68,7 +67,9 @@ class _NewGardenState extends State<NewGarden> {
           child: ElevatedButton(
             onPressed: _newGardenName.isNotEmpty
                 ? () {
-                    context.read<GardenState>().initialise(_newGardenName);
+                    context
+                        .read<SessionState>()
+                        .createAndLoadNewGarden(_newGardenName);
                   }
                 : null,
             child: Text("Create"),
@@ -185,12 +186,10 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
           });
         },
         onTap: () {
-          context.read<LoadingState>().setLoading("Loading ${widget.name}...");
           loadGarden(
             widget.name,
-            context.read<GardenState>(),
+            context.read<SessionState>(),
             context.read<ModalsState>(),
-            context.read<LoadingState>(),
           );
         },
         child: AnimatedContainer(
@@ -251,22 +250,19 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
     );
   }
 
-  Future<void> loadGarden(String name, GardenState garden, ModalsState modals,
-      LoadingState loading) async {
+  Future<void> loadGarden(
+      String name, SessionState session, ModalsState modals) async {
     final escapedName = name; // TODO: escape the name properly
     try {
       final response = await http
           .get(Uri.parse("http://localhost:3000/gardens/get/$escapedName"));
 
       if (response.statusCode == 200) {
-        loading.setFinished();
-        garden.initialise(response.body);
+        // garden.initialise(response.body);
       } else {
-        loading.setFinished();
         modals.add(Text("Error from server: ${response.body}"));
       }
     } catch (e) {
-      loading.setFinished();
       modals.add(Text("Error from client: $e"));
     }
   }
