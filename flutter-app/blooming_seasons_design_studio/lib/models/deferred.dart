@@ -6,11 +6,11 @@ enum _State {
 }
 
 class Deferred<Data> {
-  Data? _data;
-  Object? _error;
-  _State _state;
+  final Data? _data;
+  final Object? _error;
+  final _State _state;
 
-  Deferred._(this._data, this._error, this._state);
+  const Deferred._(this._data, this._error, this._state);
 
   factory Deferred.data(Data data) {
     return Deferred._(data, null, _State.data);
@@ -21,12 +21,14 @@ class Deferred<Data> {
   }
 
   factory Deferred.loading() {
-    return Deferred._(null, null, _State.loading);
+    return const Deferred._(null, null, _State.loading);
   }
 
   factory Deferred.empty() {
-    return Deferred._(null, null, _State.empty);
+    return const Deferred._(null, null, _State.empty);
   }
+
+  get isEmpty => _state == _State.empty;
 
   Result handle<Result>({
     required Result Function(Data) data,
