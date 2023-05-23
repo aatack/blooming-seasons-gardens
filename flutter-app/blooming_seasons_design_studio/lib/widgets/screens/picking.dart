@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import '../../models/modals.dart';
 import '../../models/session.dart';
+import '../../models/thunk.dart';
 import '../providers/loading.dart';
 
 class PickGarden extends StatelessWidget {
@@ -22,10 +23,13 @@ class PickGarden extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               NewGarden(),
               SizedBox(height: 25),
-              LoadGarden(),
+              BlocSelector<SessionState, Session, Thunk<List<String>>>(
+                selector: (state) => state.availableGardens,
+                builder: (context, gardens) => LoadGarden(gardens: gardens),
+              ),
             ],
           ),
         ),
@@ -80,55 +84,35 @@ class _NewGardenState extends State<NewGarden> {
   }
 }
 
-class LoadGarden extends StatefulWidget {
-  // TODO: move this state into the `GardenState`, and rename it to `AppState`
+class LoadGarden extends StatelessWidget {
+  final Thunk<List<String>> gardens;
 
-  const LoadGarden({super.key});
-
-  @override
-  State<LoadGarden> createState() => _LoadGardenState();
-}
-
-class _LoadGardenState extends State<LoadGarden> {
-  List<String>? _gardens;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (_gardens == null) {
-      _refreshGardens().then((data) {
-        setState(() {
-          _gardens = data;
-          _error = null;
-        });
-      }).catchError((error) {
-        setState(() {
-          _gardens = null;
-          _error = "Failed to load gardens: ${error.toString()}";
-        });
-      });
-    }
-  }
+  const LoadGarden({super.key, required this.gardens});
 
   @override
   Widget build(BuildContext context) {
-    if (_gardens != null) {
-      return SizedBox(
+    return gardens.handle(
+      data: (data) => SizedBox(
         height: 250,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children:
-                _gardens!.map((name) => LoadGardenItem(name: name)).toList(),
+            children: data.map((name) => LoadGardenItem(name: name)).toList(),
           ),
         ),
-      );
-    } else {
-      return Text(_error.toString());
-    }
+      ),
+      error: (error) => Text(error.toString()),
+      loading: () => CircularProgressIndicator(),
+      empty: () => Text(
+        "Tried to render empty thunk",
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 
   Future<List<String>> _refreshGardens() async {
