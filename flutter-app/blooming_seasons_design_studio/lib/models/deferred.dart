@@ -1,24 +1,31 @@
+enum _State {
+  data,
+  error,
+  loading,
+  empty,
+}
+
 class Deferred<Data> {
   Data? _data;
   Object? _error;
-  bool _loading = false;
+  _State _state;
 
-  Deferred._(this._data, this._error, this._loading);
+  Deferred._(this._data, this._error, this._state);
 
   factory Deferred.data(Data data) {
-    return Deferred._(data, null, false);
+    return Deferred._(data, null, _State.data);
   }
 
   factory Deferred.error(Object error) {
-    return Deferred._(null, error, false);
+    return Deferred._(null, error, _State.error);
   }
 
   factory Deferred.loading() {
-    return Deferred._(null, null, true);
+    return Deferred._(null, null, _State.loading);
   }
 
   factory Deferred.empty() {
-    return Deferred._(null, null, false);
+    return Deferred._(null, null, _State.empty);
   }
 
   Result handle<Result>({
@@ -27,14 +34,15 @@ class Deferred<Data> {
     required Result Function() loading,
     required Result Function() empty,
   }) {
-    if (_data != null) {
-      return data(_data!);
-    } else if (_error != null) {
-      return error(_error!);
-    } else if (_loading) {
-      return loading();
-    } else {
-      return empty();
+    switch (_state) {
+      case _State.data:
+        return data(_data!);
+      case _State.error:
+        return error(_error!);
+      case _State.loading:
+        return loading();
+      case _State.empty:
+        return empty();
     }
   }
 }
