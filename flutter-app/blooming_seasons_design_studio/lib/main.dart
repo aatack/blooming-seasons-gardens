@@ -1,10 +1,9 @@
-import 'package:blooming_seasons_design_studio/widgets/providers/modals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'models/garden.dart' show GardenState;
 import 'models/session.dart';
 import 'widgets/app.dart';
+import 'widgets/wrappers/modals.dart';
 
 void main() {
   runApp(const AppWrapper());

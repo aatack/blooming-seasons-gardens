@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:blooming_seasons_design_studio/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -9,29 +10,26 @@ import 'package:http/http.dart' as http;
 import '../../models/modals.dart';
 import '../../models/session.dart';
 import '../../models/thunk.dart';
-import '../providers/loading.dart';
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return LoadingProvider(
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 400),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NewGarden(),
-              SizedBox(height: 25),
-              BlocSelector<SessionState, Session, Thunk<List<String>>>(
-                selector: (state) => state.availableGardens,
-                builder: (context, gardens) => LoadGarden(gardens: gardens),
-              ),
-            ],
-          ),
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 400),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NewGarden(),
+            SizedBox(height: 25),
+            BlocSelector<SessionState, Session, Thunk<List<String>>>(
+              selector: (state) => state.availableGardens,
+              builder: (context, gardens) => LoadGarden(gardens: gardens),
+            ),
+          ],
         ),
       ),
     );
@@ -91,25 +89,28 @@ class LoadGarden extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return gardens.handle(
-      data: (data) => SizedBox(
-        height: 250,
-        child: SingleChildScrollView(
+    return SizedBox(
+      height: 250,
+      child: gardens.handle(
+        data: (data) => SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: data.map((name) => LoadGardenItem(name: name)).toList(),
           ),
         ),
-      ),
-      error: (error) => Text(error.toString()),
-      loading: () => CircularProgressIndicator(),
-      empty: () => Text(
-        "Tried to render empty thunk",
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+        error: (error) => Text(error.toString()),
+        loading: () => Align(
+          alignment: Alignment.topCenter,
+          child: LoadingIndicator(message: "Loading gardens"),
+        ),
+        empty: () => Text(
+          "Tried to render empty thunk",
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
