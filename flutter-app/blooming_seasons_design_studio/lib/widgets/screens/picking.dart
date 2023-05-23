@@ -219,10 +219,11 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
       if (response.statusCode == 200) {
         // garden.initialise(response.body);
       } else {
-        modals.add(Text("Error from server: ${response.body}"));
+        modals.add(
+            ErrorIndicator(message: "Error from server: ${response.body}"));
       }
     } catch (e) {
-      modals.add(Text("Error from client: $e"));
+      modals.add(ErrorIndicator(message: "Error from client: $e"));
     }
   }
 }
