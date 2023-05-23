@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
-
 import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,14 +102,6 @@ class LoadGarden extends StatelessWidget {
         loading: () => Align(
           alignment: Alignment.topCenter,
           child: LoadingIndicator(message: "Loading gardens"),
-        ),
-        empty: () => Text(
-          "Tried to render empty thunk",
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
     );

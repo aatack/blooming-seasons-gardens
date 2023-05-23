@@ -37,7 +37,7 @@ class Thunk<Data> {
     required Result Function(Data) data,
     required Result Function(Object) error,
     required Result Function() loading,
-    required Result Function() empty,
+    Result Function()? empty,
   }) {
     switch (_state) {
       case _State.data:
@@ -47,7 +47,11 @@ class Thunk<Data> {
       case _State.loading:
         return loading();
       case _State.empty:
-        return empty();
+        if (empty != null) {
+          return empty();
+        } else {
+          return error("Tried to handle an empty thunk");
+        }
     }
   }
 

@@ -18,7 +18,7 @@ class SessionState extends Cubit<Session> {
 
         if (response.statusCode == 200) {
           final jsonResponse = jsonDecode(response.body);
-          if (jsonResponse is List<dynamic> && false) {
+          if (jsonResponse is List<dynamic>) {
             return List<String>.from(jsonResponse);
           } else {
             throw const FormatException(
