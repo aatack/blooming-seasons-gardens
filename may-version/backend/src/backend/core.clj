@@ -7,9 +7,6 @@
             [clojure.java.io :as io]
             [cheshire.core :refer [generate-string]]))
 
-;; List of characters that are reserved in HTTP URIs or Windows or Linux file paths
-(def reserved-characters ":/?&=<>\"/\\|*.\0 ")
-
 (def database "database/gardens/")
 
 (defn list-gardens []
