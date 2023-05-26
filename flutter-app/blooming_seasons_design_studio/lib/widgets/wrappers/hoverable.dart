@@ -47,3 +47,28 @@ class _HoverableState extends State<Hoverable> {
     );
   }
 }
+
+class HoverableIcon extends StatelessWidget {
+  final IconData icon;
+  final double height;
+  final void Function() onTap;
+
+  const HoverableIcon({
+    super.key,
+    required this.icon,
+    required this.height,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Hoverable(
+      builder: (context, hovered, clicked) => Icon(
+        icon,
+        color: (hovered && !clicked) ? Colors.grey[700] : Colors.white,
+        size: height,
+      ),
+      onTap: onTap,
+    );
+  }
+}

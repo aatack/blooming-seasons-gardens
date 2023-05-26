@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
+import 'package:blooming_seasons_design_studio/widgets/wrappers/hoverable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -173,7 +174,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        _HoverableWidget(
+                        HoverableIcon(
                           icon: Icons.edit,
                           height: height,
                           onTap: () {
@@ -183,7 +184,7 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                           },
                         ),
                         const SizedBox(width: 8),
-                        _HoverableWidget(
+                        HoverableIcon(
                           icon: Icons.delete,
                           height: height,
                           onTap: () {
@@ -199,59 +200,6 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _HoverableWidget extends StatefulWidget {
-  const _HoverableWidget(
-      {required this.icon, required this.height, required this.onTap});
-
-  final IconData icon;
-  final double height;
-  final void Function() onTap;
-
-  @override
-  State<_HoverableWidget> createState() => _HoverableWidgetState();
-}
-
-class _HoverableWidgetState extends State<_HoverableWidget> {
-  bool _hovered = false;
-  bool _clicked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        setState(() {
-          _clicked = true;
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          _clicked = false;
-        });
-      },
-      onTap: () {
-        widget.onTap();
-      },
-      child: MouseRegion(
-        onEnter: (_) {
-          setState(() {
-            _hovered = true;
-          });
-        },
-        onExit: (_) {
-          setState(() {
-            _hovered = false;
-          });
-        },
-        child: Icon(
-          widget.icon,
-          color: (_hovered && !_clicked) ? Colors.grey[700] : Colors.white,
-          size: widget.height,
         ),
       ),
     );
