@@ -116,8 +116,6 @@ class LoadGardenItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double height = 20;
-
     return Hoverable(
       builder: (context, hovered, clicked) => Container(
         padding: const EdgeInsets.only(bottom: 5),
