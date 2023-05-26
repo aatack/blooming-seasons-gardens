@@ -106,55 +106,29 @@ class LoadGarden extends StatelessWidget {
   }
 }
 
-class LoadGardenItem extends StatefulWidget {
+class LoadGardenItem extends StatelessWidget {
+  // TODO: determine this dynamically from the text element
+  final double height = 20;
+
   final String name;
 
   const LoadGardenItem({super.key, required this.name});
 
   @override
-  State<LoadGardenItem> createState() => _LoadGardenItemState();
-}
-
-class _LoadGardenItemState extends State<LoadGardenItem> {
-  bool _hovered = false;
-  bool _clicked = false;
-
-  @override
   Widget build(BuildContext context) {
-    // TODO: determine this dynamically from the text element
     const double height = 20;
 
-    return Container(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: InkWell(
-        onHover: (hovered) {
-          setState(() {
-            _hovered = hovered;
-          });
-        },
-        onTapDown: (_) {
-          setState(() {
-            _clicked = true;
-          });
-        },
-        onTapUp: (_) {
-          setState(() {
-            _clicked = false;
-          });
-        },
-        onTap: () {
-          context
-              .read<SessionState>()
-              .loadGarden(widget.name, context.read<ModalsState>());
-        },
+    return Hoverable(
+      builder: (context, hovered, clicked) => Container(
+        padding: const EdgeInsets.only(bottom: 5),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 20),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: _clicked
+            color: clicked
                 ? Colors.blue
-                : (_hovered ? Colors.blue[300] : Colors.lightBlue[50]),
+                : (hovered ? Colors.blue[300] : Colors.lightBlue[50]),
           ),
           child: SizedBox(
             height: height,
@@ -163,44 +137,48 @@ class _LoadGardenItemState extends State<LoadGardenItem> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    widget.name,
+                    name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (_hovered)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        HoverableIcon(
-                          icon: Icons.edit,
-                          height: height,
-                          onTap: () {
-                            context
-                                .read<ModalsState>()
-                                .add(Text("Edited ${widget.name}"));
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        HoverableIcon(
-                          icon: Icons.delete,
-                          height: height,
-                          onTap: () {
-                            context
-                                .read<ModalsState>()
-                                .add(Text("Deleted ${widget.name}"));
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
-                  ),
+                if (hovered) _overlayedIcons(context),
               ],
             ),
           ),
         ),
+      ),
+      onTap: () {
+        context
+            .read<SessionState>()
+            .loadGarden(name, context.read<ModalsState>());
+      },
+    );
+  }
+
+  Widget _overlayedIcons(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          HoverableIcon(
+            icon: Icons.edit,
+            height: height,
+            onTap: () {
+              context.read<ModalsState>().add(Text("Edited $name"));
+            },
+          ),
+          const SizedBox(width: 8),
+          HoverableIcon(
+            icon: Icons.delete,
+            height: height,
+            onTap: () {
+              context.read<ModalsState>().add(Text("Deleted $name"));
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
     );
   }
