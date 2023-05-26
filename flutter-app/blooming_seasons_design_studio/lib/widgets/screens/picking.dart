@@ -1,5 +1,3 @@
-import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
-import 'package:blooming_seasons_design_studio/widgets/wrappers/hoverable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +5,8 @@ import '../../models/modals.dart';
 import '../../models/session.dart';
 import '../../models/thunk.dart';
 import '../indicators/error.dart';
+import '../indicators/loading.dart';
+import '../wrappers/hoverable.dart';
 
 class PickGarden extends StatelessWidget {
   const PickGarden({super.key});

@@ -1,9 +1,9 @@
-import 'package:blooming_seasons_design_studio/widgets/indicators/error.dart';
-import 'package:blooming_seasons_design_studio/widgets/indicators/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/session.dart';
+import 'indicators/error.dart';
+import 'indicators/loading.dart';
 import 'screens/picking.dart';
 
 class App extends StatelessWidget {
