@@ -68,8 +68,7 @@
       :else (bad-request (str "not-found: " (apply vector segments))))))
 
 (def handler (->
-              routes
-              wrap-reload
+              (wrap-reload #'routes)
               (wrap-cors :access-control-allow-origin #".*"
                          :access-control-allow-methods [:get :put :post :delete])))
 
