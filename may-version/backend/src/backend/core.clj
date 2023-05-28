@@ -1,11 +1,12 @@
 (ns backend.core
-  (:require [clojure.string :refer [split]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.reload :refer [wrap-reload]]
-            [ring.middleware.cors :refer [wrap-cors]]
-            [ring.util.response :refer [bad-request]]
+  (:require [backend.file-names :refer [escape-file-name unescape-file-name]]
+            [cheshire.core :refer [generate-string]]
             [clojure.java.io :as io]
-            [cheshire.core :refer [generate-string]]))
+            [clojure.string :refer [split]]
+            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.cors :refer [wrap-cors]]
+            [ring.middleware.reload :refer [wrap-reload]]
+            [ring.util.response :refer [bad-request]]))
 
 (def database "database/gardens/")
 
@@ -18,23 +19,24 @@
               (map #(.getName %))
               (map #(drop-last 5 %))
               (map #(apply str %))
+              (map unescape-file-name)
               (apply vector)
               generate-string)})
 
 (defn get-garden [name]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body (slurp (str database name ".json"))})
+   :body (slurp (str database (escape-file-name name) ".json"))})
 
 (defn save-garden [name content]
   (try
-    (spit (str database name ".json") content)
+    (spit (str database (escape-file-name name) ".json") content)
     {:status 200}
     (catch Exception _
       {:status 500})))
 
 (defn delete-garden [name]
-  (io/delete-file (str database name ".json"))
+  (io/delete-file (str database (escape-file-name name) ".json"))
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body (str "Deleted " name)})
