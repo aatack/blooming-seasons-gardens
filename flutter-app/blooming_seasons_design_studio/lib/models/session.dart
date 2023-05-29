@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:blooming_seasons_design_studio/requests.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,24 @@ class SessionState extends Cubit<Session> {
   }
 
   void createAndLoadNewGarden(String name, ModalsState modals) {
-    throw "Not implemented";
+    Thunk.populate(
+      get: () async {
+        await saveGarden(Garden.blank(name), modals);
+        loadGarden(name, modals);
+      },
+      set: (result) {},
+    );
+  }
+
+  Future<void> saveGarden(Garden garden, ModalsState modals) async {
+    try {
+      queryBackend(
+        "/garden/save",
+        body: {"name": garden.name, "content": jsonEncode(garden.toJSON())},
+      );
+    } catch (error) {
+      modals.add(const ErrorIndicator(message: "Could not save garden"));
+    }
   }
 }
 

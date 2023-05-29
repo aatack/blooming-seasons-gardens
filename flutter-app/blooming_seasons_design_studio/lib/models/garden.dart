@@ -26,6 +26,10 @@ class Garden {
   Garden incrementID() {
     return Garden(name, _beds, _nursery, currentID + 1);
   }
+
+  dynamic toJSON() {
+    return "Garden.toJSON not yet implemented";
+  }
 }
 
 class Instance<E> {
