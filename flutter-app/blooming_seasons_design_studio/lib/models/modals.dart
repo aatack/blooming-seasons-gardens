@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/indicators/confirm.dart';
+
 class ModalsState extends Cubit<List<Widget>> {
   ModalsState() : super([]);
 
@@ -18,5 +20,16 @@ class ModalsState extends Cubit<List<Widget>> {
 
   void clear() {
     emit([]);
+  }
+
+  void confirm({required String message, required void Function() action}) {
+    add(Confirm(
+      message: message,
+      onCancel: () => pop(),
+      onConfirm: () {
+        pop();
+        action();
+      },
+    ));
   }
 }
