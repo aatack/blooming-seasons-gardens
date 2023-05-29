@@ -23,5 +23,22 @@ dynamic serialiseInstance(
   Map<int, dynamic> templates,
   Map<Image, int> images,
 ) {
-  throw UnimplementedError();
+  final dynamic result = {
+    "id": instance.id,
+    "x": instance.x,
+    "y": instance.y,
+  };
+
+  if (instance.template != null) {
+    if (!templates.containsKey(instance.template!)) {
+      templates[instance.template!] =
+          instance.element.serialise(templates, images);
+    }
+
+    result["template"] = instance.template!;
+  } else {
+    result["element"] = instance.element.serialise(templates, images);
+  }
+
+  return result;
 }
