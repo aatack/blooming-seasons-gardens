@@ -5,42 +5,53 @@ import 'package:flutter/material.dart' show Color, immutable;
 
 @immutable
 class Garden {
-  const Garden(this.name, this._beds, this._nursery, this.currentID);
+  const Garden(this.name, this._beds, this._templates, this.availableID);
 
-  Garden.blank(String blankName)
-      : name = blankName,
-        _beds = [],
-        _nursery = [],
-        currentID = 1;
+  factory Garden.blank(String name) {
+    return Garden(name, const [], const {}, 1);
+  }
 
   final String name;
 
   final List<Instance<Bed>> _beds;
   UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
 
-  final List<Template> _nursery;
-  UnmodifiableListView<Template> get nursery => UnmodifiableListView(_nursery);
+  // Maps identifiers to a template associated with that identifier
+  final Map<int, Template> _templates;
+  UnmodifiableMapView<int, Template> get nursery =>
+      UnmodifiableMapView(_templates);
 
-  final int currentID;
+  // The next available identifier for elements in the garden
+  final int availableID;
 
-  Garden incrementID() {
-    return Garden(name, _beds, _nursery, currentID + 1);
+  /// Return a JSON-compatible representation of the garden.
+  dynamic serialise() {
+    return "Garden.serialise not yet implemented";
   }
 
-  dynamic toJSON() {
-    return "Garden.toJSON not yet implemented";
-  }
-
-  factory Garden.fromJSON(dynamic garden) {
+  /// Produce a garden object from its JSON representation.
+  ///
+  /// The format of the passed object should mirror that of the return format
+  /// of the `serialise` function.
+  factory Garden.deserialise(dynamic garden) {
     return Garden.blank(garden.toString());
   }
 }
 
-class Instance<E> {
+@immutable
+class Template<Element> {
+  const Template(this.id, this.element);
+
+  final int id;
+  final Element element;
+}
+
+@immutable
+class Instance<Element> {
   const Instance(this.id, this.x, this.y, this.element);
 
-  Instance.blank(Garden garden, E newElement)
-      : id = garden.currentID,
+  Instance.blank(Garden garden, Element newElement)
+      : id = garden.availableID,
         x = 0.0,
         y = 0.0,
         element = newElement;
@@ -48,16 +59,10 @@ class Instance<E> {
   final int id;
   final double x;
   final double y;
-  final E element;
+  final Element element;
 }
 
-class Template {
-  const Template(this.id, this.plant);
-
-  final int id;
-  final Plant plant;
-}
-
+@immutable
 class Bed {
   const Bed(this._elements);
 
@@ -66,6 +71,7 @@ class Bed {
       UnmodifiableListView(_elements);
 }
 
+@immutable
 class Plant {
   const Plant(this.name, this.size, this.plantType, this.border, this.image);
 
@@ -80,6 +86,7 @@ class Plant {
 
 enum PlantType { border, image }
 
+@immutable
 class PlantBorder {
   const PlantBorder(this.thickness, this.colour);
 
@@ -87,6 +94,7 @@ class PlantBorder {
   final Color colour;
 }
 
+@immutable
 class PlantImage {
   const PlantImage(this.image, this.x, this.y, this.scale);
 
@@ -96,6 +104,7 @@ class PlantImage {
   final double scale;
 }
 
+@immutable
 class Label {
   const Label(this.text, this.size);
 
@@ -103,6 +112,7 @@ class Label {
   final double size;
 }
 
+@immutable
 class Arrow {
   const Arrow(this.x, this.y);
 

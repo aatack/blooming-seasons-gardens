@@ -58,10 +58,10 @@ class SessionState extends Cubit<Session> {
       get: () async {
         await queryBackend(
           "/garden/save",
-          body: {"name": name, "content": Garden.blank(name).toJSON()},
+          body: {"name": name, "content": Garden.blank(name).serialise()},
         );
         final garden = await queryBackend("/garden/get", body: {"name": name});
-        return Garden.fromJSON(garden);
+        return Garden.deserialise(garden);
       },
       set: (result) {
         result.handle(data: (data) {
