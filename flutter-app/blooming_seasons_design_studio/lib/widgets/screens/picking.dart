@@ -52,7 +52,7 @@ class _NewGardenState extends State<_NewGarden> {
           constraints: const BoxConstraints(maxWidth: 300),
           child: TextField(
             decoration: const InputDecoration(
-              labelText: 'New garden',
+              labelText: "New garden",
             ),
             onChanged: (value) {
               setState(() {
@@ -165,11 +165,9 @@ class _LoadGardenItem extends StatelessWidget {
             icon: Icons.edit,
             height: height,
             onTap: () {
-              context.read<SessionState>().renameGarden(
-                    name,
-                    "A renamed garden",
-                    context.read<ModalsState>(),
-                  );
+              final modals = context.read<ModalsState>();
+
+              modals.add(_RenameGarden(name));
             },
           ),
           const SizedBox(width: 8),
@@ -189,6 +187,79 @@ class _LoadGardenItem extends StatelessWidget {
             },
           ),
           const SizedBox(width: 8),
+        ],
+      ),
+    );
+  }
+}
+
+class _RenameGarden extends StatefulWidget {
+  final String oldName;
+
+  const _RenameGarden(this.oldName);
+
+  @override
+  State<_RenameGarden> createState() => _RenameGardenState();
+}
+
+class _RenameGardenState extends State<_RenameGarden> {
+  String _newName = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    _newName = widget.oldName;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: "New garden name",
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _newName = value;
+                });
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  context.read<ModalsState>().pop();
+                },
+                child: const Text("Cancel"),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: (_newName.isNotEmpty && (_newName != widget.oldName))
+                    ? () {
+                        final modals = context.read<ModalsState>();
+
+                        modals.pop();
+                        context.read<SessionState>().renameGarden(
+                              widget.oldName,
+                              _newName,
+                              modals,
+                            );
+                      }
+                    : null,
+                child: const Text("Confirm"),
+              ),
+            ],
+          ),
         ],
       ),
     );
