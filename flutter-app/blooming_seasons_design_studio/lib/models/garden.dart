@@ -30,6 +30,10 @@ class Garden {
   dynamic toJSON() {
     return "Garden.toJSON not yet implemented";
   }
+
+  factory Garden.fromJSON(dynamic garden) {
+    return Garden.blank(garden.toString());
+  }
 }
 
 class Instance<E> {

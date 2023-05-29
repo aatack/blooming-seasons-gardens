@@ -35,13 +35,13 @@ class SessionState extends Cubit<Session> {
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, Thunk.data(data)));
+          emit(Session(state.availableGardens, result));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
             emit(Session(state.availableGardens, Thunk.empty()));
           } else {
-            emit(Session(state.availableGardens, Thunk.error(error)));
+            emit(Session(state.availableGardens, result));
           }
         }, loading: () {
           // TODO: potentially show the loading indicator in a modal, such
@@ -53,25 +53,31 @@ class SessionState extends Cubit<Session> {
     );
   }
 
-  void createAndLoadNewGarden(String name, ModalsState modals) {
+  void createGarden(String name, ModalsState? modals) {
     Thunk.populate(
       get: () async {
-        await saveGarden(Garden.blank(name), modals);
-        loadGarden(name, modals);
+        await queryBackend(
+          "/garden/save",
+          body: {"name": name, "content": Garden.blank(name).toJSON()},
+        );
+        final garden = await queryBackend("/garden/get", body: {"name": name});
+        return Garden.fromJSON(garden);
       },
-      set: (result) {},
+      set: (result) {
+        result.handle(data: (data) {
+          emit(Session(state.availableGardens, result));
+        }, error: (error) {
+          if (modals != null) {
+            modals.add(ErrorIndicator(message: error.toString()));
+            emit(Session(state.availableGardens, Thunk.empty()));
+          } else {
+            emit(Session(state.availableGardens, result));
+          }
+        }, loading: () {
+          emit(Session(state.availableGardens, Thunk.loading()));
+        });
+      },
     );
-  }
-
-  Future<void> saveGarden(Garden garden, ModalsState modals) async {
-    try {
-      queryBackend(
-        "/garden/save",
-        body: {"name": garden.name, "content": jsonEncode(garden.toJSON())},
-      );
-    } catch (error) {
-      modals.add(const ErrorIndicator(message: "Could not save garden"));
-    }
   }
 }
 
