@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:blooming_seasons_design_studio/requests.dart';
@@ -17,7 +18,7 @@ class SessionState extends Cubit<Session> {
       get: () async {
         final gardens = await queryBackend("/garden/list");
         if (gardens is List<dynamic>) {
-          return List<String>.from(gardens);
+          return UnmodifiableListView(List<String>.from(gardens));
         } else {
           throw "Response was not formatted as a list of strings";
         }
@@ -79,11 +80,40 @@ class SessionState extends Cubit<Session> {
       },
     );
   }
+
+  void deleteGarden(String name, ModalsState modals) {
+    final initialState = state.availableGardens;
+
+    Thunk.populate(
+      get: () async {
+        await queryBackend("/garden/delete", body: {"name": name});
+      },
+      set: (result) {
+        result.handle(
+          data: (data) {},
+          error: (error) {
+            modals
+                .add(ErrorIndicator(message: "Failed to delete garden: $name"));
+            emit(Session(initialState, state.currentGarden));
+          },
+          loading: () {
+            emit(Session(
+              state.availableGardens.map(
+                (gardens) => UnmodifiableListView(
+                    gardens.where((element) => element != name)),
+              ),
+              state.currentGarden,
+            ));
+          },
+        );
+      },
+    );
+  }
 }
 
 @immutable
 class Session {
-  final Thunk<List<String>> availableGardens;
+  final Thunk<UnmodifiableListView<String>> availableGardens;
   final Thunk<Garden> currentGarden;
 
   const Session(this.availableGardens, this.currentGarden);

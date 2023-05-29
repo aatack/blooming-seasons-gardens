@@ -56,6 +56,15 @@ class Thunk<Data> {
     }
   }
 
+  Thunk<Result> map<Result>(Result Function(Data) function) {
+    return handle(
+      data: (data) => Thunk.data(function(data)),
+      error: (error) => Thunk.error(error),
+      loading: () => Thunk.loading(),
+      empty: () => Thunk.empty(),
+    );
+  }
+
   static Future<void> populate<Data>({
     required Future<Data> Function() get,
     required void Function(Thunk<Data>) set,
