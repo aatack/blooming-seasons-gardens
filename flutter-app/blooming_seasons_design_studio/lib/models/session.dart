@@ -73,7 +73,7 @@ class SessionState extends Cubit<Session> {
 
   void createAndLoadNewGarden(String name, ModalsState modals) async {
     try {
-      final res = await queryBackend("/garden/get", null);
+      final res = await queryBackend("/garden/get", body: {"name": "a"});
       print("Success");
       print(res);
     } catch (error) {
