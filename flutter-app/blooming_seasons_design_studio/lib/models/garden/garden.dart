@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
@@ -58,9 +59,17 @@ Garden deserialiseGarden(dynamic garden) {
 }
 
 dynamic _serialiseImage(Image image) {
-  throw UnimplementedError();
+  return {
+    "data": base64.encode(image.getBytes()),
+    "width": image.width,
+    "height": image.height,
+  };
 }
 
 Image _deserialiseImage(dynamic image) {
-  throw UnimplementedError();
+  return Image.fromBytes(
+    width: image["width"],
+    height: image["height"],
+    bytes: base64.decode(image["data"]).buffer,
+  );
 }
