@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:blooming_seasons_design_studio/requests.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
