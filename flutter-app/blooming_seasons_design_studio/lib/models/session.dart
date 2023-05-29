@@ -70,11 +70,19 @@ class SessionState extends Cubit<Session> {
     );
   }
 
-  void createAndLoadNewGarden(String name, ModalsState modals) {
+  void createAndLoadNewGarden(String name, ModalsState modals) async {
     http
-        .post(Uri.parse("http://localhost:3000/test"),
-            body: jsonEncode({"name": name}))
-        .then((value) => modals.add(Text(value.body.toString())));
+        .post(
+      Uri.parse("http://localhost:3000/garden/rename"),
+      body: jsonEncode({
+        "old-name": "b",
+        "new-name": name,
+      }),
+    )
+        .then((value) {
+      print(value.statusCode);
+      print(value.body);
+    });
   }
 }
 
