@@ -1,6 +1,7 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
+import 'package:image/image.dart' show Image;
+import 'package:flutter/material.dart' show immutable;
 
 import 'instance.dart';
 
@@ -11,12 +12,12 @@ class Bed implements GardenElement {
       UnmodifiableListView(_elements);
 
   const Bed(this._elements);
-}
 
-dynamic serialiseBed(
-  Bed bed,
-  Map<int, dynamic> templates,
-  Map<Image, int> images,
-) {
-  throw UnimplementedError();
+  @override
+  dynamic serialise(
+    Map<int, dynamic> templates,
+    Map<Image, int> images,
+  ) {
+    throw UnimplementedError();
+  }
 }

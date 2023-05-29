@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show immutable;
 
+import 'package:image/image.dart' show Image;
 import 'instance.dart';
 
 @immutable
@@ -8,4 +9,12 @@ class Label implements BedElement {
   final double size;
 
   const Label(this.text, this.size);
+
+  @override
+  dynamic serialise(
+    Map<int, dynamic> templates,
+    Map<Image, int> images,
+  ) {
+    throw UnimplementedError();
+  }
 }

@@ -14,6 +14,14 @@ class Plant implements BedElement {
   final PlantImage? image;
 
   const Plant(this.name, this.size, this.plantType, this.border, this.image);
+
+  @override
+  dynamic serialise(
+    Map<int, dynamic> templates,
+    Map<Image, int> images,
+  ) {
+    throw UnimplementedError();
+  }
 }
 
 enum PlantType { border, image }

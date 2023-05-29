@@ -1,6 +1,7 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart' show immutable, Image;
+import 'package:flutter/material.dart' show immutable;
+import 'package:image/image.dart' show Image;
 
 import 'bed.dart';
 import 'instance.dart';
