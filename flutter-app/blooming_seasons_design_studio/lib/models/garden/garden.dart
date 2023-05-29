@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart' show immutable;
+import 'package:flutter/material.dart' show immutable, Image;
 
 import 'bed.dart';
 import 'instance.dart';
@@ -30,20 +30,21 @@ class Garden {
 /// Return a JSON-compatible representation of the garden.
 dynamic serialiseGarden(Garden garden) {
   final Map<int, dynamic> templates = {};
+  final Map<Image, int> images = {};
 
-  final List<dynamic> beds =
-      garden.beds.map((bed) => serialiseInstance(bed, templates)).toList();
+  final List<dynamic> beds = garden.beds
+      .map((bed) => serialiseInstance(bed, templates, images))
+      .toList();
 
   return {
     "name": garden.name,
     "beds": beds,
-    "templates": UnmodifiableListView(
-      templates
-          .map((id, template) => MapEntry(id, {...template, "id": id}))
-          .values
-          .toList(),
-    ),
+    "templates": templates
+        .map((id, template) => MapEntry(id, {...template, "id": id}))
+        .values
+        .toList(),
     "availableID": garden.availableID,
+    "images": images.map((image, id) => MapEntry(id, _serialiseImage(image))),
   };
 }
 
@@ -53,4 +54,12 @@ dynamic serialiseGarden(Garden garden) {
 /// of the `serialise` function.
 Garden deserialiseGarden(dynamic garden) {
   return Garden.blank(garden.toString());
+}
+
+dynamic _serialiseImage(Image image) {
+  throw UnimplementedError();
+}
+
+Image _deserialiseImage(dynamic image) {
+  throw UnimplementedError();
 }

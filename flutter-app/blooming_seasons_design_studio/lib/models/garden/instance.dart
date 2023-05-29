@@ -15,6 +15,10 @@ class Instance<E extends GardenElement> {
   const Instance(this.id, this.x, this.y, this.element, this.template);
 }
 
-dynamic serialiseInstance(Instance instance, Map<int, dynamic> templates) {
+dynamic serialiseInstance(
+  Instance instance,
+  Map<int, dynamic> templates,
+  Map<Image, int> images,
+) {
   throw UnimplementedError();
 }
