@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blooming_seasons_design_studio/requests.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,18 +72,7 @@ class SessionState extends Cubit<Session> {
   }
 
   void createAndLoadNewGarden(String name, ModalsState modals) async {
-    http
-        .post(
-      Uri.parse("http://localhost:3000/garden/rename"),
-      body: jsonEncode({
-        "old-name": "b",
-        "new-name": name,
-      }),
-    )
-        .then((value) {
-      print(value.statusCode);
-      print(value.body);
-    });
+    queryBackend("/garden/list", null).then((value) => print(value));
   }
 }
 
