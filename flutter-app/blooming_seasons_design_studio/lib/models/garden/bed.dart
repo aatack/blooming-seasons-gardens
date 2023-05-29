@@ -18,6 +18,12 @@ class Bed implements GardenElement {
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
-    throw UnimplementedError();
+    return {
+      "elements": elements
+          .map(
+            (element) => serialiseInstance(element, templates, images),
+          )
+          .toList(),
+    };
   }
 }
