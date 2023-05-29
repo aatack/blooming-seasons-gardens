@@ -20,11 +20,11 @@ class PickGarden extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const NewGarden(),
+            const _NewGarden(),
             const SizedBox(height: 25),
             BlocSelector<SessionState, Session, Thunk<List<String>>>(
               selector: (state) => state.availableGardens,
-              builder: (context, gardens) => LoadGarden(gardens: gardens),
+              builder: (context, gardens) => _LoadGarden(gardens: gardens),
             ),
           ],
         ),
@@ -33,14 +33,14 @@ class PickGarden extends StatelessWidget {
   }
 }
 
-class NewGarden extends StatefulWidget {
-  const NewGarden({super.key});
+class _NewGarden extends StatefulWidget {
+  const _NewGarden({super.key});
 
   @override
-  State<NewGarden> createState() => _NewGardenState();
+  State<_NewGarden> createState() => _NewGardenState();
 }
 
-class _NewGardenState extends State<NewGarden> {
+class _NewGardenState extends State<_NewGarden> {
   String _newGardenName = "";
 
   @override
@@ -80,10 +80,10 @@ class _NewGardenState extends State<NewGarden> {
   }
 }
 
-class LoadGarden extends StatelessWidget {
+class _LoadGarden extends StatelessWidget {
   final Thunk<List<String>> gardens;
 
-  const LoadGarden({super.key, required this.gardens});
+  const _LoadGarden({super.key, required this.gardens});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class LoadGarden extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: data.map((name) => LoadGardenItem(name: name)).toList(),
+            children: data.map((name) => _LoadGardenItem(name: name)).toList(),
           ),
         ),
         error: (error) => ErrorIndicator(message: error.toString()),
@@ -107,13 +107,13 @@ class LoadGarden extends StatelessWidget {
   }
 }
 
-class LoadGardenItem extends StatelessWidget {
+class _LoadGardenItem extends StatelessWidget {
   // TODO: determine this dynamically from the text element
   final double height = 20;
 
   final String name;
 
-  const LoadGardenItem({super.key, required this.name});
+  const _LoadGardenItem({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
