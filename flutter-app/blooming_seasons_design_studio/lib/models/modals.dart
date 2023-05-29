@@ -23,13 +23,15 @@ class ModalsState extends Cubit<List<Widget>> {
   }
 
   void confirm({required String message, required void Function() action}) {
-    add(Confirm(
-      message: message,
-      onCancel: () => pop(),
-      onConfirm: () {
-        pop();
-        action();
-      },
-    ));
+    add(
+      Confirm(
+        message: message,
+        onCancel: () => pop(),
+        onConfirm: () {
+          pop();
+          action();
+        },
+      ),
+    );
   }
 }

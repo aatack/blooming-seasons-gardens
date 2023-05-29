@@ -14,16 +14,24 @@ class Confirm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(message),
-        Row(
-          children: [
-            ElevatedButton(onPressed: onCancel, child: const Text("Cancel")),
-            ElevatedButton(onPressed: onConfirm, child: const Text("Confirm")),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(message),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(onPressed: onCancel, child: const Text("Cancel")),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                  onPressed: onConfirm, child: const Text("Confirm")),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
