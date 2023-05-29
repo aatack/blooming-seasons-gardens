@@ -23,13 +23,28 @@ class Garden {
   const Garden(this.name, this._beds, this._templates, this.availableID);
 
   factory Garden.blank(String name) {
-    return Garden(name, const [], const {}, 1);
+    return Garden(name, const [], const {}, 0);
   }
 }
 
 /// Return a JSON-compatible representation of the garden.
 dynamic serialiseGarden(Garden garden) {
-  return "`serialiseGarden` not yet implemented";
+  final Map<int, dynamic> templates = {};
+
+  final List<dynamic> beds =
+      garden.beds.map((bed) => serialiseInstance(bed, templates)).toList();
+
+  return {
+    "name": garden.name,
+    "beds": beds,
+    "templates": UnmodifiableListView(
+      templates
+          .map((id, template) => MapEntry(id, {...template, "id": id}))
+          .values
+          .toList(),
+    ),
+    "availableID": garden.availableID,
+  };
 }
 
 /// Produce a garden object from its JSON representation.

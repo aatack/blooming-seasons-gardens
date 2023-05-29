@@ -12,3 +12,7 @@ class Bed implements GardenElement {
 
   const Bed(this._elements);
 }
+
+dynamic serialiseBed(Bed bed, Map<int, dynamic> templates) {
+  throw UnimplementedError();
+}
