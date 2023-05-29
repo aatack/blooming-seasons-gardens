@@ -165,7 +165,11 @@ class LoadGardenItem extends StatelessWidget {
             icon: Icons.edit,
             height: height,
             onTap: () {
-              context.read<ModalsState>().add(Text("Edited $name"));
+              context.read<SessionState>().renameGarden(
+                    name,
+                    "A renamed garden",
+                    context.read<ModalsState>(),
+                  );
             },
           ),
           const SizedBox(width: 8),

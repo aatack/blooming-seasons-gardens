@@ -93,7 +93,7 @@ class SessionState extends Cubit<Session> {
           error: (error) {
             modals
                 .add(ErrorIndicator(message: "Failed to delete garden: $name"));
-            emit(Session(initialState, state.currentGarden));
+            emit(state);
           },
           loading: () {
             emit(Session(
@@ -103,6 +103,43 @@ class SessionState extends Cubit<Session> {
               ),
               state.currentGarden,
             ));
+          },
+        );
+      },
+    );
+  }
+
+  void renameGarden(String oldName, String newName, ModalsState modals) {
+    final initialState = state.availableGardens;
+
+    Thunk.populate(
+      get: () async {
+        return await queryBackend(
+          "/garden/rename",
+          body: {"old-name": oldName, "new-name": newName},
+        );
+      },
+      set: (result) {
+        result.handle(
+          data: (data) {},
+          error: (error) {
+            modals.add(
+                ErrorIndicator(message: "Failed to rename garden: $oldName"));
+            emit(state);
+          },
+          loading: () {
+            emit(
+              Session(
+                state.availableGardens.map(
+                  (gardens) => UnmodifiableListView(
+                    gardens.map(
+                      (garden) => garden == oldName ? newName : garden,
+                    ),
+                  ),
+                ),
+                state.currentGarden,
+              ),
+            );
           },
         );
       },
