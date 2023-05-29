@@ -173,7 +173,10 @@ class LoadGardenItem extends StatelessWidget {
             icon: Icons.delete,
             height: height,
             onTap: () {
-              context.read<ModalsState>().add(Text("Deleted $name"));
+              context.read<SessionState>().deleteGarden(
+                    name,
+                    context.read<ModalsState>(),
+                  );
             },
           ),
           const SizedBox(width: 8),

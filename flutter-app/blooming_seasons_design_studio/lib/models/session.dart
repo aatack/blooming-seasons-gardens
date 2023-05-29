@@ -86,7 +86,7 @@ class SessionState extends Cubit<Session> {
 
     Thunk.populate(
       get: () async {
-        await queryBackend("/garden/delete", body: {"name": name});
+        return await queryBackend("/garden/delete", body: {"name": name});
       },
       set: (result) {
         result.handle(
