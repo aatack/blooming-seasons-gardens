@@ -70,7 +70,12 @@ class SessionState extends Cubit<Session> {
     );
   }
 
-  void createAndLoadNewGarden(String name) {}
+  void createAndLoadNewGarden(String name, ModalsState modals) {
+    http
+        .post(Uri.parse("http://localhost:3000/test"),
+            body: jsonEncode({"name": name}))
+        .then((value) => modals.add(Text(value.body.toString())));
+  }
 }
 
 @immutable

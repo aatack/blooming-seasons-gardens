@@ -1,12 +1,14 @@
 (ns backend.core
   (:require [backend.file-names :refer [escape-file-name unescape-file-name]]
-            [cheshire.core :refer [generate-string]]
+            [cheshire.core :refer [generate-string parse-string]]
             [clojure.java.io :as io]
             [clojure.string :refer [split]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.cors :refer [wrap-cors]]
             [ring.middleware.reload :refer [wrap-reload]]
-            [ring.util.response :refer [bad-request]]))
+            [ring.middleware.json :refer [wrap-json-body]]
+            [ring.util.response :refer [bad-request]]
+            [ring.util.request :refer [body-string]]))
 
 (def database "database/gardens/")
 
@@ -65,6 +67,10 @@
            (= (count segments) 4)) (let [arguments (drop 2 segments)]
                                      (rename-garden (first arguments)
                                                     (second arguments)))
+      (= segments ["test"]) {:status 200
+                             :headers {"Content-Type" "application/json"}
+                             :body (generate-string
+                                    {:body (parse-string (body-string request))})}
       :else (bad-request (str "not-found: " (apply vector segments))))))
 
 (def handler (->

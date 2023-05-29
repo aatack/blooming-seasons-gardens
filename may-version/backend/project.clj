@@ -7,6 +7,7 @@
                  [ring/ring "1.8.0"]
                  [ring/ring-jetty-adapter "1.8.2"]
                  [ring/ring-devel "1.8.2"]
+                 [ring/ring-json "0.5.1"]
                  [ring-cors "0.1.13"]
                  [cheshire "5.10.0"]]
   :main ^:skip-aot backend.core

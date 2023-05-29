@@ -66,9 +66,8 @@ class _NewGardenState extends State<NewGarden> {
           child: ElevatedButton(
             onPressed: _newGardenName.isNotEmpty
                 ? () {
-                    context
-                        .read<SessionState>()
-                        .createAndLoadNewGarden(_newGardenName);
+                    context.read<SessionState>().createAndLoadNewGarden(
+                        _newGardenName, context.read<ModalsState>());
                   }
                 : null,
             child: const Text("Create"),
