@@ -16,19 +16,11 @@ class SessionState extends Cubit<Session> {
   void loadGardens() {
     Thunk.populate(
       get: () async {
-        final response =
-            await http.get(Uri.parse("http://localhost:3000/gardens/list"));
-
-        if (response.statusCode == 200) {
-          final jsonResponse = jsonDecode(response.body);
-          if (jsonResponse is List<dynamic>) {
-            return List<String>.from(jsonResponse);
-          } else {
-            throw const FormatException(
-                "Response was not formatted as a list of strings");
-          }
+        final gardens = await queryBackend("/garden/list");
+        if (gardens is List<dynamic>) {
+          return List<String>.from(gardens);
         } else {
-          throw Exception("Could not load existing gardens");
+          throw "Response was not formatted as a list of strings";
         }
       },
       set: (result) => emit(Session(result, state.currentGarden)),
@@ -38,18 +30,9 @@ class SessionState extends Cubit<Session> {
   void loadGarden(String name, ModalsState? modals) {
     Thunk.populate(
       get: () async {
-        try {
-          final response = await http
-              .get(Uri.parse("http://localhost:3000/gardens/get/$name"));
-
-          if (response.statusCode == 200) {
-            return Garden.blank(response.body);
-          } else {
-            throw "Error from server: ${response.body}";
-          }
-        } catch (error) {
-          throw "Error from client: $error";
-        }
+        final garden = await queryBackend("/garden/get", body: {"name": name});
+        // TODO: actually parse the garden
+        return Garden.blank(garden.toString());
       },
       set: (result) {
         result.handle(data: (data) {
@@ -71,28 +54,8 @@ class SessionState extends Cubit<Session> {
     );
   }
 
-  void createAndLoadNewGarden(String name, ModalsState modals) async {
-    try {
-      final res = await queryBackend("/garden/get", body: {"name": "a"});
-      print("Success");
-      print(res);
-    } catch (error) {
-      print("Error");
-      print(error);
-    }
-
-    // http
-    //     .post(
-    //   Uri.parse("http://localhost:3000/garden/rename"),
-    //   body: jsonEncode({
-    //     "old-name": "b",
-    //     "new-name": name,
-    //   }),
-    // )
-    //     .then((value) {
-    //   print(value.statusCode);
-    //   print(value.body);
-    // });
+  void createAndLoadNewGarden(String name, ModalsState modals) {
+    throw "Not implemented";
   }
 }
 
