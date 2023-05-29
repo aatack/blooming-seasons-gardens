@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/garden.dart';
+import '../../models/garden/garden.dart';
 
 class EditGarden extends StatelessWidget {
   final Garden garden;

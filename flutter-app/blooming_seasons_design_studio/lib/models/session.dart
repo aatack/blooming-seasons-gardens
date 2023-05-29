@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/indicators/error.dart';
-import 'garden.dart';
+import 'garden/garden.dart';
 import 'modals.dart';
 import 'thunk.dart';
 
