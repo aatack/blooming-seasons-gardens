@@ -206,13 +206,6 @@ class _RenameGardenState extends State<_RenameGarden> {
   String _newName = "";
 
   @override
-  void initState() {
-    super.initState();
-
-    _newName = widget.oldName;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
