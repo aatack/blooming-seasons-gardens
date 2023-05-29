@@ -72,7 +72,27 @@ class SessionState extends Cubit<Session> {
   }
 
   void createAndLoadNewGarden(String name, ModalsState modals) async {
-    queryBackend("/garden/list", null).then((value) => print(value));
+    try {
+      final res = await queryBackend("/garden/get", null);
+      print("Success");
+      print(res);
+    } catch (error) {
+      print("Error");
+      print(error);
+    }
+
+    // http
+    //     .post(
+    //   Uri.parse("http://localhost:3000/garden/rename"),
+    //   body: jsonEncode({
+    //     "old-name": "b",
+    //     "new-name": name,
+    //   }),
+    // )
+    //     .then((value) {
+    //   print(value.statusCode);
+    //   print(value.body);
+    // });
   }
 }
 

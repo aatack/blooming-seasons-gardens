@@ -1,8 +1,17 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
-Future<http.Response> queryBackend(
+Future<dynamic> queryBackend(
   String uri,
   dynamic body,
-) {
-  return http.post(Uri.parse("http://localhost:3000$uri"));
+) async {
+  final response = await http
+      .post(Uri.parse("http://localhost:3000$uri"));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw response.body;
+  }
 }
