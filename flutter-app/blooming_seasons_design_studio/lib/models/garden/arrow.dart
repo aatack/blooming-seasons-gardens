@@ -15,6 +15,9 @@ class Arrow implements BedElement {
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
-    throw UnimplementedError();
+    return {
+      "x": x,
+      "y": y,
+    };
   }
 }

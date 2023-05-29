@@ -9,18 +9,24 @@ class Plant implements BedElement {
 
   final double size;
 
-  final PlantType plantType;
+  final PlantType type;
   final PlantBorder? border;
   final PlantImage? image;
 
-  const Plant(this.name, this.size, this.plantType, this.border, this.image);
+  const Plant(this.name, this.size, this.type, this.border, this.image);
 
   @override
   dynamic serialise(
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
-    throw UnimplementedError();
+    return {
+      "name": name,
+      "size": size,
+      "type": type.toString(),
+      "border": border ?? _serialiseBorder(border!),
+      "image": image ?? _serialiseImage(image!, images),
+    };
   }
 }
 
@@ -34,6 +40,18 @@ class PlantBorder {
   const PlantBorder(this.thickness, this.colour);
 }
 
+dynamic _serialiseBorder(PlantBorder border) {
+  return {
+    "thickness": border.thickness,
+    "colour": {
+      "red": border.colour.red,
+      "green": border.colour.green,
+      "blue": border.colour.blue,
+      "alpha": border.colour.alpha,
+    }
+  };
+}
+
 @immutable
 class PlantImage {
   final Image image;
@@ -42,4 +60,17 @@ class PlantImage {
   final double scale;
 
   const PlantImage(this.image, this.x, this.y, this.scale);
+}
+
+dynamic _serialiseImage(PlantImage image, Map<Image, int> images) {
+  if (!images.containsKey(image)) {
+    images[image.image] = images.length;
+  }
+
+  return {
+    "image": images[image.image],
+    "x": image.x,
+    "y": image.y,
+    "scale": image.scale,
+  };
 }

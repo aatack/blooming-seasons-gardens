@@ -15,6 +15,9 @@ class Label implements BedElement {
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
-    throw UnimplementedError();
+    return {
+      "text": text,
+      "size": size,
+    };
   }
 }
