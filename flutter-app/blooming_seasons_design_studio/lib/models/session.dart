@@ -58,10 +58,10 @@ class SessionState extends Cubit<Session> {
       get: () async {
         await queryBackend(
           "/garden/save",
-          body: {"name": name, "content": Garden.blank(name).serialise()},
+          body: {"name": name, "content": serialiseGarden(Garden.blank(name))},
         );
         final garden = await queryBackend("/garden/get", body: {"name": name});
-        return Garden.deserialise(garden);
+        return deserialiseGarden(garden);
       },
       set: (result) {
         result.handle(data: (data) {
@@ -81,8 +81,6 @@ class SessionState extends Cubit<Session> {
   }
 
   void deleteGarden(String name, ModalsState modals) {
-    final initialState = state.availableGardens;
-
     Thunk.populate(
       get: () async {
         return await queryBackend("/garden/delete", body: {"name": name});
@@ -110,8 +108,6 @@ class SessionState extends Cubit<Session> {
   }
 
   void renameGarden(String oldName, String newName, ModalsState modals) {
-    final initialState = state.availableGardens;
-
     Thunk.populate(
       get: () async {
         return await queryBackend(

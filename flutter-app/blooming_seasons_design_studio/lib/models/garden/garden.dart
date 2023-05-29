@@ -25,17 +25,17 @@ class Garden {
   factory Garden.blank(String name) {
     return Garden(name, const [], const {}, 1);
   }
+}
 
-  /// Return a JSON-compatible representation of the garden.
-  dynamic serialise() {
-    return "Garden.serialise not yet implemented";
-  }
+/// Return a JSON-compatible representation of the garden.
+dynamic serialiseGarden(Garden garden) {
+  return "`serialiseGarden` not yet implemented";
+}
 
-  /// Produce a garden object from its JSON representation.
-  ///
-  /// The format of the passed object should mirror that of the return format
-  /// of the `serialise` function.
-  factory Garden.deserialise(dynamic garden) {
-    return Garden.blank(garden.toString());
-  }
+/// Produce a garden object from its JSON representation.
+///
+/// The format of the passed object should mirror that of the return format
+/// of the `serialise` function.
+Garden deserialiseGarden(dynamic garden) {
+  return Garden.blank(garden.toString());
 }
