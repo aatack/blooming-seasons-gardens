@@ -13,7 +13,13 @@ class Plant implements BedElement {
   final PlantBorder? border;
   final PlantImage? image;
 
-  const Plant(this.name, this.size, this.type, this.border, this.image);
+  const Plant({
+    required this.name,
+    required this.size,
+    required this.type,
+    required this.border,
+    required this.image,
+  });
 
   @override
   dynamic serialise(
@@ -24,10 +30,24 @@ class Plant implements BedElement {
       "name": name,
       "size": size,
       "type": type.toString(),
-      "border": border ?? _serialiseBorder(border!),
-      "image": image ?? _serialiseImage(image!, images),
+      "border": border ?? _serialisePlantBorder(border!),
+      "image": image ?? _serialisePlantImage(image!, images),
     };
   }
+}
+
+Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
+  final border = plant["border"];
+  final image = plant["image"];
+
+  return Plant(
+    name: plant["name"],
+    size: plant["size"],
+    type: PlantType.values
+        .firstWhere((value) => value.toString() == plant["type"]),
+    border: border ?? _deserialisePlantBorder(border),
+    image: image ?? _deserialisePlantImage(image, images),
+  );
 }
 
 enum PlantType { border, image }
@@ -37,19 +57,33 @@ class PlantBorder {
   final double thickness;
   final Color colour;
 
-  const PlantBorder(this.thickness, this.colour);
+  const PlantBorder({required this.thickness, required this.colour});
 }
 
-dynamic _serialiseBorder(PlantBorder border) {
+dynamic _serialisePlantBorder(PlantBorder border) {
   return {
     "thickness": border.thickness,
     "colour": {
+      "alpha": border.colour.alpha,
       "red": border.colour.red,
       "green": border.colour.green,
       "blue": border.colour.blue,
-      "alpha": border.colour.alpha,
     }
   };
+}
+
+PlantBorder _deserialisePlantBorder(dynamic border) {
+  final colour = border["colour"];
+
+  return PlantBorder(
+    thickness: border["thickness"],
+    colour: Color.fromARGB(
+      colour["alpha"],
+      colour["red"],
+      colour["green"],
+      colour["blue"],
+    ),
+  );
 }
 
 @immutable
@@ -59,18 +93,31 @@ class PlantImage {
   final double y;
   final double scale;
 
-  const PlantImage(this.image, this.x, this.y, this.scale);
+  const PlantImage({
+    required this.image,
+    required this.x,
+    required this.y,
+    required this.scale,
+  });
 }
 
-dynamic _serialiseImage(PlantImage image, Map<Image, int> images) {
+dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
   if (!images.containsKey(image)) {
     images[image.image] = images.length;
   }
 
   return {
-    "image": images[image.image],
+    "imageID": images[image.image],
     "x": image.x,
     "y": image.y,
     "scale": image.scale,
   };
+}
+
+PlantImage _deserialisePlantImage(dynamic image, Map<int, Image> images) {
+  return PlantImage(
+      image: images[image["imageID"]]!,
+      x: image["x"],
+      y: image["y"],
+      scale: image["scale"]);
 }
