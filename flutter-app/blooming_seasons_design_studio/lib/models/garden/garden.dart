@@ -41,10 +41,8 @@ dynamic serialiseGarden(Garden garden) {
   return {
     "name": garden.name,
     "beds": beds,
-    "templates": templates
-        .map((id, template) => MapEntry(id, {...template, "id": id}))
-        .values
-        .toList(),
+    "templates":
+        templates.map((id, template) => MapEntry(id.toString(), template)),
     "availableID": garden.availableID,
     "images": images.map((image, id) => MapEntry(id, _serialiseImage(image))),
   };
@@ -55,7 +53,12 @@ dynamic serialiseGarden(Garden garden) {
 /// The format of the passed object should mirror that of the return format
 /// of the `serialise` function.
 Garden deserialiseGarden(dynamic garden) {
-  return Garden.blank(garden.toString());
+  final templates = garden["templates"]
+      .map((id, template) => MapEntry(int.parse(id), template));
+  final images = garden["images"]
+      .map((id, image) => MapEntry(id, _deserialiseImage(image)));
+
+  return Garden(garden["name"], [], {}, garden["availableID"]);
 }
 
 dynamic _serialiseImage(Image image) {
