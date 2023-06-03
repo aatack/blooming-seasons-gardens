@@ -141,6 +141,12 @@ class SessionState extends Cubit<Session> {
       },
     );
   }
+
+  void exitGarden() {
+    emit(Session(Thunk.empty(), Thunk.empty()));
+    // List of gardens may have changed in the meantime, so reload it
+    loadGardens();
+  }
 }
 
 @immutable

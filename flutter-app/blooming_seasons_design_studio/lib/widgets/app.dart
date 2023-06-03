@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/screens/editing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class App extends StatelessWidget {
           return const PickGarden();
         } else {
           return session.currentGarden.handle(
-            data: (data) => Text(data.name),
+            data: (data) => EditGarden(garden: data),
             error: (error) => ErrorIndicator(message: error.toString()),
             loading: () => const Center(
               child: LoadingIndicator(message: "Loading garden"),
