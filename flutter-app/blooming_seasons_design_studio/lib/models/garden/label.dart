@@ -8,7 +8,7 @@ class Label implements BedElement {
   final String text;
   final double size;
 
-  const Label(this.text, this.size);
+  const Label({required this.text, required this.size});
 
   @override
   dynamic serialise(
@@ -20,4 +20,8 @@ class Label implements BedElement {
       "size": size,
     };
   }
+}
+
+Label deserialiseLabel(dynamic label) {
+  return Label(text: label["text"], size: label["size"]);
 }
