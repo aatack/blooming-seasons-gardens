@@ -27,6 +27,7 @@ class Plant implements BedElement {
     Map<Image, int> images,
   ) {
     return {
+      "elementType": "plant",
       "name": name,
       "size": size,
       "type": type.toString(),

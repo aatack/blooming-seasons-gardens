@@ -15,8 +15,8 @@ class Garden {
   UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
 
   // Maps identifiers to a template associated with that identifier
-  final Map<int, GardenElement> _templates;
-  UnmodifiableMapView<int, GardenElement> get nursery =>
+  final Map<int, BedElement> _templates;
+  UnmodifiableMapView<int, BedElement> get templates =>
       UnmodifiableMapView(_templates);
 
   // The next available identifier for elements in the garden
@@ -53,12 +53,25 @@ dynamic serialiseGarden(Garden garden) {
 /// The format of the passed object should mirror that of the return format
 /// of the `serialise` function.
 Garden deserialiseGarden(dynamic garden) {
-  final templates = garden["templates"]
-      .map((id, template) => MapEntry(int.parse(id), template));
-  final images = garden["images"]
-      .map((id, image) => MapEntry(id, _deserialiseImage(image)));
+  final images = Map<int, Image>.from(
+    garden["images"].map(
+      (id, image) => MapEntry(id, _deserialiseImage(image)),
+    ),
+  );
 
-  return Garden(garden["name"], [], {}, garden["availableID"]);
+  final templates = Map<int, BedElement>.from(
+    garden["templates"].map(
+      (id, template) => MapEntry(
+        int.parse(id),
+        deserialiseBedElement(
+          template,
+          images,
+        ),
+      ),
+    ),
+  );
+
+  return Garden(garden["name"], [], templates, garden["availableID"]);
 }
 
 dynamic _serialiseImage(Image image) {

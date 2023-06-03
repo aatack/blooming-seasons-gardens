@@ -15,7 +15,7 @@ class Arrow implements BedElement {
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
-    return {"x": x, "y": y};
+    return {"elementType": "arrow", "x": x, "y": y};
   }
 }
 

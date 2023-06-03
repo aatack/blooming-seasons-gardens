@@ -16,6 +16,7 @@ class Label implements BedElement {
     Map<Image, int> images,
   ) {
     return {
+      "elementType": "label", 
       "text": text,
       "size": size,
     };

@@ -1,5 +1,10 @@
+import 'package:blooming_seasons_design_studio/models/garden/arrow.dart';
+import 'package:blooming_seasons_design_studio/models/garden/label.dart';
+import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
+
+import 'bed.dart';
 
 abstract class GardenElement {
   dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);
@@ -41,4 +46,19 @@ dynamic serialiseInstance(
   }
 
   return result;
+}
+
+BedElement deserialiseBedElement(dynamic element, Map<int, Image> images) {
+  final elementType = element["elementType"];
+
+  switch (elementType) {
+    case "plant":
+      return deserialisePlant(element, images);
+    case "label":
+      return deserialiseLabel(element);
+    case "arrow":
+      return deserialiseArrow(element);
+    default:
+      throw Exception("Unrecognised bed element type: $elementType");
+  }
 }
