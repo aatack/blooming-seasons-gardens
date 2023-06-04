@@ -4,8 +4,6 @@ import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
 
-import 'bed.dart';
-
 abstract class GardenElement {
   dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);
 }
@@ -20,7 +18,7 @@ class Instance<E extends GardenElement> {
   final E element;
   final int? template;
 
-  const Instance(this.id, this.x, this.y, this.element, this.template);
+  const Instance({required this.id, required this.x, required this.y, required this.element, required this.template,});
 }
 
 dynamic serialiseInstance(
@@ -46,6 +44,16 @@ dynamic serialiseInstance(
   }
 
   return result;
+}
+
+Instance<E> deserialiseInstance<E extends GardenElement>(dynamic instance) {
+  return Instance(
+    id: instance["id"],
+    x: instance["x"],
+    y: instance["y"],
+    element: instance["template"], // TODO: properly deserialise
+    template: instance["template"],
+  )
 }
 
 BedElement deserialiseBedElement(dynamic element, Map<int, Image> images) {

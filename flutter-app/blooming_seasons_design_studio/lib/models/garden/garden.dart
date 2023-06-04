@@ -71,6 +71,9 @@ Garden deserialiseGarden(dynamic garden) {
     ),
   );
 
+  final beds = List<Instance<Bed>>.from(
+      garden["beds"].map((bed) => deserialiseInstance()));
+
   return Garden(garden["name"], [], templates, garden["availableID"]);
 }
 
