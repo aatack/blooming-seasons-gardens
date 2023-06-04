@@ -6,24 +6,48 @@ import 'package:flutter/material.dart' show immutable;
 import 'instance.dart';
 
 @immutable
-class Bed implements GardenElement {
-  final List<Instance<BedElement>> _elements;
-  UnmodifiableListView<Instance<BedElement>> get elements =>
+class Bed {
+  final int id;
+
+  final List<Instance<Element>> _elements;
+  UnmodifiableListView<Instance<Element>> get elements =>
       UnmodifiableListView(_elements);
 
-  const Bed(this._elements);
+  final double x;
+  final double y;
 
-  @override
+  final String name;
+
+  const Bed(this._elements,
+      {required this.id, required this.x, required this.y, required this.name});
+
   dynamic serialise(
     Map<int, dynamic> templates,
     Map<Image, int> images,
-  ) {
-    return {
-      "elements": elements
-          .map(
-            (element) => serialiseInstance(element, templates, images),
-          )
-          .toList(),
-    };
-  }
+  ) {}
+}
+
+dynamic serialiseBed(
+    Bed bed, Map<int, dynamic> templates, Map<Image, int> images) {
+  return {
+    "elements": bed.elements
+        .map(
+          (element) => serialiseInstance(element, templates, images),
+        )
+        .toList(),
+    "x": bed.x,
+    "y": bed.y,
+    "name": bed.name,
+  };
+}
+
+Bed deserialiseBed(Map<String, dynamic> bed, Map<int, Element> templates,
+    Map<int, Image> images) {
+  return Bed(
+    bed["elements"].map((element) => deserialiseElement(element, images)),
+    id: bed["id"],
+    x: bed["x"],
+    y: bed["y"],
+    name: bed["name"],
+  );
 }

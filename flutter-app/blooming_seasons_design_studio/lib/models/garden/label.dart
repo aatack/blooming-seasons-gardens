@@ -4,7 +4,7 @@ import 'package:image/image.dart' show Image;
 import 'instance.dart';
 
 @immutable
-class Label implements BedElement {
+class Label implements Element {
   final String text;
   final double size;
 
@@ -16,7 +16,7 @@ class Label implements BedElement {
     Map<Image, int> images,
   ) {
     return {
-      "elementType": "label", 
+      "elementType": "label",
       "text": text,
       "size": size,
     };

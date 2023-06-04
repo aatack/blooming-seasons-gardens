@@ -11,12 +11,12 @@ import 'instance.dart';
 class Garden {
   final String name;
 
-  final List<Instance<Bed>> _beds;
-  UnmodifiableListView<Instance<Bed>> get beds => UnmodifiableListView(_beds);
+  final List<Bed> _beds;
+  UnmodifiableListView<Bed> get beds => UnmodifiableListView(_beds);
 
   // Maps identifiers to a template associated with that identifier
-  final Map<int, BedElement> _templates;
-  UnmodifiableMapView<int, BedElement> get templates =>
+  final Map<int, Element> _templates;
+  UnmodifiableMapView<int, Element> get templates =>
       UnmodifiableMapView(_templates);
 
   // The next available identifier for elements in the garden
@@ -34,9 +34,8 @@ dynamic serialiseGarden(Garden garden) {
   final Map<int, dynamic> templates = {};
   final Map<Image, int> images = {};
 
-  final List<dynamic> beds = garden.beds
-      .map((bed) => serialiseInstance(bed, templates, images))
-      .toList();
+  final List<dynamic> beds =
+      garden.beds.map((bed) => serialiseBed(bed, templates, images)).toList();
 
   return {
     "name": garden.name,
@@ -59,22 +58,19 @@ Garden deserialiseGarden(dynamic garden) {
     ),
   );
 
-  final templates = Map<int, BedElement>.from(
+  final templates = Map<int, Element>.from(
     garden["templates"].map(
       (id, template) => MapEntry(
         int.parse(id),
-        deserialiseBedElement(
-          template,
-          images,
-        ),
+        deserialiseElement(template, images),
       ),
     ),
   );
 
-  final beds = List<Instance<Bed>>.from(
-      garden["beds"].map((bed) => deserialiseInstance()));
+  final beds = List<Bed>.from(
+      garden["beds"].map((bed) => deserialiseBed(bed, templates, images)));
 
-  return Garden(garden["name"], [], templates, garden["availableID"]);
+  return Garden(garden["name"], beds, templates, garden["availableID"]);
 }
 
 dynamic _serialiseImage(Image image) {

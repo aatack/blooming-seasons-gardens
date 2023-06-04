@@ -4,21 +4,25 @@ import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
 
-abstract class GardenElement {
+abstract class Element {
   dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);
 }
 
-abstract class BedElement implements GardenElement {}
-
 @immutable
-class Instance<E extends GardenElement> {
+class Instance<E extends Element> {
   final int id;
   final double x;
   final double y;
   final E element;
   final int? template;
 
-  const Instance({required this.id, required this.x, required this.y, required this.element, required this.template,});
+  const Instance({
+    required this.id,
+    required this.x,
+    required this.y,
+    required this.element,
+    required this.template,
+  });
 }
 
 dynamic serialiseInstance(
@@ -46,17 +50,29 @@ dynamic serialiseInstance(
   return result;
 }
 
-Instance<E> deserialiseInstance<E extends GardenElement>(dynamic instance) {
+Instance deserialiseInstance(Map<String, dynamic> instance,
+    Map<int, Element> templates, Map<int, Image> images) {
+  int? template;
+  Element element;
+
+  if (instance.containsKey("template")) {
+    template = instance["template"];
+    element = templates[template!]!;
+  } else {
+    template = null;
+    element = deserialiseElement(instance["element"], images);
+  }
+
   return Instance(
     id: instance["id"],
     x: instance["x"],
     y: instance["y"],
-    element: instance["template"], // TODO: properly deserialise
-    template: instance["template"],
-  )
+    element: element,
+    template: template,
+  );
 }
 
-BedElement deserialiseBedElement(dynamic element, Map<int, Image> images) {
+Element deserialiseElement(dynamic element, Map<int, Image> images) {
   final elementType = element["elementType"];
 
   switch (elementType) {

@@ -4,7 +4,7 @@ import 'package:image/image.dart' show Image;
 import 'instance.dart';
 
 @immutable
-class Plant implements BedElement {
+class Plant implements Element {
   final String name;
 
   final double size;

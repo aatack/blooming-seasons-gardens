@@ -4,7 +4,7 @@ import 'package:image/image.dart' show Image;
 import 'instance.dart';
 
 @immutable
-class Arrow implements BedElement {
+class Arrow implements Element {
   final double x;
   final double y;
 
