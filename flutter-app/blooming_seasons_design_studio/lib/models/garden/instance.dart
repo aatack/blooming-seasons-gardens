@@ -14,14 +14,14 @@ class Instance<E extends Element> {
   final double x;
   final double y;
   final E element;
-  final int? template;
+  final int? templateID;
 
   const Instance({
     required this.id,
     required this.x,
     required this.y,
     required this.element,
-    required this.template,
+    required this.templateID,
   });
 }
 
@@ -36,13 +36,13 @@ dynamic serialiseInstance(
     "y": instance.y,
   };
 
-  if (instance.template != null) {
-    if (!templates.containsKey(instance.template!)) {
-      templates[instance.template!] =
+  if (instance.templateID != null) {
+    if (!templates.containsKey(instance.templateID!)) {
+      templates[instance.templateID!] =
           instance.element.serialise(templates, images);
     }
 
-    result["template"] = instance.template!;
+    result["template"] = instance.templateID!;
   } else {
     result["element"] = instance.element.serialise(templates, images);
   }
@@ -55,8 +55,8 @@ Instance deserialiseInstance(Map<String, dynamic> instance,
   int? template;
   Element element;
 
-  if (instance.containsKey("template")) {
-    template = instance["template"];
+  if (instance.containsKey("templateID")) {
+    template = instance["templateID"];
     element = templates[template!]!;
   } else {
     template = null;
@@ -68,7 +68,7 @@ Instance deserialiseInstance(Map<String, dynamic> instance,
     x: instance["x"],
     y: instance["y"],
     element: element,
-    template: template,
+    templateID: template,
   );
 }
 
