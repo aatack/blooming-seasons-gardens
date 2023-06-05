@@ -1,8 +1,9 @@
-import 'package:blooming_seasons_design_studio/models/garden/arrow.dart';
-import 'package:blooming_seasons_design_studio/models/garden/label.dart';
-import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
+
+import 'arrow.dart';
+import 'label.dart';
+import 'plant.dart';
 
 abstract class Element {
   dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);

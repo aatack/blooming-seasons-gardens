@@ -1,9 +1,9 @@
-import 'package:blooming_seasons_design_studio/widgets/wrappers/hoverable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/garden.dart';
 import '../../../models/session.dart';
+import '../../wrappers/hoverable.dart';
 import 'editor.dart';
 import 'planner.dart';
 

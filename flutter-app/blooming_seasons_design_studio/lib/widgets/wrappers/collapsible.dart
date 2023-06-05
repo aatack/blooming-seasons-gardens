@@ -1,5 +1,6 @@
-import 'package:blooming_seasons_design_studio/widgets/wrappers/hoverable.dart';
 import 'package:flutter/material.dart';
+
+import 'hoverable.dart';
 
 class Collapsible extends StatefulWidget {
   final Widget header;

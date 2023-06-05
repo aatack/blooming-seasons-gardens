@@ -1,9 +1,9 @@
 import 'dart:collection';
 
-import 'package:blooming_seasons_design_studio/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../requests.dart';
 import '../widgets/indicators/error.dart';
 import 'garden/garden.dart';
 import 'modals.dart';
