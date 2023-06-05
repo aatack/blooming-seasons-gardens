@@ -10,7 +10,7 @@ import 'modals.dart';
 import 'thunk.dart';
 
 class SessionState extends Cubit<Session> {
-  SessionState() : super(Session(Thunk.empty(), Thunk.empty()));
+  SessionState() : super(Session(Thunk.empty(), Thunk.empty(), const []));
 
   void loadGardens() {
     Thunk.populate(
@@ -22,7 +22,11 @@ class SessionState extends Cubit<Session> {
           throw "Response was not formatted as a list of strings";
         }
       },
-      set: (result) => emit(Session(result, state.currentGarden)),
+      set: (result) => emit(Session(
+        result,
+        state.currentGarden,
+        state.editHistory,
+      )),
     );
   }
 
@@ -34,19 +38,19 @@ class SessionState extends Cubit<Session> {
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result));
+          emit(Session(state.availableGardens, result, const []));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
-            emit(Session(state.availableGardens, Thunk.empty()));
+            emit(Session(state.availableGardens, Thunk.empty(), const []));
           } else {
-            emit(Session(state.availableGardens, result));
+            emit(Session(state.availableGardens, result, const []));
           }
         }, loading: () {
           // TODO: potentially show the loading indicator in a modal, such
           //       that stateful widgets maintain their state while the
           //       garden loads (in case it fails to load properly)
-          emit(Session(state.availableGardens, Thunk.loading()));
+          emit(Session(state.availableGardens, Thunk.loading(), const []));
         });
       },
     );
@@ -64,16 +68,16 @@ class SessionState extends Cubit<Session> {
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result));
+          emit(Session(state.availableGardens, result, const []));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
-            emit(Session(state.availableGardens, Thunk.empty()));
+            emit(Session(state.availableGardens, Thunk.empty(), const []));
           } else {
-            emit(Session(state.availableGardens, result));
+            emit(Session(state.availableGardens, result, const []));
           }
         }, loading: () {
-          emit(Session(state.availableGardens, Thunk.loading()));
+          emit(Session(state.availableGardens, Thunk.loading(), const []));
         });
       },
     );
@@ -99,6 +103,7 @@ class SessionState extends Cubit<Session> {
                     gardens.where((element) => element != name)),
               ),
               state.currentGarden,
+              state.editHistory,
             ));
           },
         );
@@ -133,6 +138,7 @@ class SessionState extends Cubit<Session> {
                   ),
                 ),
                 state.currentGarden,
+                state.editHistory,
               ),
             );
           },
@@ -142,7 +148,7 @@ class SessionState extends Cubit<Session> {
   }
 
   void exitGarden() {
-    emit(Session(Thunk.empty(), Thunk.empty()));
+    emit(Session(Thunk.empty(), Thunk.empty(), const []));
     // List of gardens may have changed in the meantime, so reload it
     loadGardens();
   }
@@ -153,5 +159,9 @@ class Session {
   final Thunk<UnmodifiableListView<String>> availableGardens;
   final Thunk<Garden> currentGarden;
 
-  const Session(this.availableGardens, this.currentGarden);
+  final List<Garden> _editHistory;
+  UnmodifiableListView<Garden> get editHistory =>
+      UnmodifiableListView(_editHistory);
+
+  const Session(this.availableGardens, this.currentGarden, this._editHistory);
 }
