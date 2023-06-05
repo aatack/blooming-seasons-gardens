@@ -1,22 +1,61 @@
 import 'package:flutter/material.dart';
 
 class Editor extends StatelessWidget {
-  const Editor({
-    super.key,
-  });
+  const Editor({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // return ResizableArea();
     return FractionallySizedBox(
-      widthFactor: 0.25,
+      // widthFactor: 0.25,
       heightFactor: 1.0,
-      child: ListView(
-        children: const [
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-          Collapsible(child: Placeholder()),
-        ],
+      // child: ListView(
+      //   children: const [
+      //     Collapsible(child: Placeholder()),
+      //     Collapsible(child: Placeholder()),
+      //     Collapsible(child: Placeholder()),
+      //     Collapsible(child: Placeholder()),
+      //   ],
+      // ),
+      child: ResizableArea(),
+    );
+  }
+}
+
+class ResizableArea extends StatefulWidget {
+  @override
+  _ResizableAreaState createState() => _ResizableAreaState();
+}
+
+class _ResizableAreaState extends State<ResizableArea> {
+  double _width = 200.0; // Initial width of the resizable area
+  final double _minWidth = 20.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.grab,
+      child: GestureDetector(
+        onHorizontalDragUpdate: (details) {
+          // I'm not sure how, but this condition somehow also prevents the
+          // area from being made too big
+          if (details.globalPosition.dx > 0) {
+            setState(
+              () {
+                _width += details.delta.dx;
+                if (_width < _minWidth) {
+                  _width = _minWidth;
+                }
+              },
+            );
+          }
+        },
+        child: Container(
+          width: _width,
+          height: 200.0, // Height of the resizable area
+          color: Colors.blue,
+          child: Placeholder(),
+        ),
       ),
     );
   }
