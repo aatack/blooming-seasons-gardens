@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/wrappers/collapsible.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/garden/garden.dart';
@@ -17,8 +18,10 @@ class Editor extends StatelessWidget {
         child: Container(
           color: Colors.white,
           child: Column(
-            children: garden.beds.map((bed) => BedWidget(bed: bed)).toList(),
-          ),
+              // children: garden.beds.map((bed) => BedWidget(bed: bed)).toList(),
+              children: [
+                Collapsible(header: Text("Header"), child: Text("Child"))
+              ]),
         ),
       ),
     );
