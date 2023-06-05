@@ -37,9 +37,13 @@ class _CollapsibleState extends State<Collapsible> {
         Hoverable(
           builder: (BuildContext context, bool hovered, bool clicked) {
             return Container(
-              color: clicked
-                  ? Colors.blue
-                  : (hovered ? Colors.blue[300] : Colors.lightBlue[50]),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: clicked
+                    ? Colors.blue
+                    : (hovered ? Colors.blue[300] : Colors.lightBlue[50]),
+              ),
               child: Row(
                 children: [
                   Icon(_collapsed ? Icons.arrow_drop_down : Icons.arrow_right),

@@ -83,7 +83,7 @@ class _NewGardenState extends State<_NewGarden> {
 class _LoadGarden extends StatelessWidget {
   final Thunk<List<String>> gardens;
 
-  const _LoadGarden({super.key, required this.gardens});
+  const _LoadGarden({required this.gardens});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,6 @@ class _LoadGarden extends StatelessWidget {
 }
 
 class _LoadGardenItem extends StatelessWidget {
-  // TODO: determine this dynamically from the text element
   final double height = 20;
 
   final String name;
