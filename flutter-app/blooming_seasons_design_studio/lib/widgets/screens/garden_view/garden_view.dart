@@ -45,9 +45,9 @@ class GardenView extends StatelessWidget {
         ),
         Expanded(
           child: Stack(
-            children: const [
-              Planner(),
-              Editor(),
+            children: [
+              const Planner(),
+              Editor(garden: garden),
             ],
           ),
         ),

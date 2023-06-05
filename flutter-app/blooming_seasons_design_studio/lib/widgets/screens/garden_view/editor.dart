@@ -14,47 +14,11 @@ class Editor extends StatelessWidget {
     return FractionallySizedBox(
       child: Resizable(
         initialWidth: 200,
-        child: Column(
-          children: garden.beds.map((bed) => BedWidget(bed: bed)).toList(),
-        ),
-      ),
-    );
-  }
-}
-
-class ResizableArea extends StatefulWidget {
-  @override
-  _ResizableAreaState createState() => _ResizableAreaState();
-}
-
-class _ResizableAreaState extends State<ResizableArea> {
-  double _width = 200.0; // Initial width of the resizable area
-  final double _minWidth = 20.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.grab,
-      child: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          // I'm not sure how, but this condition somehow also prevents the
-          // area from being made too big
-          if (details.globalPosition.dx > 0) {
-            setState(
-              () {
-                _width += details.delta.dx;
-                if (_width < _minWidth) {
-                  _width = _minWidth;
-                }
-              },
-            );
-          }
-        },
         child: Container(
-          width: _width,
-          height: 200.0, // Height of the resizable area
-          color: Colors.blue,
-          child: const Placeholder(),
+          color: Colors.white,
+          child: Column(
+            children: garden.beds.map((bed) => BedWidget(bed: bed)).toList(),
+          ),
         ),
       ),
     );
