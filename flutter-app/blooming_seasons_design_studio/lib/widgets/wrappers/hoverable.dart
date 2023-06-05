@@ -40,6 +40,7 @@ class _HoverableState extends State<Hoverable> {
         onExit: (_) {
           setState(() {
             _hovered = false;
+            _clicked = false;
           });
         },
         child: widget.builder(context, _hovered, _clicked),

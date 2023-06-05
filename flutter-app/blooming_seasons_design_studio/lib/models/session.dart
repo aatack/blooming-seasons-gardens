@@ -30,8 +30,7 @@ class SessionState extends Cubit<Session> {
     Thunk.populate(
       get: () async {
         final garden = await queryBackend("/garden/get", body: {"name": name});
-        // TODO: actually parse the garden
-        return Garden.blank(garden.toString());
+        return deserialiseGarden(garden);
       },
       set: (result) {
         result.handle(data: (data) {
