@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../wrappers/resizable.dart';
+
 class Editor extends StatelessWidget {
   const Editor({super.key});
 
@@ -8,7 +10,7 @@ class Editor extends StatelessWidget {
     // return ResizableArea();
     return FractionallySizedBox(
       // widthFactor: 0.25,
-      heightFactor: 1.0,
+      // heightFactor: 1.0,
       // child: ListView(
       //   children: const [
       //     Collapsible(child: Placeholder()),
@@ -17,7 +19,7 @@ class Editor extends StatelessWidget {
       //     Collapsible(child: Placeholder()),
       //   ],
       // ),
-      child: ResizableArea(),
+      child: Resizable(initialWidth: 200, child: Placeholder()),
     );
   }
 }
