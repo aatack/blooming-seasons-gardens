@@ -27,6 +27,7 @@ class _ResizableState extends State<Resizable> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: _closed ? 0 : _width,
@@ -61,7 +62,7 @@ class _ResizableState extends State<Resizable> {
                 color: Colors.grey[300],
               ),
             ),
-          )
+          ),
         ],
       );
     });
