@@ -12,6 +12,7 @@ class Resizable extends StatefulWidget {
 
 class _ResizableState extends State<Resizable> {
   late double _width;
+  bool _closed = false;
 
   final double _padding = 50;
   final double _handleWidth = 6;
@@ -28,28 +29,32 @@ class _ResizableState extends State<Resizable> {
       return Row(
         children: [
           SizedBox(
-            width: _width,
+            width: _closed ? 0 : _width,
             child: widget.child,
           ),
           MouseRegion(
             cursor: SystemMouseCursors.grab,
             child: GestureDetector(
               onHorizontalDragUpdate: (details) {
-                if (details.globalPosition.dx > 0 &&
+                if (!_closed &&
+                    details.globalPosition.dx > 0 &&
                     details.globalPosition.dx < constraints.maxWidth) {
-                  setState(
-                    () {
-                      _width += details.delta.dx;
-                      if (_width < _padding) {
-                        _width = _padding;
-                      }
-                      if (_width >
-                          constraints.maxWidth - _handleWidth - _padding) {
-                        _width = constraints.maxWidth - _handleWidth - _padding;
-                      }
-                    },
-                  );
+                  setState(() {
+                    _width += details.delta.dx;
+                    if (_width < _padding) {
+                      _width = _padding;
+                    }
+                    if (_width >
+                        constraints.maxWidth - _handleWidth - _padding) {
+                      _width = constraints.maxWidth - _handleWidth - _padding;
+                    }
+                  });
                 }
+              },
+              onTap: () {
+                setState(() {
+                  _closed = !_closed;
+                });
               },
               child: Container(
                 width: _handleWidth,
