@@ -41,7 +41,7 @@ class EditGarden extends StatelessWidget {
             ],
           ),
         ),
-        const Placeholder(),
+        Expanded(child: const Placeholder()),
       ],
     );
   }
