@@ -1,11 +1,11 @@
-import 'package:blooming_seasons_design_studio/widgets/screens/editing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/session.dart';
 import 'indicators/error.dart';
 import 'indicators/loading.dart';
-import 'screens/picking.dart';
+import 'screens/garden_view/garden_view.dart';
+import 'screens/landing_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,15 +15,15 @@ class App extends StatelessWidget {
     return BlocBuilder<SessionState, Session>(
       builder: (context, session) {
         if (session.currentGarden.isEmpty) {
-          return const PickGarden();
+          return const LandingPage();
         } else {
           return session.currentGarden.handle(
-            data: (data) => EditGarden(garden: data),
+            data: (data) => GardenView(garden: data),
             error: (error) => ErrorIndicator(message: error.toString()),
             loading: () => const Center(
               child: LoadingIndicator(message: "Loading garden"),
             ),
-            empty: () => const PickGarden(),
+            empty: () => const LandingPage(),
           );
         }
       },

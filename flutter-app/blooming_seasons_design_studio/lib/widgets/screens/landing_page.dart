@@ -8,8 +8,8 @@ import '../indicators/error.dart';
 import '../indicators/loading.dart';
 import '../wrappers/hoverable.dart';
 
-class PickGarden extends StatelessWidget {
-  const PickGarden({super.key});
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

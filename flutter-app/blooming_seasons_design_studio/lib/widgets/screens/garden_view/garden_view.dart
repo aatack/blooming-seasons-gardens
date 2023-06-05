@@ -2,13 +2,15 @@ import 'package:blooming_seasons_design_studio/widgets/wrappers/hoverable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/garden/garden.dart';
-import '../../models/session.dart';
+import '../../../models/garden/garden.dart';
+import '../../../models/session.dart';
+import 'editor.dart';
+import 'planner.dart';
 
-class EditGarden extends StatelessWidget {
+class GardenView extends StatelessWidget {
   final Garden garden;
 
-  const EditGarden({super.key, required this.garden});
+  const GardenView({super.key, required this.garden});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,14 @@ class EditGarden extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(child: const Placeholder()),
+        Expanded(
+          child: Stack(
+            children: const [
+              Planner(),
+              Editor(),
+            ],
+          ),
+        ),
       ],
     );
   }
