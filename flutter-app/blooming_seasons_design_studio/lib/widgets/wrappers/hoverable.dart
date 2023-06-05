@@ -32,6 +32,7 @@ class _HoverableState extends State<Hoverable> {
         widget.onTap();
       },
       child: MouseRegion(
+        cursor: SystemMouseCursors.click,
         onEnter: (_) {
           setState(() {
             _hovered = true;
