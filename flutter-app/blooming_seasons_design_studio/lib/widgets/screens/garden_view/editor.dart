@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/garden/garden.dart';
+import '../../elements/bed.dart';
 import '../../wrappers/resizable.dart';
 
 class Editor extends StatelessWidget {
-  const Editor({super.key});
+  final Garden garden;
+
+  const Editor({super.key, required this.garden});
 
   @override
   Widget build(BuildContext context) {
-    // return ResizableArea();
     return FractionallySizedBox(
-      // widthFactor: 0.25,
-      // heightFactor: 1.0,
-      // child: ListView(
-      //   children: const [
-      //     Collapsible(child: Placeholder()),
-      //     Collapsible(child: Placeholder()),
-      //     Collapsible(child: Placeholder()),
-      //     Collapsible(child: Placeholder()),
-      //   ],
-      // ),
-      child: Resizable(initialWidth: 200, child: Placeholder()),
+      child: Resizable(
+        initialWidth: 200,
+        child: Column(
+          children: garden.beds.map((bed) => BedWidget(bed: bed)).toList(),
+        ),
+      ),
     );
   }
 }
@@ -56,7 +54,7 @@ class _ResizableAreaState extends State<ResizableArea> {
           width: _width,
           height: 200.0, // Height of the resizable area
           color: Colors.blue,
-          child: Placeholder(),
+          child: const Placeholder(),
         ),
       ),
     );
