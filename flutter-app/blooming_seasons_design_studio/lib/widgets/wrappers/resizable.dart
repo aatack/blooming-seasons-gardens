@@ -13,7 +13,8 @@ class Resizable extends StatefulWidget {
 class _ResizableState extends State<Resizable> {
   late double _width;
 
-  final double _padding = 20;
+  final double _padding = 50;
+  final double _handleWidth = 6;
 
   @override
   void initState() {
@@ -23,37 +24,42 @@ class _ResizableState extends State<Resizable> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: _width,
-          child: widget.child,
-        ),
-        MouseRegion(
-          cursor: SystemMouseCursors.grab,
-          child: GestureDetector(
-            onHorizontalDragUpdate: (details) {
-              // I'm not sure how, but this condition somehow also prevents the
-              // area from being made too big
-              if (details.globalPosition.dx > 0) {
-                setState(
-                  () {
-                    _width += details.delta.dx;
-                    if (_width < _padding) {
-                      _width = _padding;
-                    }
-                  },
-                );
-              }
-            },
-            child: Container(
-              width: 6,
-              color: Colors.grey[300],
-            ),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Row(
+        children: [
+          SizedBox(
+            width: _width,
+            child: widget.child,
           ),
-        )
-      ],
-    );
+          MouseRegion(
+            cursor: SystemMouseCursors.grab,
+            child: GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                if (details.globalPosition.dx > 0 &&
+                    details.globalPosition.dx < constraints.maxWidth) {
+                  setState(
+                    () {
+                      _width += details.delta.dx;
+                      if (_width < _padding) {
+                        _width = _padding;
+                      }
+                      if (_width >
+                          constraints.maxWidth - _handleWidth - _padding) {
+                        _width = constraints.maxWidth - _handleWidth - _padding;
+                      }
+                    },
+                  );
+                }
+              },
+              child: Container(
+                width: _handleWidth,
+                color: Colors.grey[300],
+              ),
+            ),
+          )
+        ],
+      );
+    });
     ;
   }
 }
