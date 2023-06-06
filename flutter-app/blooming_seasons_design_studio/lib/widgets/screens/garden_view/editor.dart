@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/bed.dart';
 import '../../../models/garden/garden.dart';
+import '../../../models/modals.dart';
 import '../../../models/session.dart';
 import '../../elements/bed.dart';
 import '../../wrappers/resizable.dart';
@@ -17,11 +20,14 @@ class Editor extends StatelessWidget {
     return FractionallySizedBox(
       heightFactor: 1.0,
       child: Resizable(
-        initialWidth: 200,
+        initialWidth: 400,
         child: Container(
           color: Colors.white,
           child: Column(
-            children: [const HeaderButtons(), BedsView(beds: garden.beds)],
+            children: [
+              HeaderButtons(garden: garden),
+              BedsView(beds: garden.beds)
+            ],
           ),
         ),
       ),
@@ -30,7 +36,9 @@ class Editor extends StatelessWidget {
 }
 
 class HeaderButtons extends StatelessWidget {
-  const HeaderButtons({super.key});
+  final Garden garden;
+
+  const HeaderButtons({super.key, required this.garden});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +60,32 @@ class HeaderButtons extends StatelessWidget {
           onPressed: () {},
           child: const Text(
             "Templates",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            const encoder = JsonEncoder.withIndent("  ");
+
+            final text = Text(
+              encoder.convert(serialiseGarden(garden)),
+              style: const TextStyle(fontFamily: "consolas"),
+            );
+
+            context.read<ModalsState>().add(
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: FractionallySizedBox(
+                      widthFactor: 0.5,
+                      heightFactor: 0.8,
+                      child: ListView(children: [text]),
+                    ),
+                  ),
+                );
+          },
+          child: const Text(
+            "Debug",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

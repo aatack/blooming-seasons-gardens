@@ -31,7 +31,10 @@ class Garden {
   Garden addNewBed() {
     return Garden(
       name,
-      [...beds, Bed(const [], id: availableID, x: 0.0, y: 0.0, name: name)],
+      [
+        ...beds,
+        Bed(const [], id: availableID, x: 0.0, y: 0.0, name: "Bed $availableID")
+      ],
       templates,
       availableID + 1,
     );
