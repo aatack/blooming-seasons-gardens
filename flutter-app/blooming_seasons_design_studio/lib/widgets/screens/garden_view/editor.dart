@@ -5,7 +5,6 @@ import '../../../models/garden/bed.dart';
 import '../../../models/garden/garden.dart';
 import '../../../models/session.dart';
 import '../../elements/bed.dart';
-import '../../wrappers/collapsible.dart';
 import '../../wrappers/resizable.dart';
 
 class Editor extends StatelessWidget {
@@ -16,6 +15,7 @@ class Editor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
+      heightFactor: 1.0,
       child: Resizable(
         initialWidth: 200,
         child: Container(
@@ -78,8 +78,13 @@ class BedsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: beds.map((bed) => BedView(bed: bed)).toList(),
+    return Expanded(
+      child: FractionallySizedBox(
+        heightFactor: 1.0,
+        child: ListView(
+          children: beds.map((bed) => BedView(bed: bed)).toList(),
+        ),
+      ),
     );
   }
 }
