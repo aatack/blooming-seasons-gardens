@@ -2,21 +2,19 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-import 'garden/garden.dart';
-
 @immutable
-class GardenHistory {
-  final List<Garden> _past;
-  UnmodifiableListView<Garden> get past => UnmodifiableListView(_past);
+class History<Data> {
+  final List<Data> _past;
+  UnmodifiableListView<Data> get past => UnmodifiableListView(_past);
 
-  final Garden present;
+  final Data present;
 
-  final List<Garden> _future;
-  UnmodifiableListView<Garden> get future => UnmodifiableListView(_future);
+  final List<Data> _future;
+  UnmodifiableListView<Data> get future => UnmodifiableListView(_future);
 
-  const GardenHistory(this._past, this.present, this._future);
+  const History(this._past, this.present, this._future);
 
-  factory GardenHistory.from(Garden garden) {
-    return GardenHistory(const [], garden, const []);
+  factory History.from(Data data) {
+    return History(const [], data, const []);
   }
 }
