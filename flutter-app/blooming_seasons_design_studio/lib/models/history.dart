@@ -9,21 +9,22 @@ import 'linked_list.dart';
 class History<Data> {
   final ImmutableLinkedList<Data>? past;
 
-  /// The checkpoint is the last state that will be included in the history.
+  /// The last state that will be included in the history.
   ///
   /// This is useful for making small, transient changes that do not need to
   /// be recovered later.  Such changes will be made to the present object,
   /// which is still the main source of information contained in the history
-  /// object.  Whenever a change is made, the checkpoint will be added to the
-  /// history instead of the present object.  If no transient changes have
-  /// been made, the two will be the same and so it will make no difference.
-  final Data checkpoint;
+  /// object.  Whenever a change is made, the private present state will be
+  /// added to the history instead of the public present object.  If no
+  /// transient changes have been made, the two will be the same and so it
+  /// will make no difference.
+  final Data _present;
 
   final Data present;
 
   final ImmutableLinkedList<Data>? future;
 
-  const History(this.past, this.checkpoint, this.present, this.future);
+  const History(this.past, this._present, this.present, this.future);
 
   factory History.from(Data data) {
     return History(null, data, data, null);
@@ -43,7 +44,7 @@ class History<Data> {
   /// recent non-transient commit instead.
   History<Data> commit(Data data, {bool transient = false}) {
     return History(
-        cons(checkpoint, past), transient ? checkpoint : data, data, null);
+        cons(_present, past), transient ? _present : data, data, null);
   }
 
   /// Step back in the version history, if possible.
@@ -54,7 +55,7 @@ class History<Data> {
       return this;
     } else {
       return History(
-          past!.rest, past!.first, past!.first, cons(checkpoint, future));
+          past!.rest, past!.first, past!.first, cons(_present, future));
     }
   }
 
@@ -66,7 +67,7 @@ class History<Data> {
       return this;
     } else {
       return History(
-          cons(checkpoint, past), future!.first, future!.first, future!.rest);
+          cons(_present, past), future!.first, future!.first, future!.rest);
     }
   }
 }
