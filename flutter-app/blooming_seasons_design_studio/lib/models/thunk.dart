@@ -56,7 +56,7 @@ class Thunk<Data> {
     }
   }
 
-  Thunk<Result> map<Result>(Result Function(Data) function) {
+  Thunk<Result> fmap<Result>(Result Function(Data) function) {
     return handle(
       data: (data) => Thunk.data(function(data)),
       error: (error) => Thunk.error(error),

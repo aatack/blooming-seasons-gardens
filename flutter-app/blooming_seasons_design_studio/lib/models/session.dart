@@ -95,7 +95,7 @@ class SessionState extends Cubit<Session> {
           },
           loading: () {
             emit(Session(
-              state.gardens.map(
+              state.gardens.fmap(
                 (gardens) => UnmodifiableListView(
                   gardens.where((element) => element != name),
                 ),
@@ -127,7 +127,7 @@ class SessionState extends Cubit<Session> {
           loading: () {
             emit(
               Session(
-                state.gardens.map(
+                state.gardens.fmap(
                   (gardens) => UnmodifiableListView(
                     gardens.map(
                       (garden) => garden == oldName ? newName : garden,
@@ -149,11 +149,20 @@ class SessionState extends Cubit<Session> {
     loadGardens();
   }
 
-  void editGarden(
-    Garden Function(Garden) update, {
-    bool addToHistory = true,
-  }) {
-    throw UnimplementedError();
+  void editGarden(Garden Function(Garden) update, {bool transient = false}) {
+    emit(
+      Session(
+        state.gardens,
+        state.garden.fmap(
+          (history) {
+            return history.commit(
+              update(history.present),
+              transient: transient,
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 
