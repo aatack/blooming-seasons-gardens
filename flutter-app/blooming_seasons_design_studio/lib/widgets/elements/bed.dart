@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../models/garden/bed.dart';
 
-class BedWidget extends StatelessWidget {
+class BedView extends StatelessWidget {
   final Bed bed;
 
-  const BedWidget({super.key, required this.bed});
+  const BedView({super.key, required this.bed});
 
   @override
   Widget build(BuildContext context) {

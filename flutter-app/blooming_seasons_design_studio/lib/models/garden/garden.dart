@@ -27,6 +27,15 @@ class Garden {
   factory Garden.blank(String name) {
     return Garden(name, const [], const {}, 0);
   }
+
+  Garden addNewBed() {
+    return Garden(
+      name,
+      [...beds, Bed(const [], id: availableID, x: 0.0, y: 0.0, name: name)],
+      templates,
+      availableID + 1,
+    );
+  }
 }
 
 /// Return a JSON-compatible representation of the garden.
