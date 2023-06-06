@@ -14,11 +14,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SessionState, Session>(
       builder: (context, session) {
-        if (session.currentGarden.isEmpty) {
+        if (session.garden.isEmpty) {
           return const LandingPage();
         } else {
-          return session.currentGarden.handle(
-            data: (data) => GardenView(garden: data),
+          return session.garden.handle(
+            data: (data) => GardenView(garden: data.present),
             error: (error) => ErrorIndicator(message: error.toString()),
             loading: () => const Center(
               child: LoadingIndicator(message: "Loading garden"),

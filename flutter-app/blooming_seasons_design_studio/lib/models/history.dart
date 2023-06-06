@@ -2,6 +2,9 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
+// NOTE: if this becomes a performance bottleneck, it can very easily be
+//       replaced with a linked list
+
 @immutable
 class History<Data> {
   final List<Data> _past;

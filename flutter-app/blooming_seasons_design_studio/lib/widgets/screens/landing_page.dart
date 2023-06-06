@@ -23,7 +23,7 @@ class LandingPage extends StatelessWidget {
             const _NewGarden(),
             const SizedBox(height: 25),
             BlocSelector<SessionState, Session, Thunk<List<String>>>(
-              selector: (state) => state.availableGardens,
+              selector: (state) => state.gardens,
               builder: (context, gardens) => _LoadGarden(gardens: gardens),
             ),
           ],

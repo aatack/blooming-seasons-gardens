@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../requests.dart';
 import '../widgets/indicators/error.dart';
 import 'garden/garden.dart';
+import 'history.dart';
 import 'modals.dart';
 import 'thunk.dart';
 
 class SessionState extends Cubit<Session> {
-  SessionState() : super(Session(Thunk.empty(), Thunk.empty(), const []));
+  SessionState() : super(Session(Thunk.empty(), Thunk.empty()));
 
   void loadGardens() {
     Thunk.populate(
@@ -22,11 +23,7 @@ class SessionState extends Cubit<Session> {
           throw "Response was not formatted as a list of strings";
         }
       },
-      set: (result) => emit(Session(
-        result,
-        state.currentGarden,
-        state.editHistory,
-      )),
+      set: (result) => emit(Session(result, state.garden)),
     );
   }
 
@@ -34,23 +31,23 @@ class SessionState extends Cubit<Session> {
     Thunk.populate(
       get: () async {
         final garden = await queryBackend("/garden/get", body: {"name": name});
-        return deserialiseGarden(garden);
+        return History.from(deserialiseGarden(garden));
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result, [data]));
+          emit(Session(state.gardens, result));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
-            emit(Session(state.availableGardens, Thunk.empty(), const []));
+            emit(Session(state.gardens, Thunk.empty()));
           } else {
-            emit(Session(state.availableGardens, result, const []));
+            emit(Session(state.gardens, result));
           }
         }, loading: () {
           // TODO: potentially show the loading indicator in a modal, such
           //       that stateful widgets maintain their state while the
           //       garden loads (in case it fails to load properly)
-          emit(Session(state.availableGardens, Thunk.loading(), const []));
+          emit(Session(state.gardens, Thunk.loading()));
         });
       },
     );
@@ -64,20 +61,20 @@ class SessionState extends Cubit<Session> {
           body: {"name": name, "content": serialiseGarden(Garden.blank(name))},
         );
         final garden = await queryBackend("/garden/get", body: {"name": name});
-        return deserialiseGarden(garden);
+        return History.from(deserialiseGarden(garden));
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result, [data]));
+          emit(Session(state.gardens, result));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
-            emit(Session(state.availableGardens, Thunk.empty(), const []));
+            emit(Session(state.gardens, Thunk.empty()));
           } else {
-            emit(Session(state.availableGardens, result, const []));
+            emit(Session(state.gardens, result));
           }
         }, loading: () {
-          emit(Session(state.availableGardens, Thunk.loading(), const []));
+          emit(Session(state.gardens, Thunk.loading()));
         });
       },
     );
@@ -98,12 +95,12 @@ class SessionState extends Cubit<Session> {
           },
           loading: () {
             emit(Session(
-              state.availableGardens.map(
+              state.gardens.map(
                 (gardens) => UnmodifiableListView(
-                    gardens.where((element) => element != name)),
+                  gardens.where((element) => element != name),
+                ),
               ),
-              state.currentGarden,
-              state.editHistory,
+              state.garden,
             ));
           },
         );
@@ -130,15 +127,14 @@ class SessionState extends Cubit<Session> {
           loading: () {
             emit(
               Session(
-                state.availableGardens.map(
+                state.gardens.map(
                   (gardens) => UnmodifiableListView(
                     gardens.map(
                       (garden) => garden == oldName ? newName : garden,
                     ),
                   ),
                 ),
-                state.currentGarden,
-                state.editHistory,
+                state.garden,
               ),
             );
           },
@@ -148,7 +144,7 @@ class SessionState extends Cubit<Session> {
   }
 
   void exitGarden() {
-    emit(Session(Thunk.empty(), Thunk.empty(), const []));
+    emit(Session(Thunk.empty(), Thunk.empty()));
     // List of gardens may have changed in the meantime, so reload it
     loadGardens();
   }
@@ -157,27 +153,14 @@ class SessionState extends Cubit<Session> {
     Garden Function(Garden) update, {
     bool addToHistory = true,
   }) {
-    final oldGarden = state.currentGarden.unpack();
-
-    if (oldGarden != null) {
-      final newGarden = update(oldGarden);
-      emit(Session(
-        state.availableGardens,
-        Thunk.data(newGarden),
-        addToHistory ? [...state.editHistory, newGarden] : state.editHistory,
-      ));
-    }
+    throw UnimplementedError();
   }
 }
 
 @immutable
 class Session {
-  final Thunk<UnmodifiableListView<String>> availableGardens;
-  final Thunk<Garden> currentGarden;
+  final Thunk<UnmodifiableListView<String>> gardens;
+  final Thunk<History<Garden>> garden;
 
-  final List<Garden> _editHistory;
-  UnmodifiableListView<Garden> get editHistory =>
-      UnmodifiableListView(_editHistory);
-
-  const Session(this.availableGardens, this.currentGarden, this._editHistory);
+  const Session(this.gardens, this.garden);
 }
