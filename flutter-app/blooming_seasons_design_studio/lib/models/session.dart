@@ -38,7 +38,7 @@ class SessionState extends Cubit<Session> {
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result, const []));
+          emit(Session(state.availableGardens, result, [data]));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
@@ -68,7 +68,7 @@ class SessionState extends Cubit<Session> {
       },
       set: (result) {
         result.handle(data: (data) {
-          emit(Session(state.availableGardens, result, const []));
+          emit(Session(state.availableGardens, result, [data]));
         }, error: (error) {
           if (modals != null) {
             modals.add(ErrorIndicator(message: error.toString()));
@@ -151,6 +151,22 @@ class SessionState extends Cubit<Session> {
     emit(Session(Thunk.empty(), Thunk.empty(), const []));
     // List of gardens may have changed in the meantime, so reload it
     loadGardens();
+  }
+
+  void editGarden(
+    Garden Function(Garden) update, {
+    bool addToHistory = true,
+  }) {
+    final oldGarden = state.currentGarden.unpack();
+
+    if (oldGarden != null) {
+      final newGarden = update(oldGarden);
+      emit(Session(
+        state.availableGardens,
+        Thunk.data(newGarden),
+        addToHistory ? [...state.editHistory, newGarden] : state.editHistory,
+      ));
+    }
   }
 }
 

@@ -65,6 +65,15 @@ class Thunk<Data> {
     );
   }
 
+  Data? unpack() {
+    return handle(
+      data: (data) => data,
+      error: (error) => null,
+      loading: () => null,
+      empty: () => null,
+    );
+  }
+
   static Future<void> populate<Data>({
     required Future<Data> Function() get,
     required void Function(Thunk<Data>) set,
