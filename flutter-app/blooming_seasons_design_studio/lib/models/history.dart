@@ -1,14 +1,13 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
+
+import 'linked_list.dart';
 
 // NOTE: if this becomes a performance bottleneck, it can very easily be
 //       replaced with a linked list
 
 @immutable
 class History<Data> {
-  final List<Data> _past;
-  UnmodifiableListView<Data> get past => UnmodifiableListView(_past);
+  final ImmutableLinkedList<Data>? past;
 
   /// The checkpoint is the last state that will be included in the history.
   ///
@@ -22,17 +21,16 @@ class History<Data> {
 
   final Data present;
 
-  final List<Data> _future;
-  UnmodifiableListView<Data> get future => UnmodifiableListView(_future);
+  final ImmutableLinkedList<Data>? future;
 
-  const History(this._past, this.checkpoint, this.present, this._future);
+  const History(this.past, this.checkpoint, this.present, this.future);
 
   factory History.from(Data data) {
-    return History(const [], data, data, const []);
+    return History(null, data, data, null);
   }
 
-  bool get canGoBack => true;
-  bool get canGoForward => true;
+  bool get canGoBack => past != null;
+  bool get canGoForward => future != null;
 
   /// Commit a new piece of data to history.
   ///
@@ -45,24 +43,30 @@ class History<Data> {
   /// recent non-transient commit instead.
   History<Data> commit(Data data, {bool transient = false}) {
     return History(
-      [...past, checkpoint],
-      transient ? checkpoint : data,
-      data,
-      const [],
-    );
+        cons(checkpoint, past), transient ? checkpoint : data, data, null);
   }
 
   /// Step back in the version history, if possible.
   ///
   /// If stepping back is not possible, gives the same object back.
   History<Data> back() {
-    throw UnimplementedError();
+    if (canGoBack) {
+      return this;
+    } else {
+      return History(
+          past!.rest, past!.first, past!.first, cons(checkpoint, future));
+    }
   }
 
   /// Step forward in the version history, if possible.
   ///
   /// If stepping forward is not possible, gives the same object back.
   History<Data> forward() {
-    throw UnimplementedError();
+    if (canGoForward) {
+      return this;
+    } else {
+      return History(
+          cons(checkpoint, past), future!.first, future!.first, future!.rest);
+    }
   }
 }
