@@ -70,7 +70,7 @@ class HeaderButtons extends StatelessWidget {
 
             final text = Text(
               encoder.convert(serialiseGarden(garden)),
-              style: const TextStyle(fontFamily: "consolas"),
+              style: const TextStyle(fontFamily: "Monospace"),
             );
 
             context.read<ModalsState>().add(

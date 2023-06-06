@@ -20,3 +20,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Monospace
+      fonts:
+        - asset: assets/fonts/Inconsolata-Regular.ttf
