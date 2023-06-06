@@ -30,4 +30,39 @@ class History<Data> {
   factory History.from(Data data) {
     return History(const [], data, data, const []);
   }
+
+  bool get canGoBack => true;
+  bool get canGoForward => true;
+
+  /// Commit a new piece of data to history.
+  ///
+  /// If the current state is not the head, any future values will be
+  /// overwritten by this operation.
+  ///
+  /// When `transient` is set to `true`, the current state will be updated
+  /// but not added to the history.  If the history is later stepped back,
+  /// this piece of data will be ignored, and it will proceed to the most
+  /// recent non-transient commit instead.
+  History<Data> commit(Data data, {bool transient = false}) {
+    return History(
+      [...past, checkpoint],
+      transient ? checkpoint : data,
+      data,
+      const [],
+    );
+  }
+
+  /// Step back in the version history, if possible.
+  ///
+  /// If stepping back is not possible, gives the same object back.
+  History<Data> back() {
+    throw UnimplementedError();
+  }
+
+  /// Step forward in the version history, if possible.
+  ///
+  /// If stepping forward is not possible, gives the same object back.
+  History<Data> forward() {
+    throw UnimplementedError();
+  }
 }
