@@ -164,6 +164,18 @@ class SessionState extends Cubit<Session> {
       ),
     );
   }
+
+  void undo() {
+    emit(
+      Session(state.gardens, state.garden.fmap((history) => history.back())),
+    );
+  }
+
+  void redo() {
+    emit(
+      Session(state.gardens, state.garden.fmap((history) => history.forward())),
+    );
+  }
 }
 
 @immutable

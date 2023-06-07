@@ -52,10 +52,10 @@ class History<Data> {
   /// If stepping back is not possible, gives the same object back.
   History<Data> back() {
     if (canGoBack) {
-      return this;
-    } else {
       return History(
           past!.rest, past!.first, past!.first, cons(_present, future));
+    } else {
+      return this;
     }
   }
 
@@ -64,10 +64,10 @@ class History<Data> {
   /// If stepping forward is not possible, gives the same object back.
   History<Data> forward() {
     if (canGoForward) {
-      return this;
-    } else {
       return History(
           cons(_present, past), future!.first, future!.first, future!.rest);
+    } else {
+      return this;
     }
   }
 }

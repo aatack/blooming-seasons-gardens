@@ -57,9 +57,21 @@ class HeaderButtons extends StatelessWidget {
           ),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            context.read<SessionState>().undo();
+          },
           child: const Text(
-            "Templates",
+            "Undo",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            context.read<SessionState>().redo();
+          },
+          child: const Text(
+            "Redo",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

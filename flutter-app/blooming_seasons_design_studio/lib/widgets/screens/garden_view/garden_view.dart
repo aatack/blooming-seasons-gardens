@@ -34,12 +34,14 @@ class GardenView extends StatelessWidget {
                 },
               ),
               const SizedBox(width: padding),
-              Text(garden.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  )),
+              Text(
+                garden.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
