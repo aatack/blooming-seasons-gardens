@@ -6,7 +6,7 @@ abstract class Validated<Type> {
 
   const Validated(this.string);
 
-  bool get valid;
+  List<String> get errors;
   Type get value;
 }
 
@@ -17,13 +17,21 @@ class ValidatedDouble extends Validated<double> {
   const ValidatedDouble(super.string, {this.minimum, this.maximum});
 
   @override
-  bool get valid => _valid();
+  List<String> get errors => _errors();
 
-  bool _valid() {
+  List<String> _errors() {
     final parsedValue = double.tryParse(string);
-    return parsedValue != null &&
-        (minimum == null || parsedValue >= minimum!) &&
-        (maximum == null || parsedValue <= maximum!);
+    return [
+      if (parsedValue != null) "Value is not a valid number",
+      if ((minimum != null) &&
+          (parsedValue != null) &&
+          (parsedValue < minimum!))
+        "Value must be greater than or equal to $minimum",
+      if ((maximum != null) &&
+          (parsedValue != null) &&
+          (parsedValue > maximum!))
+        "Value must be less than or equal to $maximum",
+    ];
   }
 
   @override
@@ -43,5 +51,9 @@ class ValidatedDouble extends Validated<double> {
       minimum: validated["minimum"],
       maximum: validated["maximum"],
     );
+  }
+
+  ValidatedDouble set(String newString) {
+    return ValidatedDouble(newString, minimum: minimum, maximum: maximum);
   }
 }
