@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
 
+import '../inputs/validated.dart';
+import '../structs/point.dart';
 import 'bed.dart';
 import 'instance.dart';
 
@@ -33,7 +35,12 @@ class Garden {
       name,
       [
         ...beds,
-        Bed(const [], id: availableID, x: 0.0, y: 0.0, name: "Bed $availableID")
+        Bed(
+          const [],
+          id: availableID,
+          origin: const Point(ValidatedDouble("0"), ValidatedDouble("0")),
+          name: "Bed $availableID",
+        )
       ],
       templates,
       availableID + 1,

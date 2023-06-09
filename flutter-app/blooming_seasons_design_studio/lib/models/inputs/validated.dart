@@ -45,7 +45,7 @@ class ValidatedDouble extends Validated<double> {
     };
   }
 
-  ValidatedDouble deserialise(Map<String, dynamic> validated) {
+  static ValidatedDouble deserialise(Map<String, dynamic> validated) {
     return ValidatedDouble(
       validated["string"],
       minimum: validated["minimum"],

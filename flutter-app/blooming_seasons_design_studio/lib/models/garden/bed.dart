@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:image/image.dart' show Image;
 import 'package:flutter/material.dart' show immutable;
 
+import '../structs/point.dart';
 import 'instance.dart';
 
 @immutable
@@ -13,13 +14,12 @@ class Bed {
   UnmodifiableListView<Instance<Element>> get elements =>
       UnmodifiableListView(_elements);
 
-  final double x;
-  final double y;
+  final Point origin;
 
   final String name;
 
   const Bed(this._elements,
-      {required this.id, required this.x, required this.y, required this.name});
+      {required this.id, required this.origin, required this.name});
 
   dynamic serialise(
     Map<int, dynamic> templates,
@@ -35,8 +35,7 @@ dynamic serialiseBed(
           (element) => serialiseInstance(element, templates, images),
         )
         .toList(),
-    "x": bed.x,
-    "y": bed.y,
+    "origin": bed.origin.serialise(),
     "name": bed.name,
   };
 }
@@ -46,8 +45,7 @@ Bed deserialiseBed(Map<String, dynamic> bed, Map<int, Element> templates,
   return Bed(
     bed["elements"].map((element) => deserialiseElement(element, images)),
     id: bed["id"],
-    x: bed["x"],
-    y: bed["y"],
+    origin: Point.deserialise(bed["origin"]),
     name: bed["name"],
   );
 }
