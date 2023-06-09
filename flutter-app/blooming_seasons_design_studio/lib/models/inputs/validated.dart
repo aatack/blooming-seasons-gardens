@@ -10,11 +10,11 @@ abstract class Validated<Type> {
   Type get value;
 }
 
-class UserEnteredDouble extends Validated<double> {
+class ValidatedDouble extends Validated<double> {
   final double? minimum;
   final double? maximum;
 
-  const UserEnteredDouble(super.string, {this.minimum, this.maximum});
+  const ValidatedDouble(super.string, {this.minimum, this.maximum});
 
   @override
   bool get valid => _valid();
@@ -37,8 +37,8 @@ class UserEnteredDouble extends Validated<double> {
     };
   }
 
-  UserEnteredDouble deserialise(Map<String, dynamic> validated) {
-    return UserEnteredDouble(
+  ValidatedDouble deserialise(Map<String, dynamic> validated) {
+    return ValidatedDouble(
       validated["string"],
       minimum: validated["minimum"],
       maximum: validated["maximum"],
