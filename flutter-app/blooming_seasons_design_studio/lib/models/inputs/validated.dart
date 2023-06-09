@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 @immutable
-abstract class UserEntered<Type> {
+abstract class Validated<Type> {
   final String string;
 
-  const UserEntered(this.string);
+  const Validated(this.string);
 
   bool get valid;
   Type get value;
 }
 
-class UserEnteredDouble extends UserEntered<double> {
+class UserEnteredDouble extends Validated<double> {
   final double? minimum;
   final double? maximum;
 
@@ -37,11 +37,11 @@ class UserEnteredDouble extends UserEntered<double> {
     };
   }
 
-  UserEnteredDouble deserialise(Map<String, dynamic> userEnteredDouble) {
+  UserEnteredDouble deserialise(Map<String, dynamic> validated) {
     return UserEnteredDouble(
-      userEnteredDouble["string"],
-      minimum: userEnteredDouble["minimum"],
-      maximum: userEnteredDouble["maximum"],
+      validated["string"],
+      minimum: validated["minimum"],
+      maximum: validated["maximum"],
     );
   }
 }
