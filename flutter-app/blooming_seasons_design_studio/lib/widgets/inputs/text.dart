@@ -1,7 +1,5 @@
-import 'package:blooming_seasons_design_studio/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../wrappers/hoverable.dart';
 
@@ -41,24 +39,21 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   final FocusNode _keyboardFocusNode = FocusNode();
   final FocusNode _inputFocusNode = FocusNode();
 
-  late final TextEditingController _controller;
+  final TextEditingController _controller = TextEditingController(text: "");
 
   @override
   void initState() {
     super.initState();
 
-    _controller = TextEditingController(text: widget.value);
-
-    // _focusNode.addListener(() {
-    //   setState(() {});
-    // });
-    _keyboardFocusNode.addListener(_handleFocusChange);
+    _keyboardFocusNode.addListener(() {
+      if (!_keyboardFocusNode.hasFocus) {
+        _stopEditing(cancelled: false);
+      }
+    });
   }
 
   @override
   void dispose() {
-    // _keyboardFocusNode.removeListener(_handleFocusChange);
-
     _keyboardFocusNode.dispose();
     _inputFocusNode.dispose();
 
@@ -87,7 +82,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
         child: content,
       ),
       onTap: () {
-        startEditing();
+        _startEditing();
       },
     );
   }
@@ -97,8 +92,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       focusNode: _keyboardFocusNode,
       onKey: (event) {
         if (event.logicalKey == LogicalKeyboardKey.escape) {
-          stopEditing(cancelled: true);
-          // _keyboardFocusNode.unfocus();
+          _stopEditing(cancelled: true);
         }
       },
       child: Align(
@@ -119,7 +113,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     );
   }
 
-  void startEditing() {
+  void _startEditing() {
     setState(() {
       _originalValue = widget.value;
     });
@@ -131,113 +125,11 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     _inputFocusNode.requestFocus();
   }
 
-  void stopEditing({required bool cancelled}) {
+  void _stopEditing({required bool cancelled}) {
     widget.onChange(cancelled ? _originalValue! : _controller.text, cancelled);
     setState(() {
       _originalValue = null;
     });
-  }
-
-  void _handleFocusChange({bool cancelled = false}) {
-    if (!_keyboardFocusNode.hasFocus) {
-      // widget.onChange(_controller.text, _controller.text == _originalValue);
-      // setState(() {
-      //   _originalValue = null;
-      // });
-      stopEditing(cancelled: false);
-    }
-  }
-
-  void _handleKeyEvent(RawKeyEvent event) {
-    if ((event.logicalKey == LogicalKeyboardKey.escape) &&
-        (_originalValue != null)) {
-      _controller.text = _originalValue!;
-      _keyboardFocusNode.unfocus();
-    }
-  }
-}
-
-class _GreedyTextField extends StatefulWidget {
-  final String initial;
-  final void Function(String, bool) onChange;
-  final void Function() onDefocus;
-
-  const _GreedyTextField(
-      {required this.initial, required this.onChange, required this.onDefocus});
-
-  @override
-  State<_GreedyTextField> createState() => _GreedyTextFieldState();
-}
-
-class _GreedyTextFieldState extends State<_GreedyTextField> {
-  final FocusNode _focusNode = FocusNode();
-  final FocusNode _innerFocusNode = FocusNode();
-  late final TextEditingController _controller;
-
-  bool _isFocused = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = TextEditingController(text: widget.initial);
-    _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: _controller.text.length));
-
-    _focusNode.addListener(() {
-      setState(() {});
-    });
-    _focusNode.addListener(_handleFocusChange);
-
-    _innerFocusNode.requestFocus();
-  }
-
-  @override
-  void dispose() {
-    _focusNode.removeListener(_handleFocusChange);
-    _focusNode.dispose();
-    _innerFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _handleKeyEvent(RawKeyEvent event) {
-    if (event.logicalKey == LogicalKeyboardKey.escape) {
-      _controller.text = widget.initial;
-      _focusNode.unfocus();
-    }
-  }
-
-  void _handleFocusChange() {
-    setState(() {
-      _isFocused = _focusNode.hasFocus;
-      if (!_isFocused) {
-        widget.onDefocus();
-        widget.onChange(_controller.text, _controller.text != widget.initial);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RawKeyboardListener(
-      focusNode: _focusNode,
-      onKey: _handleKeyEvent,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: IntrinsicWidth(
-          child: TextField(
-            focusNode: _innerFocusNode,
-            controller: _controller,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: null,
-            style: style,
-            onChanged: (value) {
-              widget.onChange(value, false);
-            },
-          ),
-        ),
-      ),
-    );
   }
 }
 
