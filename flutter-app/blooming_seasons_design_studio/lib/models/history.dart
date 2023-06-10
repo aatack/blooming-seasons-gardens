@@ -44,7 +44,11 @@ class History<Data> {
   /// recent non-transient commit instead.
   History<Data> commit(Data data, {bool transient = false}) {
     return History(
-        cons(_present, past), transient ? _present : data, data, null);
+      transient ? past : cons(_present, past),
+      transient ? _present : data,
+      data,
+      null,
+    );
   }
 
   /// Step back in the version history, if possible.
