@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../models/inputs/validated.dart';
 import '../wrappers/hoverable.dart';
 
-class DoubleInput extends StatefulWidget {
-  final ValidatedDouble value;
-  final void Function(ValidatedDouble) onChange;
+class ControlledTextInput extends StatefulWidget {
+  final String value;
+  final void Function(String) onChange;
 
-  const DoubleInput({super.key, required this.value, required this.onChange});
+  const ControlledTextInput(
+      {super.key, required this.value, required this.onChange});
 
   @override
-  State<DoubleInput> createState() => _DoubleInputState();
+  State<ControlledTextInput> createState() => _ControlledTextInputState();
 }
 
-class _DoubleInputState extends State<DoubleInput> {
+class _ControlledTextInputState extends State<ControlledTextInput> {
   bool _editing = false;
 
   @override
   Widget build(BuildContext context) {
+    late Widget content;
     if (_editing) {
-      return _GreedyTextField(
-        initial: widget.value.string,
-        onDefocus: () {
-          setState(() {
-            _editing = false;
+      content = _GreedyTextField(
+          initial: widget.value,
+          onDefocus: () {
+            setState(() {
+              _editing = false;
+            });
           });
-        },
-      );
     } else {
-      return Hoverable(
+      content = Hoverable(
         builder: (context, hovered, clicked) => Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -41,11 +41,11 @@ class _DoubleInputState extends State<DoubleInput> {
           child: SizedBox(
             height: 20,
             child: Stack(
-              children: const [
+              children: [
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Hello world",
+                    widget.value,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -62,6 +62,8 @@ class _DoubleInputState extends State<DoubleInput> {
         },
       );
     }
+
+    return content;
   }
 }
 
