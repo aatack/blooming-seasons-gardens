@@ -69,21 +69,26 @@ class GreedyTextField extends StatefulWidget {
 
 class _GreedyTextFieldState extends State<GreedyTextField> {
   final FocusNode _focusNode = FocusNode();
+  final FocusNode _innerFocusNode = FocusNode();
   bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
+
     _focusNode.addListener(() {
       setState(() {});
     });
     _focusNode.addListener(_handleFocusChange);
+
+    _innerFocusNode.requestFocus();
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
+    _innerFocusNode.dispose();
     super.dispose();
   }
 
@@ -112,6 +117,7 @@ class _GreedyTextFieldState extends State<GreedyTextField> {
           height: 20,
           width: 150,
           child: TextField(
+              focusNode: _innerFocusNode,
               controller: TextEditingController(text: widget.initial))),
     );
   }
