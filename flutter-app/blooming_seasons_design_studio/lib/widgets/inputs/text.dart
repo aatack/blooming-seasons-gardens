@@ -1,5 +1,7 @@
+import 'package:blooming_seasons_design_studio/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../wrappers/hoverable.dart';
 
@@ -37,7 +39,9 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       content = _GreedyTextField(
           initial: widget.value,
           onChange: (value, commit) {
-            print("$value ($commit)");
+            context.read<SessionState>().editGarden(
+                (garden) => garden.editBed(0, (bed) => bed.rename(value)),
+                transient: !commit);
           },
           onDefocus: () {
             setState(() {

@@ -46,6 +46,15 @@ class Garden {
       availableID + 1,
     );
   }
+
+  Garden editBed(int id, Bed Function(Bed) update) {
+    return Garden(
+      name,
+      _beds.map((bed) => bed.id == id ? update(bed) : bed).toList(),
+      _templates,
+      availableID,
+    );
+  }
 }
 
 /// Return a JSON-compatible representation of the garden.

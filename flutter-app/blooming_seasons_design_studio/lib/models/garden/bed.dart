@@ -25,6 +25,10 @@ class Bed {
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {}
+
+  Bed rename(String newName) {
+    return Bed(_elements, id: id, origin: origin, name: newName);
+  }
 }
 
 dynamic serialiseBed(
