@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/inputs/double.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/garden/bed.dart';
@@ -14,7 +15,9 @@ class BedView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Collapsible(
         header: Text(bed.name),
-        child: const SizedBox(height: 200, child: Placeholder()),
+        child: Row(children: [
+          DoubleInput(value: bed.origin.x, onChange: (newValue) {})
+        ]),
       ),
     );
   }
