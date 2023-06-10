@@ -1,7 +1,9 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/garden/bed.dart';
+import '../../models/session.dart';
 import '../wrappers/collapsible.dart';
 
 class BedView extends StatelessWidget {
@@ -16,7 +18,15 @@ class BedView extends StatelessWidget {
       child: Collapsible(
         header: Text(bed.name),
         child: Row(children: [
-          ControlledTextInput(value: bed.name, onChange: (newValue) {})
+          ControlledTextInput(
+              value: bed.name,
+              onChange: (newValue, commit) {
+                print("Editing to $newValue ($commit)");
+                context.read<SessionState>().editGarden(
+                    (garden) =>
+                        garden.editBed(0, (bed) => bed.rename(newValue)),
+                    transient: !commit);
+              })
         ]),
       ),
     );

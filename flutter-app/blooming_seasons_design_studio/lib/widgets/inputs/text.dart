@@ -18,9 +18,15 @@ import '../wrappers/hoverable.dart';
 /// element, the callback will be fired one more time with the *original*
 /// string, and with the commit flag set to `false`, indicating that the
 /// user has cancelled or abandoned their changes.
+///
+/// To enable this to work, the widget ensures that it is only being edited
+/// when it has focus.  By this mechanism, multiple of these widgets can
+/// co-exist, while simultaneously guaranteeing that only one of them will
+/// be being edited (and hence technically actually controlling the state)
+/// at once.
 class ControlledTextInput extends StatefulWidget {
   final String value;
-  final void Function(String) onChange;
+  final void Function(String, bool) onChange;
 
   const ControlledTextInput(
       {super.key, required this.value, required this.onChange});
@@ -30,24 +36,40 @@ class ControlledTextInput extends StatefulWidget {
 }
 
 class _ControlledTextInputState extends State<ControlledTextInput> {
-  bool _editing = false;
+  String? _originalValue; // Defined iff the widget is being edited
+
+  final FocusNode _keyboardFocusNode = FocusNode();
+  final FocusNode _inputFocusNode = FocusNode();
+
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = TextEditingController(text: widget.value);
+
+    // _focusNode.addListener(() {
+    //   setState(() {});
+    // });
+    _keyboardFocusNode.addListener(_handleFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _keyboardFocusNode.removeListener(_handleFocusChange);
+
+    _keyboardFocusNode.dispose();
+    _inputFocusNode.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     late final Widget content;
-    if (_editing) {
-      content = _GreedyTextField(
-          initial: widget.value,
-          onChange: (value, commit) {
-            context.read<SessionState>().editGarden(
-                (garden) => garden.editBed(0, (bed) => bed.rename(value)),
-                transient: !commit);
-          },
-          onDefocus: () {
-            setState(() {
-              _editing = false;
-            });
-          });
+    if (_originalValue != null) {
+      content = _inputWidget(context);
     } else {
       content = Text(widget.value,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
@@ -65,11 +87,64 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
         child: content,
       ),
       onTap: () {
-        setState(() {
-          _editing = true;
-        });
+        startEditing();
       },
     );
+  }
+
+  Widget _inputWidget(BuildContext context) {
+    return RawKeyboardListener(
+      focusNode: _keyboardFocusNode,
+      onKey: _handleKeyEvent,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: IntrinsicWidth(
+          child: TextField(
+            focusNode: _inputFocusNode,
+            controller: _controller,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: null,
+            style: style,
+            onChanged: (value) {
+              widget.onChange(value, false);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void startEditing() {
+    setState(() {
+      _originalValue = widget.value;
+    });
+
+    _controller.text = widget.value;
+    _controller.selection =
+        TextSelection.fromPosition(TextPosition(offset: widget.value.length));
+
+    _inputFocusNode.requestFocus();
+  }
+
+  // void stopEditing({bool cancelled = false}) {
+  //   setState()
+  // }
+
+  void _handleFocusChange() {
+    if (!_keyboardFocusNode.hasFocus && (_originalValue != null)) {
+      widget.onChange(_controller.text, _controller.text != _originalValue);
+      setState(() {
+        _originalValue = null;
+      });
+    }
+  }
+
+  void _handleKeyEvent(RawKeyEvent event) {
+    if ((event.logicalKey == LogicalKeyboardKey.escape) &&
+        (_originalValue != null)) {
+      _controller.text = _originalValue!;
+      _keyboardFocusNode.unfocus();
+    }
   }
 }
 
