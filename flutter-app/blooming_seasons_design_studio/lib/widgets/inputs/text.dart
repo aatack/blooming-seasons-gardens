@@ -19,7 +19,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    late Widget content;
+    late final Widget content;
     if (_editing) {
       content = _GreedyTextField(
           initial: widget.value,
@@ -29,41 +29,32 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
             });
           });
     } else {
-      content = Hoverable(
-        builder: (context, hovered, clicked) => Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            color: clicked
-                ? Colors.grey[400]
-                : (hovered ? Colors.grey[350] : Colors.grey[300]),
-          ),
-          child: SizedBox(
-            height: 20,
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.value,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                // if (hovered) _overlayedIcons(context),
-              ],
-            ),
-          ),
-        ),
-        onTap: () {
-          setState(() {
-            _editing = true;
-          });
-        },
+      content = Text(
+        widget.value,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       );
     }
 
-    return content;
+    return Hoverable(
+      builder: (context, hovered, clicked) => Container(
+        width: 200,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2),
+          color: clicked
+              ? Colors.grey[400]
+              : (hovered ? Colors.grey[350] : Colors.grey[300]),
+        ),
+        child: content,
+      ),
+      onTap: () {
+        setState(() {
+          _editing = true;
+        });
+      },
+    );
   }
 }
 
@@ -71,8 +62,7 @@ class _GreedyTextField extends StatefulWidget {
   final String initial;
   final void Function() onDefocus;
 
-  const _GreedyTextField(
-      {super.key, required this.initial, required this.onDefocus});
+  const _GreedyTextField({required this.initial, required this.onDefocus});
 
   @override
   State<_GreedyTextField> createState() => _GreedyTextFieldState();
@@ -81,11 +71,17 @@ class _GreedyTextField extends StatefulWidget {
 class _GreedyTextFieldState extends State<_GreedyTextField> {
   final FocusNode _focusNode = FocusNode();
   final FocusNode _innerFocusNode = FocusNode();
+  late final TextEditingController _controller;
+
   bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
+
+    _controller = TextEditingController(text: widget.initial);
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length));
 
     _focusNode.addListener(() {
       setState(() {});
@@ -114,7 +110,6 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
       _isFocused = _focusNode.hasFocus;
       if (!_isFocused) {
         // Run your callback or perform any desired actions here
-        print('Text field lost focus');
         widget.onDefocus();
       }
     });
@@ -125,12 +120,17 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: _handleKeyEvent,
-      child: SizedBox(
-          height: 20,
-          width: 150,
+      child: IntrinsicWidth(
+        child: Align(
+          alignment: Alignment.centerLeft,
           child: TextField(
-              focusNode: _innerFocusNode,
-              controller: TextEditingController(text: widget.initial))),
+            focusNode: _innerFocusNode,
+            controller: _controller,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: null,
+          ),
+        ),
+      ),
     );
   }
 }
