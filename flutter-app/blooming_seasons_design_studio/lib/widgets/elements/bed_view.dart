@@ -21,10 +21,9 @@ class BedView extends StatelessWidget {
           ControlledTextInput(
               value: bed.name,
               onChange: (newValue, transient) {
-                print("Editing to $newValue ($transient)");
                 context.read<SessionState>().editGarden(
                     (garden) =>
-                        garden.editBed(0, (bed) => bed.rename(newValue)),
+                        garden.editBed(bed.id, (bed) => bed.rename(newValue)),
                     transient: transient);
               })
         ]),

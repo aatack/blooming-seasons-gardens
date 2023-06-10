@@ -57,7 +57,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   @override
   void dispose() {
-    _keyboardFocusNode.removeListener(_handleFocusChange);
+    // _keyboardFocusNode.removeListener(_handleFocusChange);
 
     _keyboardFocusNode.dispose();
     _inputFocusNode.dispose();
@@ -95,7 +95,12 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   Widget _inputWidget(BuildContext context) {
     return RawKeyboardListener(
       focusNode: _keyboardFocusNode,
-      onKey: _handleKeyEvent,
+      onKey: (event) {
+        if (event.logicalKey == LogicalKeyboardKey.escape) {
+          stopEditing(cancelled: true);
+          // _keyboardFocusNode.unfocus();
+        }
+      },
       child: Align(
         alignment: Alignment.centerLeft,
         child: IntrinsicWidth(
@@ -126,16 +131,20 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     _inputFocusNode.requestFocus();
   }
 
-  // void stopEditing({bool cancelled = false}) {
-  //   setState()
-  // }
+  void stopEditing({required bool cancelled}) {
+    widget.onChange(cancelled ? _originalValue! : _controller.text, cancelled);
+    setState(() {
+      _originalValue = null;
+    });
+  }
 
-  void _handleFocusChange() {
-    if (!_keyboardFocusNode.hasFocus && (_originalValue != null)) {
-      widget.onChange(_controller.text, _controller.text == _originalValue);
-      setState(() {
-        _originalValue = null;
-      });
+  void _handleFocusChange({bool cancelled = false}) {
+    if (!_keyboardFocusNode.hasFocus) {
+      // widget.onChange(_controller.text, _controller.text == _originalValue);
+      // setState(() {
+      //   _originalValue = null;
+      // });
+      stopEditing(cancelled: false);
     }
   }
 
