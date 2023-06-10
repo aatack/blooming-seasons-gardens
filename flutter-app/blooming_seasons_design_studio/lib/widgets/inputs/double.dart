@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/inputs/validated.dart';
 import '../wrappers/hoverable.dart';
@@ -57,16 +58,48 @@ class _DoubleInputState extends State<DoubleInput> {
   }
 }
 
-class GreedyTextField extends StatelessWidget {
+class GreedyTextField extends StatefulWidget {
   final String initial;
 
   const GreedyTextField({super.key, required this.initial});
 
   @override
+  State<GreedyTextField> createState() => _GreedyTextFieldState();
+}
+
+class _GreedyTextFieldState extends State<GreedyTextField> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleKeyEvent(RawKeyEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _focusNode.unfocus();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 20,
-        width: 150,
-        child: TextField(controller: TextEditingController(text: initial)));
+    return RawKeyboardListener(
+      focusNode: _focusNode,
+      onKey: _handleKeyEvent,
+      child: SizedBox(
+          height: 20,
+          width: 150,
+          child: TextField(
+              controller: TextEditingController(text: widget.initial))),
+    );
   }
 }
