@@ -13,10 +13,10 @@ import '../wrappers/hoverable.dart';
 ///
 /// Every time the text inside is changed, the `onChange` callback will
 /// be fired with the new string.  The boolean argument represents whether
-/// or not the change is a "commit": when the element loses focus or when
+/// or not the change is transient: when the element loses focus or when
 /// the user presses enter.  If the user presses escape while editing this
 /// element, the callback will be fired one more time with the *original*
-/// string, and with the commit flag set to `false`, indicating that the
+/// string, and with the transient flag set to `true`, indicating that the
 /// user has cancelled or abandoned their changes.
 ///
 /// To enable this to work, the widget ensures that it is only being edited
@@ -106,7 +106,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
             decoration: null,
             style: style,
             onChanged: (value) {
-              widget.onChange(value, false);
+              widget.onChange(value, true);
             },
           ),
         ),
@@ -132,7 +132,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   void _handleFocusChange() {
     if (!_keyboardFocusNode.hasFocus && (_originalValue != null)) {
-      widget.onChange(_controller.text, _controller.text != _originalValue);
+      widget.onChange(_controller.text, _controller.text == _originalValue);
       setState(() {
         _originalValue = null;
       });

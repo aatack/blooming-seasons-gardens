@@ -20,12 +20,12 @@ class BedView extends StatelessWidget {
         child: Row(children: [
           ControlledTextInput(
               value: bed.name,
-              onChange: (newValue, commit) {
-                print("Editing to $newValue ($commit)");
+              onChange: (newValue, transient) {
+                print("Editing to $newValue ($transient)");
                 context.read<SessionState>().editGarden(
                     (garden) =>
                         garden.editBed(0, (bed) => bed.rename(newValue)),
-                    transient: !commit);
+                    transient: transient);
               })
         ]),
       ),
