@@ -20,7 +20,14 @@ class _DoubleInputState extends State<DoubleInput> {
   @override
   Widget build(BuildContext context) {
     if (_editing) {
-      return GreedyTextField(initial: widget.value.string);
+      return _GreedyTextField(
+        initial: widget.value.string,
+        onDefocus: () {
+          setState(() {
+            _editing = false;
+          });
+        },
+      );
     } else {
       return Hoverable(
         builder: (context, hovered, clicked) => Container(
@@ -58,16 +65,18 @@ class _DoubleInputState extends State<DoubleInput> {
   }
 }
 
-class GreedyTextField extends StatefulWidget {
+class _GreedyTextField extends StatefulWidget {
   final String initial;
+  final void Function() onDefocus;
 
-  const GreedyTextField({super.key, required this.initial});
+  const _GreedyTextField(
+      {super.key, required this.initial, required this.onDefocus});
 
   @override
-  State<GreedyTextField> createState() => _GreedyTextFieldState();
+  State<_GreedyTextField> createState() => _GreedyTextFieldState();
 }
 
-class _GreedyTextFieldState extends State<GreedyTextField> {
+class _GreedyTextFieldState extends State<_GreedyTextField> {
   final FocusNode _focusNode = FocusNode();
   final FocusNode _innerFocusNode = FocusNode();
   bool _isFocused = false;
@@ -104,6 +113,7 @@ class _GreedyTextFieldState extends State<GreedyTextField> {
       if (!_isFocused) {
         // Run your callback or perform any desired actions here
         print('Text field lost focus');
+        widget.onDefocus();
       }
     });
   }
