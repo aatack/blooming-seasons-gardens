@@ -19,16 +19,16 @@ class _DoubleInputState extends State<DoubleInput> {
   @override
   Widget build(BuildContext context) {
     if (_editing) {
-      return greedyTextField(widget.value.string);
+      return GreedyTextField(initial: widget.value.string);
     } else {
       return Hoverable(
         builder: (context, hovered, clicked) => Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(2),
             color: clicked
-                ? Colors.blue
-                : (hovered ? Colors.blue[300] : Colors.lightBlue[50]),
+                ? Colors.grey[400]
+                : (hovered ? Colors.grey[350] : Colors.grey[300]),
           ),
           child: SizedBox(
             height: 20,
@@ -57,9 +57,16 @@ class _DoubleInputState extends State<DoubleInput> {
   }
 }
 
-Widget greedyTextField(String initial) {
-  return SizedBox(
-      height: 20,
-      width: 150,
-      child: TextField(controller: TextEditingController(text: initial)));
+class GreedyTextField extends StatelessWidget {
+  final String initial;
+
+  const GreedyTextField({super.key, required this.initial});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        height: 20,
+        width: 150,
+        child: TextField(controller: TextEditingController(text: initial)));
+  }
 }
