@@ -3,6 +3,19 @@ import 'package:flutter/services.dart';
 
 import '../wrappers/hoverable.dart';
 
+/// A controlled text input, mimicking the React style of data entry.
+///
+/// While the text input is not being edited, it will reactively display
+/// whatever text is passed to its `value` property.  While it is being
+/// edited, it will display the currently edited text.
+///
+/// Every time the text inside is changed, the `onChange` callback will
+/// be fired with the new string.  The boolean argument represents whether
+/// or not the change is a "commit": when the element loses focus or when
+/// the user presses enter.  If the user presses escape while editing this
+/// element, the callback will be fired one more time with the *original*
+/// string, and with the commit flag set to `false`, indicating that the
+/// user has cancelled or abandoned their changes.
 class ControlledTextInput extends StatefulWidget {
   final String value;
   final void Function(String) onChange;
@@ -23,6 +36,9 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     if (_editing) {
       content = _GreedyTextField(
           initial: widget.value,
+          onChange: (value, commit) {
+            print("$value ($commit)");
+          },
           onDefocus: () {
             setState(() {
               _editing = false;
@@ -38,7 +54,6 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
           color: clicked
               ? Colors.grey[400]
               : (hovered ? Colors.grey[350] : Colors.grey[300]),
@@ -56,9 +71,11 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
 class _GreedyTextField extends StatefulWidget {
   final String initial;
+  final void Function(String, bool) onChange;
   final void Function() onDefocus;
 
-  const _GreedyTextField({required this.initial, required this.onDefocus});
+  const _GreedyTextField(
+      {required this.initial, required this.onChange, required this.onDefocus});
 
   @override
   State<_GreedyTextField> createState() => _GreedyTextFieldState();
@@ -97,6 +114,7 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
 
   void _handleKeyEvent(RawKeyEvent event) {
     if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _controller.text = widget.initial;
       _focusNode.unfocus();
     }
   }
@@ -105,8 +123,8 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
     setState(() {
       _isFocused = _focusNode.hasFocus;
       if (!_isFocused) {
-        // Run your callback or perform any desired actions here
         widget.onDefocus();
+        widget.onChange(_controller.text, _controller.text != widget.initial);
       }
     });
   }
@@ -125,6 +143,9 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
             textAlignVertical: TextAlignVertical.center,
             decoration: null,
             style: style,
+            onChanged: (value) {
+              widget.onChange(value, false);
+            },
           ),
         ),
       ),
