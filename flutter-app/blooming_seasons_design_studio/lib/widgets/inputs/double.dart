@@ -69,6 +69,7 @@ class GreedyTextField extends StatefulWidget {
 
 class _GreedyTextFieldState extends State<GreedyTextField> {
   final FocusNode _focusNode = FocusNode();
+  bool _isFocused = false;
 
   @override
   void initState() {
@@ -76,10 +77,12 @@ class _GreedyTextFieldState extends State<GreedyTextField> {
     _focusNode.addListener(() {
       setState(() {});
     });
+    _focusNode.addListener(_handleFocusChange);
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
     super.dispose();
   }
@@ -88,6 +91,16 @@ class _GreedyTextFieldState extends State<GreedyTextField> {
     if (event.logicalKey == LogicalKeyboardKey.escape) {
       _focusNode.unfocus();
     }
+  }
+
+  void _handleFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+      if (!_isFocused) {
+        // Run your callback or perform any desired actions here
+        print('Text field lost focus');
+      }
+    });
   }
 
   @override
