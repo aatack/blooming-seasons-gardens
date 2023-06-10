@@ -29,16 +29,12 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
             });
           });
     } else {
-      content = Text(
-        widget.value,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      );
+      content = Text(widget.value,
+          maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
     }
 
     return Hoverable(
       builder: (context, hovered, clicked) => Container(
-        width: 200,
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -120,17 +116,24 @@ class _GreedyTextFieldState extends State<_GreedyTextField> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: _handleKeyEvent,
-      child: IntrinsicWidth(
-        child: Align(
-          alignment: Alignment.centerLeft,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: IntrinsicWidth(
           child: TextField(
             focusNode: _innerFocusNode,
             controller: _controller,
             textAlignVertical: TextAlignVertical.center,
             decoration: null,
+            style: style,
           ),
         ),
       ),
     );
   }
 }
+
+const style = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
