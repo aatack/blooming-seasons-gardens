@@ -61,6 +61,15 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   }
 
   @override
+  void didUpdateWidget(ControlledTextInput oldWidget) {
+    final selection = _controller.selection.copyWith();
+    _controller.text = widget.value;
+    _controller.selection = selection;
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     late final Widget content;
     if (_originalValue != null) {

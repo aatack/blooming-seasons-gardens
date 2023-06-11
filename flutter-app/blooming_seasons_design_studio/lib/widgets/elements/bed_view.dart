@@ -17,16 +17,28 @@ class BedView extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Collapsible(
         header: Text(bed.name),
-        child: Row(children: [
-          ControlledTextInput(
+        child: Row(
+          children: [
+            ControlledTextInput(
               value: bed.name,
               onChange: (newValue, transient) {
                 context.read<SessionState>().editGarden(
                     (garden) =>
                         garden.editBed(bed.id, (bed) => bed.rename(newValue)),
                     transient: transient);
-              })
-        ]),
+              },
+            ),
+            ControlledTextInput(
+              value: bed.name,
+              onChange: (newValue, transient) {
+                context.read<SessionState>().editGarden(
+                    (garden) =>
+                        garden.editBed(bed.id, (bed) => bed.rename(newValue)),
+                    transient: transient);
+              },
+            )
+          ],
+        ),
       ),
     );
   }
