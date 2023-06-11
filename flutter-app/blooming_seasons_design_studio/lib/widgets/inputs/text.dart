@@ -26,30 +26,40 @@ class ControlledTextInput extends StatefulWidget {
   final String value;
   final void Function(String, bool) onChange;
 
-  const ControlledTextInput(
-      {super.key, required this.value, required this.onChange});
+  final bool editing;
+  final void Function() onEditingFinished;
+
+  const ControlledTextInput({
+    super.key,
+    required this.value,
+    required this.onChange,
+    this.editing = true,
+    this.onEditingFinished = _doNothing,
+  });
 
   @override
   State<ControlledTextInput> createState() => _ControlledTextInputState();
 }
 
 class _ControlledTextInputState extends State<ControlledTextInput> {
-  String? _originalValue; // Defined iff the widget is being edited
+  String? _originalValue;
 
   final FocusNode _keyboardFocusNode = FocusNode();
   final FocusNode _inputFocusNode = FocusNode();
 
-  final TextEditingController _controller = TextEditingController(text: "");
+  late final TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
 
-    _keyboardFocusNode.addListener(() {
+    _inputFocusNode.addListener(() {
       if (!_keyboardFocusNode.hasFocus) {
         _stopEditing(cancelled: false);
       }
     });
+
+    _controller = TextEditingController(text: widget.value);
   }
 
   @override
@@ -72,27 +82,20 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   @override
   Widget build(BuildContext context) {
     late final Widget content;
-    if (_originalValue != null) {
+    if (widget.editing) {
       content = _inputWidget(context);
     } else {
       content = Text(widget.value,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
     }
 
-    return Hoverable(
-      builder: (context, hovered, clicked) => Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: clicked
-              ? Colors.grey[400]
-              : (hovered ? Colors.grey[350] : Colors.grey[300]),
-        ),
-        child: content,
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
       ),
-      onTap: () {
-        _startEditing();
-      },
+      child: content,
     );
   }
 
@@ -127,7 +130,6 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       _originalValue = widget.value;
     });
 
-    _controller.text = widget.value;
     _controller.selection =
         TextSelection.fromPosition(TextPosition(offset: widget.value.length));
 
@@ -135,10 +137,17 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   }
 
   void _stopEditing({required bool cancelled}) {
-    widget.onChange(cancelled ? _originalValue! : _controller.text, cancelled);
-    setState(() {
-      _originalValue = null;
-    });
+    if (_originalValue != null) {
+      // If the original value was never set, this widget is permanently being
+      // edited, so cannot be reset/cancelled
+
+      widget.onChange(
+        cancelled ? _originalValue! : _controller.text,
+        cancelled,
+      );
+
+      widget.onEditingFinished();
+    }
   }
 }
 
@@ -147,3 +156,5 @@ const style = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.black,
 );
+
+void _doNothing() {}
