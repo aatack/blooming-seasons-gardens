@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../wrappers/hoverable.dart';
+// TODO:
+// - even when editing is always on, set the original value when the input widget gains focus
+// - if editing is switched on externally, simply request focus on the input widget
+// - potentially remove the focus node from the keyboard handler
 
 /// A controlled text input, mimicking the React style of data entry.
 ///
@@ -27,14 +30,16 @@ class ControlledTextInput extends StatefulWidget {
   final void Function(String, bool) onChange;
 
   final bool editing;
-  final void Function() onEditingFinished;
+  final void Function()? onEditingStarted;
+  final void Function()? onEditingFinished;
 
   const ControlledTextInput({
     super.key,
     required this.value,
     required this.onChange,
     this.editing = true,
-    this.onEditingFinished = _doNothing,
+    this.onEditingStarted,
+    this.onEditingFinished,
   });
 
   @override
@@ -54,8 +59,10 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     super.initState();
 
     _inputFocusNode.addListener(() {
-      if (!_keyboardFocusNode.hasFocus) {
-        _stopEditing(cancelled: false);
+      if (_keyboardFocusNode.hasFocus) {
+        _handleEditingStarted();
+      } else {
+        _handleEditingFinished(cancelled: false);
       }
     });
 
@@ -72,9 +79,15 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   @override
   void didUpdateWidget(ControlledTextInput oldWidget) {
-    final selection = _controller.selection.copyWith();
-    _controller.text = widget.value;
-    _controller.selection = selection;
+    if (widget.value != oldWidget.value) {
+      final selection = _controller.selection.copyWith();
+      _controller.text = widget.value;
+      _controller.selection = selection;
+    }
+
+    if (widget.editing && !oldWidget.editing) {
+      _inputFocusNode.requestFocus();
+    }
 
     super.didUpdateWidget(oldWidget);
   }
@@ -104,7 +117,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       focusNode: _keyboardFocusNode,
       onKey: (event) {
         if (event.logicalKey == LogicalKeyboardKey.escape) {
-          _stopEditing(cancelled: true);
+          _handleEditingFinished(cancelled: true);
         }
       },
       child: Align(
@@ -125,7 +138,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     );
   }
 
-  void _startEditing() {
+  void _handleEditingStarted() {
     setState(() {
       _originalValue = widget.value;
     });
@@ -133,20 +146,21 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     _controller.selection =
         TextSelection.fromPosition(TextPosition(offset: widget.value.length));
 
-    _inputFocusNode.requestFocus();
+    if (widget.onEditingStarted != null) {
+      widget.onEditingStarted!();
+    }
   }
 
-  void _stopEditing({required bool cancelled}) {
+  void _handleEditingFinished({required bool cancelled}) {
     if (_originalValue != null) {
-      // If the original value was never set, this widget is permanently being
-      // edited, so cannot be reset/cancelled
-
       widget.onChange(
         cancelled ? _originalValue! : _controller.text,
         cancelled,
       );
 
-      widget.onEditingFinished();
+      if (widget.onEditingFinished != null) {
+        widget.onEditingFinished!();
+      }
     }
   }
 }
@@ -156,5 +170,3 @@ const style = TextStyle(
   fontWeight: FontWeight.normal,
   color: Colors.black,
 );
-
-void _doNothing() {}
