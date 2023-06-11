@@ -59,10 +59,10 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     super.initState();
 
     _inputFocusNode.addListener(() {
-      if (_keyboardFocusNode.hasFocus) {
+      if (_inputFocusNode.hasFocus) {
         _handleEditingStarted();
       } else {
-        _handleEditingFinished(cancelled: false);
+        _handleEditingFinished();
       }
     });
 
@@ -82,7 +82,10 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     if (widget.value != oldWidget.value) {
       final selection = _controller.selection.copyWith();
       _controller.text = widget.value;
-      _controller.selection = selection;
+      _controller.selection = _controller.isSelectionWithinTextBounds(selection)
+          ? selection
+          : TextSelection.fromPosition(
+              TextPosition(offset: widget.value.length));
     }
 
     if (widget.editing && !oldWidget.editing) {
@@ -117,7 +120,11 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       focusNode: _keyboardFocusNode,
       onKey: (event) {
         if (event.logicalKey == LogicalKeyboardKey.escape) {
-          _handleEditingFinished(cancelled: true);
+          _controller.text = _originalValue!;
+          _controller.selection =
+              TextSelection.fromPosition(const TextPosition(offset: 0));
+
+          _inputFocusNode.unfocus();
         }
       },
       child: Align(
@@ -151,10 +158,12 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     }
   }
 
-  void _handleEditingFinished({required bool cancelled}) {
+  void _handleEditingFinished() {
+    final cancelled = _controller.text == _originalValue;
+
     if (_originalValue != null) {
       widget.onChange(
-        cancelled ? _originalValue! : _controller.text,
+        cancelled ? _originalValue! : widget.value,
         cancelled,
       );
 
