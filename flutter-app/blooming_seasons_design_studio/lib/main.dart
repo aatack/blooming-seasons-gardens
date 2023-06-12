@@ -37,8 +37,15 @@ class AppWrapper extends StatelessWidget {
           state.loadGardens();
           return state;
         },
-        child: const Scaffold(
-          body: ModalsWrapper(
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 40,
+            title: const Text(
+              "Blooming Seasons Design",
+              style: TextStyle(fontFamily: "Spectral", fontSize: 15),
+            ),
+          ),
+          body: const ModalsWrapper(
             child: App(),
           ),
         ),
