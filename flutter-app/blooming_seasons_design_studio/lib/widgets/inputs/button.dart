@@ -16,13 +16,12 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colour =
-        emphasise ? AppTheme.emphasiseColour : AppTheme.foregroundColour;
-
     return TextButton(
       onPressed: onClicked,
       style: TextButton.styleFrom(
-          backgroundColor: colour,
+          backgroundColor:
+              emphasise ? AppTheme.emphasiseColour : AppTheme.foregroundColour,
+          foregroundColor: AppTheme.lightColour,
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
       child: child,
     );
