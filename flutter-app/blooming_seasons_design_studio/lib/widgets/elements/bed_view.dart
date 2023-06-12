@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/garden/bed.dart';
 import '../../models/session.dart';
+import '../inputs/button.dart';
 import '../wrappers/collapsible.dart';
 
 class BedView extends StatelessWidget {
@@ -57,13 +58,14 @@ class _BedViewHeaderState extends State<BedViewHeader> {
             });
           },
         ),
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _editingName = true;
-              });
-            },
-            child: const Text("Edit"))
+        Button(
+          onClicked: () {
+            setState(() {
+              _editingName = true;
+            });
+          },
+          child: const Text("Edit"),
+        )
       ],
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../inputs/button.dart';
+
 class Confirm extends StatelessWidget {
   final String message;
   final void Function() onConfirm;
@@ -23,10 +25,9 @@ class Confirm extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(onPressed: onCancel, child: const Text("Cancel")),
+              Button(onClicked: onCancel, child: const Text("Cancel")),
               const SizedBox(width: 20),
-              ElevatedButton(
-                  onPressed: onConfirm, child: const Text("Confirm")),
+              Button(onClicked: onConfirm, child: const Text("Confirm")),
             ],
           ),
         ],

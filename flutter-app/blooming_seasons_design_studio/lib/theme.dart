@@ -6,5 +6,7 @@ class Theme {
   static const Color foregroundColour = Color.fromARGB(1, 78, 166, 153);
 
   static const Color emphasiseColour = Color.fromARGB(1, 20, 13, 79);
-  static const Color textColour = Color.fromARGB(1, 28, 11, 25);
+
+  static const Color darkColour = Color.fromARGB(1, 28, 11, 25);
+  static const Color lightColour = Color.fromARGB(1, 247, 247, 242);
 }

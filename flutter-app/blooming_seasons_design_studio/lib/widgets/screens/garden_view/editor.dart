@@ -8,6 +8,7 @@ import '../../../models/garden/garden.dart';
 import '../../../models/modals.dart';
 import '../../../models/session.dart';
 import '../../elements/bed_view.dart';
+import '../../inputs/button.dart';
 import '../../wrappers/resizable.dart';
 
 class Editor extends StatelessWidget {
@@ -44,8 +45,8 @@ class HeaderButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        ElevatedButton(
-          onPressed: () {
+        Button(
+          onClicked: () {
             context
                 .read<SessionState>()
                 .editGarden((garden) => garden.addNewBed());
@@ -56,8 +57,8 @@ class HeaderButtons extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
+        Button(
+          onClicked: () {
             context.read<SessionState>().undo();
           },
           child: const Text(
@@ -66,8 +67,8 @@ class HeaderButtons extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
+        Button(
+          onClicked: () {
             context.read<SessionState>().redo();
           },
           child: const Text(
@@ -76,8 +77,8 @@ class HeaderButtons extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
+        Button(
+          onClicked: () {
             const encoder = JsonEncoder.withIndent("  ");
 
             final text = Text(

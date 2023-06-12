@@ -17,21 +17,6 @@ class _CollapsibleState extends State<Collapsible> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = [
-      ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _collapsed = !_collapsed;
-          });
-        },
-        child: const Text("Expand"),
-      )
-    ];
-
-    if (!_collapsed) {
-      children.add(widget.child);
-    }
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

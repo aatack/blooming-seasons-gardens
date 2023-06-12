@@ -6,6 +6,7 @@ import '../../models/session.dart';
 import '../../models/thunk.dart';
 import '../indicators/error.dart';
 import '../indicators/loading.dart';
+import '../inputs/button.dart';
 import '../wrappers/hoverable.dart';
 
 class LandingPage extends StatelessWidget {
@@ -228,15 +229,15 @@ class _RenameGardenState extends State<_RenameGarden> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                onPressed: () {
+              Button(
+                onClicked: () {
                   context.read<ModalsState>().pop();
                 },
                 child: const Text("Cancel"),
               ),
               const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: (_newName.isNotEmpty && (_newName != widget.oldName))
+              Button(
+                onClicked: (_newName.isNotEmpty && (_newName != widget.oldName))
                     ? () {
                         final modals = context.read<ModalsState>();
 
