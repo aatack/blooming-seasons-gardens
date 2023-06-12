@@ -1,43 +1,69 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart' hide Color;
+const lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xFF006B5C),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFF77F8DF),
+  onPrimaryContainer: Color(0xFF00201B),
+  secondary: Color(0xFF006B5F),
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFF75F8E3),
+  onSecondaryContainer: Color(0xFF00201C),
+  tertiary: Color(0xFF705D00),
+  onTertiary: Color(0xFFFFFFFF),
+  tertiaryContainer: Color(0xFFFFE174),
+  onTertiaryContainer: Color(0xFF221B00),
+  error: Color(0xFFBA1A1A),
+  errorContainer: Color(0xFFFFDAD6),
+  onError: Color(0xFFFFFFFF),
+  onErrorContainer: Color(0xFF410002),
+  background: Color(0xFFFFFBFF),
+  onBackground: Color(0xFF2E004E),
+  surface: Color(0xFFFFFBFF),
+  onSurface: Color(0xFF2E004E),
+  surfaceVariant: Color(0xFFDAE5E1),
+  onSurfaceVariant: Color(0xFF3F4946),
+  outline: Color(0xFF6F7976),
+  onInverseSurface: Color(0xFFFBECFF),
+  inverseSurface: Color(0xFF461968),
+  inversePrimary: Color(0xFF58DBC3),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFF006B5C),
+  outlineVariant: Color(0xFFBEC9C5),
+  scrim: Color(0xFF000000),
+);
 
-class AppTheme {
-  static MaterialColor backgroundColour =
-      _createMaterialColour(const Color.fromARGB(255, 201, 248, 228));
-  static MaterialColor neutralColour =
-      _createMaterialColour(const Color.fromARGB(255, 139, 206, 185));
-  static MaterialColor foregroundColour =
-      _createMaterialColour(const Color.fromARGB(255, 78, 166, 153));
-
-  static MaterialColor emphasiseColour =
-      _createMaterialColour(const Color.fromARGB(255, 20, 13, 79));
-
-  static MaterialColor darkColour =
-      _createMaterialColour(const Color.fromARGB(255, 28, 11, 25));
-  static MaterialColor lightColour =
-      _createMaterialColour(const Color.fromARGB(255, 247, 247, 242));
-}
-
-MaterialColor _createMaterialColour(Color colour) {
-  List strengths = <double>[.05];
-
-  final swatch = <int, Color>{};
-  final int red = colour.red, green = colour.green, blue = colour.blue;
-
-  for (int i = 1; i < 10; i++) {
-    strengths.add(0.1 * i);
-  }
-  strengths.forEach((strength) {
-    final double delta = 0.5 - strength;
-
-    swatch[(strength * 1000).round()] = Color.fromRGBO(
-      red + ((delta < 0 ? red : (255 - red)) * delta).round(),
-      green + ((delta < 0 ? green : (255 - green)) * delta).round(),
-      blue + ((delta < 0 ? blue : (255 - blue)) * delta).round(),
-      1,
-    );
-  });
-
-  return MaterialColor(colour.value, swatch);
-}
+const darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: Color(0xFF58DBC3),
+  onPrimary: Color(0xFF00382F),
+  primaryContainer: Color(0xFF005045),
+  onPrimaryContainer: Color(0xFF77F8DF),
+  secondary: Color(0xFF54DBC8),
+  onSecondary: Color(0xFF003731),
+  secondaryContainer: Color(0xFF005047),
+  onSecondaryContainer: Color(0xFF75F8E3),
+  tertiary: Color(0xFFE4C44A),
+  onTertiary: Color(0xFF3B2F00),
+  tertiaryContainer: Color(0xFF554500),
+  onTertiaryContainer: Color(0xFFFFE174),
+  error: Color(0xFFFFB4AB),
+  errorContainer: Color(0xFF93000A),
+  onError: Color(0xFF690005),
+  onErrorContainer: Color(0xFFFFDAD6),
+  background: Color(0xFF2E004E),
+  onBackground: Color(0xFFF2DAFF),
+  surface: Color(0xFF2E004E),
+  onSurface: Color(0xFFF2DAFF),
+  surfaceVariant: Color(0xFF3F4946),
+  onSurfaceVariant: Color(0xFFBEC9C5),
+  outline: Color(0xFF89938F),
+  onInverseSurface: Color(0xFF2E004E),
+  inverseSurface: Color(0xFFF2DAFF),
+  inversePrimary: Color(0xFF006B5C),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFF58DBC3),
+  outlineVariant: Color(0xFF3F4946),
+  scrim: Color(0xFF000000),
+);
