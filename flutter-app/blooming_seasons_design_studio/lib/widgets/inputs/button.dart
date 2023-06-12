@@ -19,8 +19,9 @@ class Button extends StatelessWidget {
     return TextButton(
       onPressed: onClicked,
       style: TextButton.styleFrom(
-          backgroundColor:
-              emphasise ? AppTheme.emphasiseColour : AppTheme.foregroundColour,
+          backgroundColor: emphasise
+              ? AppTheme.emphasiseColour[200]
+              : AppTheme.foregroundColour,
           foregroundColor: AppTheme.lightColour,
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
       child: child,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/modals.dart';
 import '../../models/session.dart';
 import '../../models/thunk.dart';
+import '../../theme.dart';
 import '../indicators/error.dart';
 import '../indicators/loading.dart';
 import '../inputs/button.dart';
@@ -64,8 +65,8 @@ class _NewGardenState extends State<_NewGarden> {
         ),
         const SizedBox(width: 10),
         Expanded(
-          child: ElevatedButton(
-            onPressed: _newGardenName.isNotEmpty
+          child: Button(
+            onClicked: _newGardenName.isNotEmpty
                 ? () {
                     context.read<SessionState>().createGarden(
                           _newGardenName,
@@ -73,6 +74,7 @@ class _NewGardenState extends State<_NewGarden> {
                         );
                   }
                 : null,
+            emphasise: true,
             child: const Text("Create"),
           ),
         )
@@ -126,8 +128,10 @@ class _LoadGardenItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: clicked
-                ? Colors.blue
-                : (hovered ? Colors.blue[300] : Colors.lightBlue[50]),
+                ? AppTheme.backgroundColour
+                : (hovered
+                    ? AppTheme.backgroundColour[500]
+                    : AppTheme.backgroundColour[200]),
           ),
           child: SizedBox(
             height: height,
