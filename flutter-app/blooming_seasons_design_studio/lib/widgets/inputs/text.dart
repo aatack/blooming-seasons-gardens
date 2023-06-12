@@ -123,7 +123,6 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
         child: TextField(
           focusNode: _inputFocusNode,
           controller: _controller,
-          textAlignVertical: TextAlignVertical.center,
           decoration: null,
           style: widget.textStyle,
           onChanged: (value) {
