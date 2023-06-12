@@ -67,3 +67,12 @@ const darkColorScheme = ColorScheme(
   outlineVariant: Color(0xFF3F4946),
   scrim: Color(0xFF000000),
 );
+
+Color lighter(Color colour, {int amount = 10}) {
+  return Color.fromARGB(colour.alpha, colour.red + amount,
+      colour.green + amount, colour.blue + amount);
+}
+
+Color darker(Color colour, {int amount = 10}) {
+  return lighter(colour, amount: -amount);
+}

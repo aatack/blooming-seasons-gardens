@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../theme.dart';
-
 class Button extends StatelessWidget {
   final void Function()? onClicked;
   final Widget child;
@@ -16,13 +14,9 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    return OutlinedButton(
       onPressed: onClicked,
       style: TextButton.styleFrom(
-          backgroundColor: emphasise
-              ? AppTheme.emphasiseColour[200]
-              : AppTheme.foregroundColour,
-          foregroundColor: AppTheme.lightColour,
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
       child: child,
     );

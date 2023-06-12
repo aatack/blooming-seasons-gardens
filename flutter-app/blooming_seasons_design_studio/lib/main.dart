@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,7 @@ class AppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        colorScheme: lightColorScheme,
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
             fontFamily: "Spectral",

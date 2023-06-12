@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +22,7 @@ class GardenView extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          color: Colors.blue[800],
+          color: lightColorScheme.surfaceVariant,
           padding: const EdgeInsets.all(padding),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

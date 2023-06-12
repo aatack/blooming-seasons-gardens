@@ -1,10 +1,10 @@
+import 'package:blooming_seasons_design_studio/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/modals.dart';
 import '../../models/session.dart';
 import '../../models/thunk.dart';
-import '../../theme.dart';
 import '../indicators/error.dart';
 import '../indicators/loading.dart';
 import '../inputs/button.dart';
@@ -115,24 +115,22 @@ class _LoadGardenItem extends StatelessWidget {
 
   final String name;
 
-  const _LoadGardenItem({super.key, required this.name});
+  const _LoadGardenItem({required this.name});
 
   @override
   Widget build(BuildContext context) {
+    final colourScheme = Theme.of(context).colorScheme;
+
     return Hoverable(
-      builder: (context, hovered, clicked) => Container(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 20),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: clicked
-                ? AppTheme.backgroundColour
-                : (hovered
-                    ? AppTheme.backgroundColour[500]
-                    : AppTheme.backgroundColour[200]),
-          ),
+      builder: (context, hovered, clicked) => Card(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        color: clicked
+            ? darker(darker(colourScheme.surfaceVariant))
+            : (hovered
+                ? darker(colourScheme.surfaceVariant)
+                : colourScheme.surfaceVariant),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: SizedBox(
             height: height,
             child: Stack(
