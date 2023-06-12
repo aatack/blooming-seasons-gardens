@@ -15,6 +15,19 @@ class AppWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(
+            fontFamily: "Spectral",
+          ),
+          labelLarge: TextStyle(
+            fontFamily: "Spectral",
+          ),
+          titleMedium: TextStyle(
+            fontFamily: "Spectral",
+          ),
+        ),
+      ),
       title: "Blooming Seasons Design Studio",
       home: BlocProvider<SessionState>(
         create: (_) {
