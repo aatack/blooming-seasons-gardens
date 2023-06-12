@@ -57,14 +57,13 @@ class _BedViewHeaderState extends State<BedViewHeader> {
             });
           },
         ),
-        if (!_editingName)
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _editingName = true;
-                });
-              },
-              child: const Text("Edit"))
+        ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _editingName = true;
+              });
+            },
+            child: const Text("Edit"))
       ],
     );
   }

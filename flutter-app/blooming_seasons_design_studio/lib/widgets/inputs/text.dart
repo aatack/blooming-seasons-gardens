@@ -97,22 +97,12 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    late final Widget content;
-    if (widget.editing) {
-      content = _inputWidget(context);
-    } else {
-      content = Text(widget.value,
-          maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
-    }
+    return widget.editing ? _inputWidget(context) : _textWidget(context);
+  }
 
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-      ),
-      child: content,
-    );
+  Widget _textWidget(BuildContext context) {
+    return Text(widget.value,
+        maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
   }
 
   Widget _inputWidget(BuildContext context) {
@@ -127,19 +117,16 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
           _inputFocusNode.unfocus();
         }
       },
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: IntrinsicWidth(
-          child: TextField(
-            focusNode: _inputFocusNode,
-            controller: _controller,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: null,
-            style: style,
-            onChanged: (value) {
-              widget.onChange(value, true);
-            },
-          ),
+      child: IntrinsicWidth(
+        child: TextField(
+          focusNode: _inputFocusNode,
+          controller: _controller,
+          textAlignVertical: TextAlignVertical.center,
+          decoration: null,
+          style: style,
+          onChanged: (value) {
+            widget.onChange(value, true);
+          },
         ),
       ),
     );
