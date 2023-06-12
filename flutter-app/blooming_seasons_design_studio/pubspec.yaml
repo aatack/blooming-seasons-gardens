@@ -24,3 +24,6 @@ flutter:
     - family: Monospace
       fonts:
         - asset: assets/fonts/Inconsolata-Regular.ttf
+    - family: Spectral
+      fonts:
+        - asset: assets/fonts/Spectral-Regular.ttf
