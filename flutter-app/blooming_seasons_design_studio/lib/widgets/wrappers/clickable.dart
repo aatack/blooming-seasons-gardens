@@ -24,6 +24,7 @@ class ClickableCard extends StatelessWidget {
 
     return Hoverable(
       builder: (context, hovered, clicked) => Card(
+        elevation: 0,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         color: clicked
             ? darker(darker(colour))
