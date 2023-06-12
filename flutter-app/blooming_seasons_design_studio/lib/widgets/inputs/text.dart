@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// TODO:
-// - even when editing is always on, set the original value when the input widget gains focus
-// - if editing is switched on externally, simply request focus on the input widget
-// - potentially remove the focus node from the keyboard handler
-
 /// A controlled text input, mimicking the React style of data entry.
 ///
 /// While the text input is not being edited, it will reactively display
@@ -33,6 +28,8 @@ class ControlledTextInput extends StatefulWidget {
   final void Function()? onEditingStarted;
   final void Function()? onEditingFinished;
 
+  final TextStyle textStyle;
+
   const ControlledTextInput({
     super.key,
     required this.value,
@@ -40,6 +37,11 @@ class ControlledTextInput extends StatefulWidget {
     this.editing = true,
     this.onEditingStarted,
     this.onEditingFinished,
+    this.textStyle = const TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+    ),
   });
 
   @override
@@ -102,7 +104,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
   Widget _textWidget(BuildContext context) {
     return Text(widget.value,
-        maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
+        maxLines: 1, overflow: TextOverflow.ellipsis, style: widget.textStyle);
   }
 
   Widget _inputWidget(BuildContext context) {
@@ -123,7 +125,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
           controller: _controller,
           textAlignVertical: TextAlignVertical.center,
           decoration: null,
-          style: style,
+          style: widget.textStyle,
           onChanged: (value) {
             widget.onChange(value, true);
           },
@@ -160,9 +162,3 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
     }
   }
 }
-
-const style = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.normal,
-  color: Colors.black,
-);
