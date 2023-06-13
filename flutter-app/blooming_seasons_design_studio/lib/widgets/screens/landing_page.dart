@@ -158,6 +158,10 @@ class _LoadGardenItem extends StatelessWidget {
   }
 
   Widget _overlayedIcons(BuildContext context) {
+    final colour = Theme.of(context).colorScheme.onSurfaceVariant;
+    final hoverColour = lighter(colour, amount: 50);
+    final clickColour = lighter(colour, amount: 100);
+
     return Align(
       alignment: Alignment.centerRight,
       child: Row(
@@ -171,6 +175,9 @@ class _LoadGardenItem extends StatelessWidget {
 
               modals.add(_RenameGarden(name));
             },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
           ),
           const SizedBox(width: 8),
           HoverableIcon(
@@ -187,6 +194,9 @@ class _LoadGardenItem extends StatelessWidget {
                     },
                   );
             },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
           ),
           const SizedBox(width: 8),
         ],

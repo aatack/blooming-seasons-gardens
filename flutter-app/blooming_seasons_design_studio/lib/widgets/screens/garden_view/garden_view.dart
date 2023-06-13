@@ -21,31 +21,31 @@ class GardenView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Container(
-          color: lightColorScheme.surfaceVariant,
-          padding: const EdgeInsets.all(padding),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              HoverableIcon(
-                icon: Icons.arrow_back,
-                height: 20,
-                onTap: () {
-                  context.read<SessionState>().exitGarden();
-                },
-              ),
-              const SizedBox(width: padding),
-              Text(
-                garden.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   color: lightColorScheme.surfaceVariant,
+        //   padding: const EdgeInsets.all(padding),
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       HoverableIcon(
+        //         icon: Icons.arrow_back,
+        //         height: 20,
+        //         onTap: () {
+        //           context.read<SessionState>().exitGarden();
+        //         },
+        //       ),
+        //       const SizedBox(width: padding),
+        //       Text(
+        //         garden.name,
+        //         style: const TextStyle(
+        //           color: Colors.white,
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Expanded(
           child: Stack(
             children: [

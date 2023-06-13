@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'models/session.dart';
 import 'widgets/app.dart';
+import 'widgets/wrappers/hoverable.dart';
 import 'widgets/wrappers/modals.dart';
 
 void main() {
@@ -38,17 +39,34 @@ class AppWrapper extends StatelessWidget {
           return state;
         },
         child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 40,
-            title: const Text(
-              "Blooming Seasons Design",
-              style: TextStyle(fontFamily: "Spectral", fontSize: 15),
-            ),
-          ),
+          appBar: _appBar(context),
           body: const ModalsWrapper(
             child: App(),
           ),
         ),
+      ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    final colour = Theme.of(context).colorScheme.onPrimary;
+
+    return AppBar(
+      toolbarHeight: 40,
+      leading: HoverableIcon(
+        icon: Icons.arrow_back,
+        height: 20,
+        onTap: () {
+          print("Clicked");
+          context.read<SessionState>().exitGarden();
+        },
+        colour: colour,
+        hoverColour: darker(colour, amount: 40),
+        clickColour: darker(colour, amount: 80),
+      ),
+      title: const Text(
+        "Blooming Seasons Design",
+        style: TextStyle(fontFamily: "Spectral", fontSize: 15),
       ),
     );
   }
