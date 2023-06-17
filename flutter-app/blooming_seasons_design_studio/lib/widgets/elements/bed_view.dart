@@ -56,10 +56,20 @@ class _BedViewState extends State<BedView> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.bed.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: ControlledTextInput(
+                    value: widget.bed.name,
+                    onChange: (newValue, transient) {
+                      context.read<SessionState>().editGarden(
+                          (garden) => garden.editBed(
+                              widget.bed.id, (bed) => bed.rename(newValue)),
+                          transient: transient);
+                    },
+                    editing: _editingName,
+                    onEditingFinished: () {
+                      setState(() {
+                        _editingName = false;
+                      });
+                    },
                   ),
                 ),
                 if (hovered) _overlayedIcons(context),
@@ -90,7 +100,9 @@ class _BedViewState extends State<BedView> {
             icon: Icons.edit,
             height: height,
             onTap: () {
-              throw UnimplementedError();
+              setState(() {
+                _editingName = true;
+              });
             },
             colour: colour,
             hoverColour: hoverColour,
@@ -101,15 +113,7 @@ class _BedViewState extends State<BedView> {
             icon: Icons.delete,
             height: height,
             onTap: () {
-              context.read<ModalsState>().confirm(
-                    message: "Delete garden ${widget.bed.name}?",
-                    action: () {
-                      context.read<SessionState>().deleteGarden(
-                            widget.bed.name,
-                            context.read<ModalsState>(),
-                          );
-                    },
-                  );
+              context.read<SessionState>(); // TODO: delete bed
             },
             colour: colour,
             hoverColour: hoverColour,
