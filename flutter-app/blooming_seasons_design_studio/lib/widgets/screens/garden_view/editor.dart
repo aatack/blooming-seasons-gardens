@@ -129,9 +129,16 @@ class BedsView extends StatelessWidget {
       child: FractionallySizedBox(
         heightFactor: 1.0,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
           child: ListView(
-            children: beds.map((bed) => BedView(bed: bed)).toList(),
+            children: beds
+                .map((bed) => Column(
+                      children: [
+                        BedView(bed: bed),
+                        const SizedBox(height: 8.0)
+                      ],
+                    ))
+                .toList(),
           ),
         ),
       ),

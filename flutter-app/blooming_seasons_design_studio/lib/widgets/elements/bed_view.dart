@@ -27,6 +27,16 @@ class _BedViewState extends State<BedView> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _header(context),
+        if (!_collapsed) _content(context),
+      ],
+    );
+  }
+
+  Widget _header(BuildContext context) {
     final colourScheme = Theme.of(context).colorScheme;
 
     return Hoverable(
@@ -37,6 +47,7 @@ class _BedViewState extends State<BedView> {
             : (hovered
                 ? darker(colourScheme.surfaceVariant)
                 : colourScheme.surfaceVariant),
+        margin: const EdgeInsets.all(0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
@@ -58,9 +69,9 @@ class _BedViewState extends State<BedView> {
         ),
       ),
       onTap: () {
-        context
-            .read<SessionState>()
-            .loadGarden(widget.bed.name, context.read<ModalsState>());
+        setState(() {
+          _collapsed = !_collapsed;
+        });
       },
     );
   }
@@ -106,6 +117,19 @@ class _BedViewState extends State<BedView> {
           ),
           const SizedBox(width: 8),
         ],
+      ),
+    );
+  }
+
+  Widget _content(BuildContext context) {
+    return Card(
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      color: Colors.grey[100],
+      elevation: 0,
+      margin: const EdgeInsets.all(0),
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text("Bed content"),
       ),
     );
   }
