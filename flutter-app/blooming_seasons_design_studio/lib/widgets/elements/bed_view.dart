@@ -4,10 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/garden/bed.dart';
 import '../../models/session.dart';
-import '../inputs/button.dart';
-import 'package:blooming_seasons_design_studio/theme.dart';
-
-import '../../models/modals.dart';
+import '../../theme.dart';
 import '../wrappers/hoverable.dart';
 
 class BedView extends StatefulWidget {
@@ -56,20 +53,27 @@ class _BedViewState extends State<BedView> {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: ControlledTextInput(
-                    value: widget.bed.name,
-                    onChange: (newValue, transient) {
-                      context.read<SessionState>().editGarden(
-                          (garden) => garden.editBed(
-                              widget.bed.id, (bed) => bed.rename(newValue)),
-                          transient: transient);
-                    },
-                    editing: _editingName,
-                    onEditingFinished: () {
-                      setState(() {
-                        _editingName = false;
-                      });
-                    },
+                  child: Row(
+                    children: [
+                      Icon(_collapsed
+                          ? Icons.arrow_drop_down
+                          : Icons.arrow_right),
+                      ControlledTextInput(
+                        value: widget.bed.name,
+                        onChange: (newValue, transient) {
+                          context.read<SessionState>().editGarden(
+                              (garden) => garden.editBed(
+                                  widget.bed.id, (bed) => bed.rename(newValue)),
+                              transient: transient);
+                        },
+                        editing: _editingName,
+                        onEditingFinished: () {
+                          setState(() {
+                            _editingName = false;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 if (hovered) _overlayedIcons(context),
@@ -135,91 +139,6 @@ class _BedViewState extends State<BedView> {
         padding: EdgeInsets.all(8.0),
         child: Text("Bed content"),
       ),
-    );
-  }
-}
-
-class BedViewHeader extends StatefulWidget {
-  const BedViewHeader({
-    super.key,
-    required this.bed,
-  });
-
-  final Bed bed;
-
-  @override
-  State<BedViewHeader> createState() => _BedViewHeaderState();
-}
-
-class _BedViewHeaderState extends State<BedViewHeader> {
-  final double height = 20;
-
-  bool _editingName = false;
-  bool _collapsed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ControlledTextInput(
-          value: widget.bed.name,
-          onChange: (newValue, transient) {
-            context.read<SessionState>().editGarden(
-                (garden) => garden.editBed(
-                    widget.bed.id, (bed) => bed.rename(newValue)),
-                transient: transient);
-          },
-          editing: _editingName,
-          onEditingFinished: () {
-            setState(() {
-              _editingName = false;
-            });
-          },
-        ),
-        Button(
-          onClicked: () {
-            setState(() {
-              _editingName = true;
-            });
-          },
-          child: const Text("Edit"),
-        )
-      ],
-    );
-  }
-}
-
-class BedViewContent extends StatelessWidget {
-  const BedViewContent({
-    super.key,
-    required this.bed,
-  });
-
-  final Bed bed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ControlledTextInput(
-          value: bed.name,
-          onChange: (newValue, transient) {
-            context.read<SessionState>().editGarden(
-                (garden) =>
-                    garden.editBed(bed.id, (bed) => bed.rename(newValue)),
-                transient: transient);
-          },
-        ),
-        ControlledTextInput(
-          value: bed.name,
-          onChange: (newValue, transient) {
-            context.read<SessionState>().editGarden(
-                (garden) =>
-                    garden.editBed(bed.id, (bed) => bed.rename(newValue)),
-                transient: transient);
-          },
-        )
-      ],
     );
   }
 }
