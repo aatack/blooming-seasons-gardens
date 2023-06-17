@@ -16,6 +16,24 @@ class AppWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider<SessionState>(
+      create: (_) {
+        final state = SessionState();
+        state.loadGardens();
+        return state;
+      },
+      child: const AppContainer(),
+    );
+  }
+}
+
+class AppContainer extends StatelessWidget {
+  const AppContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         colorScheme: lightColorScheme,
@@ -32,17 +50,10 @@ class AppWrapper extends StatelessWidget {
         ),
       ),
       title: "Blooming Seasons Design Studio",
-      home: BlocProvider<SessionState>(
-        create: (_) {
-          final state = SessionState();
-          state.loadGardens();
-          return state;
-        },
-        child: Scaffold(
-          appBar: _appBar(context),
-          body: const ModalsWrapper(
-            child: App(),
-          ),
+      home: Scaffold(
+        appBar: _appBar(context),
+        body: const ModalsWrapper(
+          child: App(),
         ),
       ),
     );
@@ -57,7 +68,6 @@ class AppWrapper extends StatelessWidget {
         icon: Icons.arrow_back,
         height: 20,
         onTap: () {
-          print("Clicked");
           context.read<SessionState>().exitGarden();
         },
         colour: colour,
