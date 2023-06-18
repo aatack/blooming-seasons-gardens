@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/bed.dart';
+import '../../../models/garden/instance.dart';
 import '../../../models/session.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
@@ -98,7 +99,9 @@ class _BedEditorState extends State<BedEditor> {
             icon: Icons.add_circle,
             height: 20,
             onTap: () {
-              context.read<ModalsState>().add(_AddElementModal());
+              context
+                  .read<ModalsState>()
+                  .add(_AddElementModal(bed: widget.bed));
             },
             colour: colour,
             hoverColour: hoverColour,
@@ -172,6 +175,10 @@ class _BedEditorState extends State<BedEditor> {
 }
 
 class _AddElementModal extends StatelessWidget {
+  final Bed bed;
+
+  const _AddElementModal({required this.bed});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -182,6 +189,8 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
+              context.read<SessionState>().editGarden(
+                  (garden) => garden.addElement(bed.id, ElementType.plant));
             },
             child: const Text("Plant"),
           ),

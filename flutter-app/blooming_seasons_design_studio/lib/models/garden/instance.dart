@@ -33,7 +33,7 @@ dynamic serialiseInstance(
   Map<int, dynamic> templates,
   Map<Image, int> images,
 ) {
-  final dynamic result = {
+  final Map<String, dynamic> result = {
     "id": instance.id,
     "x": instance.x,
     "y": instance.y,

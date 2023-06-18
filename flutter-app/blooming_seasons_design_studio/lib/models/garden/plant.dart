@@ -22,7 +22,7 @@ class Plant implements Element {
   });
 
   @override
-  dynamic serialise(
+  Map<String, dynamic> serialise(
     Map<int, dynamic> templates,
     Map<Image, int> images,
   ) {
@@ -31,8 +31,8 @@ class Plant implements Element {
       "name": name,
       "size": size,
       "type": type.toString(),
-      "border": border ?? _serialisePlantBorder(border!),
-      "image": image ?? _serialisePlantImage(image!, images),
+      "border": border == null ? null : _serialisePlantBorder(border!),
+      "image": image == null ? null : _serialisePlantImage(image!, images),
     };
   }
 }
