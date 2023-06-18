@@ -55,7 +55,7 @@ class _HoverableState extends State<Hoverable> {
 class HoverableIcon extends StatelessWidget {
   final IconData icon;
   final double height;
-  final void Function() onTap;
+  final void Function()? onTap;
   final Color? colour;
   final Color? hoverColour;
   final Color? clickColour;
@@ -81,7 +81,7 @@ class HoverableIcon extends StatelessWidget {
                 : colour,
         size: height,
       ),
-      onTap: onTap,
+      onTap: onTap == null ? () {} : onTap!,
     );
   }
 }

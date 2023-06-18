@@ -1,3 +1,5 @@
+import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +95,17 @@ class _BedViewState extends State<BedView> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           HoverableIcon(
+            icon: Icons.add_circle,
+            height: 20,
+            onTap: () {
+              context.read<ModalsState>().add(_AddElementModal());
+            },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
+          ),
+          const SizedBox(width: 8),
+          HoverableIcon(
             icon: Icons.edit,
             height: 20,
             onTap: () {
@@ -153,6 +166,40 @@ class _BedViewState extends State<BedView> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AddElementModal extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Button(
+            onClicked: () {
+              context.read<ModalsState>().pop();
+            },
+            child: const Text("Plant"),
+          ),
+          const SizedBox(height: 8),
+          Button(
+            onClicked: () {
+              context.read<ModalsState>().pop();
+            },
+            child: const Text("Label"),
+          ),
+          const SizedBox(height: 8),
+          Button(
+            onClicked: () {
+              context.read<ModalsState>().pop();
+            },
+            child: const Text("Arrow"),
+          ),
+        ],
       ),
     );
   }
