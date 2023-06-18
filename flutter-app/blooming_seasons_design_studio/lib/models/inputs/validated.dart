@@ -22,7 +22,7 @@ class ValidatedDouble extends Validated<double> {
   List<String> _errors() {
     final parsedValue = double.tryParse(string);
     return [
-      if (parsedValue != null) "Value is not a valid number",
+      if (parsedValue == null) "Value is not a valid number",
       if ((minimum != null) &&
           (parsedValue != null) &&
           (parsedValue < minimum!))
