@@ -5,21 +5,21 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/garden/bed.dart';
-import '../../models/session.dart';
-import '../../theme.dart';
-import '../wrappers/hoverable.dart';
+import '../../../models/garden/bed.dart';
+import '../../../models/session.dart';
+import '../../../theme.dart';
+import '../../wrappers/hoverable.dart';
 
-class BedView extends StatefulWidget {
+class BedEditor extends StatefulWidget {
   final Bed bed;
 
-  const BedView({super.key, required this.bed});
+  const BedEditor({super.key, required this.bed});
 
   @override
-  State<BedView> createState() => _BedViewState();
+  State<BedEditor> createState() => _BedEditorState();
 }
 
-class _BedViewState extends State<BedView> {
+class _BedEditorState extends State<BedEditor> {
   bool _editingName = false;
   bool _collapsed = false;
 

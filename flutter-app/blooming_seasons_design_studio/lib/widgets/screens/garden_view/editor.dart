@@ -7,7 +7,7 @@ import '../../../models/garden/bed.dart';
 import '../../../models/garden/garden.dart';
 import '../../../models/modals.dart';
 import '../../../models/session.dart';
-import '../../elements/bed_view.dart';
+import '../../inputs/elements/bed.dart';
 import '../../inputs/button.dart';
 import '../../wrappers/resizable.dart';
 
@@ -134,7 +134,7 @@ class BedsView extends StatelessWidget {
             children: beds
                 .map((bed) => Column(
                       children: [
-                        BedView(bed: bed),
+                        BedEditor(bed: bed),
                         const SizedBox(height: 8.0)
                       ],
                     ))
