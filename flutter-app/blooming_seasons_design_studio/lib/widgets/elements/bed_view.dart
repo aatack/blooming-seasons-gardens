@@ -18,8 +18,6 @@ class BedView extends StatefulWidget {
 }
 
 class _BedViewState extends State<BedView> {
-  final double height = 20;
-
   bool _editingName = false;
   bool _collapsed = false;
 
@@ -46,40 +44,33 @@ class _BedViewState extends State<BedView> {
                 ? darker(colourScheme.surfaceVariant)
                 : colourScheme.surfaceVariant),
         margin: const EdgeInsets.all(0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: height,
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      Icon(_collapsed
-                          ? Icons.arrow_drop_down
-                          : Icons.arrow_right),
-                      ControlledTextInput(
-                        value: widget.bed.name,
-                        onChange: (newValue, transient) {
-                          context.read<SessionState>().editGarden(
-                              (garden) => garden.editBed(
-                                  widget.bed.id, (bed) => bed.rename(newValue)),
-                              transient: transient);
-                        },
-                        editing: _editingName,
-                        onEditingFinished: () {
-                          setState(() {
-                            _editingName = false;
-                          });
-                        },
-                      ),
-                    ],
+        child: SizedBox(
+          height: 36,
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              Row(
+                children: [
+                  Icon(_collapsed ? Icons.arrow_drop_down : Icons.arrow_right),
+                  ControlledTextInput(
+                    value: widget.bed.name,
+                    onChange: (newValue, transient) {
+                      context.read<SessionState>().editGarden(
+                          (garden) => garden.editBed(
+                              widget.bed.id, (bed) => bed.rename(newValue)),
+                          transient: transient);
+                    },
+                    editing: _editingName,
+                    onEditingFinished: () {
+                      setState(() {
+                        _editingName = false;
+                      });
+                    },
                   ),
-                ),
-                if (hovered && !_editingName) _overlayedIcons(context),
-              ],
-            ),
+                ],
+              ),
+              if (hovered && !_editingName) _overlayedIcons(context),
+            ],
           ),
         ),
       ),
@@ -103,7 +94,7 @@ class _BedViewState extends State<BedView> {
         children: [
           HoverableIcon(
             icon: Icons.edit,
-            height: height,
+            height: 20,
             onTap: () {
               setState(() {
                 _editingName = true;
@@ -116,7 +107,7 @@ class _BedViewState extends State<BedView> {
           const SizedBox(width: 8),
           HoverableIcon(
             icon: Icons.delete,
-            height: height,
+            height: 20,
             onTap: () {
               context
                   .read<SessionState>()
