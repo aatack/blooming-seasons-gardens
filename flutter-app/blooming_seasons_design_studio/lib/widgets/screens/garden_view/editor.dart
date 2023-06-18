@@ -49,7 +49,7 @@ class HeaderButtons extends StatelessWidget {
           onClicked: () {
             context
                 .read<SessionState>()
-                .editGarden((garden) => garden.addNewBed());
+                .editGarden((garden) => garden.addBed());
           },
           child: const Text(
             "New bed",

@@ -1,7 +1,10 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:flutter/material.dart' show immutable;
+import 'package:blooming_seasons_design_studio/models/garden/arrow.dart';
+import 'package:blooming_seasons_design_studio/models/garden/label.dart';
+import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
+import 'package:flutter/material.dart' show Colors, immutable;
 import 'package:image/image.dart' show Image;
 
 import '../inputs/validated.dart';
@@ -30,7 +33,7 @@ class Garden {
     return Garden(name, const [], const {}, 0);
   }
 
-  Garden addNewBed() {
+  Garden addBed() {
     return Garden(
       name,
       [
@@ -63,6 +66,46 @@ class Garden {
       _templates,
       availableID,
     );
+  }
+
+  Garden addElement(int bedID, ElementType elementType) {
+    late final Element element;
+    switch (elementType) {
+      case ElementType.plant:
+        element = Plant(
+          name: "Plant $availableID",
+          size: 0.3,
+          type: PlantType.border,
+          border: PlantBorder(thickness: 0.01, colour: Colors.yellow[300]!),
+          image: null,
+        );
+        break;
+      case ElementType.label:
+        element = Label(text: "Label $availableID", size: 12);
+        break;
+      case ElementType.arrow:
+        element = const Arrow(x: 0, y: 0);
+        break;
+    }
+
+    return Garden(
+        name,
+        _beds
+            .map((bed) => bed.id == bedID
+                ? Bed([
+                    ...bed.elements,
+                    Instance(
+                      id: availableID,
+                      x: 0,
+                      y: 0,
+                      element: element,
+                      templateID: null,
+                    )
+                  ], id: bed.id, origin: bed.origin, name: bed.name)
+                : bed)
+            .toList(),
+        _templates,
+        availableID + 1);
   }
 }
 

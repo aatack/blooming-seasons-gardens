@@ -5,6 +5,8 @@ import 'arrow.dart';
 import 'label.dart';
 import 'plant.dart';
 
+enum ElementType { plant, label, arrow }
+
 abstract class Element {
   dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);
 }
