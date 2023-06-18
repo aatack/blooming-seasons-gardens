@@ -14,12 +14,13 @@ class PointInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Table(
       defaultColumnWidth: const IntrinsicColumnWidth(),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
         TableRow(
           children: [
             const TableCell(
                 child: Padding(
-              padding: EdgeInsets.only(right: 10, bottom: 8),
+              padding: EdgeInsets.only(right: 10),
               child: Text("Horizontal"),
             )),
             TableCell(
@@ -31,6 +32,7 @@ class PointInput extends StatelessWidget {
             )),
           ],
         ),
+        const TableRow(children: [SizedBox(height: 4), SizedBox(height: 4)]),
         TableRow(
           children: [
             const TableCell(child: Text("Vertical")),
