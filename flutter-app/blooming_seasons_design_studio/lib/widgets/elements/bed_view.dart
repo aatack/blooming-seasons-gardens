@@ -76,7 +76,7 @@ class _BedViewState extends State<BedView> {
                     ],
                   ),
                 ),
-                if (hovered) _overlayedIcons(context),
+                if (hovered && !_editingName) _overlayedIcons(context),
               ],
             ),
           ),
@@ -117,7 +117,9 @@ class _BedViewState extends State<BedView> {
             icon: Icons.delete,
             height: height,
             onTap: () {
-              context.read<SessionState>(); // TODO: delete bed
+              context
+                  .read<SessionState>()
+                  .editGarden((garden) => garden.deleteBed(widget.bed.id));
             },
             colour: colour,
             hoverColour: hoverColour,

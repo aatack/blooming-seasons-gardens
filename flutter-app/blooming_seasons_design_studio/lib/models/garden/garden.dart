@@ -55,6 +55,15 @@ class Garden {
       availableID,
     );
   }
+
+  Garden deleteBed(int id) {
+    return Garden(
+      name,
+      _beds.where((bed) => bed.id != id).toList(),
+      _templates,
+      availableID,
+    );
+  }
 }
 
 /// Return a JSON-compatible representation of the garden.
