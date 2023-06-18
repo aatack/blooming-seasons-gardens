@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,9 +138,29 @@ class _BedViewState extends State<BedView> {
       color: Colors.grey[100],
       elevation: 0,
       margin: const EdgeInsets.all(0),
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text("Bed content"),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            PointInput(
+              point: widget.bed.origin,
+              onChange: (newOrigin, transient) {
+                context.read<SessionState>().editGarden(
+                      (garden) => garden.editBed(
+                        widget.bed.id,
+                        (bed) => Bed(
+                          widget.bed.elements,
+                          id: widget.bed.id,
+                          origin: newOrigin,
+                          name: widget.bed.name,
+                        ),
+                      ),
+                      transient: transient,
+                    );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

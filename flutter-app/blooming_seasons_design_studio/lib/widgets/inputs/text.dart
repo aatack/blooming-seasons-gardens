@@ -151,7 +151,7 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
 
     if (_originalValue != null) {
       widget.onChange(
-        cancelled ? _originalValue! : widget.value,
+        cancelled ? _originalValue! : _controller.text,
         cancelled,
       );
 
