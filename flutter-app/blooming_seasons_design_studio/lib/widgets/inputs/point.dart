@@ -12,31 +12,35 @@ class PointInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Table(
+      defaultColumnWidth: const IntrinsicColumnWidth(),
       children: [
-        Row(
+        TableRow(
           children: [
-            const Text("Horizontal"),
-            const SizedBox(width: 5),
-            _wrapTextInput(
+            const TableCell(
+                child: Padding(
+              padding: EdgeInsets.only(right: 10, bottom: 8),
+              child: Text("Horizontal"),
+            )),
+            TableCell(
+                child: _wrapTextInput(
               point.x,
               (newValue, transient) {
                 onChange(Point(point.x.set(newValue), point.y), transient);
               },
-            ),
+            )),
           ],
         ),
-        const SizedBox(height: 8),
-        Row(
+        TableRow(
           children: [
-            const Text("Vertical"),
-            const SizedBox(width: 5),
-            _wrapTextInput(
+            const TableCell(child: Text("Vertical")),
+            TableCell(
+                child: _wrapTextInput(
               point.y,
               (newValue, transient) {
                 onChange(Point(point.x, point.y.set(newValue)), transient);
               },
-            ),
+            )),
           ],
         ),
       ],
