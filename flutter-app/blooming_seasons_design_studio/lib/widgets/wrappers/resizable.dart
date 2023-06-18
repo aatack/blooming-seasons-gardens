@@ -29,9 +29,13 @@ class _ResizableState extends State<Resizable> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: _closed ? 0 : _width,
-            child: widget.child,
+          Visibility(
+            visible: !_closed,
+            maintainState: true,
+            child: SizedBox(
+              width: _closed ? 0 : _width,
+              child: widget.child,
+            ),
           ),
           MouseRegion(
             cursor: SystemMouseCursors.grab,
