@@ -170,6 +170,7 @@ class _BedEditorState extends State<BedEditor> {
                     );
               },
             ),
+            const SizedBox(height: 8),
             ...widget.bed.elements
                 .map((instance) => InstanceEditor(instance: instance))
           ],

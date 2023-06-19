@@ -57,16 +57,63 @@ class _InstanceEditorState extends State<InstanceEditor> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Divider(),
-              content,
-              if (!_collapsed)
-                PointInput(
-                    point: widget.instance.position,
-                    onChange: (newPosition, transient) {}),
+              const Divider(height: 0),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Table(
+                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    _header(context),
+                    if (!_collapsed) _contentWrapper(context)
+                  ],
+                ),
+              )
             ],
           ),
         );
       },
     );
+  }
+
+  TableRow _header(BuildContext context) {
+    late final IconData icon;
+
+    if (widget.instance.element is Plant) {
+      icon = Icons.compost;
+    } else if (widget.instance.element is Label) {
+      icon = Icons.label;
+    } else if (widget.instance.element is Arrow) {
+      icon = Icons.arrow_right_alt_sharp;
+    } else {
+      throw UnimplementedError();
+    }
+
+    return TableRow(
+      children: [
+        TableCell(
+          child: Icon(icon),
+        ),
+        const TableCell(child: SizedBox(width: 10)),
+        TableCell(child: Text("Plant")),
+      ],
+    );
+  }
+
+  TableRow _contentWrapper(BuildContext context) {
+    return TableRow(
+      children: [
+        TableCell(
+          child: Stack(children: []),
+        ),
+        const TableCell(child: SizedBox(width: 10)),
+        TableCell(child: _contentInner(context)),
+      ],
+    );
+  }
+
+  Widget _contentInner(BuildContext context) {
+    return PointInput(
+        point: widget.instance.position, onChange: (newPosition, transient) {});
   }
 }
