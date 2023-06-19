@@ -146,7 +146,11 @@ class _InstanceEditorState extends State<InstanceEditor> {
           HoverableIcon(
             icon: Icons.delete,
             height: 20,
-            onTap: () {},
+            onTap: () {
+              context.read<SessionState>().editGarden(
+                    (garden) => garden.removeInstance(widget.instance.id),
+                  );
+            },
             colour: colour,
             hoverColour: hoverColour,
             clickColour: clickColour,

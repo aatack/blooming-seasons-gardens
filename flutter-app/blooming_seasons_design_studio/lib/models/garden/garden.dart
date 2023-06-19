@@ -89,20 +89,28 @@ class Garden {
   }
 
   Garden editInstance(int id, Instance Function(Instance) update) {
-    final bedID = instanceParent(id);
     return editBed(
-      bedID,
-      (bed) => bed.id == bedID
-          ? Bed(
-              bed.instances
-                  .map((instance) =>
-                      instance.id == id ? update(instance) : instance)
-                  .toList(),
-              id: bed.id,
-              origin: bed.origin,
-              name: bed.name,
-            )
-          : bed,
+      instanceParent(id),
+      (bed) => Bed(
+        bed.instances
+            .map((instance) => instance.id == id ? update(instance) : instance)
+            .toList(),
+        id: bed.id,
+        origin: bed.origin,
+        name: bed.name,
+      ),
+    );
+  }
+
+  Garden removeInstance(int id) {
+    return editBed(
+      instanceParent(id),
+      (bed) => Bed(
+        bed.instances.where((instance) => instance.id != id).toList(),
+        id: bed.id,
+        origin: bed.origin,
+        name: bed.name,
+      ),
     );
   }
 
