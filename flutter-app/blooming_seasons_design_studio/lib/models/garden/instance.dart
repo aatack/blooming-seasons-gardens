@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show immutable;
 import 'package:image/image.dart' show Image;
 
+import '../structs/point.dart';
 import 'arrow.dart';
 import 'label.dart';
 import 'plant.dart';
@@ -14,15 +15,13 @@ abstract class Element {
 @immutable
 class Instance<E extends Element> {
   final int id;
-  final double x;
-  final double y;
+  final Point position;
   final E element;
   final int? templateID;
 
   const Instance({
     required this.id,
-    required this.x,
-    required this.y,
+    required this.position,
     required this.element,
     required this.templateID,
   });
@@ -35,8 +34,7 @@ dynamic serialiseInstance(
 ) {
   final Map<String, dynamic> result = {
     "id": instance.id,
-    "x": instance.x,
-    "y": instance.y,
+    "position": instance.position.serialise(),
   };
 
   if (instance.templateID != null) {
@@ -68,8 +66,7 @@ Instance deserialiseInstance(Map<String, dynamic> instance,
 
   return Instance(
     id: instance["id"],
-    x: instance["x"],
-    y: instance["y"],
+    position: Point.deserialise(instance["position"]),
     element: element,
     templateID: template,
   );

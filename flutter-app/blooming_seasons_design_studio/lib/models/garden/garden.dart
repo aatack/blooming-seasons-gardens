@@ -77,8 +77,8 @@ class Garden {
                   ...bed.elements,
                   Instance(
                     id: availableID,
-                    x: 0,
-                    y: 0,
+                    position:
+                        const Point(ValidatedDouble("0"), ValidatedDouble("0")),
                     element: element,
                     templateID: null,
                   )
