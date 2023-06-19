@@ -5,8 +5,11 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../models/garden/arrow.dart';
 import '../../../models/garden/bed.dart';
 import '../../../models/garden/instance.dart';
+import '../../../models/garden/label.dart';
+import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
@@ -189,8 +192,18 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addElement(bed.id, ElementType.plant));
+              context
+                  .read<SessionState>()
+                  .editGarden((garden) => garden.addElement(
+                      bed.id,
+                      Plant(
+                        name: "Plant ${garden.availableID}",
+                        size: 0.3,
+                        type: PlantType.border,
+                        border: PlantBorder(
+                            thickness: 0.01, colour: Colors.yellow[300]!),
+                        image: null,
+                      )));
             },
             child: const Text("Plant"),
           ),
@@ -198,8 +211,9 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addElement(bed.id, ElementType.label));
+              context.read<SessionState>().editGarden((garden) =>
+                  garden.addElement(bed.id,
+                      Label(text: "Label ${garden.availableID}", size: 12)));
             },
             child: const Text("Label"),
           ),
@@ -207,8 +221,8 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addElement(bed.id, ElementType.arrow));
+              context.read<SessionState>().editGarden((garden) =>
+                  garden.addElement(bed.id, const Arrow(x: 0, y: 0)));
             },
             child: const Text("Arrow"),
           ),

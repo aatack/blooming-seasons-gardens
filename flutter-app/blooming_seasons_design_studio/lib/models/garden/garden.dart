@@ -68,44 +68,26 @@ class Garden {
     );
   }
 
-  Garden addElement(int bedID, ElementType elementType) {
-    late final Element element;
-    switch (elementType) {
-      case ElementType.plant:
-        element = Plant(
-          name: "Plant $availableID",
-          size: 0.3,
-          type: PlantType.border,
-          border: PlantBorder(thickness: 0.01, colour: Colors.yellow[300]!),
-          image: null,
-        );
-        break;
-      case ElementType.label:
-        element = Label(text: "Label $availableID", size: 12);
-        break;
-      case ElementType.arrow:
-        element = const Arrow(x: 0, y: 0);
-        break;
-    }
-
+  Garden addElement(int bedID, Element element) {
     return Garden(
-        name,
-        _beds
-            .map((bed) => bed.id == bedID
-                ? Bed([
-                    ...bed.elements,
-                    Instance(
-                      id: availableID,
-                      x: 0,
-                      y: 0,
-                      element: element,
-                      templateID: null,
-                    )
-                  ], id: bed.id, origin: bed.origin, name: bed.name)
-                : bed)
-            .toList(),
-        _templates,
-        availableID + 1);
+      name,
+      _beds
+          .map((bed) => bed.id == bedID
+              ? Bed([
+                  ...bed.elements,
+                  Instance(
+                    id: availableID,
+                    x: 0,
+                    y: 0,
+                    element: element,
+                    templateID: null,
+                  )
+                ], id: bed.id, origin: bed.origin, name: bed.name)
+              : bed)
+          .toList(),
+      _templates,
+      availableID + 1,
+    );
   }
 }
 
