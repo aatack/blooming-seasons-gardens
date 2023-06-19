@@ -171,8 +171,8 @@ class _BedEditorState extends State<BedEditor> {
               },
             ),
             const SizedBox(height: 8),
-            ...widget.bed.elements
-                .map((instance) => InstanceEditor(instance: instance))
+            ...widget.bed.elements.map((instance) => InstanceEditor(
+                key: Key(instance.id.toString()), instance: instance))
           ],
         ),
       ),
