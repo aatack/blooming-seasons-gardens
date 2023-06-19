@@ -1,5 +1,6 @@
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/bed.dart';
-import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
@@ -170,6 +170,8 @@ class _BedEditorState extends State<BedEditor> {
                     );
               },
             ),
+            ...widget.bed.elements
+                .map((instance) => InstanceEditor(instance: instance))
           ],
         ),
       ),
