@@ -124,8 +124,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
           HoverableIcon(
             icon: Icons.edit,
             height: 20,
-            onTap: () {
-            },
+            onTap: () {},
             colour: colour,
             hoverColour: hoverColour,
             clickColour: clickColour,
@@ -134,8 +133,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
           HoverableIcon(
             icon: Icons.delete,
             height: 20,
-            onTap: () {
-            },
+            onTap: () {},
             colour: colour,
             hoverColour: hoverColour,
             clickColour: clickColour,
@@ -150,7 +148,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     return TableRow(
       children: [
         TableCell(
-          child: Stack(children: []),
+          child: Stack(children: const []),
         ),
         const TableCell(child: SizedBox(width: 10)),
         TableCell(child: _contentInner(context)),
@@ -159,7 +157,13 @@ class _InstanceEditorState extends State<InstanceEditor> {
   }
 
   Widget _contentInner(BuildContext context) {
-    return PointInput(
-        point: widget.instance.position, onChange: (newPosition, transient) {});
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PointInput(
+            point: widget.instance.position,
+            onChange: (newPosition, transient) {}),
+      ],
+    );
   }
 }
