@@ -100,13 +100,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
                   context.read<SessionState>().editGarden(
                         (garden) => garden.editInstance(
                           widget.instance.id,
-                          (instance) => Instance(
-                            id: widget.instance.id,
-                            name: newValue,
-                            position: widget.instance.position,
-                            element: widget.instance.element,
-                            templateID: widget.instance.templateID,
-                          ),
+                          (instance) => instance.rename(newValue),
                         ),
                         transient: transient,
                       );

@@ -1,9 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:blooming_seasons_design_studio/models/garden/arrow.dart';
-import 'package:blooming_seasons_design_studio/models/garden/label.dart';
-import 'package:blooming_seasons_design_studio/models/garden/plant.dart';
 import 'package:flutter/material.dart' show Colors, immutable;
 import 'package:image/image.dart' show Image;
 
@@ -94,7 +91,7 @@ class Garden {
   Garden editInstance(int id, Instance Function(Instance) update) {
     final bedID = instanceParent(id);
     return editBed(
-      id,
+      bedID,
       (bed) => bed.id == bedID
           ? Bed(
               bed.instances

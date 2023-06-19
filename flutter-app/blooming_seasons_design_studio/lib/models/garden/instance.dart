@@ -27,6 +27,16 @@ class Instance {
     required this.element,
     required this.templateID,
   });
+
+  Instance rename(String newName) {
+    return Instance(
+      id: id,
+      name: newName,
+      position: position,
+      element: element,
+      templateID: templateID,
+    );
+  }
 }
 
 dynamic serialiseInstance(
