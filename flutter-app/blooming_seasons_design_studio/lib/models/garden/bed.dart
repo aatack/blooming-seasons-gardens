@@ -10,15 +10,15 @@ import 'instance.dart';
 class Bed {
   final int id;
 
-  final List<Instance<Element>> _elements;
-  UnmodifiableListView<Instance<Element>> get elements =>
-      UnmodifiableListView(_elements);
+  final List<Instance> _instances;
+  UnmodifiableListView<Instance> get instances =>
+      UnmodifiableListView(_instances);
 
   final Point origin;
 
   final String name;
 
-  const Bed(this._elements,
+  const Bed(this._instances,
       {required this.id, required this.origin, required this.name});
 
   dynamic serialise(
@@ -27,7 +27,7 @@ class Bed {
   ) {}
 
   Bed rename(String newName) {
-    return Bed(_elements, id: id, origin: origin, name: newName);
+    return Bed(_instances, id: id, origin: origin, name: newName);
   }
 }
 
@@ -35,7 +35,7 @@ dynamic serialiseBed(
     Bed bed, Map<int, dynamic> templates, Map<Image, int> images) {
   return {
     "id": bed.id,
-    "elements": bed.elements
+    "elements": bed.instances
         .map(
           (element) => serialiseInstance(element, templates, images),
         )

@@ -74,7 +74,7 @@ class Garden {
       _beds
           .map((bed) => bed.id == bedID
               ? Bed([
-                  ...bed.elements,
+                  ...bed.instances,
                   Instance(
                     id: availableID,
                     name: "${element.runtimeType.toString()} $availableID",
@@ -92,12 +92,12 @@ class Garden {
   }
 
   Garden editInstance(int id, Instance Function(Instance) update) {
-    final bedID = instanceBed(id);
+    final bedID = instanceParent(id);
     return editBed(
       id,
       (bed) => bed.id == bedID
           ? Bed(
-              bed.elements
+              bed.instances
                   .map((instance) =>
                       instance.id == id ? update(instance) : instance)
                   .toList(),
@@ -109,9 +109,9 @@ class Garden {
     );
   }
 
-  int instanceBed(int instanceID) {
+  int instanceParent(int instanceID) {
     for (final bed in beds) {
-      if (bed.elements.any((instance) => instance.id == instanceID)) {
+      if (bed.instances.any((instance) => instance.id == instanceID)) {
         return bed.id;
       }
     }

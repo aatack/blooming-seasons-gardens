@@ -160,7 +160,7 @@ class _BedEditorState extends State<BedEditor> {
                       (garden) => garden.editBed(
                         widget.bed.id,
                         (bed) => Bed(
-                          widget.bed.elements,
+                          widget.bed.instances,
                           id: widget.bed.id,
                           origin: newOrigin,
                           name: widget.bed.name,
@@ -171,7 +171,7 @@ class _BedEditorState extends State<BedEditor> {
               },
             ),
             const SizedBox(height: 8),
-            ...widget.bed.elements.map((instance) => InstanceEditor(
+            ...widget.bed.instances.map((instance) => InstanceEditor(
                 key: Key(instance.id.toString()), instance: instance))
           ],
         ),

@@ -13,11 +13,11 @@ abstract class Element {
 }
 
 @immutable
-class Instance<E extends Element> {
+class Instance {
   final int id;
   final String name;
   final Point position;
-  final E element;
+  final Element element;
   final int? templateID;
 
   const Instance({

@@ -15,7 +15,7 @@ import 'arrow.dart';
 import 'plant.dart';
 
 class InstanceEditor extends StatefulWidget {
-  final Instance<Element> instance;
+  final Instance instance;
 
   const InstanceEditor({super.key, required this.instance});
 
