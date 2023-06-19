@@ -90,6 +90,33 @@ class Garden {
       availableID + 1,
     );
   }
+
+  Garden editInstance(int id, Instance Function(Instance) update) {
+    final bedID = instanceBed(id);
+    return editBed(
+      id,
+      (bed) => bed.id == bedID
+          ? Bed(
+              bed.elements
+                  .map((instance) =>
+                      instance.id == id ? update(instance) : instance)
+                  .toList(),
+              id: bed.id,
+              origin: bed.origin,
+              name: bed.name,
+            )
+          : bed,
+    );
+  }
+
+  int instanceBed(int instanceID) {
+    for (final bed in beds) {
+      if (bed.elements.any((instance) => instance.id == instanceID)) {
+        return bed.id;
+      }
+    }
+    throw Exception("Could not find instance with ID $instanceID");
+  }
 }
 
 /// Return a JSON-compatible representation of the garden.

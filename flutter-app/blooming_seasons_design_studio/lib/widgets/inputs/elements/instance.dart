@@ -1,10 +1,13 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
+import '../../../models/session.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
 import '../point.dart';
@@ -22,21 +25,10 @@ class InstanceEditor extends StatefulWidget {
 
 class _InstanceEditorState extends State<InstanceEditor> {
   bool _collapsed = true;
+  bool _editingName = false;
 
   @override
   Widget build(BuildContext context) {
-    late final Widget content;
-
-    if (widget.instance.element is Plant) {
-      content = PlantEditor(plant: widget.instance.element as Plant);
-    } else if (widget.instance.element is Label) {
-      content = LabelEditor(label: widget.instance.element as Label);
-    } else if (widget.instance.element is Arrow) {
-      content = ArrowEditor(arrow: widget.instance.element as Arrow);
-    } else {
-      throw UnimplementedError();
-    }
-
     final colour = Colors.grey[100]!;
     final hoverColour = darker(colour, amount: 10);
     final clickColour = darker(colour, amount: 20);
@@ -61,7 +53,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
               Padding(
                 padding: const EdgeInsets.all(5),
                 child: Table(
-                  columnWidths: {
+                  columnWidths: const {
                     0: IntrinsicColumnWidth(),
                     1: IntrinsicColumnWidth(),
                     2: FlexColumnWidth()
@@ -102,8 +94,31 @@ class _InstanceEditorState extends State<InstanceEditor> {
         TableCell(
           child: Stack(
             children: [
-              Text(widget.instance.name),
-              if (hovered) _overlayedIcons(context),
+              ControlledTextInput(
+                value: widget.instance.name,
+                onChange: (newValue, transient) {
+                  context.read<SessionState>().editGarden(
+                        (garden) => garden.editInstance(
+                          widget.instance.id,
+                          (instance) => Instance(
+                            id: widget.instance.id,
+                            name: newValue,
+                            position: widget.instance.position,
+                            element: widget.instance.element,
+                            templateID: widget.instance.templateID,
+                          ),
+                        ),
+                        transient: transient,
+                      );
+                },
+                editing: _editingName,
+                onEditingFinished: () {
+                  setState(() {
+                    _editingName = false;
+                  });
+                },
+              ),
+              if (hovered && !_editingName) _overlayedIcons(context),
             ],
           ),
         ),
@@ -124,7 +139,11 @@ class _InstanceEditorState extends State<InstanceEditor> {
           HoverableIcon(
             icon: Icons.edit,
             height: 20,
-            onTap: () {},
+            onTap: () {
+              setState(() {
+                _editingName = true;
+              });
+            },
             colour: colour,
             hoverColour: hoverColour,
             clickColour: clickColour,
@@ -157,12 +176,25 @@ class _InstanceEditorState extends State<InstanceEditor> {
   }
 
   Widget _contentInner(BuildContext context) {
+    late final Widget content;
+
+    if (widget.instance.element is Plant) {
+      content = PlantEditor(plant: widget.instance.element as Plant);
+    } else if (widget.instance.element is Label) {
+      content = LabelEditor(label: widget.instance.element as Label);
+    } else if (widget.instance.element is Arrow) {
+      content = ArrowEditor(arrow: widget.instance.element as Arrow);
+    } else {
+      throw UnimplementedError();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PointInput(
             point: widget.instance.position,
             onChange: (newPosition, transient) {}),
+        content,
       ],
     );
   }
