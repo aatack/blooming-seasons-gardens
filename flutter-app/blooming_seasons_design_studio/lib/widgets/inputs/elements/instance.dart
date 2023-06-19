@@ -55,16 +55,20 @@ class _InstanceEditorState extends State<InstanceEditor> {
                   ? hoverColour
                   : colour,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Divider(height: 0),
               Padding(
                 padding: const EdgeInsets.all(5),
                 child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                  columnWidths: {
+                    0: IntrinsicColumnWidth(),
+                    1: IntrinsicColumnWidth(),
+                    2: FlexColumnWidth()
+                  },
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   children: [
-                    _header(context),
+                    _header(context, hovered),
                     if (!_collapsed) _contentWrapper(context)
                   ],
                 ),
@@ -76,7 +80,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     );
   }
 
-  TableRow _header(BuildContext context) {
+  TableRow _header(BuildContext context, bool hovered) {
     late final IconData icon;
 
     if (widget.instance.element is Plant) {
@@ -95,8 +99,50 @@ class _InstanceEditorState extends State<InstanceEditor> {
           child: Icon(icon),
         ),
         const TableCell(child: SizedBox(width: 10)),
-        TableCell(child: Text(widget.instance.name)),
+        TableCell(
+          child: Stack(
+            children: [
+              Text(widget.instance.name),
+              if (hovered) _overlayedIcons(context),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _overlayedIcons(BuildContext context) {
+    final colour = Theme.of(context).colorScheme.onSurfaceVariant;
+    final hoverColour = lighter(colour, amount: 50);
+    final clickColour = lighter(colour, amount: 100);
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          HoverableIcon(
+            icon: Icons.edit,
+            height: 20,
+            onTap: () {
+            },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
+          ),
+          const SizedBox(width: 8),
+          HoverableIcon(
+            icon: Icons.delete,
+            height: 20,
+            onTap: () {
+            },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
     );
   }
 
