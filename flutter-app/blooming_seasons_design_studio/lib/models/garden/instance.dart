@@ -15,12 +15,14 @@ abstract class Element {
 @immutable
 class Instance<E extends Element> {
   final int id;
+  final String name;
   final Point position;
   final E element;
   final int? templateID;
 
   const Instance({
     required this.id,
+    required this.name,
     required this.position,
     required this.element,
     required this.templateID,
@@ -34,6 +36,7 @@ dynamic serialiseInstance(
 ) {
   final Map<String, dynamic> result = {
     "id": instance.id,
+    "name": instance.name,
     "position": instance.position.serialise(),
   };
 
@@ -66,6 +69,7 @@ Instance deserialiseInstance(Map<String, dynamic> instance,
 
   return Instance(
     id: instance["id"],
+    name: instance["name"],
     position: Point.deserialise(instance["position"]),
     element: element,
     templateID: template,

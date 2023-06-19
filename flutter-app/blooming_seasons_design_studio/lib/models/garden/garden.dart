@@ -77,6 +77,7 @@ class Garden {
                   ...bed.elements,
                   Instance(
                     id: availableID,
+                    name: "${element.runtimeType.toString()} $availableID",
                     position:
                         const Point(ValidatedDouble("0"), ValidatedDouble("0")),
                     element: element,

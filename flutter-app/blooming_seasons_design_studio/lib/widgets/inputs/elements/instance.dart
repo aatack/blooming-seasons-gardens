@@ -80,9 +80,9 @@ class _InstanceEditorState extends State<InstanceEditor> {
     late final IconData icon;
 
     if (widget.instance.element is Plant) {
-      icon = Icons.compost;
+      icon = Icons.energy_savings_leaf_outlined;
     } else if (widget.instance.element is Label) {
-      icon = Icons.label;
+      icon = Icons.label_outline_sharp;
     } else if (widget.instance.element is Arrow) {
       icon = Icons.arrow_right_alt_sharp;
     } else {
@@ -95,7 +95,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
           child: Icon(icon),
         ),
         const TableCell(child: SizedBox(width: 10)),
-        TableCell(child: Text("Plant")),
+        TableCell(child: Text(widget.instance.name)),
       ],
     );
   }
