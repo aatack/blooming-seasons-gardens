@@ -32,6 +32,9 @@ class AppContainer extends StatelessWidget {
     super.key,
   });
 
+  final double actionSize = 25;
+  final double actionPadding = 12;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,6 +64,8 @@ class AppContainer extends StatelessWidget {
 
   AppBar _appBar(BuildContext context) {
     final colour = Theme.of(context).colorScheme.onPrimary;
+    final hoverColour = darker(colour, amount: 40);
+    final clickColour = darker(colour, amount: 80);
 
     return AppBar(
       toolbarHeight: 40,
@@ -71,12 +76,65 @@ class AppContainer extends StatelessWidget {
           context.read<SessionState>().exitGarden();
         },
         colour: colour,
-        hoverColour: darker(colour, amount: 40),
-        clickColour: darker(colour, amount: 80),
+        hoverColour: hoverColour,
+        clickColour: clickColour,
       ),
       title: const Text(
         "Blooming Seasons Design",
         style: TextStyle(fontFamily: "Spectral", fontSize: 15),
+      ),
+      actions: [
+        _appBarAction(
+          context,
+          icon: Icons.undo,
+          onTap: () {
+            context.read<SessionState>().undo();
+          },
+          colour: colour,
+          hoverColour: hoverColour,
+          clickColour: clickColour,
+        ),
+        _appBarAction(
+          context,
+          icon: Icons.redo,
+          onTap: () {
+            context.read<SessionState>().redo();
+          },
+          colour: colour,
+          hoverColour: hoverColour,
+          clickColour: clickColour,
+        ),
+        _appBarAction(
+          context,
+          icon: Icons.save,
+          onTap: () {
+            // TODO: save garden
+          },
+          colour: colour,
+          hoverColour: hoverColour,
+          clickColour: clickColour,
+        ),
+      ],
+    );
+  }
+
+  Widget _appBarAction(
+    BuildContext context, {
+    required IconData icon,
+    required void Function() onTap,
+    required Color colour,
+    required Color hoverColour,
+    required Color clickColour,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(right: actionPadding),
+      child: HoverableIcon(
+        icon: icon,
+        height: actionSize,
+        onTap: onTap,
+        colour: colour,
+        hoverColour: hoverColour,
+        clickColour: clickColour,
       ),
     );
   }
