@@ -84,36 +84,46 @@ class AppContainer extends StatelessWidget {
         style: TextStyle(fontFamily: "Spectral", fontSize: 15),
       ),
       actions: [
-        _appBarAction(
-          context,
-          icon: Icons.undo,
-          onTap: () {
-            context.read<SessionState>().undo();
-          },
-          colour: colour,
-          hoverColour: hoverColour,
-          clickColour: clickColour,
-        ),
-        _appBarAction(
-          context,
-          icon: Icons.redo,
-          onTap: () {
-            context.read<SessionState>().redo();
-          },
-          colour: colour,
-          hoverColour: hoverColour,
-          clickColour: clickColour,
-        ),
-        _appBarAction(
-          context,
-          icon: Icons.save,
-          onTap: () {
-            // TODO: save garden
-          },
-          colour: colour,
-          hoverColour: hoverColour,
-          clickColour: clickColour,
-        ),
+        BlocBuilder<SessionState, Session>(builder: (context, session) {
+          return session.garden.handle(
+            data: (_) => Row(
+              children: [
+                _appBarAction(
+                  context,
+                  icon: Icons.undo,
+                  onTap: () {
+                    context.read<SessionState>().undo();
+                  },
+                  colour: colour,
+                  hoverColour: hoverColour,
+                  clickColour: clickColour,
+                ),
+                _appBarAction(
+                  context,
+                  icon: Icons.redo,
+                  onTap: () {
+                    context.read<SessionState>().redo();
+                  },
+                  colour: colour,
+                  hoverColour: hoverColour,
+                  clickColour: clickColour,
+                ),
+                _appBarAction(
+                  context,
+                  icon: Icons.save,
+                  onTap: () {
+                    // TODO: save garden
+                  },
+                  colour: colour,
+                  hoverColour: hoverColour,
+                  clickColour: clickColour,
+                ),
+              ],
+            ),
+            error: (_) => Row(),
+            loading: () => Row(),
+          );
+        }),
       ],
     );
   }
