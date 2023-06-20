@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../theme.dart';
 
@@ -6,8 +7,10 @@ class Hoverable extends StatefulWidget {
   final Widget Function(BuildContext context, bool hovered, bool clicked)
       builder;
   final void Function() onTap;
+  final SystemMouseCursor? cursor;
 
-  const Hoverable({super.key, required this.builder, required this.onTap});
+  const Hoverable(
+      {super.key, required this.builder, required this.onTap, this.cursor});
 
   @override
   State<Hoverable> createState() => _HoverableState();
@@ -34,7 +37,8 @@ class _HoverableState extends State<Hoverable> {
         widget.onTap();
       },
       child: MouseRegion(
-        cursor: SystemMouseCursors.click,
+        cursor:
+            widget.cursor == null ? SystemMouseCursors.click : widget.cursor!,
         onEnter: (_) {
           setState(() {
             _hovered = true;
@@ -74,7 +78,7 @@ class HoverableIcon extends StatelessWidget {
     return Hoverable(
       builder: (context, hovered, clicked) => Icon(
         icon,
-        color: clicked
+        color: (clicked || onTap == null)
             ? clickColour
             : hovered
                 ? hoverColour
@@ -82,6 +86,7 @@ class HoverableIcon extends StatelessWidget {
         size: height,
       ),
       onTap: onTap == null ? () {} : onTap!,
+      cursor: onTap == null ? SystemMouseCursors.forbidden : null,
     );
   }
 }

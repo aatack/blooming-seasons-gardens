@@ -97,9 +97,14 @@ class AppContainer extends StatelessWidget {
                 _appBarAction(
                   context,
                   icon: Icons.undo,
-                  onTap: () {
-                    context.read<SessionState>().undo();
-                  },
+                  onTap: (session.garden
+                              .fmap((history) => history.canGoBack)
+                              .unpack() ??
+                          false)
+                      ? () {
+                          context.read<SessionState>().undo();
+                        }
+                      : null,
                   colour: colour,
                   hoverColour: hoverColour,
                   clickColour: clickColour,
@@ -107,9 +112,14 @@ class AppContainer extends StatelessWidget {
                 _appBarAction(
                   context,
                   icon: Icons.redo,
-                  onTap: () {
-                    context.read<SessionState>().redo();
-                  },
+                  onTap: (session.garden
+                              .fmap((history) => history.canGoForward)
+                              .unpack() ??
+                          false)
+                      ? () {
+                          context.read<SessionState>().redo();
+                        }
+                      : null,
                   colour: colour,
                   hoverColour: hoverColour,
                   clickColour: clickColour,
@@ -137,7 +147,7 @@ class AppContainer extends StatelessWidget {
   Widget _appBarAction(
     BuildContext context, {
     required IconData icon,
-    required void Function() onTap,
+    required void Function()? onTap,
     required Color colour,
     required Color hoverColour,
     required Color clickColour,
