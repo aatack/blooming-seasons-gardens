@@ -118,7 +118,7 @@ class AppContainer extends StatelessWidget {
                   context,
                   icon: Icons.save,
                   onTap: () {
-                    // TODO: save garden
+                    context.read<SessionState>().saveGarden();
                   },
                   colour: colour,
                   hoverColour: hoverColour,

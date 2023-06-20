@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -140,6 +141,22 @@ class SessionState extends Cubit<Session> {
           },
         );
       },
+    );
+  }
+
+  void saveGarden() {
+    state.garden.handle(
+      data: (garden) {
+        queryBackend(
+          "/garden/save",
+          body: {
+            "name": garden.present.name,
+            "content": serialiseGarden(garden.present),
+          },
+        );
+      },
+      error: (_) {},
+      loading: () {},
     );
   }
 

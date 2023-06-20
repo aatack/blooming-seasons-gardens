@@ -21,11 +21,6 @@ class Bed {
   const Bed(this._instances,
       {required this.id, required this.origin, required this.name});
 
-  dynamic serialise(
-    Map<int, dynamic> templates,
-    Map<Image, int> images,
-  ) {}
-
   Bed rename(String newName) {
     return Bed(_instances, id: id, origin: origin, name: newName);
   }
@@ -48,7 +43,9 @@ dynamic serialiseBed(
 Bed deserialiseBed(Map<String, dynamic> bed, Map<int, Element> templates,
     Map<int, Image> images) {
   return Bed(
-    bed["elements"].map((element) => deserialiseElement(element, images)),
+    (bed["elements"] as List<dynamic>)
+        .map((instance) => deserialiseInstance(instance, templates, images))
+        .toList(),
     id: bed["id"],
     origin: Point.deserialise(bed["origin"]),
     name: bed["name"],
