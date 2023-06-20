@@ -46,8 +46,8 @@ Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
     size: plant["size"],
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
-    border: border ?? _deserialisePlantBorder(border),
-    image: image ?? _deserialisePlantImage(image, images),
+    border: border == null ? null : _deserialisePlantBorder(border),
+    image: image == null ? null : _deserialisePlantImage(image, images),
   );
 }
 
