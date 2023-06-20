@@ -30,7 +30,7 @@ dynamic serialiseBed(
     Bed bed, Map<int, dynamic> templates, Map<Image, int> images) {
   return {
     "id": bed.id,
-    "elements": bed.instances
+    "instances": bed.instances
         .map(
           (element) => serialiseInstance(element, templates, images),
         )
@@ -43,7 +43,7 @@ dynamic serialiseBed(
 Bed deserialiseBed(Map<String, dynamic> bed, Map<int, Element> templates,
     Map<int, Image> images) {
   return Bed(
-    (bed["elements"] as List<dynamic>)
+    (bed["instances"] as List<dynamic>)
         .map((instance) => deserialiseInstance(instance, templates, images))
         .toList(),
     id: bed["id"],
