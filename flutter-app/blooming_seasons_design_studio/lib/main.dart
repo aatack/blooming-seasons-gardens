@@ -69,16 +69,22 @@ class AppContainer extends StatelessWidget {
 
     return AppBar(
       toolbarHeight: 40,
-      leading: HoverableIcon(
-        icon: Icons.arrow_back,
-        height: 20,
-        onTap: () {
-          context.read<SessionState>().exitGarden();
-        },
-        colour: colour,
-        hoverColour: hoverColour,
-        clickColour: clickColour,
-      ),
+      leading: BlocBuilder<SessionState, Session>(builder: (context, session) {
+        return session.garden.handle(
+          data: (_) => HoverableIcon(
+            icon: Icons.arrow_back,
+            height: 20,
+            onTap: () {
+              context.read<SessionState>().exitGarden();
+            },
+            colour: colour,
+            hoverColour: hoverColour,
+            clickColour: clickColour,
+          ),
+          error: (_) => Row(),
+          loading: () => Row(),
+        );
+      }),
       title: const Text(
         "Blooming Seasons Design",
         style: TextStyle(fontFamily: "Spectral", fontSize: 15),
