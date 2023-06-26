@@ -3,6 +3,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/structs/point.dart';
+import 'form_layout.dart';
 
 class PointInput extends StatelessWidget {
   final Point point;
@@ -12,41 +13,26 @@ class PointInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+    return FormLayout(
       children: [
-        TableRow(
-          children: [
-            const TableCell(
-              child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Text("Horizontal"),
-              ),
-            ),
-            TableCell(
-              child: _wrapTextInput(
-                point.x,
-                (newValue, transient) {
-                  onChange(Point(point.x.set(newValue), point.y), transient);
-                },
-              ),
-            ),
-          ],
+        FormLayoutItem(
+          label: const Text("Horizontal"),
+          child: _wrapTextInput(
+            point.x,
+            (newValue, transient) {
+              onChange(Point(point.x.set(newValue), point.y), transient);
+            },
+          ),
         ),
-        const TableRow(children: [SizedBox(height: 4), SizedBox(height: 4)]),
-        TableRow(
-          children: [
-            const TableCell(child: Text("Vertical")),
-            TableCell(
-                child: _wrapTextInput(
-              point.y,
-              (newValue, transient) {
-                onChange(Point(point.x, point.y.set(newValue)), transient);
-              },
-            )),
-          ],
-        ),
+        FormLayoutItem(
+          label: const Text("Vertical"),
+          child: _wrapTextInput(
+            point.y,
+            (newValue, transient) {
+              onChange(Point(point.x, point.y.set(newValue)), transient);
+            },
+          ),
+        )
       ],
     );
   }

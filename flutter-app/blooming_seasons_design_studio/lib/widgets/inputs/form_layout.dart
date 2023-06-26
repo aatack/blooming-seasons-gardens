@@ -15,8 +15,8 @@ class FormLayout extends StatelessWidget {
   const FormLayout({
     super.key,
     required this.children,
-    this.rowSpacing = 8,
-    this.columnSpacing = 8,
+    this.rowSpacing = 5,
+    this.columnSpacing = 5,
   });
 
   @override
