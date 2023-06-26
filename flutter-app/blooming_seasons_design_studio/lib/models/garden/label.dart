@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:flutter/material.dart' show immutable;
 
 import 'package:image/image.dart' show Image;
@@ -5,7 +6,7 @@ import 'instance.dart';
 
 @immutable
 class Label implements Element {
-  final String text;
+  final UnvalidatedString text;
   final double size;
 
   const Label({required this.text, required this.size});
@@ -17,12 +18,12 @@ class Label implements Element {
   ) {
     return {
       "elementType": "label",
-      "text": text,
+      "text": text.string,
       "size": size,
     };
   }
 }
 
 Label deserialiseLabel(dynamic label) {
-  return Label(text: label["text"], size: label["size"]);
+  return Label(text: UnvalidatedString(label["text"]), size: label["size"]);
 }

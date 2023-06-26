@@ -28,7 +28,7 @@ class LabelEditor extends StatelessWidget {
         FormLayoutItem(
           label: const Text("Text"),
           child: validatedTextInput(
-            UnvalidatedString(label.text),
+            label.text,
             (newText, transient) {
               context.read<SessionState>().editGarden((garden) => garden);
             },

@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.dart';
@@ -218,9 +219,14 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden((garden) =>
-                  garden.addElement(bed.id,
-                      Label(text: "Label ${garden.availableID}", size: 12)));
+              context
+                  .read<SessionState>()
+                  .editGarden((garden) => garden.addElement(
+                      bed.id,
+                      Label(
+                        text: UnvalidatedString("Label ${garden.availableID}"),
+                        size: 12,
+                      )));
             },
             child: const Text("Label"),
           ),
