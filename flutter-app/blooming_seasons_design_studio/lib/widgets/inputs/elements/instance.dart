@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,6 @@ import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
-import '../point.dart';
 import 'arrow.dart';
 import 'plant.dart';
 
@@ -52,16 +52,10 @@ class _InstanceEditorState extends State<InstanceEditor> {
               const Divider(height: 0),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Table(
-                  columnWidths: const {
-                    0: IntrinsicColumnWidth(),
-                    1: IntrinsicColumnWidth(),
-                    2: FlexColumnWidth()
-                  },
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                child: FormLayout(
                   children: [
                     _header(context, hovered),
-                    if (!_collapsed) _contentWrapper(context)
+                    if (!_collapsed) _body(context)
                   ],
                 ),
               )
@@ -72,7 +66,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     );
   }
 
-  TableRow _header(BuildContext context, bool hovered) {
+  FormLayoutItem _header(BuildContext context, bool hovered) {
     late final IconData icon;
 
     if (widget.instance.element is Plant) {
@@ -85,38 +79,31 @@ class _InstanceEditorState extends State<InstanceEditor> {
       throw UnimplementedError();
     }
 
-    return TableRow(
-      children: [
-        TableCell(
-          child: Icon(icon),
-        ),
-        const TableCell(child: SizedBox(width: 10)),
-        TableCell(
-          child: Stack(
-            children: [
-              ControlledTextInput(
-                value: widget.instance.name,
-                onChange: (newValue, transient) {
-                  context.read<SessionState>().editGarden(
-                        (garden) => garden.editInstance(
-                          widget.instance.id,
-                          (instance) => instance.rename(newValue),
-                        ),
-                        transient: transient,
-                      );
-                },
-                editing: _editingName,
-                onEditingFinished: () {
-                  setState(() {
-                    _editingName = false;
-                  });
-                },
-              ),
-              if (hovered && !_editingName) _overlayedIcons(context),
-            ],
+    return FormLayoutItem(
+      label: Icon(icon),
+      child: Stack(
+        children: [
+          ControlledTextInput(
+            value: widget.instance.name,
+            onChange: (newValue, transient) {
+              context.read<SessionState>().editGarden(
+                    (garden) => garden.editInstance(
+                      widget.instance.id,
+                      (instance) => instance.rename(newValue),
+                    ),
+                    transient: transient,
+                  );
+            },
+            editing: _editingName,
+            onEditingFinished: () {
+              setState(() {
+                _editingName = false;
+              });
+            },
           ),
-        ),
-      ],
+          if (hovered && !_editingName) _overlayedIcons(context),
+        ],
+      ),
     );
   }
 
@@ -161,19 +148,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     );
   }
 
-  TableRow _contentWrapper(BuildContext context) {
-    return TableRow(
-      children: [
-        TableCell(
-          child: Stack(children: const []),
-        ),
-        const TableCell(child: SizedBox(width: 10)),
-        TableCell(child: _contentInner(context)),
-      ],
-    );
-  }
-
-  Widget _contentInner(BuildContext context) {
+  FormLayoutItem _body(BuildContext context) {
     late final Widget content;
 
     if (widget.instance.element is Plant) {
@@ -186,14 +161,6 @@ class _InstanceEditorState extends State<InstanceEditor> {
       throw UnimplementedError();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PointInput(
-            point: widget.instance.position,
-            onChange: (newPosition, transient) {}),
-        content,
-      ],
-    );
+    return FormLayoutItem(child: content);
   }
 }
