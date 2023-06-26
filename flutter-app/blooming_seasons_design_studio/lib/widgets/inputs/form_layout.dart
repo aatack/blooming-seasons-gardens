@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class FormLayoutItem {
-  final Widget label;
-  final Widget child;
+  final Widget? label;
+  final Widget? child;
 
-  const FormLayoutItem({required this.label, required this.child});
+  const FormLayoutItem({this.label, this.child});
 }
 
 class FormLayout extends StatelessWidget {
@@ -18,6 +18,8 @@ class FormLayout extends StatelessWidget {
     this.rowSpacing = 5,
     this.columnSpacing = 5,
   });
+
+  final _empty = const SizedBox(width: 0, height: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +38,15 @@ class FormLayout extends StatelessWidget {
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: intersperse(
         children
-            .map((child) => TableRow(children: [
-                  child.label,
+            .map(
+              (child) => TableRow(
+                children: [
+                  child.label ?? _empty,
                   SizedBox(width: columnSpacing),
-                  child.child,
-                ]))
+                  child.child ?? _empty,
+                ],
+              ),
+            )
             .toList(),
         spacer,
       ).toList(),
