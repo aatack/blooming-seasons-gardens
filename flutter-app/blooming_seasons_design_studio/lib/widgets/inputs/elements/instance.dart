@@ -152,7 +152,9 @@ class _InstanceEditorState extends State<InstanceEditor> {
   FormLayoutItem _body(BuildContext context) {
     final Point position = widget.instance.position;
 
-    void setPosition(newPosition) {}
+    void setPosition(newPosition, transient) {
+      // TODO
+    }
 
     late final Widget content;
     if (widget.instance.element is Plant) {
