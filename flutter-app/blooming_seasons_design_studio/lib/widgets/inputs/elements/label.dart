@@ -1,8 +1,11 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/label.dart';
+import '../../../models/session.dart';
 import '../../../models/structs/point.dart';
 
 class LabelEditor extends StatelessWidget {
@@ -19,13 +22,31 @@ class LabelEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FormLayout(children: [
-      FormLayoutItem(
+    return FormLayout(
+      children: [
+        FormLayoutItem(
+          label: const Text("Text"),
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5, right: 3),
+              child: ControlledTextInput(
+                value: label.text,
+                onChange: (newText, transient) {
+                  context.read<SessionState>().editGarden((garden) => garden);
+                },
+              ),
+            ),
+          ),
+        ),
+        FormLayoutItem(
           label: const Text("Position"),
           child: PointInput(
             point: position,
             onChange: setPosition,
-          )),
-    ]);
+          ),
+        ),
+      ],
+    );
   }
 }
