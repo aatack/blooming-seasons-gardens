@@ -16,7 +16,7 @@ class FormLayout extends StatelessWidget {
     super.key,
     required this.children,
     this.rowSpacing = 5,
-    this.columnSpacing = 5,
+    this.columnSpacing = 10,
   });
 
   final _empty = const SizedBox(width: 0, height: 0);

@@ -10,7 +10,12 @@ List<FormLayoutItem> pointInput({
   required void Function(Point, bool) setPoint,
 }) {
   return [
-    if (label != null) FormLayoutItem(label: Text(label)),
+    if (label != null)
+      FormLayoutItem(
+          label: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      )),
     FormLayoutItem(
       label: const Text("Horizontal"),
       child: validatedTextInput(
