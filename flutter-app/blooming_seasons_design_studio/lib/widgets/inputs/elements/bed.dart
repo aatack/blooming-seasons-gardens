@@ -225,7 +225,7 @@ class _AddElementModal extends StatelessWidget {
                       bed.id,
                       Label(
                         text: UnvalidatedString("Label ${garden.availableID}"),
-                        size: 12,
+                        size: const ValidatedDouble("12", minimum: 0),
                       )));
             },
             child: const Text("Label"),

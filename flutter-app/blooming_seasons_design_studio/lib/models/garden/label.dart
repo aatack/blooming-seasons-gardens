@@ -7,7 +7,7 @@ import 'instance.dart';
 @immutable
 class Label implements Element {
   final UnvalidatedString text;
-  final double size;
+  final ValidatedDouble size;
 
   const Label({required this.text, required this.size});
 
@@ -19,11 +19,13 @@ class Label implements Element {
     return {
       "elementType": "label",
       "text": text.string,
-      "size": size,
+      "size": size.serialise(),
     };
   }
 }
 
 Label deserialiseLabel(dynamic label) {
-  return Label(text: UnvalidatedString(label["text"]), size: label["size"]);
+  return Label(
+      text: UnvalidatedString(label["text"]),
+      size: ValidatedDouble.deserialise(label["size"]));
 }
