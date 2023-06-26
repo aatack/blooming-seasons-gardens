@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../models/inputs/validated.dart';
+
 /// A controlled text input, mimicking the React style of data entry.
 ///
 /// While the text input is not being edited, it will reactively display
@@ -160,4 +162,43 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
       }
     }
   }
+}
+
+Widget validatedTextInput(
+  Validated value,
+  void Function(String, bool) onInputChange,
+) {
+  final content = Container(
+    color: value.errors.isEmpty ? Colors.white : Colors.red[100],
+    child: Padding(
+      padding: const EdgeInsets.only(left: 5, right: 3),
+      child: ControlledTextInput(
+        value: value.string,
+        onChange: onInputChange,
+      ),
+    ),
+  );
+
+  return Row(
+    children: [
+      content,
+      Visibility(
+        visible: value.errors.isNotEmpty,
+        maintainSize: true,
+        maintainAnimation: true,
+        maintainState: true,
+        /* For some reason, simply using a tooltip here causes the
+          tooltip to grab focus every time the message goes from empty
+          to non-empty.  This solution doesn't grab focus, and hence
+          doesn't interfere with the text input. */
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Tooltip(
+            message: value.errors.join("\n"),
+            child: const Icon(Icons.error_outline),
+          ),
+        ),
+      )
+    ],
+  );
 }

@@ -10,6 +10,16 @@ abstract class Validated<Type> {
   Type get value;
 }
 
+class UnvalidatedString extends Validated<String> {
+  const UnvalidatedString(super.string);
+
+  @override
+  List<String> get errors => [];
+
+  @override
+  String get value => string;
+}
+
 class ValidatedDouble extends Validated<double> {
   final double? minimum;
   final double? maximum;
