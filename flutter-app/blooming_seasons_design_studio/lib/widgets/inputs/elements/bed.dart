@@ -1,6 +1,7 @@
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart';
@@ -153,22 +154,25 @@ class _BedEditorState extends State<BedEditor> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PointInput(
-              point: widget.bed.origin,
-              onChange: (newOrigin, transient) {
-                context.read<SessionState>().editGarden(
-                      (garden) => garden.editBed(
-                        widget.bed.id,
-                        (bed) => Bed(
-                          widget.bed.instances,
-                          id: widget.bed.id,
-                          origin: newOrigin,
-                          name: widget.bed.name,
+            FormLayout(
+              children: pointInput(
+                label: "Origin",
+                point: widget.bed.origin,
+                setPoint: (newOrigin, transient) {
+                  context.read<SessionState>().editGarden(
+                        (garden) => garden.editBed(
+                          widget.bed.id,
+                          (bed) => Bed(
+                            widget.bed.instances,
+                            id: widget.bed.id,
+                            origin: newOrigin,
+                            name: widget.bed.name,
+                          ),
                         ),
-                      ),
-                      transient: transient,
-                    );
-              },
+                        transient: transient,
+                      );
+                },
+              ),
             ),
             const SizedBox(height: 8),
             ...widget.bed.instances.map((instance) => InstanceEditor(
