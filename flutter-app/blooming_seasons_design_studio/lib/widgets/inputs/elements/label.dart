@@ -20,7 +20,12 @@ class LabelEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormLayout(children: [
-      ...pointInputLayoutItems(position, setPosition),
+      FormLayoutItem(
+          label: const Text("Position"),
+          child: PointInput(
+            point: position,
+            onChange: setPosition,
+          )),
     ]);
   }
 }

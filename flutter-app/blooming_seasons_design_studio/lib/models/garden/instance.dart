@@ -37,6 +37,16 @@ class Instance {
       templateID: templateID,
     );
   }
+
+  Instance reposition(Point newPosition) {
+    return Instance(
+      id: id,
+      name: name,
+      position: newPosition,
+      element: element,
+      templateID: templateID,
+    );
+  }
 }
 
 dynamic serialiseInstance(

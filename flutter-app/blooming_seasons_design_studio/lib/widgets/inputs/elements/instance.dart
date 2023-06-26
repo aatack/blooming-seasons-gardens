@@ -153,7 +153,13 @@ class _InstanceEditorState extends State<InstanceEditor> {
     final Point position = widget.instance.position;
 
     void setPosition(newPosition, transient) {
-      // TODO
+      context.read<SessionState>().editGarden(
+            (garden) => garden.editInstance(
+              widget.instance.id,
+              (instance) => instance.reposition(newPosition),
+            ),
+            transient: transient,
+          );
     }
 
     late final Widget content;
