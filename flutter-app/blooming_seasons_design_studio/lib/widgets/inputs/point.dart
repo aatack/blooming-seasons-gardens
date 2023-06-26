@@ -19,17 +19,19 @@ class PointInput extends StatelessWidget {
         TableRow(
           children: [
             const TableCell(
-                child: Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: Text("Horizontal"),
-            )),
+              child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Text("Horizontal"),
+              ),
+            ),
             TableCell(
-                child: _wrapTextInput(
-              point.x,
-              (newValue, transient) {
-                onChange(Point(point.x.set(newValue), point.y), transient);
-              },
-            )),
+              child: _wrapTextInput(
+                point.x,
+                (newValue, transient) {
+                  onChange(Point(point.x.set(newValue), point.y), transient);
+                },
+              ),
+            ),
           ],
         ),
         const TableRow(children: [SizedBox(height: 4), SizedBox(height: 4)]),
