@@ -9,6 +9,7 @@ import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
+import '../../../models/structs/point.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
 import 'arrow.dart';
@@ -149,14 +150,29 @@ class _InstanceEditorState extends State<InstanceEditor> {
   }
 
   FormLayoutItem _body(BuildContext context) {
-    late final Widget content;
+    final Point position = widget.instance.position;
 
+    void setPosition(newPosition) {}
+
+    late final Widget content;
     if (widget.instance.element is Plant) {
-      content = PlantEditor(plant: widget.instance.element as Plant);
+      content = PlantEditor(
+        plant: widget.instance.element as Plant,
+        position: position,
+        setPosition: setPosition,
+      );
     } else if (widget.instance.element is Label) {
-      content = LabelEditor(label: widget.instance.element as Label);
+      content = LabelEditor(
+        label: widget.instance.element as Label,
+        position: position,
+        setPosition: setPosition,
+      );
     } else if (widget.instance.element is Arrow) {
-      content = ArrowEditor(arrow: widget.instance.element as Arrow);
+      content = ArrowEditor(
+        arrow: widget.instance.element as Arrow,
+        position: position,
+        setPosition: setPosition,
+      );
     } else {
       throw UnimplementedError();
     }
