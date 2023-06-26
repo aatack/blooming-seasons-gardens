@@ -28,7 +28,11 @@ class FormLayout extends StatelessWidget {
     ]);
 
     return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(),
+      columnWidths: const {
+        0: IntrinsicColumnWidth(),
+        1: IntrinsicColumnWidth(),
+        2: FlexColumnWidth()
+      },
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: intersperse(
         children
