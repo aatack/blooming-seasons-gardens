@@ -34,12 +34,10 @@ class LabelEditor extends StatelessWidget {
             },
           ),
         ),
-        FormLayoutItem(
-          label: const Text("Position"),
-          child: PointInput(
-            point: position,
-            onChange: setPosition,
-          ),
+        ...pointInput(
+          label: "Position",
+          point: position,
+          setPoint: setPosition,
         ),
       ],
     );

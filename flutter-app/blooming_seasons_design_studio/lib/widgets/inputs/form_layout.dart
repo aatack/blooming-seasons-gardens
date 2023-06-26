@@ -35,7 +35,7 @@ class FormLayout extends StatelessWidget {
         1: IntrinsicColumnWidth(),
         2: FlexColumnWidth()
       },
-      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: intersperse(
         children
             .map(
