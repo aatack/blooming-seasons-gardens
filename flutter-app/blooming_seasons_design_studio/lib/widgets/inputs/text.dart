@@ -164,9 +164,10 @@ class _ControlledTextInputState extends State<ControlledTextInput> {
   }
 }
 
-Widget validatedTextInput(
-  Validated value,
-  void Function(String, bool) onInputChange,
+Widget
+    validatedTextInput<DataType, OwnType extends Validated<DataType, OwnType>>(
+  Validated<DataType, OwnType> value,
+  void Function(OwnType, bool) setValue,
 ) {
   final content = Container(
     color: value.errors.isEmpty ? Colors.white : Colors.red[100],
@@ -174,7 +175,9 @@ Widget validatedTextInput(
       padding: const EdgeInsets.only(left: 5, right: 3),
       child: ControlledTextInput(
         value: value.string,
-        onChange: onInputChange,
+        onChange: (newString, transient) {
+          setValue(value.set(newString), transient);
+        },
       ),
     ),
   );

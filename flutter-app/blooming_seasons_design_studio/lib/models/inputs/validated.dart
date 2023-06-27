@@ -10,7 +10,7 @@ abstract class Validated<DataType,
   List<String> get errors;
   DataType get value;
 
-  Validated<DataType, OwnType> set(String newString);
+  OwnType set(String newString);
 }
 
 class UnvalidatedString extends Validated<String, UnvalidatedString> {

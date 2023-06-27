@@ -21,7 +21,7 @@ List<FormLayoutItem> pointInput({
       child: validatedTextInput(
         point.x,
         (newValue, transient) {
-          setPoint(Point(point.x.set(newValue), point.y), transient);
+          setPoint(Point(newValue, point.y), transient);
         },
       ),
     ),
@@ -30,7 +30,7 @@ List<FormLayoutItem> pointInput({
       child: validatedTextInput(
         point.y,
         (newValue, transient) {
-          setPoint(Point(point.x, point.y.set(newValue)), transient);
+          setPoint(Point(point.x, newValue), transient);
         },
       ),
     )
