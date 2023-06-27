@@ -152,11 +152,21 @@ class _InstanceEditorState extends State<InstanceEditor> {
   FormLayoutItem _body(BuildContext context) {
     final Point position = widget.instance.position;
 
-    void setPosition(newPosition, transient) {
+    void setPosition(Point newPosition, bool transient) {
       context.read<SessionState>().editGarden(
             (garden) => garden.editInstance(
               widget.instance.id,
               (instance) => instance.reposition(newPosition),
+            ),
+            transient: transient,
+          );
+    }
+
+    void setElement(Element newElement, bool transient) {
+      context.read<SessionState>().editGarden(
+            (garden) => garden.editInstance(
+              widget.instance.id,
+              (instance) => instance.withElement(newElement),
             ),
             transient: transient,
           );
@@ -172,6 +182,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     } else if (widget.instance.element is Label) {
       content = LabelEditor(
         label: widget.instance.element as Label,
+        setElement: setElement,
         position: position,
         setPosition: setPosition,
       );

@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart' hide Element;
 
+import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
-import '../../../models/session.dart';
 import '../../../models/structs/point.dart';
 import '../form_layout.dart';
 import '../point.dart';
@@ -10,12 +9,15 @@ import '../text.dart';
 
 class LabelEditor extends StatelessWidget {
   final Label label;
+  final void Function(Element, bool) setElement;
+
   final Point position;
   final void Function(Point, bool) setPosition;
 
   const LabelEditor({
     super.key,
     required this.label,
+    required this.setElement,
     required this.position,
     required this.setPosition,
   });
@@ -29,7 +31,7 @@ class LabelEditor extends StatelessWidget {
           child: validatedTextInput(
             label.text,
             (newText, transient) {
-              context.read<SessionState>().editGarden((garden) => garden);
+              setElement(Label(text: newText, size: label.size), transient);
             },
           ),
         ),
@@ -37,8 +39,8 @@ class LabelEditor extends StatelessWidget {
           label: const Text("Size"),
           child: validatedTextInput(
             label.size,
-            (newText, transient) {
-              context.read<SessionState>().editGarden((garden) => garden);
+            (newSize, transient) {
+              setElement(Label(text: label.text, size: newSize), transient);
             },
           ),
         ),

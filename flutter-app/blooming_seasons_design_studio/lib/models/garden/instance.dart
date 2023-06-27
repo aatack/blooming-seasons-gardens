@@ -47,6 +47,16 @@ class Instance {
       templateID: templateID,
     );
   }
+
+  Instance withElement(Element newElement) {
+    return Instance(
+      id: id,
+      name: name,
+      position: position,
+      element: newElement,
+      templateID: templateID,
+    );
+  }
 }
 
 dynamic serialiseInstance(
