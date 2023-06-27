@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 @immutable
-abstract class Validated<Type> {
+abstract class Validated<DataType,
+    OwnType extends Validated<DataType, OwnType>> {
   final String string;
 
   const Validated(this.string);
 
   List<String> get errors;
-  Type get value;
+  DataType get value;
+
+  Validated<DataType, OwnType> set(String newString);
 }
 
-class UnvalidatedString extends Validated<String> {
+class UnvalidatedString extends Validated<String, UnvalidatedString> {
   const UnvalidatedString(super.string);
 
   @override
@@ -18,9 +21,14 @@ class UnvalidatedString extends Validated<String> {
 
   @override
   String get value => string;
+
+  @override
+  UnvalidatedString set(String newString) {
+    return UnvalidatedString(newString);
+  }
 }
 
-class ValidatedDouble extends Validated<double> {
+class ValidatedDouble extends Validated<double, ValidatedDouble> {
   final double? minimum;
   final double? maximum;
 
@@ -63,6 +71,7 @@ class ValidatedDouble extends Validated<double> {
     );
   }
 
+  @override
   ValidatedDouble set(String newString) {
     return ValidatedDouble(newString, minimum: minimum, maximum: maximum);
   }
