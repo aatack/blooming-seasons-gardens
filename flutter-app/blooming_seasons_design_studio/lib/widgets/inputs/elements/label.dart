@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/label.dart';
-import '../../../models/inputs/validated.dart';
 import '../../../models/session.dart';
 import '../../../models/structs/point.dart';
 import '../form_layout.dart';
@@ -29,6 +28,15 @@ class LabelEditor extends StatelessWidget {
           label: const Text("Text"),
           child: validatedTextInput(
             label.text,
+            (newText, transient) {
+              context.read<SessionState>().editGarden((garden) => garden);
+            },
+          ),
+        ),
+        FormLayoutItem(
+          label: const Text("Size"),
+          child: validatedTextInput(
+            label.size,
             (newText, transient) {
               context.read<SessionState>().editGarden((garden) => garden);
             },
