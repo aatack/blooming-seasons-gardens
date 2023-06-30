@@ -53,7 +53,7 @@ class PlantEditor extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         _wrap(Button(
           onClicked: () {
-            setElement(plant.withType(PlantType.fill), true);
+            setElement(plant.withType(PlantType.fill), false);
           },
           backgroundColour: plant.type == PlantType.fill
               ? Theme.of(context).colorScheme.surfaceVariant
@@ -62,7 +62,7 @@ class PlantEditor extends StatelessWidget {
         )),
         _wrap(Button(
           onClicked: () {
-            setElement(plant.withType(PlantType.image), true);
+            setElement(plant.withType(PlantType.image), false);
           },
           backgroundColour: plant.type == PlantType.image
               ? Theme.of(context).colorScheme.surfaceVariant
@@ -104,7 +104,12 @@ class PlantEditor extends StatelessWidget {
         label: const Text("Colour"),
         child: ColorPicker(
           pickerColor: plant.fill.colour,
-          onColorChanged: (newColour) {},
+          onColorChanged: (newColour) {
+            setElement(
+                plant.withFill(PlantFill(
+                    thickness: plant.fill.thickness, colour: newColour)),
+                true);
+          },
           pickerAreaHeightPercent: 0.35,
           enableAlpha: false,
         ),
