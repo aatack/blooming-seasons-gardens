@@ -4,9 +4,11 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image/image.dart' show Image;
+import 'dart:html' as html;
 
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
@@ -202,6 +204,38 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       context,
       FormLayout(
         children: [
+          FormLayoutItem(
+            label: const Text("Image"),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Button(
+                  onClicked: () async {
+                    final uploadInput = html.FileUploadInputElement();
+                    uploadInput.accept = "image/*";
+                    uploadInput.click();
+
+                    await uploadInput.onChange.first;
+
+                    if (uploadInput.files!.isNotEmpty) {
+                      final file = uploadInput.files!.first;
+                      final reader = html.FileReader();
+
+                      reader.readAsDataUrl(file);
+                      await reader.onLoad.first;
+
+                      final String encodedImage = reader.result as String;
+
+                      final String base64Image = encodedImage.split(",")[1];
+
+                      print(base64Image.substring(0, 100));
+                    }
+                  },
+                  child: const Text("Choose image"),
+                ),
+              ],
+            ),
+          ),
           ...pointInput(
             label: "Position",
             point: _position,
