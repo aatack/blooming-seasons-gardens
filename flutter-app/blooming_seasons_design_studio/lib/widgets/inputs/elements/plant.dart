@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
@@ -38,7 +39,44 @@ class PlantEditor extends StatelessWidget {
             ),
           ],
         ),
+        _typeSelection(context),
       ],
+    );
+  }
+
+  Widget _typeSelection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0, bottom: 0),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
+        _wrap(Button(
+          onClicked: () {
+            setElement(plant.withType(PlantType.border), true);
+          },
+          backgroundColour: plant.type == PlantType.border
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : null,
+          child: const Text("Border"),
+        )),
+        _wrap(Button(
+          onClicked: () {
+            setElement(plant.withType(PlantType.image), true);
+          },
+          backgroundColour: plant.type == PlantType.image
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : null,
+          child: const Text("Image"),
+        )),
+      ]),
+    );
+  }
+
+  Widget _wrap(Widget widget) {
+    return Expanded(
+      child: Container(
+        // TODO: shrink the ugly space between the buttons
+        padding: const EdgeInsets.all(4),
+        child: widget,
+      ),
     );
   }
 }

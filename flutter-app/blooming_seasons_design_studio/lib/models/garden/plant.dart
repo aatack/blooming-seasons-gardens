@@ -47,6 +47,11 @@ class Plant implements Element {
     return Plant(
         diameter: newDiameter, type: type, border: border, image: image);
   }
+
+  Plant withType(PlantType newType) {
+    return Plant(
+        diameter: diameter, type: newType, border: border, image: image);
+  }
 }
 
 Plant deserialisePlant(dynamic plant, Map<int, Image> images) {

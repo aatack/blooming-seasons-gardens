@@ -103,11 +103,11 @@ class HeaderButtons extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-      ].map((element) => wrap(element)).toList(),
+      ].map((element) => _wrap(element)).toList(),
     );
   }
 
-  Widget wrap(Widget widget) {
+  Widget _wrap(Widget widget) {
     return Expanded(
       child: Container(
         // TODO: shrink the ugly space between the buttons
