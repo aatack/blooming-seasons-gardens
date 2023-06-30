@@ -2,6 +2,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
@@ -85,9 +86,10 @@ class PlantEditor extends StatelessWidget {
   Widget _fillEditor(BuildContext context) {
     return FormLayout(children: [
       FormLayoutItem(
-          label: const Text("Thickness"),
-          child: validatedTextInput(plant.fill.thickness,
-              (newThickness, transient) {
+        label: const Text("Thickness"),
+        child: validatedTextInput(
+          plant.fill.thickness,
+          (newThickness, transient) {
             setElement(
               plant.withFill(PlantFill(
                 thickness: newThickness,
@@ -95,7 +97,18 @@ class PlantEditor extends StatelessWidget {
               )),
               transient,
             );
-          })),
+          },
+        ),
+      ),
+      FormLayoutItem(
+        label: const Text("Colour"),
+        child: ColorPicker(
+          pickerColor: plant.fill.colour,
+          onColorChanged: (newColour) {},
+          pickerAreaHeightPercent: 0.35,
+          enableAlpha: false,
+        ),
+      ),
     ]);
   }
 

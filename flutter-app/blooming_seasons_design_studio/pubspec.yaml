@@ -12,6 +12,7 @@ dependencies:
   flutter_bloc: ^8.1.2
   image: ^4.0.15
   http: ^0.13.3
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:
