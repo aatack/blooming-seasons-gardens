@@ -50,12 +50,12 @@ class PlantEditor extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         _wrap(Button(
           onClicked: () {
-            setElement(plant.withType(PlantType.border), true);
+            setElement(plant.withType(PlantType.fill), true);
           },
-          backgroundColour: plant.type == PlantType.border
+          backgroundColour: plant.type == PlantType.fill
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
-          child: const Text("Border"),
+          child: const Text("Fill"),
         )),
         _wrap(Button(
           onClicked: () {

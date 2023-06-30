@@ -10,13 +10,13 @@ class Plant implements Element {
   final ValidatedDouble diameter;
 
   final PlantType type;
-  final PlantBorder border;
+  final PlantFill fill;
   final PlantImage image;
 
   const Plant({
     required this.diameter,
     required this.type,
-    required this.border,
+    required this.fill,
     required this.image,
   });
 
@@ -29,7 +29,7 @@ class Plant implements Element {
       "elementType": "plant",
       "diameter": diameter.serialise(),
       "type": type.toString(),
-      "border": _serialisePlantBorder(border),
+      "fill": _serialisePlantFill(fill),
       "image": _serialisePlantImage(image, images),
     };
   }
@@ -37,68 +37,68 @@ class Plant implements Element {
   static Plant blank() {
     return Plant(
       diameter: const ValidatedDouble("0.25"),
-      type: PlantType.border,
-      border: PlantBorder.blank(),
+      type: PlantType.fill,
+      fill: PlantFill.blank(),
       image: PlantImage.blank(),
     );
   }
 
   Plant resize(ValidatedDouble newDiameter) {
     return Plant(
-        diameter: newDiameter, type: type, border: border, image: image);
+        diameter: newDiameter, type: type, fill: fill, image: image);
   }
 
   Plant withType(PlantType newType) {
     return Plant(
-        diameter: diameter, type: newType, border: border, image: image);
+        diameter: diameter, type: newType, fill: fill, image: image);
   }
 }
 
 Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
-  final border = plant["border"];
+  final fill = plant["fill"];
   final image = plant["image"];
 
   return Plant(
     diameter: ValidatedDouble.deserialise(plant["diameter"]),
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
-    border: _deserialisePlantBorder(border),
+    fill: _deserialisePlantFill(fill),
     image: _deserialisePlantImage(image, images),
   );
 }
 
-enum PlantType { border, image }
+enum PlantType { fill, image }
 
 @immutable
-class PlantBorder {
+class PlantFill {
   final ValidatedDouble thickness;
   final Color colour;
 
-  const PlantBorder({required this.thickness, required this.colour});
+  const PlantFill({required this.thickness, required this.colour});
 
-  static PlantBorder blank() {
-    return PlantBorder(
+  static PlantFill blank() {
+    return PlantFill(
         thickness: const ValidatedDouble("1"), colour: Colors.yellow[300]!);
   }
 }
 
-dynamic _serialisePlantBorder(PlantBorder border) {
+dynamic _serialisePlantFill(PlantFill fill) {
   return {
-    "thickness": border.thickness.serialise(),
+    "thickness": fill.thickness.serialise(),
     "colour": {
-      "alpha": border.colour.alpha,
-      "red": border.colour.red,
-      "green": border.colour.green,
-      "blue": border.colour.blue,
+      "alpha": fill.colour.alpha,
+      "red": fill.colour.red,
+      "green": fill.colour.green,
+      "blue": fill.colour.blue,
     }
   };
 }
 
-PlantBorder _deserialisePlantBorder(dynamic border) {
-  final colour = border["colour"];
+PlantFill _deserialisePlantFill(dynamic fill) {
+  final colour = fill["colour"];
 
-  return PlantBorder(
-    thickness: ValidatedDouble.deserialise(border["thickness"]),
+  return PlantFill(
+    thickness: ValidatedDouble.deserialise(fill["thickness"]),
     colour: Color.fromARGB(
       colour["alpha"],
       colour["red"],
