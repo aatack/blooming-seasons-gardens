@@ -36,7 +36,7 @@ class Plant implements Element {
 
   static Plant blank() {
     return Plant(
-      diameter: const ValidatedDouble("0.25"),
+      diameter: const ValidatedDouble("0.25", minimum: 0),
       type: PlantType.fill,
       fill: PlantFill.blank(),
       image: PlantImage.blank(),
@@ -44,13 +44,19 @@ class Plant implements Element {
   }
 
   Plant resize(ValidatedDouble newDiameter) {
-    return Plant(
-        diameter: newDiameter, type: type, fill: fill, image: image);
+    return Plant(diameter: newDiameter, type: type, fill: fill, image: image);
   }
 
   Plant withType(PlantType newType) {
-    return Plant(
-        diameter: diameter, type: newType, fill: fill, image: image);
+    return Plant(diameter: diameter, type: newType, fill: fill, image: image);
+  }
+
+  Plant withFill(PlantFill newFill) {
+    return Plant(diameter: diameter, type: type, fill: newFill, image: image);
+  }
+
+  Plant withImage(PlantImage newImage) {
+    return Plant(diameter: diameter, type: type, fill: fill, image: newImage);
   }
 }
 
@@ -78,7 +84,8 @@ class PlantFill {
 
   static PlantFill blank() {
     return PlantFill(
-        thickness: const ValidatedDouble("1"), colour: Colors.yellow[300]!);
+        thickness: const ValidatedDouble("1", minimum: 0),
+        colour: Colors.yellow[300]!);
   }
 }
 

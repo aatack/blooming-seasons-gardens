@@ -40,6 +40,8 @@ class PlantEditor extends StatelessWidget {
           ],
         ),
         _typeSelection(context),
+        if (plant.type == PlantType.fill) _fillEditor(context),
+        if (plant.type == PlantType.image) _imageEditor(context),
       ],
     );
   }
@@ -78,5 +80,26 @@ class PlantEditor extends StatelessWidget {
         child: widget,
       ),
     );
+  }
+
+  Widget _fillEditor(BuildContext context) {
+    return FormLayout(children: [
+      FormLayoutItem(
+          label: const Text("Thickness"),
+          child: validatedTextInput(plant.fill.thickness,
+              (newThickness, transient) {
+            setElement(
+              plant.withFill(PlantFill(
+                thickness: newThickness,
+                colour: plant.fill.colour,
+              )),
+              transient,
+            );
+          })),
+    ]);
+  }
+
+  Widget _imageEditor(BuildContext context) {
+    return FormLayout(children: []);
   }
 }
