@@ -7,14 +7,14 @@ import 'instance.dart';
 
 @immutable
 class Plant implements Element {
-  final ValidatedDouble size;
+  final ValidatedDouble diameter;
 
   final PlantType type;
   final PlantBorder border;
   final PlantImage image;
 
   const Plant({
-    required this.size,
+    required this.diameter,
     required this.type,
     required this.border,
     required this.image,
@@ -27,11 +27,20 @@ class Plant implements Element {
   ) {
     return {
       "elementType": "plant",
-      "size": size.serialise(),
+      "diameter": diameter.serialise(),
       "type": type.toString(),
       "border": _serialisePlantBorder(border),
       "image": _serialisePlantImage(image, images),
     };
+  }
+
+  static Plant blank() {
+    return Plant(
+      diameter: const ValidatedDouble("0.25"),
+      type: PlantType.border,
+      border: PlantBorder.blank(),
+      image: PlantImage.blank(),
+    );
   }
 }
 
@@ -40,7 +49,7 @@ Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
   final image = plant["image"];
 
   return Plant(
-    size: ValidatedDouble.deserialise(plant["size"]),
+    diameter: ValidatedDouble.deserialise(plant["diameter"]),
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
     border: _deserialisePlantBorder(border),

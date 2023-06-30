@@ -199,18 +199,8 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context
-                  .read<SessionState>()
-                  .editGarden((garden) => garden.addElement(
-                      bed.id,
-                      Plant(
-                        name: "Plant ${garden.availableID}",
-                        size: 0.3,
-                        type: PlantType.border,
-                        border: PlantBorder(
-                            thickness: 0.01, colour: Colors.yellow[300]!),
-                        image: PlantImage.blank(),
-                      )));
+              context.read<SessionState>().editGarden(
+                  (garden) => garden.addElement(bed.id, Plant.blank()));
             },
             child: const Text("Plant"),
           ),
