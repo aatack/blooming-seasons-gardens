@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:flutter/material.dart' show Color, immutable;
 import 'package:image/image.dart' show Image;
 
@@ -91,19 +92,20 @@ PlantBorder _deserialisePlantBorder(dynamic border) {
 @immutable
 class PlantImage {
   final Image? image;
-  final double x;
-  final double y;
-  final double scale;
+  final Point position;
+  final ValidatedDouble scale;
 
   const PlantImage({
     required this.image,
-    required this.x,
-    required this.y,
+    required this.position,
     required this.scale,
   });
 
   static PlantImage blank() {
-    return const PlantImage(image: null, x: 0, y: 0, scale: 1);
+    return PlantImage(
+        image: null,
+        position: Point.blank(),
+        scale: const ValidatedDouble("0"));
   }
 }
 
@@ -114,16 +116,14 @@ dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
 
   return {
     "imageID": image.image == null ? null : images[image.image],
-    "x": image.x,
-    "y": image.y,
-    "scale": image.scale,
+    "position": image.position.serialise(),
+    "scale": image.scale.serialise(),
   };
 }
 
 PlantImage _deserialisePlantImage(dynamic image, Map<int, Image> images) {
   return PlantImage(
       image: image["imageID"] == null ? null : images[image["imageID"]]!,
-      x: image["x"],
-      y: image["y"],
-      scale: image["scale"]);
+      position: Point.deserialise(image["position"]),
+      scale: ValidatedDouble.deserialise(image["scale"]));
 }

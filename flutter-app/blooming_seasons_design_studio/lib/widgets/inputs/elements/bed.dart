@@ -209,7 +209,7 @@ class _AddElementModal extends StatelessWidget {
                         type: PlantType.border,
                         border: PlantBorder(
                             thickness: 0.01, colour: Colors.yellow[300]!),
-                        image: null,
+                        image: PlantImage.blank(),
                       )));
             },
             child: const Text("Plant"),
