@@ -1,3 +1,5 @@
+import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
 
 import '../../../models/garden/instance.dart';
@@ -21,6 +23,22 @@ class PlantEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Plant");
+    return Column(
+      children: [
+        FormLayout(
+          children: [
+            FormLayoutItem(
+              label: const Text("Diameter"),
+              child: validatedTextInput(
+                plant.diameter,
+                (newDiameter, transient) {
+                  setElement(plant.resize(newDiameter), transient);
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

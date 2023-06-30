@@ -42,6 +42,11 @@ class Plant implements Element {
       image: PlantImage.blank(),
     );
   }
+
+  Plant resize(ValidatedDouble newDiameter) {
+    return Plant(
+        diameter: newDiameter, type: type, border: border, image: image);
+  }
 }
 
 Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
