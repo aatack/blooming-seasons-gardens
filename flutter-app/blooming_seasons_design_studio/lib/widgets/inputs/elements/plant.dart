@@ -10,6 +10,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';
+import '../point.dart';
 
 class PlantEditor extends StatelessWidget {
   final Plant plant;
@@ -32,6 +33,8 @@ class PlantEditor extends StatelessWidget {
       children: [
         FormLayout(
           children: [
+            ...pointInput(
+                label: "Position", point: position, setPoint: setPosition),
             FormLayoutItem(
               label: const Text("Diameter"),
               child: validatedTextInput(
