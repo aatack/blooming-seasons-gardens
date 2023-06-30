@@ -7,16 +7,13 @@ import 'instance.dart';
 
 @immutable
 class Plant implements Element {
-  final String name;
-
-  final double size;
+  final ValidatedDouble size;
 
   final PlantType type;
   final PlantBorder border;
   final PlantImage image;
 
   const Plant({
-    required this.name,
     required this.size,
     required this.type,
     required this.border,
@@ -30,8 +27,7 @@ class Plant implements Element {
   ) {
     return {
       "elementType": "plant",
-      "name": name,
-      "size": size,
+      "size": size.serialise(),
       "type": type.toString(),
       "border": _serialisePlantBorder(border),
       "image": _serialisePlantImage(image, images),
@@ -44,8 +40,7 @@ Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
   final image = plant["image"];
 
   return Plant(
-    name: plant["name"],
-    size: plant["size"],
+    size: ValidatedDouble.deserialise(plant["size"]),
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
     border: _deserialisePlantBorder(border),
