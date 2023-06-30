@@ -108,38 +108,41 @@ class _PlantFillEditorModal extends StatelessWidget {
   final PlantFill fill;
   final void Function(PlantFill) setFill;
 
-  const _PlantFillEditorModal(
-      {super.key, required this.fill, required this.setFill});
+  const _PlantFillEditorModal({required this.fill, required this.setFill});
 
   @override
   Widget build(BuildContext context) {
-    return FormLayout(children: [
-      FormLayoutItem(
-        label: const Text("Thickness"),
-        child: validatedTextInput(
-          fill.thickness,
-          (newThickness, transient) {
-            setFill(
-              PlantFill(
-                thickness: newThickness,
-                colour: fill.colour,
-              ),
-            );
-          },
+    return Container(
+      padding: const EdgeInsets.all(8),
+      width: 400,
+      color: Colors.grey[100],
+      child: FormLayout(children: [
+        FormLayoutItem(
+          label: const Text("Thickness"),
+          child: validatedTextInput(
+            fill.thickness,
+            (newThickness, transient) {
+              setFill(
+                PlantFill(
+                  thickness: newThickness,
+                  colour: fill.colour,
+                ),
+              );
+            },
+          ),
         ),
-      ),
-      FormLayoutItem(
-        label: const Text("Colour"),
-        child: ColorPicker(
-          // STARTHERE: move this into a modal to only capture the final value
-          pickerColor: fill.colour,
-          onColorChanged: (newColour) {
-            // setFill(PlantFill(thickness: fill.thickness, colour: newColour));
-          },
-          pickerAreaHeightPercent: 0.35,
-          enableAlpha: false,
+        FormLayoutItem(
+          label: const Text("Colour"),
+          child: ColorPicker(
+            // STARTHERE: move this into a modal to only capture the final value
+            pickerColor: fill.colour,
+            onColorChanged: (newColour) {
+              // setFill(PlantFill(thickness: fill.thickness, colour: newColour));
+            },
+            enableAlpha: false,
+          ),
         ),
-      ),
-    ]);
+      ]),
+    );
   }
 }
