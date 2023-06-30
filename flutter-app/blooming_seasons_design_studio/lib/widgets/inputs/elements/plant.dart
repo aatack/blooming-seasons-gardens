@@ -3,9 +3,10 @@ import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
-import 'package:flutter/material.dart' hide Element;
+import 'package:flutter/material.dart' hide Element, Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:image/image.dart' show Image;
 
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
@@ -80,6 +81,13 @@ class PlantEditor extends StatelessWidget {
         _wrap(Button(
           onClicked: () {
             if (imageSelected) {
+              context.read<ModalsState>().add(
+                    _PlantImageEditorModal(
+                      image: plant.image,
+                      setImage: (newImage) =>
+                          setElement(plant.withImage(newImage), false),
+                    ),
+                  );
             } else {
               setElement(plant.withType(PlantType.image), false);
             }
@@ -159,6 +167,57 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
       ),
       () {
         widget.setFill(PlantFill(thickness: _thickness, colour: _colour));
+      },
+    );
+  }
+}
+
+class _PlantImageEditorModal extends StatefulWidget {
+  final PlantImage image;
+  final void Function(PlantImage) setImage;
+
+  const _PlantImageEditorModal({required this.image, required this.setImage});
+
+  @override
+  State<_PlantImageEditorModal> createState() => _PlantImageEditorModalState();
+}
+
+class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
+  late Image? _image;
+  late Point _position;
+  late ValidatedDouble _scale;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _image = widget.image.image;
+    _position = widget.image.position;
+    _scale = widget.image.scale;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _wrapInModal(
+      context,
+      FormLayout(
+        children: [
+          FormLayoutItem(
+            label: const Text("Scale"),
+            child: validatedTextInput(
+              _scale,
+              (newScale, transient) {
+                setState(() {
+                  _scale = newScale;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      () {
+        widget.setImage(
+            PlantImage(image: _image, position: _position, scale: _scale));
       },
     );
   }
