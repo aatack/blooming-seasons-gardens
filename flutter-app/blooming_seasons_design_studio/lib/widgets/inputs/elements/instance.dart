@@ -176,6 +176,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     if (widget.instance.element is Plant) {
       content = PlantEditor(
         plant: widget.instance.element as Plant,
+        setElement: setElement,
         position: position,
         setPosition: setPosition,
       );
@@ -189,6 +190,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
     } else if (widget.instance.element is Arrow) {
       content = ArrowEditor(
         arrow: widget.instance.element as Arrow,
+        setElement: setElement,
         position: position,
         setPosition: setPosition,
       );

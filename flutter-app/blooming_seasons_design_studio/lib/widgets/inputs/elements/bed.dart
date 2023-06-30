@@ -13,6 +13,7 @@ import '../../../models/garden/bed.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
+import '../../../models/structs/point.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
 
@@ -234,8 +235,15 @@ class _AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden((garden) =>
-                  garden.addElement(bed.id, const Arrow(x: 0, y: 0)));
+              context
+                  .read<SessionState>()
+                  .editGarden((garden) => garden.addElement(
+                      bed.id,
+                      const Arrow(
+                        source:
+                            Point(ValidatedDouble("0"), ValidatedDouble("0")),
+                        thickness: ValidatedDouble("1", minimum: 0),
+                      )));
             },
             child: const Text("Arrow"),
           ),
