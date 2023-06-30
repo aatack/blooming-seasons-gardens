@@ -1,7 +1,9 @@
+import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../models/garden/instance.dart';
@@ -41,33 +43,47 @@ class PlantEditor extends StatelessWidget {
           ],
         ),
         _typeSelection(context),
-        if (plant.type == PlantType.fill) _fillEditor(context),
-        if (plant.type == PlantType.image) _imageEditor(context),
       ],
     );
   }
 
   Widget _typeSelection(BuildContext context) {
+    final fillSelected = plant.type == PlantType.fill;
+    final imageSelected = plant.type == PlantType.image;
+
     return Padding(
       padding: const EdgeInsets.only(top: 0, bottom: 0),
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         _wrap(Button(
           onClicked: () {
-            setElement(plant.withType(PlantType.fill), false);
+            if (fillSelected) {
+              context.read<ModalsState>().add(
+                    _PlantFillEditorModal(
+                      fill: plant.fill,
+                      setFill: (newFill) =>
+                          setElement(plant.withFill(newFill), true),
+                    ),
+                  );
+            } else {
+              setElement(plant.withType(PlantType.fill), false);
+            }
           },
           backgroundColour: plant.type == PlantType.fill
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
-          child: const Text("Fill"),
+          child: Text(fillSelected ? "Edit fill" : "Use fill"),
         )),
         _wrap(Button(
           onClicked: () {
-            setElement(plant.withType(PlantType.image), false);
+            if (imageSelected) {
+            } else {
+              setElement(plant.withType(PlantType.image), false);
+            }
           },
           backgroundColour: plant.type == PlantType.image
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
-          child: const Text("Image"),
+          child: Text(imageSelected ? "Edit image" : "Use image"),
         )),
       ]),
     );
@@ -83,19 +99,31 @@ class PlantEditor extends StatelessWidget {
     );
   }
 
-  Widget _fillEditor(BuildContext context) {
+  Widget _imageEditor(BuildContext context) {
+    return FormLayout(children: []);
+  }
+}
+
+class _PlantFillEditorModal extends StatelessWidget {
+  final PlantFill fill;
+  final void Function(PlantFill) setFill;
+
+  const _PlantFillEditorModal(
+      {super.key, required this.fill, required this.setFill});
+
+  @override
+  Widget build(BuildContext context) {
     return FormLayout(children: [
       FormLayoutItem(
         label: const Text("Thickness"),
         child: validatedTextInput(
-          plant.fill.thickness,
+          fill.thickness,
           (newThickness, transient) {
-            setElement(
-              plant.withFill(PlantFill(
+            setFill(
+              PlantFill(
                 thickness: newThickness,
-                colour: plant.fill.colour,
-              )),
-              transient,
+                colour: fill.colour,
+              ),
             );
           },
         ),
@@ -103,21 +131,15 @@ class PlantEditor extends StatelessWidget {
       FormLayoutItem(
         label: const Text("Colour"),
         child: ColorPicker(
-          pickerColor: plant.fill.colour,
+          // STARTHERE: move this into a modal to only capture the final value
+          pickerColor: fill.colour,
           onColorChanged: (newColour) {
-            setElement(
-                plant.withFill(PlantFill(
-                    thickness: plant.fill.thickness, colour: newColour)),
-                true);
+            // setFill(PlantFill(thickness: fill.thickness, colour: newColour));
           },
           pickerAreaHeightPercent: 0.35,
           enableAlpha: false,
         ),
       ),
     ]);
-  }
-
-  Widget _imageEditor(BuildContext context) {
-    return FormLayout(children: []);
   }
 }
