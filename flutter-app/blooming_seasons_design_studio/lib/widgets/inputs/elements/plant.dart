@@ -102,10 +102,6 @@ class PlantEditor extends StatelessWidget {
       ),
     );
   }
-
-  Widget _imageEditor(BuildContext context) {
-    return FormLayout(children: []);
-  }
 }
 
 class _PlantFillEditorModal extends StatefulWidget {
@@ -132,60 +128,70 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      width: 400,
-      color: Colors.grey[100],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+    return _wrapInModal(
+      context,
+      FormLayout(
         children: [
-          FormLayout(
-            children: [
-              FormLayoutItem(
-                label: const Text("Thickness"),
-                child: validatedTextInput(
-                  _thickness,
-                  (newThickness, transient) {
-                    setState(() {
-                      _thickness = newThickness;
-                    });
-                  },
-                ),
-              ),
-              FormLayoutItem(
-                label: const Text("Colour"),
-                child: ColorPicker(
-                  pickerColor: _colour,
-                  onColorChanged: (newColour) {
-                    setState(() {
-                      _colour = newColour;
-                    });
-                  },
-                  enableAlpha: false,
-                ),
-              ),
-            ],
+          FormLayoutItem(
+            label: const Text("Thickness"),
+            child: validatedTextInput(
+              _thickness,
+              (newThickness, transient) {
+                setState(() {
+                  _thickness = newThickness;
+                });
+              },
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Button(
-                  onClicked: () {
-                    context.read<ModalsState>().pop();
-                  },
-                  child: const Text("Cancel")),
-              const SizedBox(width: 8),
-              Button(
-                  onClicked: () {
-                    widget.setFill(
-                        PlantFill(thickness: _thickness, colour: _colour));
-                    context.read<ModalsState>().pop();
-                  },
-                  child: const Text("Confirm")),
-            ],
+          FormLayoutItem(
+            label: const Text("Colour"),
+            child: ColorPicker(
+              pickerColor: _colour,
+              onColorChanged: (newColour) {
+                setState(() {
+                  _colour = newColour;
+                });
+              },
+              enableAlpha: false,
+            ),
           ),
         ],
       ),
+      () {
+        widget.setFill(PlantFill(thickness: _thickness, colour: _colour));
+      },
     );
   }
+}
+
+Widget _wrapInModal(
+    BuildContext context, Widget modal, void Function() onConfirm) {
+  return Container(
+    padding: const EdgeInsets.all(8),
+    width: 400,
+    color: Colors.grey[100],
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        modal,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Button(
+                onClicked: () {
+                  context.read<ModalsState>().pop();
+                },
+                child: const Text("Cancel")),
+            const SizedBox(width: 8),
+            Button(
+                onClicked: () {
+                  onConfirm();
+                  context.read<ModalsState>().pop();
+                },
+                child: const Text("Confirm")),
+          ],
+        ),
+      ],
+    ),
+  );
 }
