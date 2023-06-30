@@ -35,12 +35,8 @@ class Garden {
       name,
       [
         ...beds,
-        Bed(
-          const [],
-          id: availableID,
-          origin: const Point(ValidatedDouble("0"), ValidatedDouble("0")),
-          name: "Bed $availableID",
-        )
+        Bed(const [],
+            id: availableID, origin: Point.blank(), name: "Bed $availableID")
       ],
       templates,
       availableID + 1,
@@ -70,17 +66,21 @@ class Garden {
       name,
       _beds
           .map((bed) => bed.id == bedID
-              ? Bed([
-                  ...bed.instances,
-                  Instance(
-                    id: availableID,
-                    name: "${element.runtimeType.toString()} $availableID",
-                    position:
-                        const Point(ValidatedDouble("0"), ValidatedDouble("0")),
-                    element: element,
-                    templateID: null,
-                  )
-                ], id: bed.id, origin: bed.origin, name: bed.name)
+              ? Bed(
+                  [
+                    ...bed.instances,
+                    Instance(
+                      id: availableID,
+                      name: "${element.runtimeType.toString()} $availableID",
+                      position: Point.blank(),
+                      element: element,
+                      templateID: null,
+                    )
+                  ],
+                  id: bed.id,
+                  origin: bed.origin,
+                  name: bed.name,
+                )
               : bed)
           .toList(),
       _templates,
