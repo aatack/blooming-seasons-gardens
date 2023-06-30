@@ -1,5 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
-import 'package:flutter/material.dart' show Color, immutable;
+import 'package:flutter/material.dart' show Color, Colors, immutable;
 import 'package:image/image.dart' show Image;
 
 import '../structs/point.dart';
@@ -57,15 +57,20 @@ enum PlantType { border, image }
 
 @immutable
 class PlantBorder {
-  final double thickness;
+  final ValidatedDouble thickness;
   final Color colour;
 
   const PlantBorder({required this.thickness, required this.colour});
+
+  static PlantBorder blank() {
+    return PlantBorder(
+        thickness: const ValidatedDouble("1"), colour: Colors.yellow[300]!);
+  }
 }
 
 dynamic _serialisePlantBorder(PlantBorder border) {
   return {
-    "thickness": border.thickness,
+    "thickness": border.thickness.serialise(),
     "colour": {
       "alpha": border.colour.alpha,
       "red": border.colour.red,
@@ -79,7 +84,7 @@ PlantBorder _deserialisePlantBorder(dynamic border) {
   final colour = border["colour"];
 
   return PlantBorder(
-    thickness: border["thickness"],
+    thickness: ValidatedDouble.deserialise(border["thickness"]),
     colour: Color.fromARGB(
       colour["alpha"],
       colour["red"],
