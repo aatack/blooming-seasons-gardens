@@ -5,6 +5,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -190,6 +191,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   late Point _position;
   late ValidatedDouble _scale;
 
+  late material.Image? _test;
+
   @override
   void initState() {
     super.initState();
@@ -197,6 +200,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
     _image = widget.image.image;
     _position = widget.image.position;
     _scale = widget.image.scale;
+
+    _test = null;
   }
 
   @override
@@ -210,14 +215,27 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Button(
-                  onClicked: () async {
-                    final image = await uploadImage();
+                _test == null
+                    ? Button(
+                        onClicked: () async {
+                          final image = await uploadImage();
 
-                    print(image);
-                  },
-                  child: const Text("Choose image"),
-                ),
+                          if (image != null) {
+                            setState(() {
+                              _test = deserialiseImage(image);
+                            });
+                          }
+                        },
+                        child: const Text("Upload image"),
+                      )
+                    : Button(
+                        onClicked: () {
+                          setState(() {
+                            _test = null;
+                          });
+                        },
+                        child: const Text("Reset image"),
+                      ),
               ],
             ),
           ),
@@ -241,6 +259,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
               },
             ),
           ),
+          if (_test != null)
+            FormLayoutItem(child: SizedBox(width: 300, child: _test)),
         ],
       ),
       () {

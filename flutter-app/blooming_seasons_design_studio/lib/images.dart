@@ -1,4 +1,8 @@
 import 'dart:html' as html;
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart' show Image;
 
 Future<String?> uploadImage() async {
   final uploadInput = html.FileUploadInputElement();
@@ -20,4 +24,9 @@ Future<String?> uploadImage() async {
   } else {
     return null;
   }
+}
+
+Image deserialiseImage(String image) {
+  final bytes = Uint8List.fromList(base64.decode(image));
+  return Image.memory(bytes);
 }
