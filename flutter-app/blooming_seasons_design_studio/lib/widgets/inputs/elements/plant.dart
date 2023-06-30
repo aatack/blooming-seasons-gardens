@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/images.dart';
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
@@ -211,25 +212,9 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
               children: [
                 Button(
                   onClicked: () async {
-                    final uploadInput = html.FileUploadInputElement();
-                    uploadInput.accept = "image/*";
-                    uploadInput.click();
+                    final image = await uploadImage();
 
-                    await uploadInput.onChange.first;
-
-                    if (uploadInput.files!.isNotEmpty) {
-                      final file = uploadInput.files!.first;
-                      final reader = html.FileReader();
-
-                      reader.readAsDataUrl(file);
-                      await reader.onLoad.first;
-
-                      final String encodedImage = reader.result as String;
-
-                      final String base64Image = encodedImage.split(",")[1];
-
-                      print(base64Image.substring(0, 100));
-                    }
+                    print(image);
                   },
                   child: const Text("Choose image"),
                 ),
