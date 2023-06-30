@@ -4,6 +4,8 @@ import '../../models/structs/point.dart';
 import 'form_layout.dart';
 import 'text.dart';
 
+const double indent = 20;
+
 List<FormLayoutItem> pointInput({
   String? label,
   required Point point,
@@ -17,7 +19,10 @@ List<FormLayoutItem> pointInput({
         style: const TextStyle(fontWeight: FontWeight.bold),
       )),
     FormLayoutItem(
-      label: const Text("Horizontal"),
+      label: const Padding(
+        padding: EdgeInsets.only(left: indent),
+        child: Text("Horizontal"),
+      ),
       child: validatedTextInput(
         point.x,
         (newValue, transient) {
@@ -26,7 +31,10 @@ List<FormLayoutItem> pointInput({
       ),
     ),
     FormLayoutItem(
-      label: const Text("Vertical"),
+      label: const Padding(
+        padding: EdgeInsets.only(left: indent),
+        child: Text("Vertical"),
+      ),
       child: validatedTextInput(
         point.y,
         (newValue, transient) {
