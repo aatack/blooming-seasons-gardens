@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
@@ -61,7 +62,7 @@ class PlantEditor extends StatelessWidget {
                     _PlantFillEditorModal(
                       fill: plant.fill,
                       setFill: (newFill) =>
-                          setElement(plant.withFill(newFill), true),
+                          setElement(plant.withFill(newFill), false),
                     ),
                   );
             } else {
@@ -104,11 +105,27 @@ class PlantEditor extends StatelessWidget {
   }
 }
 
-class _PlantFillEditorModal extends StatelessWidget {
+class _PlantFillEditorModal extends StatefulWidget {
   final PlantFill fill;
   final void Function(PlantFill) setFill;
 
   const _PlantFillEditorModal({required this.fill, required this.setFill});
+
+  @override
+  State<_PlantFillEditorModal> createState() => _PlantFillEditorModalState();
+}
+
+class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
+  late ValidatedDouble _thickness;
+  late Color _colour;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _thickness = widget.fill.thickness;
+    _colour = widget.fill.colour;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,33 +133,56 @@ class _PlantFillEditorModal extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       width: 400,
       color: Colors.grey[100],
-      child: FormLayout(children: [
-        FormLayoutItem(
-          label: const Text("Thickness"),
-          child: validatedTextInput(
-            fill.thickness,
-            (newThickness, transient) {
-              setFill(
-                PlantFill(
-                  thickness: newThickness,
-                  colour: fill.colour,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FormLayout(
+            children: [
+              FormLayoutItem(
+                label: const Text("Thickness"),
+                child: validatedTextInput(
+                  _thickness,
+                  (newThickness, transient) {
+                    setState(() {
+                      _thickness = newThickness;
+                    });
+                  },
                 ),
-              );
-            },
+              ),
+              FormLayoutItem(
+                label: const Text("Colour"),
+                child: ColorPicker(
+                  pickerColor: _colour,
+                  onColorChanged: (newColour) {
+                    setState(() {
+                      _colour = newColour;
+                    });
+                  },
+                  enableAlpha: false,
+                ),
+              ),
+            ],
           ),
-        ),
-        FormLayoutItem(
-          label: const Text("Colour"),
-          child: ColorPicker(
-            // STARTHERE: move this into a modal to only capture the final value
-            pickerColor: fill.colour,
-            onColorChanged: (newColour) {
-              // setFill(PlantFill(thickness: fill.thickness, colour: newColour));
-            },
-            enableAlpha: false,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Button(
+                  onClicked: () {
+                    context.read<ModalsState>().pop();
+                  },
+                  child: const Text("Cancel")),
+              const SizedBox(width: 8),
+              Button(
+                  onClicked: () {
+                    widget.setFill(
+                        PlantFill(thickness: _thickness, colour: _colour));
+                    context.read<ModalsState>().pop();
+                  },
+                  child: const Text("Confirm")),
+            ],
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
