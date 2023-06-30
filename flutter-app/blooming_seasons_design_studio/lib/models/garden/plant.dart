@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show Color, immutable;
 import 'package:image/image.dart' show Image;
 
+import '../structs/point.dart';
 import 'instance.dart';
 
 @immutable
@@ -10,8 +11,8 @@ class Plant implements Element {
   final double size;
 
   final PlantType type;
-  final PlantBorder? border;
-  final PlantImage? image;
+  final PlantBorder border;
+  final PlantImage image;
 
   const Plant({
     required this.name,
@@ -31,8 +32,8 @@ class Plant implements Element {
       "name": name,
       "size": size,
       "type": type.toString(),
-      "border": border == null ? null : _serialisePlantBorder(border!),
-      "image": image == null ? null : _serialisePlantImage(image!, images),
+      "border": _serialisePlantBorder(border),
+      "image": _serialisePlantImage(image, images),
     };
   }
 }
@@ -46,8 +47,8 @@ Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
     size: plant["size"],
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
-    border: border == null ? null : _deserialisePlantBorder(border),
-    image: image == null ? null : _deserialisePlantImage(image, images),
+    border: _deserialisePlantBorder(border),
+    image: _deserialisePlantImage(image, images),
   );
 }
 
@@ -89,7 +90,7 @@ PlantBorder _deserialisePlantBorder(dynamic border) {
 
 @immutable
 class PlantImage {
-  final Image image;
+  final Image? image;
   final double x;
   final double y;
   final double scale;
@@ -100,15 +101,19 @@ class PlantImage {
     required this.y,
     required this.scale,
   });
+
+  static PlantImage blank() {
+    return const PlantImage(image: null, x: 0, y: 0, scale: 1);
+  }
 }
 
 dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
-  if (!images.containsKey(image)) {
-    images[image.image] = images.length;
+  if (image.image != null && !images.containsKey(image)) {
+    images[image.image!] = images.length;
   }
 
   return {
-    "imageID": images[image.image],
+    "imageID": image.image == null ? null : images[image.image],
     "x": image.x,
     "y": image.y,
     "scale": image.scale,
@@ -117,7 +122,7 @@ dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
 
 PlantImage _deserialisePlantImage(dynamic image, Map<int, Image> images) {
   return PlantImage(
-      image: images[image["imageID"]]!,
+      image: image["imageID"] == null ? null : images[image["imageID"]]!,
       x: image["x"],
       y: image["y"],
       scale: image["scale"]);
