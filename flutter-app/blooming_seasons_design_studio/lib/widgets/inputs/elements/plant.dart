@@ -202,6 +202,15 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       context,
       FormLayout(
         children: [
+          ...pointInput(
+            label: "Position",
+            point: _position,
+            setPoint: (newPosition, _) {
+              setState(() {
+                _position = newPosition;
+              });
+            },
+          ),
           FormLayoutItem(
             label: const Text("Scale"),
             child: validatedTextInput(
