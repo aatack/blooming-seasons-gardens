@@ -22,6 +22,13 @@ class Label implements Element {
       "size": size.serialise(),
     };
   }
+
+  static Label blank() {
+    return const Label(
+      text: UnvalidatedString("Label"),
+      size: ValidatedDouble("0"),
+    );
+  }
 }
 
 Label deserialiseLabel(dynamic label) {

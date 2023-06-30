@@ -19,4 +19,8 @@ class Point {
       ValidatedDouble.deserialise(point["y"]),
     );
   }
+
+  static Point blank() {
+    return const Point(ValidatedDouble("0"), ValidatedDouble("0"));
+  }
 }

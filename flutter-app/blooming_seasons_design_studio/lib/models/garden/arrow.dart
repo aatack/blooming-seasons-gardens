@@ -31,6 +31,10 @@ class Arrow implements Element {
   Arrow withThickness(ValidatedDouble newThickness) {
     return Arrow(source: source, thickness: newThickness);
   }
+
+  static Arrow blank() {
+    return Arrow(source: Point.blank(), thickness: const ValidatedDouble("1"));
+  }
 }
 
 Arrow deserialiseArrow(dynamic arrow) {
