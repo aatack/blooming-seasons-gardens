@@ -178,7 +178,16 @@ class _InstanceEditorState extends State<InstanceEditor> {
     if (widget.instance.element is Plant) {
       content = PlantEditor(
         plant: widget.instance.element as Plant,
-        setElement: setElement,
+        updateElement: (updatePlant, transient, {images}) {
+          context.read<SessionState>().editGarden(
+                (garden) => garden.editInstance(
+                    widget.instance.id,
+                    (instance, cachedImages) => instance.withElement(
+                        updatePlant(instance.element as Plant, cachedImages)),
+                    images: images),
+                transient: transient,
+              );
+        },
         position: position,
         setPosition: setPosition,
         hidePosition: widget.hidePosition,

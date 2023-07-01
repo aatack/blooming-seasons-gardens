@@ -9,14 +9,14 @@ import 'package:flutter/material.dart' hide Element, Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';
 import '../point.dart';
 
 class PlantEditor extends StatelessWidget {
   final Plant plant;
-  final void Function(Element, bool) setElement;
+  final void Function(Plant Function(Plant, List<CachedImage>), bool,
+      {List<String>? images}) updateElement;
 
   final Point position;
   final void Function(Point, bool) setPosition;
@@ -26,7 +26,7 @@ class PlantEditor extends StatelessWidget {
   const PlantEditor({
     super.key,
     required this.plant,
-    required this.setElement,
+    required this.updateElement,
     required this.position,
     required this.setPosition,
     this.hidePosition = false,
@@ -46,7 +46,8 @@ class PlantEditor extends StatelessWidget {
               child: validatedTextInput(
                 plant.diameter,
                 (newDiameter, transient) {
-                  setElement(plant.resize(newDiameter), transient);
+                  updateElement(
+                      (element, _) => element.resize(newDiameter), transient);
                 },
               ),
             ),
@@ -70,12 +71,13 @@ class PlantEditor extends StatelessWidget {
               context.read<ModalsState>().add(
                     _PlantFillEditorModal(
                       fill: plant.fill,
-                      setFill: (newFill) =>
-                          setElement(plant.withFill(newFill), false),
+                      setFill: (newFill) => updateElement(
+                          (element, _) => element.withFill(newFill), false),
                     ),
                   );
             } else {
-              setElement(plant.withType(PlantType.fill), false);
+              updateElement(
+                  (element, _) => element.withType(PlantType.fill), false);
             }
           },
           backgroundColour: plant.type == PlantType.fill
@@ -89,12 +91,13 @@ class PlantEditor extends StatelessWidget {
               context.read<ModalsState>().add(
                     _PlantImageEditorModal(
                       image: plant.image,
-                      setImage: (newImage) =>
-                          setElement(plant.withImage(newImage), false),
+                      setImage: (newImage) => updateElement(
+                          (element, _) => element.withImage(newImage), false),
                     ),
                   );
             } else {
-              setElement(plant.withType(PlantType.image), false);
+              updateElement(
+                  (element, _) => element.withType(PlantType.image), false);
             }
           },
           backgroundColour: plant.type == PlantType.image
