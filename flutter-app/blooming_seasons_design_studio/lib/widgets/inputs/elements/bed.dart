@@ -100,19 +100,6 @@ class _BedEditorState extends State<BedEditor> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           HoverableIcon(
-            icon: Icons.add_circle,
-            height: 20,
-            onTap: () {
-              context
-                  .read<ModalsState>()
-                  .add(_AddElementModal(bed: widget.bed));
-            },
-            colour: colour,
-            hoverColour: hoverColour,
-            clickColour: clickColour,
-          ),
-          const SizedBox(width: 8),
-          HoverableIcon(
             icon: Icons.edit,
             height: 20,
             onTap: () {
@@ -152,7 +139,7 @@ class _BedEditorState extends State<BedEditor> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FormLayout(
               children: pointInput(
@@ -176,7 +163,14 @@ class _BedEditorState extends State<BedEditor> {
             ),
             const SizedBox(height: 8),
             ...widget.bed.instances.map((instance) => InstanceEditor(
-                key: Key(instance.id.toString()), instance: instance))
+                key: Key(instance.id.toString()), instance: instance)),
+            Button(
+                onClicked: () {
+                  context
+                      .read<ModalsState>()
+                      .add(_AddElementModal(bed: widget.bed));
+                },
+                child: const Text("Add element")),
           ],
         ),
       ),
