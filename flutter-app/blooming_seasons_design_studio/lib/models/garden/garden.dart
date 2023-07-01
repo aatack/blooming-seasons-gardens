@@ -13,18 +13,25 @@ class Garden {
   final List<Bed> _beds;
   UnmodifiableListView<Bed> get beds => UnmodifiableListView(_beds);
 
-  // Maps identifiers to a template associated with that identifier
-  final Map<int, Element> _templates;
-  UnmodifiableMapView<int, Element> get templates =>
-      UnmodifiableMapView(_templates);
+  // Contains template elements that can be reused throughout the garden
+  final Bed nursery;
 
   // The next available identifier for elements in the garden
   final int availableID;
 
-  const Garden(this.name, this._beds, this._templates, this.availableID);
+  const Garden(this.name, this._beds, this.nursery, this.availableID);
 
   factory Garden.blank(String name) {
-    return Garden(name, const [], const {}, 0);
+    return Garden(
+        name,
+        const [],
+        Bed(
+          [],
+          id: -1,
+          origin: Point.blank(),
+          name: "nursery",
+        ),
+        0);
   }
 
   Garden addBed() {
@@ -32,10 +39,14 @@ class Garden {
       name,
       [
         ...beds,
-        Bed(const [],
-            id: availableID, origin: Point.blank(), name: "Bed $availableID")
+        Bed(
+          const [],
+          id: availableID,
+          origin: Point.blank(),
+          name: "Bed $availableID",
+        )
       ],
-      templates,
+      nursery,
       availableID + 1,
     );
   }
@@ -44,7 +55,7 @@ class Garden {
     return Garden(
       name,
       _beds.map((bed) => bed.id == id ? update(bed) : bed).toList(),
-      _templates,
+      nursery,
       availableID,
     );
   }
@@ -53,7 +64,7 @@ class Garden {
     return Garden(
       name,
       _beds.where((bed) => bed.id != id).toList(),
-      _templates,
+      nursery,
       availableID,
     );
   }
@@ -80,7 +91,7 @@ class Garden {
                 )
               : bed)
           .toList(),
-      _templates,
+      nursery,
       availableID + 1,
     );
   }
@@ -123,17 +134,16 @@ class Garden {
 
 /// Return a JSON-compatible representation of the garden.
 dynamic serialiseGarden(Garden garden) {
-  final Map<int, dynamic> templates = {};
   final Map<String, int> images = {};
 
   final List<dynamic> beds =
-      garden.beds.map((bed) => serialiseBed(bed, templates, images)).toList();
+      garden.beds.map((bed) => serialiseBed(bed, images)).toList();
 
   return {
     "name": garden.name,
     "beds": beds,
-    "templates":
-        templates.map((id, template) => MapEntry(id.toString(), template)),
+    // "nursery":
+    //     templates.map((id, template) => MapEntry(id.toString(), template)),
     "availableID": garden.availableID,
     "images": images.map((image, id) => MapEntry(id.toString(), image)),
   };
@@ -150,17 +160,14 @@ Garden deserialiseGarden(dynamic garden) {
     ),
   );
 
-  final templates = Map<int, Element>.from(
-    garden["templates"].map(
-      (id, template) => MapEntry(
-        int.parse(id),
-        deserialiseElement(template, images),
-      ),
-    ),
-  );
+  // Elements in the nursery should never themselves utilise the nursery
+  final nursery = deserialiseBed(garden["nursery"], {}, images);
+  
+  final Map<int, Element> templates = Map.fromEntries(nursery.instances
+      .map((instance) => MapEntry(instance.id, instance.element)));
 
   final beds = List<Bed>.from(
       garden["beds"].map((bed) => deserialiseBed(bed, templates, images)));
 
-  return Garden(garden["name"], beds, templates, garden["availableID"]);
+  return Garden(garden["name"], beds, nursery, garden["availableID"]);
 }

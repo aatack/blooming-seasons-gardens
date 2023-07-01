@@ -20,10 +20,7 @@ class Plant implements Element {
   });
 
   @override
-  Map<String, dynamic> serialise(
-    Map<int, dynamic> templates,
-    Map<String, int> images,
-  ) {
+  Map<String, dynamic> serialise(Map<String, int> images) {
     return {
       "elementType": "plant",
       "diameter": diameter.serialise(),

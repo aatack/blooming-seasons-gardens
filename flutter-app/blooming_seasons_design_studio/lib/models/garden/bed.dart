@@ -26,12 +26,12 @@ class Bed {
 }
 
 dynamic serialiseBed(
-    Bed bed, Map<int, dynamic> templates, Map<String, int> images) {
+    Bed bed, Map<String, int> images) {
   return {
     "id": bed.id,
     "instances": bed.instances
         .map(
-          (element) => serialiseInstance(element, templates, images),
+          (element) => serialiseInstance(element, images),
         )
         .toList(),
     "origin": bed.origin.serialise(),

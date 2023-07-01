@@ -8,7 +8,7 @@ import 'plant.dart';
 enum ElementType { plant, label, arrow }
 
 abstract class Element {
-  dynamic serialise(Map<int, dynamic> templates, Map<String, int> images);
+  dynamic serialise(Map<String, int> images);
 }
 
 @immutable
@@ -58,11 +58,7 @@ class Instance {
   }
 }
 
-dynamic serialiseInstance(
-  Instance instance,
-  Map<int, dynamic> templates,
-  Map<String, int> images,
-) {
+dynamic serialiseInstance(Instance instance, Map<String, int> images) {
   final Map<String, dynamic> result = {
     "id": instance.id,
     "name": instance.name,
@@ -70,14 +66,9 @@ dynamic serialiseInstance(
   };
 
   if (instance.templateID != null) {
-    if (!templates.containsKey(instance.templateID!)) {
-      templates[instance.templateID!] =
-          instance.element.serialise(templates, images);
-    }
-
     result["template"] = instance.templateID!;
   } else {
-    result["element"] = instance.element.serialise(templates, images);
+    result["element"] = instance.element.serialise(images);
   }
 
   return result;
