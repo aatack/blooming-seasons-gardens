@@ -160,14 +160,25 @@ class Garden {
   }
 
   /// Cache an image, then update the garden with the resulting image ID.
-  Garden addImage(String image, Garden Function(Garden, CachedImage) update) {
-    for (final cachedImage in images.values) {
-      if (cachedImage.string == image) {
-        return update(this, cachedImage);
+  Garden withImages(List<String> newImages,
+      Garden Function(Garden, List<CachedImage>) update) {
+    final Map<int, CachedImage> cachedImageRepository = Map.from(images);
+    final List<CachedImage> cachedImageArguments = [];
+
+    for (final image in newImages) {
+      for (final cachedImage in cachedImageRepository.values) {
+        if (cachedImage.string == image) {
+          cachedImageArguments.add(cachedImage);
+          break;
+        }
       }
+
+      final entry =
+          CachedImage.deserialise(cachedImageRepository.length, image);
+      cachedImageRepository[entry.id] = entry;
+      cachedImageArguments.add(entry);
     }
 
-    final entry = CachedImage.deserialise(images.length, image);
     return update(
       Garden(
         name,
@@ -175,9 +186,9 @@ class Garden {
         nursery,
         background,
         availableID,
-        Map.fromEntries([...images.entries, MapEntry(entry.id, entry)]),
+        cachedImageRepository,
       ),
-      entry,
+      cachedImageArguments,
     );
   }
 }
