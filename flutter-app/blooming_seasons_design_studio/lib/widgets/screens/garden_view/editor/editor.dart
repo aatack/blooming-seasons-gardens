@@ -39,6 +39,7 @@ class _EditorState extends State<Editor> {
             children: [
               _TabButtons(
                 garden: widget.garden,
+                tab: _tab,
                 setTab: (newTab) {
                   setState(() {
                     _tab = newTab;
@@ -59,9 +60,11 @@ class _EditorState extends State<Editor> {
 
 class _TabButtons extends StatelessWidget {
   final Garden garden;
+  final _EditorTab tab;
   final void Function(_EditorTab) setTab;
 
-  const _TabButtons({required this.garden, required this.setTab});
+  const _TabButtons(
+      {required this.garden, required this.tab, required this.setTab});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +74,9 @@ class _TabButtons extends StatelessWidget {
           onClicked: () {
             setTab(_EditorTab.garden);
           },
+          backgroundColour: tab == _EditorTab.garden
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : null,
           child: const Text(
             "Garden",
             maxLines: 1,
@@ -81,6 +87,9 @@ class _TabButtons extends StatelessWidget {
           onClicked: () {
             setTab(_EditorTab.nursery);
           },
+          backgroundColour: tab == _EditorTab.nursery
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : null,
           child: const Text(
             "Nursery",
             maxLines: 1,
@@ -91,6 +100,9 @@ class _TabButtons extends StatelessWidget {
           onClicked: () {
             setTab(_EditorTab.background);
           },
+          backgroundColour: tab == _EditorTab.background
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : null,
           child: const Text(
             "Background",
             maxLines: 1,
