@@ -30,4 +30,11 @@ class PositionedImage {
       scale: ValidatedDouble.deserialise(image["scale"]),
     );
   }
+
+  static PositionedImage blank() {
+    return PositionedImage(
+        image: null,
+        position: Point.blank(),
+        scale: const ValidatedDouble("0", minimum: 0));
+  }
 }

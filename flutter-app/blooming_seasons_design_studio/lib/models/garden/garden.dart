@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart' show immutable;
 
 import '../structs/point.dart';
+import '../structs/positioned_image.dart';
 import 'bed.dart';
 import 'instance.dart';
 
@@ -16,22 +17,27 @@ class Garden {
   // Contains template elements that can be reused throughout the garden
   final Bed nursery;
 
+  final PositionedImage background;
+
   // The next available identifier for elements in the garden
   final int availableID;
 
-  const Garden(this.name, this._beds, this.nursery, this.availableID);
+  const Garden(
+      this.name, this._beds, this.nursery, this.background, this.availableID);
 
   factory Garden.blank(String name) {
     return Garden(
-        name,
+      name,
+      const [],
+      Bed(
         const [],
-        Bed(
-          const [],
-          id: -1,
-          origin: Point.blank(),
-          name: "nursery",
-        ),
-        0);
+        id: -1,
+        origin: Point.blank(),
+        name: "nursery",
+      ),
+      PositionedImage.blank(),
+      0,
+    );
   }
 
   Garden addBed() {
@@ -47,6 +53,7 @@ class Garden {
         )
       ],
       nursery,
+      background,
       availableID + 1,
     );
   }
@@ -56,6 +63,7 @@ class Garden {
       name,
       _beds.map((bed) => bed.id == id ? update(bed) : bed).toList(),
       id == nursery.id ? update(nursery) : nursery,
+      background,
       availableID,
     );
   }
@@ -65,6 +73,7 @@ class Garden {
       name,
       _beds.where((bed) => bed.id != id).toList(),
       nursery,
+      background,
       availableID,
     );
   }
@@ -94,6 +103,7 @@ class Garden {
       name,
       _beds.map((bed) => update(bed)).toList(),
       update(nursery),
+      background,
       availableID + 1,
     );
   }
@@ -142,10 +152,13 @@ dynamic serialiseGarden(Garden garden) {
   final List<dynamic> beds =
       garden.beds.map((bed) => serialiseBed(bed, images)).toList();
 
+  final background = garden.background.serialise(images);
+
   return {
     "name": garden.name,
     "beds": beds,
     "nursery": nursery,
+    "background": background,
     "availableID": garden.availableID,
     "images": images.map((image, id) => MapEntry(id.toString(), image)),
   };
@@ -171,5 +184,8 @@ Garden deserialiseGarden(dynamic garden) {
   final beds = List<Bed>.from(
       garden["beds"].map((bed) => deserialiseBed(bed, templates, images)));
 
-  return Garden(garden["name"], beds, nursery, garden["availableID"]);
+  final background = PositionedImage.deserialise(garden["background"], images);
+
+  return Garden(
+      garden["name"], beds, nursery, background, garden["availableID"]);
 }
