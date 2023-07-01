@@ -8,12 +8,25 @@ import '../../../../models/modals.dart';
 import '../../../../models/session.dart';
 import '../../../inputs/button.dart';
 import '../../../wrappers/resizable.dart';
+import 'background_tab.dart';
 import 'garden_tab.dart';
+import 'nursery_tab.dart';
 
-class Editor extends StatelessWidget {
+const bool _debug = false;
+
+enum _EditorTab { garden, nursery, background }
+
+class Editor extends StatefulWidget {
   final Garden garden;
 
   const Editor({super.key, required this.garden});
+
+  @override
+  State<Editor> createState() => _EditorState();
+}
+
+class _EditorState extends State<Editor> {
+  _EditorTab _tab = _EditorTab.garden;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +38,18 @@ class Editor extends StatelessWidget {
           color: Colors.white,
           child: Column(
             children: [
-              _TabButtons(garden: garden),
-              GardenTab(beds: garden.beds)
+              _TabButtons(
+                garden: widget.garden,
+                setTab: (newTab) {
+                  setState(() {
+                    _tab = newTab;
+                  });
+                },
+              ),
+              if (_tab == _EditorTab.garden)
+                GardenTab(beds: widget.garden.beds),
+              if (_tab == _EditorTab.nursery) const NurseryTab(),
+              if (_tab == _EditorTab.background) const BackgroundTab(),
             ],
           ),
         ),
@@ -37,8 +60,9 @@ class Editor extends StatelessWidget {
 
 class _TabButtons extends StatelessWidget {
   final Garden garden;
+  final void Function(_EditorTab) setTab;
 
-  const _TabButtons({super.key, required this.garden});
+  const _TabButtons({required this.garden, required this.setTab});
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +70,17 @@ class _TabButtons extends StatelessWidget {
       children: [
         Button(
           onClicked: () {
-            context
-                .read<SessionState>()
-                .editGarden((garden) => garden.addBed());
+            setTab(_EditorTab.garden);
           },
           child: const Text(
-            "New bed",
+            "Garden",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         Button(
           onClicked: () {
-            context.read<SessionState>().undo();
+            setTab(_EditorTab.nursery);
           },
           child: const Text(
             "Nursery",
@@ -68,8 +90,7 @@ class _TabButtons extends StatelessWidget {
         ),
         Button(
           onClicked: () {
-            print(serialiseGarden(
-                context.read<SessionState>().state.garden.unpack()!.present));
+            setTab(_EditorTab.background);
           },
           child: const Text(
             "Background",
@@ -77,36 +98,38 @@ class _TabButtons extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        Button(
-          onClicked: () {
-            const encoder = JsonEncoder.withIndent("  ");
+        if (_debug)
+          Button(
+            onClicked: () {
+              const encoder = JsonEncoder.withIndent("  ");
 
-            final serialisation = serialiseGarden(garden);
-            serialisation["images"] = serialisation["images"].map((id, image) =>
-                MapEntry(id, "<image with ${image.length} bytes>"));
+              final serialisation = serialiseGarden(garden);
+              serialisation["images"] = serialisation["images"].map(
+                  (id, image) =>
+                      MapEntry(id, "<image with ${image.length} bytes>"));
 
-            final text = Text(
-              encoder.convert(serialisation),
-              style: const TextStyle(fontFamily: "Monospace"),
-            );
+              final text = Text(
+                encoder.convert(serialisation),
+                style: const TextStyle(fontFamily: "Monospace"),
+              );
 
-            context.read<ModalsState>().add(
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: FractionallySizedBox(
-                      widthFactor: 0.5,
-                      heightFactor: 0.8,
-                      child: ListView(children: [text]),
+              context.read<ModalsState>().add(
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: FractionallySizedBox(
+                        widthFactor: 0.5,
+                        heightFactor: 0.8,
+                        child: ListView(children: [text]),
+                      ),
                     ),
-                  ),
-                );
-          },
-          child: const Text(
-            "Debug",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+                  );
+            },
+            child: const Text(
+              "Debug",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
       ].map((element) => _wrap(element)).toList(),
     );
   }
