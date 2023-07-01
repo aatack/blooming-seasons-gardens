@@ -158,6 +158,28 @@ class Garden {
     }
     throw Exception("Could not find instance with ID $instanceID");
   }
+
+  /// Cache an image, then update the garden with the resulting image ID.
+  Garden addImage(String image, Garden Function(Garden, CachedImage) update) {
+    for (final cachedImage in images.values) {
+      if (cachedImage.string == image) {
+        return update(this, cachedImage);
+      }
+    }
+
+    final entry = CachedImage.deserialise(images.length, image);
+    return update(
+      Garden(
+        name,
+        _beds,
+        nursery,
+        background,
+        availableID,
+        Map.fromEntries([...images.entries, MapEntry(entry.id, entry)]),
+      ),
+      entry,
+    );
+  }
 }
 
 /// Return a JSON-compatible representation of the garden.
