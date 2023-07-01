@@ -104,7 +104,6 @@ class PlantEditor extends StatelessWidget {
   Widget _wrap(Widget widget) {
     return Expanded(
       child: Container(
-        // TODO: shrink the ugly space between the buttons
         padding: const EdgeInsets.all(4),
         child: widget,
       ),

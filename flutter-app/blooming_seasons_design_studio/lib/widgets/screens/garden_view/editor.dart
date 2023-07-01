@@ -62,17 +62,18 @@ class HeaderButtons extends StatelessWidget {
             context.read<SessionState>().undo();
           },
           child: const Text(
-            "Undo",
+            "Nursery",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         Button(
           onClicked: () {
-            context.read<SessionState>().redo();
+            print(serialiseGarden(
+                context.read<SessionState>().state.garden.unpack()!.present));
           },
           child: const Text(
-            "Redo",
+            "Background",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
