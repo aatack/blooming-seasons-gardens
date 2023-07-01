@@ -135,7 +135,7 @@ class PlantImage {
 }
 
 dynamic _serialisePlantImage(PlantImage image, Map<String, int> images) {
-  if (image.image != null && !images.containsKey(image)) {
+  if (image.image != null && !images.containsKey(image.image!)) {
     images[image.image!] = images.length;
   }
 
