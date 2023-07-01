@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/garden.dart';
 import '../../../../models/modals.dart';
-import '../../../../models/session.dart';
 import '../../../inputs/button.dart';
 import '../../../wrappers/resizable.dart';
 import 'background_tab.dart';

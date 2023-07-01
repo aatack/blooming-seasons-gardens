@@ -26,7 +26,7 @@ class BedEditor extends StatefulWidget {
 
 class _BedEditorState extends State<BedEditor> {
   bool _editingName = false;
-  bool _collapsed = false;
+  bool _collapsed = true;
 
   @override
   Widget build(BuildContext context) {
