@@ -1,6 +1,7 @@
 import 'package:blooming_seasons_design_studio/images.dart';
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
@@ -176,8 +177,8 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
 }
 
 class _PlantImageEditorModal extends StatefulWidget {
-  final PlantImage image;
-  final void Function(PlantImage) setImage;
+  final PositionedImage image;
+  final void Function(PositionedImage) setImage;
 
   const _PlantImageEditorModal({required this.image, required this.setImage});
 
@@ -263,7 +264,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       ),
       () {
         widget.setImage(
-          PlantImage(image: _image, position: _position, scale: _scale),
+          PositionedImage(image: _image, position: _position, scale: _scale),
         );
       },
     );

@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
+import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:flutter/material.dart' show Color, Colors, immutable;
 
 import '../structs/point.dart';
@@ -10,7 +11,7 @@ class Plant implements Element {
 
   final PlantType type;
   final PlantFill fill;
-  final PlantImage image;
+  final PositionedImage image;
 
   const Plant({
     required this.diameter,
@@ -26,7 +27,7 @@ class Plant implements Element {
       "diameter": diameter.serialise(),
       "type": type.toString(),
       "fill": _serialisePlantFill(fill),
-      "image": _serialisePlantImage(image, images),
+      "image": image.serialise(images),
     };
   }
 
@@ -35,7 +36,7 @@ class Plant implements Element {
       diameter: const ValidatedDouble("0.25", minimum: 0),
       type: PlantType.fill,
       fill: PlantFill.blank(),
-      image: PlantImage.blank(),
+      image: PositionedImage.blank(),
     );
   }
 
@@ -51,7 +52,7 @@ class Plant implements Element {
     return Plant(diameter: diameter, type: type, fill: newFill, image: image);
   }
 
-  Plant withImage(PlantImage newImage) {
+  Plant withImage(PositionedImage newImage) {
     return Plant(diameter: diameter, type: type, fill: fill, image: newImage);
   }
 }
@@ -65,7 +66,7 @@ Plant deserialisePlant(dynamic plant, Map<int, String> images) {
     type: PlantType.values
         .firstWhere((value) => value.toString() == plant["type"]),
     fill: _deserialisePlantFill(fill),
-    image: _deserialisePlantImage(image, images),
+    image: PositionedImage.deserialise(image, images),
   );
 }
 
@@ -109,43 +110,4 @@ PlantFill _deserialisePlantFill(dynamic fill) {
       colour["blue"],
     ),
   );
-}
-
-@immutable
-class PlantImage {
-  final String? image;
-  final Point position;
-  final ValidatedDouble scale;
-
-  const PlantImage({
-    required this.image,
-    required this.position,
-    required this.scale,
-  });
-
-  static PlantImage blank() {
-    return PlantImage(
-        image: null,
-        position: Point.blank(),
-        scale: const ValidatedDouble("0"));
-  }
-}
-
-dynamic _serialisePlantImage(PlantImage image, Map<String, int> images) {
-  if (image.image != null && !images.containsKey(image.image!)) {
-    images[image.image!] = images.length;
-  }
-
-  return {
-    "imageID": image.image == null ? null : images[image.image],
-    "position": image.position.serialise(),
-    "scale": image.scale.serialise(),
-  };
-}
-
-PlantImage _deserialisePlantImage(dynamic image, Map<int, String> images) {
-  return PlantImage(
-      image: image["imageID"] == null ? null : images[image["imageID"]]!,
-      position: Point.deserialise(image["position"]),
-      scale: ValidatedDouble.deserialise(image["scale"]));
 }
