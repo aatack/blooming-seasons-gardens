@@ -92,7 +92,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
               context.read<SessionState>().editGarden(
                     (garden) => garden.editInstance(
                       widget.instance.id,
-                      (instance) => instance.rename(newValue),
+                      (instance, _) => instance.rename(newValue),
                     ),
                     transient: transient,
                   );
@@ -158,7 +158,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
       context.read<SessionState>().editGarden(
             (garden) => garden.editInstance(
               widget.instance.id,
-              (instance) => instance.reposition(newPosition),
+              (instance, _) => instance.reposition(newPosition),
             ),
             transient: transient,
           );
@@ -168,7 +168,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
       context.read<SessionState>().editGarden(
             (garden) => garden.editInstance(
               widget.instance.id,
-              (instance) => instance.withElement(newElement),
+              (instance, _) => instance.withElement(newElement),
             ),
             transient: transient,
           );

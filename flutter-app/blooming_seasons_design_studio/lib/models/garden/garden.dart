@@ -132,17 +132,21 @@ class Garden {
     );
   }
 
-  Garden editInstance(int id, Instance Function(Instance) update) {
+  Garden editInstance(
+      int id, Instance Function(Instance, List<CachedImage>) update,
+      {List<String>? images}) {
     return editBed(
       instanceParent(id),
-      (bed, _) => Bed(
+      (bed, cachedImages) => Bed(
         bed.instances
-            .map((instance) => instance.id == id ? update(instance) : instance)
+            .map((instance) =>
+                instance.id == id ? update(instance, cachedImages) : instance)
             .toList(),
         id: bed.id,
         origin: bed.origin,
         name: bed.name,
       ),
+      images: images,
     );
   }
 
