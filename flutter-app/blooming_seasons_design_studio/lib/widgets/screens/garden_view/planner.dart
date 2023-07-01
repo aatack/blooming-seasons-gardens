@@ -1,41 +1,41 @@
+import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
 
-class Planner extends StatelessWidget {
+class Planner extends StatefulWidget {
   const Planner({
     super.key,
   });
 
   @override
+  State<Planner> createState() => _PlannerState();
+}
+
+class _PlannerState extends State<Planner> {
+  TopDownPosition _position = TopDownPosition(0, 0, 1);
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("Clicked");
+    return TopDown(
+      position: _position,
+      setPosition: (newPosition) {
+        setState(() {
+          _position = newPosition;
+        });
       },
-      child: FractionallySizedBox(
-        widthFactor: 1,
-        heightFactor: 1,
-        child: Stack(
-          children: [
-            GestureDetector(
-                onTap: () {
-                  print("Clicked background");
-                },
-                child: Container(color: Colors.white)),
-            Positioned(
-              left: 500,
-              top: 100,
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: Container(
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                ),
-              ),
+      children: [
+        Positioned(
+          left: 500,
+          top: 100,
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Container(
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.red),
             ),
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
     );
   }
 }
