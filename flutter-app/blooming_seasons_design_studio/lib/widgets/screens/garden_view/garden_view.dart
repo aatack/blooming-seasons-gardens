@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../models/garden/garden.dart';
 import '../../../models/session.dart';
 import '../../wrappers/hoverable.dart';
-import 'editor.dart';
+import 'editor/editor.dart';
 import 'planner.dart';
 
 class GardenView extends StatelessWidget {

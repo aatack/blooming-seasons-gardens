@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/garden/bed.dart';
-import '../../../models/garden/garden.dart';
-import '../../../models/modals.dart';
-import '../../../models/session.dart';
-import '../../inputs/elements/bed.dart';
-import '../../inputs/button.dart';
-import '../../wrappers/resizable.dart';
+import '../../../../models/garden/garden.dart';
+import '../../../../models/modals.dart';
+import '../../../../models/session.dart';
+import '../../../inputs/button.dart';
+import '../../../wrappers/resizable.dart';
+import 'garden_tab.dart';
 
 class Editor extends StatelessWidget {
   final Garden garden;
@@ -26,8 +25,8 @@ class Editor extends StatelessWidget {
           color: Colors.white,
           child: Column(
             children: [
-              HeaderButtons(garden: garden),
-              BedsView(beds: garden.beds)
+              _TabButtons(garden: garden),
+              GardenTab(beds: garden.beds)
             ],
           ),
         ),
@@ -36,10 +35,10 @@ class Editor extends StatelessWidget {
   }
 }
 
-class HeaderButtons extends StatelessWidget {
+class _TabButtons extends StatelessWidget {
   final Garden garden;
 
-  const HeaderButtons({super.key, required this.garden});
+  const _TabButtons({super.key, required this.garden});
 
   @override
   Widget build(BuildContext context) {
@@ -118,34 +117,6 @@ class HeaderButtons extends StatelessWidget {
         // TODO: shrink the ugly space between the buttons
         padding: const EdgeInsets.all(4),
         child: widget,
-      ),
-    );
-  }
-}
-
-class BedsView extends StatelessWidget {
-  final List<Bed> beds;
-
-  const BedsView({super.key, required this.beds});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: FractionallySizedBox(
-        heightFactor: 1.0,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
-          child: ListView(
-            children: beds
-                .map((bed) => Column(
-                      children: [
-                        BedEditor(bed: bed),
-                        const SizedBox(height: 8.0)
-                      ],
-                    ))
-                .toList(),
-          ),
-        ),
       ),
     );
   }
