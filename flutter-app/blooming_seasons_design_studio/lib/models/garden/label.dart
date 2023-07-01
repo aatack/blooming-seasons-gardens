@@ -11,7 +11,7 @@ class Label implements Element {
   const Label({required this.text, required this.size});
 
   @override
-  dynamic serialise(Map<String, int> images) {
+  dynamic serialise() {
     return {
       "elementType": "label",
       "text": text.string,

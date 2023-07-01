@@ -34,16 +34,17 @@ Image deserialiseImage(String image) {
 
 @immutable
 class CachedImage {
+  final int id;
   final String serialised;
   final Image deserialised;
 
-  const CachedImage(this.serialised, this.deserialised);
+  const CachedImage(this.id, this.serialised, this.deserialised);
 
   String serialise() {
     return serialised;
   }
 
-  static CachedImage deserialise(String image) {
-    return CachedImage(image, deserialiseImage(image));
+  static CachedImage deserialise(int id, String image) {
+    return CachedImage(id, image, deserialiseImage(image));
   }
 }

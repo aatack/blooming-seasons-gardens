@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart' show immutable;
 
+import '../../images.dart';
 import '../structs/point.dart';
 import 'instance.dart';
 
@@ -25,13 +26,12 @@ class Bed {
   }
 }
 
-dynamic serialiseBed(
-    Bed bed, Map<String, int> images) {
+dynamic serialiseBed(Bed bed) {
   return {
     "id": bed.id,
     "instances": bed.instances
         .map(
-          (element) => serialiseInstance(element, images),
+          (element) => serialiseInstance(element),
         )
         .toList(),
     "origin": bed.origin.serialise(),
@@ -39,8 +39,11 @@ dynamic serialiseBed(
   };
 }
 
-Bed deserialiseBed(Map<String, dynamic> bed, Map<int, Element> templates,
-    Map<int, String> images) {
+Bed deserialiseBed(
+  Map<String, dynamic> bed,
+  Map<int, Element> templates,
+  Map<int, CachedImage> images,
+) {
   return Bed(
     (bed["instances"] as List<dynamic>)
         .map((instance) => deserialiseInstance(instance, templates, images))

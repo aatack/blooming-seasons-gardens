@@ -2,7 +2,7 @@ import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:flutter/material.dart' show Color, Colors, immutable;
 
-import '../structs/point.dart';
+import '../../images.dart';
 import 'instance.dart';
 
 @immutable
@@ -21,13 +21,13 @@ class Plant implements Element {
   });
 
   @override
-  Map<String, dynamic> serialise(Map<String, int> images) {
+  Map<String, dynamic> serialise() {
     return {
       "elementType": "plant",
       "diameter": diameter.serialise(),
       "type": type.toString(),
       "fill": _serialisePlantFill(fill),
-      "image": image.serialise(images),
+      "image": image.serialise(),
     };
   }
 
@@ -57,7 +57,7 @@ class Plant implements Element {
   }
 }
 
-Plant deserialisePlant(dynamic plant, Map<int, String> images) {
+Plant deserialisePlant(dynamic plant, Map<int, CachedImage> images) {
   final fill = plant["fill"];
   final image = plant["image"];
 

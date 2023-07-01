@@ -162,13 +162,11 @@ class Garden {
 
 /// Return a JSON-compatible representation of the garden.
 dynamic serialiseGarden(Garden garden) {
-  final Map<String, int> images = {};
-
-  final nursery = serialiseBed(garden.nursery, images);
+  final nursery = serialiseBed(garden.nursery);
   final List<dynamic> beds =
-      garden.beds.map((bed) => serialiseBed(bed, images)).toList();
+      garden.beds.map((bed) => serialiseBed(bed)).toList();
 
-  final background = garden.background.serialise(images);
+  final background = garden.background.serialise();
 
   return {
     "name": garden.name,
@@ -176,7 +174,8 @@ dynamic serialiseGarden(Garden garden) {
     "nursery": nursery,
     "background": background,
     "availableID": garden.availableID,
-    "images": images.map((image, id) => MapEntry(id.toString(), image)),
+    "images": garden.images
+        .map((id, image) => MapEntry(id.toString(), image.serialise())),
   };
 }
 
@@ -185,9 +184,10 @@ dynamic serialiseGarden(Garden garden) {
 /// The format of the passed object should mirror that of the return format
 /// of the `serialise` function.
 Garden deserialiseGarden(dynamic garden) {
-  final images = Map<int, String>.from(
+  final images = Map<int, CachedImage>.from(
     garden["images"].map(
-      (id, image) => MapEntry(int.parse(id), image),
+      (id, image) => MapEntry(
+          int.parse(id), CachedImage.deserialise(int.parse(id), image)),
     ),
   );
 
@@ -203,5 +203,5 @@ Garden deserialiseGarden(dynamic garden) {
   final background = PositionedImage.deserialise(garden["background"], images);
 
   return Garden(
-      garden["name"], beds, nursery, background, garden["availableID"]);
+      garden["name"], beds, nursery, background, garden["availableID"], images);
 }

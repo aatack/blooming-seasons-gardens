@@ -12,7 +12,7 @@ class Arrow implements Element {
   const Arrow({required this.source, required this.thickness});
 
   @override
-  dynamic serialise(Map<String, int> images) {
+  dynamic serialise() {
     return {
       "elementType": "arrow",
       "source": source.serialise(),

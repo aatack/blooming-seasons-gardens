@@ -187,7 +187,7 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
-  late String? _image;
+  late CachedImage? _image;
 
   late Point _position;
   late ValidatedDouble _scale;
@@ -219,7 +219,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
                           if (image != null) {
                             setState(() {
-                              _image = image;
+                              _image =
+                                  null; // TODO: go via the garden to get the image ID
                             });
                           }
                         },
@@ -258,7 +259,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
           ),
           if (_image != null)
             FormLayoutItem(
-              child: SizedBox(width: 300, child: deserialiseImage(_image!)),
+              child: SizedBox(width: 300, child: _image!.deserialised),
             ),
         ],
       ),
