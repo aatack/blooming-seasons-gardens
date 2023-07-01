@@ -30,8 +30,11 @@ class _PlannerState extends State<Planner> {
             child: Container(
               width: 100,
               height: 100,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.red),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.red,
+                border: Border.all(color: Colors.black, width: 2),
+              ),
             ),
           ),
         )
