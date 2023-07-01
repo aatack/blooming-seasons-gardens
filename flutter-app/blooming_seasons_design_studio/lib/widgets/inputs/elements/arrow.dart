@@ -35,14 +35,15 @@ class ArrowEditor extends StatelessWidget {
                 validatedTextInput(arrow.thickness, (newThickness, transient) {
               setElement(arrow.withThickness(newThickness), transient);
             })),
-        if (!hidePosition) ...pointInput(
-          label: "Start",
-          point: arrow.source,
-          setPoint: (newSource, transient) => setElement(
-            arrow.withSource(newSource),
-            transient,
+        if (!hidePosition)
+          ...pointInput(
+            label: "Start",
+            point: arrow.source,
+            setPoint: (newSource, transient) => setElement(
+              arrow.withSource(newSource),
+              transient,
+            ),
           ),
-        ),
         ...pointInput(
           label: "End",
           point: position,
@@ -52,3 +53,7 @@ class ArrowEditor extends StatelessWidget {
     );
   }
 }
+
+// class ArrowPlanner extends StatelessWidget {
+
+// }

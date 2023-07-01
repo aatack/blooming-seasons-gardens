@@ -107,6 +107,7 @@ class _TopDownState extends State<TopDown> {
         child: Transform.scale(
           alignment: Alignment.topLeft,
           scale: widget.position.scale,
+          transformHitTests: true,
           child: Stack(children: widget.children),
         ),
       ),
