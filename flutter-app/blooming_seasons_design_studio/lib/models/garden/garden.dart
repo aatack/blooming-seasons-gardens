@@ -26,7 +26,7 @@ class Garden {
         name,
         const [],
         Bed(
-          [],
+          const [],
           id: -1,
           origin: Point.blank(),
           name: "nursery",
@@ -55,7 +55,7 @@ class Garden {
     return Garden(
       name,
       _beds.map((bed) => bed.id == id ? update(bed) : bed).toList(),
-      nursery,
+      id == nursery.id ? update(nursery) : nursery,
       availableID,
     );
   }
@@ -69,29 +69,31 @@ class Garden {
     );
   }
 
-  Garden addElement(int bedID, Element element) {
+  Garden addInstance(int bedID, Element element) {
+    Bed update(Bed bed) {
+      return bed.id == bedID
+          ? Bed(
+              [
+                ...bed.instances,
+                Instance(
+                  id: availableID,
+                  name: "${element.runtimeType.toString()} $availableID",
+                  position: Point.blank(),
+                  element: element,
+                  templateID: null,
+                )
+              ],
+              id: bed.id,
+              origin: bed.origin,
+              name: bed.name,
+            )
+          : bed;
+    }
+
     return Garden(
       name,
-      _beds
-          .map((bed) => bed.id == bedID
-              ? Bed(
-                  [
-                    ...bed.instances,
-                    Instance(
-                      id: availableID,
-                      name: "${element.runtimeType.toString()} $availableID",
-                      position: Point.blank(),
-                      element: element,
-                      templateID: null,
-                    )
-                  ],
-                  id: bed.id,
-                  origin: bed.origin,
-                  name: bed.name,
-                )
-              : bed)
-          .toList(),
-      nursery,
+      _beds.map((bed) => update(bed)).toList(),
+      update(nursery),
       availableID + 1,
     );
   }
@@ -123,7 +125,7 @@ class Garden {
   }
 
   int instanceParent(int instanceID) {
-    for (final bed in beds) {
+    for (final bed in [...beds, nursery]) {
       if (bed.instances.any((instance) => instance.id == instanceID)) {
         return bed.id;
       }
