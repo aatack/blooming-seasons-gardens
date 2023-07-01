@@ -91,8 +91,26 @@ class PlantEditor extends StatelessWidget {
               context.read<ModalsState>().add(
                     _PlantImageEditorModal(
                       image: plant.image,
-                      setImage: (newImage) => updateElement(
-                          (element, _) => element.withImage(newImage), false),
+                      setImage: (newImage) {
+                        if (newImage.image?.id == -1) {
+                          // A new image has been added, and must be cached
+                          return updateElement(
+                            (element, cachedImages) => element.withImage(
+                              PositionedImage(
+                                image: cachedImages[0],
+                                position: newImage.position,
+                                scale: newImage.scale,
+                              ),
+                            ),
+                            false,
+                            images: [newImage.image!.string],
+                          );
+                        } else {
+                          return updateElement(
+                              (element, _) => element.withImage(newImage),
+                              false);
+                        }
+                      },
                     ),
                   );
             } else {
@@ -222,8 +240,12 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
                           if (image != null) {
                             setState(() {
-                              _image =
-                                  null; // TODO: go via the garden to get the image ID
+                              /* At this point, the change has not yet been
+                                committed; so we don't want to cache the image
+                                in the garden yet.  Instead we save its ID as
+                                -1, to denote that a change in the image has
+                                occurred. */
+                              _image = CachedImage.deserialise(-1, image);
                             });
                           }
                         },
