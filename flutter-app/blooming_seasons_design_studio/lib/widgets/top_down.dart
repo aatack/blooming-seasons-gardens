@@ -50,7 +50,7 @@ class _TopDownState extends State<TopDown> {
     return Listener(
       onPointerSignal: (PointerSignalEvent signal) {
         if (signal is PointerScrollEvent) {
-          _doScroll(signal.scrollDelta.dy);
+          _doScroll(signal.scrollDelta.dy, signal.localPosition);
         }
       },
       child: GestureDetector(
@@ -67,25 +67,33 @@ class _TopDownState extends State<TopDown> {
             widget.position.scale,
           ));
         },
+        onPanEnd: (_) {
+          setState(() {
+            _dragOrigin = null;
+            _positionOrigin = null;
+          });
+        },
         child: child,
       ),
     );
   }
 
-  void _doScroll(double scrollAmount) {
-    // A typical scroll amount is 100 units per scroll, so we zoom in or out
-    // by 10% per roll of the scroll wheel
-    final double factor = (1 + (0.001 * scrollAmount.abs()));
+  void _doScroll(double scrollAmount, Offset screenPosition) {
+    if (_dragOrigin == null) {
+      // A typical scroll amount is 100 units per scroll, so we zoom in or out
+      // by 10% per roll of the scroll wheel
+      final double factor = (1 + (0.001 * scrollAmount.abs()));
+      final double ratio = scrollAmount < 0 ? 1 * factor : 1 / factor;
 
-    widget.setPosition(
-      TopDownPosition(
-        widget.position.x,
-        widget.position.y,
-        scrollAmount < 0
-            ? widget.position.scale * factor
-            : widget.position.scale / factor,
-      ),
-    );
+      final x =
+          screenPosition.dx - ratio * (screenPosition.dx - widget.position.x);
+      final y =
+          screenPosition.dy - ratio * (screenPosition.dy - widget.position.y);
+
+      widget.setPosition(
+        TopDownPosition(x, y, widget.position.scale * ratio),
+      );
+    }
   }
 
   Widget _transformedChildren() {
