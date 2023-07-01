@@ -37,52 +37,61 @@ class _TopDownState extends State<TopDown> {
       heightFactor: 1,
       child: Stack(
         children: [
-          Listener(
-            onPointerSignal: (PointerSignalEvent signal) {
-              if (signal is PointerScrollEvent) {
-                widget.setPosition(
-                  TopDownPosition(
-                    widget.position.x,
-                    widget.position.y,
-                    signal.scrollDelta.dy < 0
-                        ? widget.position.scale * 1.1
-                        : widget.position.scale / 1.1,
-                  ),
-                );
-              }
-            },
-            child: GestureDetector(
-              onPanStart: (details) {
-                setState(() {
-                  _dragOrigin = details.globalPosition;
-                  _positionOrigin = widget.position;
-                });
-              },
-              onPanUpdate: (details) {
-                widget.setPosition(TopDownPosition(
-                  _positionOrigin!.x -
-                      (_dragOrigin!.dx - details.globalPosition.dx),
-                  _positionOrigin!.y -
-                      (_dragOrigin!.dy - details.globalPosition.dy),
-                  widget.position.scale,
-                ));
-              },
-              child: Container(
-                width: double.maxFinite,
-                height: double.maxFinite,
-                color: Colors.white,
-                child: Transform.translate(
-                  offset: Offset(widget.position.x, widget.position.y),
-                  transformHitTests: true,
-                  child: Transform.scale(
-                    scale: widget.position.scale,
-                    child: Stack(children: widget.children),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _wrapInControls(_transformedChildren()),
         ],
+      ),
+    );
+  }
+
+  Widget _wrapInControls(Widget child) {
+    return Listener(
+      onPointerSignal: (PointerSignalEvent signal) {
+        if (signal is PointerScrollEvent) {
+          final double scrollDelta = signal.scrollDelta.dy;
+          final double zoomDelta = (1 + (0.001 * scrollDelta.abs()));
+
+          widget.setPosition(
+            TopDownPosition(
+              widget.position.x,
+              widget.position.y,
+              scrollDelta < 0
+                  ? widget.position.scale * zoomDelta
+                  : widget.position.scale / zoomDelta,
+            ),
+          );
+        }
+      },
+      child: GestureDetector(
+        onPanStart: (details) {
+          setState(() {
+            _dragOrigin = details.localPosition;
+            _positionOrigin = widget.position;
+          });
+        },
+        onPanUpdate: (details) {
+          widget.setPosition(TopDownPosition(
+            _positionOrigin!.x - (_dragOrigin!.dx - details.localPosition.dx),
+            _positionOrigin!.y - (_dragOrigin!.dy - details.localPosition.dy),
+            widget.position.scale,
+          ));
+        },
+        child: child,
+      ),
+    );
+  }
+
+  Widget _transformedChildren() {
+    return Container(
+      width: double.maxFinite,
+      height: double.maxFinite,
+      color: Colors.white,
+      child: Transform.translate(
+        offset: Offset(widget.position.x, widget.position.y),
+        transformHitTests: true,
+        child: Transform.scale(
+          scale: widget.position.scale,
+          child: Stack(children: widget.children),
+        ),
       ),
     );
   }
