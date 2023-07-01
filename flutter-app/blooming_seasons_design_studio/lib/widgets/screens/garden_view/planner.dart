@@ -7,6 +7,25 @@ class Planner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return FractionallySizedBox(
+      widthFactor: 1,
+      heightFactor: 1,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 500,
+            top: 100,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Container(
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
