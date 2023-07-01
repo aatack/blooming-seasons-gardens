@@ -14,13 +14,13 @@ class TopDown extends StatefulWidget {
   final TopDownPosition position;
   final void Function(TopDownPosition) setPosition;
 
-  final Widget child;
+  final List<Widget> children;
 
   const TopDown(
       {super.key,
       required this.position,
       required this.setPosition,
-      required this.child});
+      required this.children});
 
   @override
   State<TopDown> createState() => _TopDownState();
@@ -75,9 +75,8 @@ class _TopDownState extends State<TopDown> {
                   offset: Offset(widget.position.x, widget.position.y),
                   transformHitTests: true,
                   child: Transform.scale(
-                    // origin: Offset(0, 0),
                     scale: widget.position.scale,
-                    child: widget.child,
+                    child: Stack(children: widget.children),
                   ),
                 ),
               ),

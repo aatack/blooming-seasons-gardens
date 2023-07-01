@@ -11,7 +11,7 @@ class Planner extends StatefulWidget {
 }
 
 class _PlannerState extends State<Planner> {
-  TopDownPosition _position = TopDownPosition(0, 0, 1);
+  TopDownPosition _position = const TopDownPosition(0, 0, 1);
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +22,20 @@ class _PlannerState extends State<Planner> {
           _position = newPosition;
         });
       },
-      child: GestureDetector(
-        onTap: () {
-          print("clicked");
-        },
-        child: Container(
-          width: 100,
-          height: 100,
-          decoration:
-              const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-        ),
-      ),
+      children: [
+        Transform.translate(
+          offset: const Offset(100, 700),
+          child: GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.red),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
