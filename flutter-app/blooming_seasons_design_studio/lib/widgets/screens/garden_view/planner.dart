@@ -23,16 +23,13 @@ class _PlannerState extends State<Planner> {
         });
       },
       children: [
-        Positioned(
-          left: 500,
-          top: 100,
-          child: SizedBox(
+        Transform.translate(
+          offset: const Offset(500, 100),
+          child: Container(
             width: 100,
             height: 100,
-            child: Container(
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.red),
-            ),
+            decoration:
+                const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
           ),
         )
       ],

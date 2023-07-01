@@ -54,14 +54,9 @@ class _TopDownState extends State<TopDown> {
             },
             child: Container(color: Colors.white),
           ),
-          Positioned(
-              left: widget.position.x,
-              top: widget.position.y,
-              child: SizedBox(
-                width: double.maxFinite,
-                height: double.maxFinite,
-                child: Stack(children: widget.children),
-              )),
+          Transform.translate(
+              offset: Offset(widget.position.x, widget.position.y),
+              child: Stack(children: widget.children)),
         ],
       ),
     );
