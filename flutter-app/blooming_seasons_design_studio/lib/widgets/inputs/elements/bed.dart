@@ -168,7 +168,7 @@ class _BedEditorState extends State<BedEditor> {
                 onClicked: () {
                   context
                       .read<ModalsState>()
-                      .add(_AddElementModal(bed: widget.bed));
+                      .add(AddElementModal(bed: widget.bed));
                 },
                 child: const Text("Add element")),
           ],
@@ -178,10 +178,10 @@ class _BedEditorState extends State<BedEditor> {
   }
 }
 
-class _AddElementModal extends StatelessWidget {
+class AddElementModal extends StatelessWidget {
   final Bed bed;
 
-  const _AddElementModal({required this.bed});
+  const AddElementModal({super.key, required this.bed});
 
   @override
   Widget build(BuildContext context) {
