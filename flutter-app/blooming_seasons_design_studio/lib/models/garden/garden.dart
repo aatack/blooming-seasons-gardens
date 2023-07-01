@@ -23,6 +23,16 @@ class Garden {
   // The next available identifier for elements in the garden
   final int availableID;
 
+  /* Images are stored in the backend as JSON strings, which is horribly
+    inefficient but makes for an easier server overall.  A consequence of
+    this is that loading images, and converting them to widgets, is a bit
+    too slow to do individually for every garden element as we would with
+    any other data structure.
+    
+    To accelerate it, images are cached when they are first added to the
+    garden (see the `withImages` function), and then loaded from that
+    cache by their IDs when each element is deserialised.  This makes it
+    quick enough to at least be acceptable. */
   final Map<int, CachedImage> _images;
   UnmodifiableMapView<int, CachedImage> get images =>
       UnmodifiableMapView(_images);
