@@ -136,14 +136,14 @@ class Garden {
 dynamic serialiseGarden(Garden garden) {
   final Map<String, int> images = {};
 
+  final nursery = serialiseBed(garden.nursery, images);
   final List<dynamic> beds =
       garden.beds.map((bed) => serialiseBed(bed, images)).toList();
 
   return {
     "name": garden.name,
     "beds": beds,
-    // "nursery":
-    //     templates.map((id, template) => MapEntry(id.toString(), template)),
+    "nursery": nursery,
     "availableID": garden.availableID,
     "images": images.map((image, id) => MapEntry(id.toString(), image)),
   };
@@ -162,7 +162,7 @@ Garden deserialiseGarden(dynamic garden) {
 
   // Elements in the nursery should never themselves utilise the nursery
   final nursery = deserialiseBed(garden["nursery"], {}, images);
-  
+
   final Map<int, Element> templates = Map.fromEntries(nursery.instances
       .map((instance) => MapEntry(instance.id, instance.element)));
 
