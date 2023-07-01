@@ -136,7 +136,7 @@ dynamic serialiseGarden(Garden garden) {
     "templates":
         templates.map((id, template) => MapEntry(id.toString(), template)),
     "availableID": garden.availableID,
-    "images": images.map((image, id) => MapEntry(id, image)),
+    "images": images.map((image, id) => MapEntry(id.toString(), image)),
   };
 }
 
@@ -147,7 +147,7 @@ dynamic serialiseGarden(Garden garden) {
 Garden deserialiseGarden(dynamic garden) {
   final images = Map<int, String>.from(
     garden["images"].map(
-      (id, image) => MapEntry(id, image),
+      (id, image) => MapEntry(int.parse(id), image),
     ),
   );
 

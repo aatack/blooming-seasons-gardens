@@ -82,8 +82,12 @@ class HeaderButtons extends StatelessWidget {
           onClicked: () {
             const encoder = JsonEncoder.withIndent("  ");
 
+            final serialisation = serialiseGarden(garden);
+            serialisation["images"] = serialisation["images"].map((id, image) =>
+                MapEntry(id, "<image with ${image.length} bytes>"));
+
             final text = Text(
-              encoder.convert(serialiseGarden(garden)),
+              encoder.convert(serialisation),
               style: const TextStyle(fontFamily: "Monospace"),
             );
 
