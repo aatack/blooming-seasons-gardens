@@ -1,8 +1,9 @@
+import 'dart:collection';
 import 'dart:html' as html;
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart' show Image;
+import 'package:flutter/material.dart' show Image, immutable;
 
 Future<String?> uploadImage() async {
   final uploadInput = html.FileUploadInputElement();
@@ -29,4 +30,20 @@ Future<String?> uploadImage() async {
 Image deserialiseImage(String image) {
   final bytes = Uint8List.fromList(base64.decode(image));
   return Image.memory(bytes);
+}
+
+@immutable
+class CachedImage {
+  final String serialised;
+  final Image deserialised;
+
+  const CachedImage(this.serialised, this.deserialised);
+
+  String serialise() {
+    return serialised;
+  }
+
+  static CachedImage deserialise(String image) {
+    return CachedImage(image, deserialiseImage(image));
+  }
 }

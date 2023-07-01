@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart' show immutable;
 
+import '../../images.dart';
 import '../structs/point.dart';
 import '../structs/positioned_image.dart';
 import 'bed.dart';
@@ -22,8 +23,18 @@ class Garden {
   // The next available identifier for elements in the garden
   final int availableID;
 
+  final Map<int, CachedImage> _images;
+  UnmodifiableMapView<int, CachedImage> get images =>
+      UnmodifiableMapView(_images);
+
   const Garden(
-      this.name, this._beds, this.nursery, this.background, this.availableID);
+    this.name,
+    this._beds,
+    this.nursery,
+    this.background,
+    this.availableID,
+    this._images,
+  );
 
   factory Garden.blank(String name) {
     return Garden(
@@ -37,6 +48,7 @@ class Garden {
       ),
       PositionedImage.blank(),
       0,
+      const {},
     );
   }
 
@@ -55,6 +67,7 @@ class Garden {
       nursery,
       background,
       availableID + 1,
+      images,
     );
   }
 
@@ -65,6 +78,7 @@ class Garden {
       id == nursery.id ? update(nursery) : nursery,
       background,
       availableID,
+      images,
     );
   }
 
@@ -75,6 +89,7 @@ class Garden {
       nursery,
       background,
       availableID,
+      images,
     );
   }
 
@@ -105,6 +120,7 @@ class Garden {
       update(nursery),
       background,
       availableID + 1,
+      images,
     );
   }
 
