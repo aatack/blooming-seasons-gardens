@@ -35,13 +35,13 @@ Image deserialiseImage(String image) {
 @immutable
 class CachedImage {
   final int id;
-  final String serialised;
-  final Image deserialised;
+  final String string;
+  final Image image;
 
-  const CachedImage(this.id, this.serialised, this.deserialised);
+  const CachedImage(this.id, this.string, this.image);
 
   String serialise() {
-    return serialised;
+    return string;
   }
 
   static CachedImage deserialise(int id, String image) {

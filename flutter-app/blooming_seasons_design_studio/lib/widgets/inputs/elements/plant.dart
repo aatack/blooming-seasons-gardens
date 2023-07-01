@@ -259,7 +259,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
           ),
           if (_image != null)
             FormLayoutItem(
-              child: SizedBox(width: 300, child: _image!.deserialised),
+              child: SizedBox(width: 300, child: _image!.image),
             ),
         ],
       ),
