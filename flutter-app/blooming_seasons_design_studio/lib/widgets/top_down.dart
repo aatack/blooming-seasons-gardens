@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -36,27 +37,45 @@ class _TopDownState extends State<TopDown> {
       heightFactor: 1,
       child: Stack(
         children: [
-          GestureDetector(
-            onPanStart: (details) {
-              setState(() {
-                _dragOrigin = details.globalPosition;
-                _positionOrigin = widget.position;
-              });
+          Listener(
+            onPointerSignal: (PointerSignalEvent signal) {
+              if (signal is PointerScrollEvent) {
+                widget.setPosition(
+                  TopDownPosition(
+                    widget.position.x,
+                    widget.position.y,
+                    signal.scrollDelta.dy < 0
+                        ? widget.position.scale * 1.1
+                        : widget.position.scale / 1.1,
+                  ),
+                );
+              }
             },
-            onPanUpdate: (details) {
-              widget.setPosition(TopDownPosition(
-                _positionOrigin!.x -
-                    (_dragOrigin!.dx - details.globalPosition.dx),
-                _positionOrigin!.y -
-                    (_dragOrigin!.dy - details.globalPosition.dy),
-                widget.position.scale,
-              ));
-            },
-            child: Container(color: Colors.white),
+            child: GestureDetector(
+              onPanStart: (details) {
+                setState(() {
+                  _dragOrigin = details.globalPosition;
+                  _positionOrigin = widget.position;
+                });
+              },
+              onPanUpdate: (details) {
+                widget.setPosition(TopDownPosition(
+                  _positionOrigin!.x -
+                      (_dragOrigin!.dx - details.globalPosition.dx),
+                  _positionOrigin!.y -
+                      (_dragOrigin!.dy - details.globalPosition.dy),
+                  widget.position.scale,
+                ));
+              },
+              child: Container(color: Colors.white),
+            ),
           ),
           Transform.translate(
               offset: Offset(widget.position.x, widget.position.y),
-              child: Stack(children: widget.children)),
+              transformHitTests: true,
+              child: Transform.scale(
+                  scale: widget.position.scale,
+                  child: Stack(children: widget.children))),
         ],
       ),
     );

@@ -23,13 +23,19 @@ class _PlannerState extends State<Planner> {
         });
       },
       children: [
-        Transform.translate(
-          offset: const Offset(500, 100),
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration:
-                const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+        GestureDetector(
+          onTap: () {
+            print("Clicked");
+          },
+          child: Transform.translate(
+            offset: Offset(500, 100),
+            transformHitTests: true,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.red),
+            ),
           ),
         )
       ],
