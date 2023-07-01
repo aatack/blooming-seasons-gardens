@@ -14,12 +14,15 @@ class LabelEditor extends StatelessWidget {
   final Point position;
   final void Function(Point, bool) setPosition;
 
+  final bool hidePosition;
+
   const LabelEditor({
     super.key,
     required this.label,
     required this.setElement,
     required this.position,
     required this.setPosition,
+    this.hidePosition = false,
   });
 
   @override
@@ -44,11 +47,12 @@ class LabelEditor extends StatelessWidget {
             },
           ),
         ),
-        ...pointInput(
-          label: "Position",
-          point: position,
-          setPoint: setPosition,
-        ),
+        if (!hidePosition)
+          ...pointInput(
+            label: "Position",
+            point: position,
+            setPoint: setPosition,
+          ),
       ],
     );
   }

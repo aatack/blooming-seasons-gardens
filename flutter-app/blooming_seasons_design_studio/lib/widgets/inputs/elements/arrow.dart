@@ -14,12 +14,15 @@ class ArrowEditor extends StatelessWidget {
   final Point position;
   final void Function(Point, bool) setPosition;
 
+  final bool hidePosition;
+
   const ArrowEditor({
     super.key,
     required this.arrow,
     required this.setElement,
     required this.position,
     required this.setPosition,
+    this.hidePosition = false,
   });
 
   @override
@@ -32,7 +35,7 @@ class ArrowEditor extends StatelessWidget {
                 validatedTextInput(arrow.thickness, (newThickness, transient) {
               setElement(arrow.withThickness(newThickness), transient);
             })),
-        ...pointInput(
+        if (!hidePosition) ...pointInput(
           label: "Start",
           point: arrow.source,
           setPoint: (newSource, transient) => setElement(

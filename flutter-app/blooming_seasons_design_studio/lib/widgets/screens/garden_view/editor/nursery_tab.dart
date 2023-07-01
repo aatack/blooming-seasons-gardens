@@ -27,7 +27,10 @@ class NurseryTab extends StatelessWidget {
             child: ListView(
               children: [
                 ...nursery.instances.map((instance) => InstanceEditor(
-                    key: Key(instance.id.toString()), instance: instance)),
+                      key: Key(instance.id.toString()),
+                      instance: instance,
+                      hidePosition: true,
+                    )),
                 Button(
                     onClicked: () {
                       context

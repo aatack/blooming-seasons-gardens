@@ -17,8 +17,10 @@ import 'plant.dart';
 
 class InstanceEditor extends StatefulWidget {
   final Instance instance;
+  final bool hidePosition;
 
-  const InstanceEditor({super.key, required this.instance});
+  const InstanceEditor(
+      {super.key, required this.instance, this.hidePosition = false});
 
   @override
   State<InstanceEditor> createState() => _InstanceEditorState();
@@ -179,6 +181,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         setElement: setElement,
         position: position,
         setPosition: setPosition,
+        hidePosition: widget.hidePosition,
       );
     } else if (widget.instance.element is Label) {
       content = LabelEditor(
@@ -186,6 +189,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         setElement: setElement,
         position: position,
         setPosition: setPosition,
+        hidePosition: widget.hidePosition,
       );
     } else if (widget.instance.element is Arrow) {
       content = ArrowEditor(
@@ -193,6 +197,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         setElement: setElement,
         position: position,
         setPosition: setPosition,
+        hidePosition: widget.hidePosition,
       );
     } else {
       throw UnimplementedError();

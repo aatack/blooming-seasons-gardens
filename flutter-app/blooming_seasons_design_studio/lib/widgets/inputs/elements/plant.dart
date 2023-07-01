@@ -20,12 +20,15 @@ class PlantEditor extends StatelessWidget {
   final Point position;
   final void Function(Point, bool) setPosition;
 
+  final bool hidePosition;
+
   const PlantEditor({
     super.key,
     required this.plant,
     required this.setElement,
     required this.position,
     required this.setPosition,
+    this.hidePosition = false,
   });
 
   @override
@@ -34,8 +37,9 @@ class PlantEditor extends StatelessWidget {
       children: [
         FormLayout(
           children: [
-            ...pointInput(
-                label: "Position", point: position, setPoint: setPosition),
+            if (!hidePosition)
+              ...pointInput(
+                  label: "Position", point: position, setPoint: setPosition),
             FormLayoutItem(
               label: const Text("Diameter"),
               child: validatedTextInput(
