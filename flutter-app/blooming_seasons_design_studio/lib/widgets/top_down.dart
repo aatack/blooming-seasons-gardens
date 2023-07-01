@@ -35,23 +35,14 @@ class _TopDownState extends State<TopDown> {
     return FractionallySizedBox(
       widthFactor: 1,
       heightFactor: 1,
-      child: Stack(
-        children: [
-          _wrapInControls(_transformedChildren()),
-          // Text(
-          //     "x=${widget.position.x} y=${widget.position.y} scale=${widget.position.scale}"),
-          if (_dragOrigin != null)
-            Text(
-                "x=${_worldPosition(_dragOrigin!).dx} y=${_worldPosition(_dragOrigin!).dy}"),
-        ],
-      ),
+      child: _wrapInControls(_transformedChildren()),
     );
   }
 
   Offset _worldPosition(Offset screenPosition) {
     return Offset(
-      screenPosition.dx - widget.position.x,
-      screenPosition.dy - widget.position.y,
+      (screenPosition.dx - widget.position.x) / widget.position.scale,
+      (screenPosition.dy - widget.position.y) / widget.position.scale,
     );
   }
 
@@ -106,6 +97,7 @@ class _TopDownState extends State<TopDown> {
         offset: Offset(widget.position.x, widget.position.y),
         transformHitTests: true,
         child: Transform.scale(
+          alignment: Alignment.topLeft,
           scale: widget.position.scale,
           child: Stack(children: widget.children),
         ),
