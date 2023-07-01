@@ -35,11 +35,7 @@ class _TopDownState extends State<TopDown> {
     return FractionallySizedBox(
       widthFactor: 1,
       heightFactor: 1,
-      child: Stack(
-        children: [
-          _wrapInControls(_transformedChildren()),
-        ],
-      ),
+      child: _wrapInControls(_transformedChildren()),
     );
   }
 
