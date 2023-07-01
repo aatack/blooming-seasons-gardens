@@ -5,12 +5,8 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
-import 'package:flutter/material.dart' as material;
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:image/image.dart' show Image;
-import 'dart:html' as html;
 
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/plant.dart';
@@ -187,19 +183,18 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
+  late String? _image;
+
   late Point _position;
   late ValidatedDouble _scale;
-
-  late material.Image? _test;
 
   @override
   void initState() {
     super.initState();
 
+    _image = widget.image.image;
     _position = widget.image.position;
     _scale = widget.image.scale;
-
-    _test = null;
   }
 
   @override
@@ -213,14 +208,14 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _test == null
+                _image == null
                     ? Button(
                         onClicked: () async {
                           final image = await uploadImage();
 
                           if (image != null) {
                             setState(() {
-                              _test = deserialiseImage(image);
+                              _image = image;
                             });
                           }
                         },
@@ -229,7 +224,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                     : Button(
                         onClicked: () {
                           setState(() {
-                            _test = null;
+                            _image = null;
                           });
                         },
                         child: const Text("Reset image"),
@@ -257,14 +252,16 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
               },
             ),
           ),
-          if (_test != null)
-            FormLayoutItem(child: SizedBox(width: 300, child: _test)),
+          if (_image != null)
+            FormLayoutItem(
+              child: SizedBox(width: 300, child: deserialiseImage(_image!)),
+            ),
         ],
       ),
       () {
         widget.setImage(
-            // TODO: set the actual image
-            PlantImage(image: "", position: _position, scale: _scale));
+          PlantImage(image: _image, position: _position, scale: _scale),
+        );
       },
     );
   }
