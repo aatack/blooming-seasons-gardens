@@ -22,23 +22,17 @@ class _PlannerState extends State<Planner> {
           _position = newPosition;
         });
       },
-      children: [
-        GestureDetector(
-          onTap: () {
-            print("Clicked");
-          },
-          child: Transform.translate(
-            offset: Offset(500, 100),
-            transformHitTests: true,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.red),
-            ),
-          ),
-        )
-      ],
+      child: GestureDetector(
+        onTap: () {
+          print("clicked");
+        },
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+        ),
+      ),
     );
   }
 }
