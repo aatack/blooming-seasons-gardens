@@ -177,11 +177,12 @@ class Garden {
     final Map<int, CachedImage> cachedImageRepository = Map.from(images);
     final List<CachedImage> cachedImageArguments = [];
 
+    overNewImages:
     for (final image in newImages) {
       for (final cachedImage in cachedImageRepository.values) {
         if (cachedImage.string == image) {
           cachedImageArguments.add(cachedImage);
-          break;
+          continue overNewImages;
         }
       }
 
