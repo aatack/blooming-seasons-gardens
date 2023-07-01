@@ -1,7 +1,6 @@
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:flutter/material.dart' show immutable;
 
-import 'package:image/image.dart' show Image;
 import 'instance.dart';
 
 @immutable
@@ -14,7 +13,7 @@ class Label implements Element {
   @override
   dynamic serialise(
     Map<int, dynamic> templates,
-    Map<Image, int> images,
+    Map<String, int> images,
   ) {
     return {
       "elementType": "label",

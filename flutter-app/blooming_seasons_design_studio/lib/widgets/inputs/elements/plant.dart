@@ -187,7 +187,6 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
-  late Image? _image;
   late Point _position;
   late ValidatedDouble _scale;
 
@@ -197,7 +196,6 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   void initState() {
     super.initState();
 
-    _image = widget.image.image;
     _position = widget.image.position;
     _scale = widget.image.scale;
 
@@ -265,7 +263,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       ),
       () {
         widget.setImage(
-            PlantImage(image: _image, position: _position, scale: _scale));
+            // TODO: set the actual image
+            PlantImage(image: "", position: _position, scale: _scale));
       },
     );
   }

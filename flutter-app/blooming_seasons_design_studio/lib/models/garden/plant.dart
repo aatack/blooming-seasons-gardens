@@ -1,6 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:flutter/material.dart' show Color, Colors, immutable;
-import 'package:image/image.dart' show Image;
 
 import '../structs/point.dart';
 import 'instance.dart';
@@ -23,7 +22,7 @@ class Plant implements Element {
   @override
   Map<String, dynamic> serialise(
     Map<int, dynamic> templates,
-    Map<Image, int> images,
+    Map<String, int> images,
   ) {
     return {
       "elementType": "plant",
@@ -60,7 +59,7 @@ class Plant implements Element {
   }
 }
 
-Plant deserialisePlant(dynamic plant, Map<int, Image> images) {
+Plant deserialisePlant(dynamic plant, Map<int, String> images) {
   final fill = plant["fill"];
   final image = plant["image"];
 
@@ -117,7 +116,7 @@ PlantFill _deserialisePlantFill(dynamic fill) {
 
 @immutable
 class PlantImage {
-  final Image? image;
+  final String? image;
   final Point position;
   final ValidatedDouble scale;
 
@@ -135,7 +134,7 @@ class PlantImage {
   }
 }
 
-dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
+dynamic _serialisePlantImage(PlantImage image, Map<String, int> images) {
   if (image.image != null && !images.containsKey(image)) {
     images[image.image!] = images.length;
   }
@@ -147,7 +146,7 @@ dynamic _serialisePlantImage(PlantImage image, Map<Image, int> images) {
   };
 }
 
-PlantImage _deserialisePlantImage(dynamic image, Map<int, Image> images) {
+PlantImage _deserialisePlantImage(dynamic image, Map<int, String> images) {
   return PlantImage(
       image: image["imageID"] == null ? null : images[image["imageID"]]!,
       position: Point.deserialise(image["position"]),

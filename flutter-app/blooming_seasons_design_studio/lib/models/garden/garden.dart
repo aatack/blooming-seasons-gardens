@@ -1,10 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:flutter/material.dart' show Colors, immutable;
-import 'package:image/image.dart' show Image;
+import 'package:flutter/material.dart' show immutable;
 
-import '../inputs/validated.dart';
 import '../structs/point.dart';
 import 'bed.dart';
 import 'instance.dart';
@@ -127,7 +125,7 @@ class Garden {
 /// Return a JSON-compatible representation of the garden.
 dynamic serialiseGarden(Garden garden) {
   final Map<int, dynamic> templates = {};
-  final Map<Image, int> images = {};
+  final Map<String, int> images = {};
 
   final List<dynamic> beds =
       garden.beds.map((bed) => serialiseBed(bed, templates, images)).toList();
@@ -138,7 +136,7 @@ dynamic serialiseGarden(Garden garden) {
     "templates":
         templates.map((id, template) => MapEntry(id.toString(), template)),
     "availableID": garden.availableID,
-    "images": images.map((image, id) => MapEntry(id, _serialiseImage(image))),
+    "images": images.map((image, id) => MapEntry(id, image)),
   };
 }
 
@@ -147,9 +145,9 @@ dynamic serialiseGarden(Garden garden) {
 /// The format of the passed object should mirror that of the return format
 /// of the `serialise` function.
 Garden deserialiseGarden(dynamic garden) {
-  final images = Map<int, Image>.from(
+  final images = Map<int, String>.from(
     garden["images"].map(
-      (id, image) => MapEntry(id, _deserialiseImage(image)),
+      (id, image) => MapEntry(id, image),
     ),
   );
 
@@ -166,20 +164,4 @@ Garden deserialiseGarden(dynamic garden) {
       garden["beds"].map((bed) => deserialiseBed(bed, templates, images)));
 
   return Garden(garden["name"], beds, templates, garden["availableID"]);
-}
-
-dynamic _serialiseImage(Image image) {
-  return {
-    "data": base64.encode(image.getBytes()),
-    "width": image.width,
-    "height": image.height,
-  };
-}
-
-Image _deserialiseImage(dynamic image) {
-  return Image.fromBytes(
-    width: image["width"],
-    height: image["height"],
-    bytes: base64.decode(image["data"]).buffer,
-  );
 }

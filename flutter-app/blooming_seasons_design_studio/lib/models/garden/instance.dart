@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' show immutable;
-import 'package:image/image.dart' show Image;
 
 import '../structs/point.dart';
 import 'arrow.dart';
@@ -9,7 +8,7 @@ import 'plant.dart';
 enum ElementType { plant, label, arrow }
 
 abstract class Element {
-  dynamic serialise(Map<int, dynamic> templates, Map<Image, int> images);
+  dynamic serialise(Map<int, dynamic> templates, Map<String, int> images);
 }
 
 @immutable
@@ -62,7 +61,7 @@ class Instance {
 dynamic serialiseInstance(
   Instance instance,
   Map<int, dynamic> templates,
-  Map<Image, int> images,
+  Map<String, int> images,
 ) {
   final Map<String, dynamic> result = {
     "id": instance.id,
@@ -85,7 +84,7 @@ dynamic serialiseInstance(
 }
 
 Instance deserialiseInstance(Map<String, dynamic> instance,
-    Map<int, Element> templates, Map<int, Image> images) {
+    Map<int, Element> templates, Map<int, String> images) {
   int? template;
   Element element;
 
@@ -106,7 +105,7 @@ Instance deserialiseInstance(Map<String, dynamic> instance,
   );
 }
 
-Element deserialiseElement(dynamic element, Map<int, Image> images) {
+Element deserialiseElement(dynamic element, Map<int, String> images) {
   final elementType = element["elementType"];
 
   switch (elementType) {
