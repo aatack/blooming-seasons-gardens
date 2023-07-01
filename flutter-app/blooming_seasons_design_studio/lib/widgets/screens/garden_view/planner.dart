@@ -24,7 +24,7 @@ class _PlannerState extends State<Planner> {
       },
       children: [
         Transform.translate(
-          offset: const Offset(100, 700),
+          offset: const Offset(0, 0),
           child: GestureDetector(
             onTap: () {},
             child: Container(

@@ -43,18 +43,7 @@ class _TopDownState extends State<TopDown> {
     return Listener(
       onPointerSignal: (PointerSignalEvent signal) {
         if (signal is PointerScrollEvent) {
-          final double scrollDelta = signal.scrollDelta.dy;
-          final double zoomDelta = (1 + (0.001 * scrollDelta.abs()));
-
-          widget.setPosition(
-            TopDownPosition(
-              widget.position.x,
-              widget.position.y,
-              scrollDelta < 0
-                  ? widget.position.scale * zoomDelta
-                  : widget.position.scale / zoomDelta,
-            ),
-          );
+          _doScroll(signal.scrollDelta.dy);
         }
       },
       child: GestureDetector(
@@ -72,6 +61,22 @@ class _TopDownState extends State<TopDown> {
           ));
         },
         child: child,
+      ),
+    );
+  }
+
+  void _doScroll(double scrollAmount) {
+    // A typical scroll amount is 100 units per scroll, so we zoom in or out
+    // by 10% per roll of the scroll wheel
+    final double factor = (1 + (0.001 * scrollAmount.abs()));
+
+    widget.setPosition(
+      TopDownPosition(
+        widget.position.x,
+        widget.position.y,
+        scrollAmount < 0
+            ? widget.position.scale * factor
+            : widget.position.scale / factor,
       ),
     );
   }
