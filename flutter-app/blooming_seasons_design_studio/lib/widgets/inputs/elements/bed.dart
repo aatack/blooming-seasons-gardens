@@ -64,7 +64,7 @@ class _BedEditorState extends State<BedEditor> {
                     onChange: (newValue, transient) {
                       context.read<SessionState>().editGarden(
                           (garden) => garden.editBed(
-                              widget.bed.id, (bed) => bed.rename(newValue)),
+                              widget.bed.id, (bed, _) => bed.rename(newValue)),
                           transient: transient);
                     },
                     editing: _editingName,
@@ -149,7 +149,7 @@ class _BedEditorState extends State<BedEditor> {
                   context.read<SessionState>().editGarden(
                         (garden) => garden.editBed(
                           widget.bed.id,
-                          (bed) => Bed(
+                          (bed, _) => Bed(
                             widget.bed.instances,
                             id: widget.bed.id,
                             origin: newOrigin,

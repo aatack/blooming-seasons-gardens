@@ -71,14 +71,22 @@ class Garden {
     );
   }
 
-  Garden editBed(int id, Bed Function(Bed) update) {
-    return Garden(
-      name,
-      _beds.map((bed) => bed.id == id ? update(bed) : bed).toList(),
-      id == nursery.id ? update(nursery) : nursery,
-      background,
-      availableID,
-      images,
+  Garden editBed(int id, Bed Function(Bed, List<CachedImage>) update,
+      {List<String>? images}) {
+    return withImages(
+      images ?? [],
+      (garden, cachedImages) => Garden(
+        garden.name,
+        garden.beds
+            .map((bed) => bed.id == id ? update(bed, cachedImages) : bed)
+            .toList(),
+        id == garden.nursery.id
+            ? update(garden.nursery, cachedImages)
+            : garden.nursery,
+        garden.background,
+        garden.availableID,
+        garden.images,
+      ),
     );
   }
 
@@ -127,7 +135,7 @@ class Garden {
   Garden editInstance(int id, Instance Function(Instance) update) {
     return editBed(
       instanceParent(id),
-      (bed) => Bed(
+      (bed, _) => Bed(
         bed.instances
             .map((instance) => instance.id == id ? update(instance) : instance)
             .toList(),
@@ -141,7 +149,7 @@ class Garden {
   Garden removeInstance(int id) {
     return editBed(
       instanceParent(id),
-      (bed) => Bed(
+      (bed, _) => Bed(
         bed.instances.where((instance) => instance.id != id).toList(),
         id: bed.id,
         origin: bed.origin,
