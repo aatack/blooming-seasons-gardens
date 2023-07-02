@@ -133,7 +133,6 @@ class OuterPainter extends CustomPainter {
 
   @override
   bool? hitTest(Offset position) {
-    print("Outer $position");
     return super.hitTest(position);
   }
 }
@@ -150,7 +149,6 @@ class InnerPainter extends CustomPainter {
 
   @override
   bool? hitTest(Offset position) {
-    print("Inner $position");
     return super.hitTest(position);
   }
 }
@@ -158,13 +156,8 @@ class InnerPainter extends CustomPainter {
 class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("Clicked");
-      },
-      child: CustomPaint(
-        painter: OuterPainter(InnerPainter()),
-      ),
+    return CustomPaint(
+      painter: OuterPainter(InnerPainter()),
     );
   }
 }

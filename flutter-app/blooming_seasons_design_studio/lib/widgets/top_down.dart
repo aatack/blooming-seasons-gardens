@@ -48,13 +48,13 @@ class _TopDownState extends State<TopDown> {
 
   Widget _wrapInControls(Widget child) {
     return Listener(
-      onPointerDown: (event) {
-        print(event.localPosition);
-      },
       onPointerSignal: (PointerSignalEvent signal) {
         if (signal is PointerScrollEvent) {
           _doScroll(signal.scrollDelta.dy, signal.localPosition);
         }
+      },
+      onPointerHover: (event) {
+        // TODO: use `event.localPosition` to determine the hovered element
       },
       child: GestureDetector(
         onPanStart: (details) {
@@ -71,17 +71,13 @@ class _TopDownState extends State<TopDown> {
           ));
         },
         onPanEnd: (_) {
-          print("Pan ended");
           setState(() {
             _dragOrigin = null;
             _positionOrigin = null;
           });
         },
-        // onDoubleTap: () {
-        //   print("Double tapped");
-        // },
         onTapUp: (TapUpDetails details) {
-          print(_worldPosition(details.localPosition));
+          print("Clicked ${_worldPosition(details.localPosition)}");
         },
         child: child,
       ),
