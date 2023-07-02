@@ -331,19 +331,27 @@ Widget _wrapInModal(
 }
 
 class PlantPainter extends Painter {
+  static const centre = Offset.zero;
+
   final Plant plant;
 
   PlantPainter(this.plant);
 
   @override
   void paint(Canvas canvas) {
-    canvas.save();
-    canvas.translate(-100, -100);
-    canvas.scale(2);
+    final outlinePaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
 
-    canvas.drawCircle(Offset.zero, 20, Paint()..color = Colors.blue);
+    final fillPaint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.fill;
 
-    canvas.restore();
+    final radius = plant.diameter.output * 0.5;
+
+    canvas.drawCircle(Offset.zero, radius, outlinePaint);
+    canvas.drawCircle(Offset.zero, radius, fillPaint);
   }
 
   @override
