@@ -360,14 +360,7 @@ class PlantPainter extends Painter {
 
     if (plant.type == PlantType.image && plant.image.image != null) {
       final image = plant.image.image!;
-      final codec = ui.instantiateImageCodec(
-        Uint8List.fromList(base64.decode(image.string)),
-        targetHeight: image.image.height?.toInt(),
-        targetWidth: image.image.width?.toInt(),
-      );
-      codec.then((value) => value.getNextFrame().then((value) {
-            _image = value.image;
-          }));
+      stringToUIImage(image.string).then((value) => _image = value);
     }
   }
 
