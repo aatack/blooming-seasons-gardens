@@ -97,7 +97,8 @@ class PlantEditor extends StatelessWidget {
                     _PlantImageEditorModal(
                       image: plant.image,
                       setImage: (newImage) {
-                        if (newImage.image?.id == null) {
+                        if (newImage.image != null &&
+                            newImage.image!.id == null) {
                           // A new image has been added, and must be cached
                           return updateElement(
                             (element, cachedImages) => element.withImage(
