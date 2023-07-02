@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
 
 import '../../../models/garden/instance.dart';
@@ -55,5 +56,32 @@ class LabelEditor extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+class LabelPainter extends Painter {
+  final Label label;
+
+  LabelPainter(this.label);
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+
+  @override
+  void paint(Canvas canvas) {
+    final text = TextSpan(
+      text: "Hello world",
+      style: TextStyle(
+          color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+    );
+
+    final textPainter =
+        TextPainter(text: text, textDirection: TextDirection.ltr);
+
+    textPainter.layout();
+
+    textPainter.paint(canvas, Offset(0, 0));
   }
 }

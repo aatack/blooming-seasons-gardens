@@ -230,6 +230,8 @@ class InstancePainter extends Painter {
       _child = PlantPainter(instance.element as Plant);
     } else if (instance.element is Arrow) {
       _child = ArrowPainter(instance.element as Arrow);
+    } else if (instance.element is Label) {
+      _child = LabelPainter(instance.element as Label);
     } else {
       throw UnimplementedError();
     }
