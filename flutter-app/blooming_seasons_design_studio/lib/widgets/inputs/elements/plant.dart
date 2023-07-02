@@ -218,41 +218,59 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
-  TopDownPosition _position = const TopDownPosition(0, 0, 1);
-
   late PositionedImage _image;
 
   @override
   void initState() {
     super.initState();
 
-    _setImage(widget.image);
+    _image = widget.image;
   }
 
   @override
   Widget build(BuildContext context) {
+    final transformedPosition = TopDownPosition(
+        _PreviewPainter.reticleCentre.dx + (_image.position.x.output * 1),
+        _PreviewPainter.reticleCentre.dy + (_image.position.y.output * 1),
+        1);
+
     return _wrapInModal(
       context,
       Column(
         children: [
           PositionedImageInput(
-              image: _image,
-              setImage: (newImage, _) {
-                _setImage(newImage);
-              }),
+            image: _image,
+            setImage: (newImage, _) {
+              setState(() {
+                _image = newImage;
+              });
+              ;
+            },
+          ),
           if (_image.image != null)
-            ClipRect(
-              child: SizedBox(
-                width: _PreviewPainter.size,
-                height: _PreviewPainter.size,
-                child: TopDown(
-                  position: _position,
-                  setPosition: (newPosition) {
-                    setState(() {
-                      _position = newPosition;
-                    });
-                  },
-                  child: _PreviewPainter(_image.image, _position),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ClipRect(
+                child: SizedBox(
+                  width: _PreviewPainter.size,
+                  height: _PreviewPainter.size,
+                  child: TopDown(
+                    position: transformedPosition,
+                    setPosition: (newPosition) {
+                      setState(() {
+                        final reticleCentre = newPosition
+                            .worldPosition(_PreviewPainter.reticleCentre);
+
+                        _image = PositionedImage(
+                            image: _image.image,
+                            position: Point(
+                                ValidatedDouble.initialise(-reticleCentre.dx),
+                                ValidatedDouble.initialise(-reticleCentre.dy)),
+                            scale: ValidatedDouble.initialise(1));
+                      });
+                    },
+                    child: _PreviewPainter(_image.image, transformedPosition),
+                  ),
                 ),
               ),
             ),
@@ -265,15 +283,12 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       },
     );
   }
-
-  void _setImage(PositionedImage image) {
-    _image = image;
-  }
 }
 
 class _PreviewPainter extends Painter {
   static const double size = 300; // Width and height of the preview
   static const Offset reticleCentre = Offset(size / 2, size / 2);
+  static const double reticleRadius = size / 3;
 
   final CachedImage? image;
   final TopDownPosition position;
@@ -306,7 +321,7 @@ class _PreviewPainter extends Painter {
 
     canvas.drawCircle(
       position.worldPosition(reticleCentre),
-      position.worldDistance(size / 3),
+      position.worldDistance(reticleRadius),
       outline,
     );
   }
