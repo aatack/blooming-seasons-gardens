@@ -67,10 +67,10 @@ class LabelPainter extends Painter {
 
   LabelPainter(this.label) {
     _text = TextSpan(
-      text: label.text.value,
+      text: label.text.output,
       style: TextStyle(
         color: Colors.black,
-        fontSize: label.size.value,
+        fontSize: label.size.output,
         fontWeight: FontWeight.bold,
         fontFamily: "Spectral",
         fontFamilyFallback: const ["Arial"],

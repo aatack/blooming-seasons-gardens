@@ -21,6 +21,6 @@ class Point {
   }
 
   static Point blank() {
-    return const Point(ValidatedDouble("0"), ValidatedDouble("0"));
+    return Point(ValidatedDouble.initialise(0), ValidatedDouble.initialise(0));
   }
 }

@@ -64,7 +64,7 @@ class ArrowPainter extends Painter {
   final double thickness = 2;
 
   ArrowPainter(this.arrow) {
-    _source = Offset(arrow.source.x.value, arrow.source.y.value);
+    _source = Offset(arrow.source.x.output, arrow.source.y.output);
   }
 
   @override

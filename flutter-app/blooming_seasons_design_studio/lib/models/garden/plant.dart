@@ -33,7 +33,7 @@ class Plant implements Element {
 
   static Plant blank() {
     return Plant(
-      diameter: const ValidatedDouble("0.25", minimum: 0),
+      diameter: ValidatedDouble.initialise(0.25, minimum: 0),
       type: PlantType.fill,
       fill: PlantFill.blank(),
       image: PositionedImage.blank(),
@@ -81,7 +81,7 @@ class PlantFill {
 
   static PlantFill blank() {
     return PlantFill(
-        thickness: const ValidatedDouble("1", minimum: 0),
+        thickness: ValidatedDouble.initialise(1, minimum: 0),
         colour: Colors.yellow[300]!);
   }
 }

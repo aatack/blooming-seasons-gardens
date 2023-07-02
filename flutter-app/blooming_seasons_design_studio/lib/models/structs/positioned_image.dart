@@ -34,6 +34,6 @@ class PositionedImage {
     return PositionedImage(
         image: null,
         position: Point.blank(),
-        scale: const ValidatedDouble("0", minimum: 0));
+        scale: ValidatedDouble.initialise(0, minimum: 0));
   }
 }

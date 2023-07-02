@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:html' as html;
 import 'dart:convert';
 import 'dart:typed_data';

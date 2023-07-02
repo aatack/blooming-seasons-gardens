@@ -20,15 +20,15 @@ class Label implements Element {
   }
 
   static Label blank() {
-    return const Label(
-      text: UnvalidatedString("Label"),
-      size: ValidatedDouble("20"),
+    return Label(
+      text: UnvalidatedString.initialise("Label"),
+      size: ValidatedDouble.initialise(20),
     );
   }
 }
 
 Label deserialiseLabel(dynamic label) {
   return Label(
-      text: UnvalidatedString(label["text"]),
+      text: UnvalidatedString.initialise(label["text"]),
       size: ValidatedDouble.deserialise(label["size"]));
 }

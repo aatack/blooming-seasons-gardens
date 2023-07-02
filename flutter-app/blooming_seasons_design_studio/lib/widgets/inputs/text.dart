@@ -176,7 +176,7 @@ Widget
       child: ControlledTextInput(
         value: value.input,
         onChange: (newString, transient) {
-          setValue(value.set(newString), transient);
+          setValue(value.update(newString), transient);
         },
       ),
     ),

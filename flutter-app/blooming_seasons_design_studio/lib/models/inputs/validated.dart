@@ -35,7 +35,7 @@ class UnvalidatedString extends Validated<String, UnvalidatedString> {
 
   @override
   ValidationResult<String> validate(String candidate) {
-    return ValidationResult([], candidate);
+    return ValidationResult(const [], candidate);
   }
 
   @override
@@ -76,6 +76,7 @@ class ValidatedDouble extends Validated<double, ValidatedDouble> {
     );
   }
 
+  @override
   ValidatedDouble update(String newInput) {
     final result = validate(newInput);
     return ValidatedDouble(
@@ -102,10 +103,5 @@ class ValidatedDouble extends Validated<double, ValidatedDouble> {
       minimum: validated.containsKey("minimum") ? validated["minimum"] : null,
       maximum: validated.containsKey("maximum") ? validated["maximum"] : null,
     );
-  }
-
-  @override
-  ValidatedDouble set(String newString) {
-    return ValidatedDouble(newString, minimum: minimum, maximum: maximum);
   }
 }
