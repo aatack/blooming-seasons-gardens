@@ -235,8 +235,6 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       context,
       Column(
         children: [
-          Text(
-              "x=${transformedPosition.x} y=${transformedPosition.y} scale=${transformedPosition.scale}"),
           PositionedImageInput(
             image: _image,
             setImage: (newImage, _) {
@@ -257,15 +255,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                     position: transformedPosition,
                     setPosition: (newPosition) {
                       setState(() {
-                        // final reticleCentre = newPosition
-                        //     .worldPosition(_PreviewPainter.reticleCentre);
-
-                        // _image = PositionedImage(
-                        //     image: _image.image,
-                        //     position: Point(
-                        //         ValidatedDouble.initialise(-reticleCentre.dx),
-                        //         ValidatedDouble.initialise(-reticleCentre.dy)),
-                        //     scale: ValidatedDouble.initialise(1));
+                        _image = _inverseTransform(newPosition, _image.image);
                       });
                     },
                     child: _PreviewPainter(_image.image, transformedPosition),
@@ -276,9 +266,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
         ],
       ),
       () {
-        widget.setImage(
-          _image,
-        );
+        widget.setImage(_image);
       },
     );
   }
@@ -300,6 +288,23 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
         ((scale / position.scale.output) * position.position.y.output);
 
     return TopDownPosition(x, y, scale);
+  }
+
+  PositionedImage _inverseTransform(
+      TopDownPosition position, CachedImage? image) {
+    final scale = (position.scale * widget.diameter.output) /
+        (2 * _PreviewPainter.reticleRadius);
+
+    final x = (scale / position.scale) *
+        (position.x - _PreviewPainter.reticleCentre.dx);
+    final y = (scale / position.scale) *
+        (position.y - _PreviewPainter.reticleCentre.dy);
+
+    return PositionedImage(
+        image: image,
+        position:
+            Point(ValidatedDouble.initialise(x), ValidatedDouble.initialise(y)),
+        scale: ValidatedDouble.initialise(scale));
   }
 }
 
