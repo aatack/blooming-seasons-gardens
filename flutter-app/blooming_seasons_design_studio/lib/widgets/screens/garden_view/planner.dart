@@ -23,21 +23,26 @@ class _PlannerState extends State<Planner> {
         });
       },
       children: [
-        Transform.translate(
-          offset: const Offset(50, 50),
-          transformHitTests: true,
-          child: GestureDetector(
-            // TODO: work out how to capture gestures when the offset is negative
-            onTap: () {
-              print("Clicked circle");
-            },
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.red,
-                border: Border.all(color: Colors.black, width: 2),
+        OverflowBox(
+          minWidth: 0,
+          maxWidth: double.infinity,
+          minHeight: 0,
+          maxHeight: double.infinity,
+          alignment: Alignment.topLeft,
+          child: Transform.translate(
+            offset: const Offset(-50, -50),
+            child: GestureDetector(
+              onTap: () {
+                print("Clicked circle");
+              },
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                  border: Border.all(color: Colors.black, width: 2),
+                ),
               ),
             ),
           ),
@@ -54,7 +59,8 @@ class _PlannerState extends State<Planner> {
               strokeWidth: 2.0, // Width of the line
             ),
           ),
-        )
+        ),
+        MyWidget(),
       ],
     );
   }
@@ -89,4 +95,76 @@ class LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+
+  @override
+  bool? hitTest(Offset position) {
+    // TODO: implement hitTest
+    return super.hitTest(position);
+  }
+}
+
+class OuterPainter extends CustomPainter {
+  final CustomPainter inner;
+
+  const OuterPainter(this.inner);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Outer painting operations
+    // ...
+
+    // Nesting a child custom painter
+
+    canvas.save();
+    canvas.translate(-100, -100);
+    canvas.scale(2);
+
+    inner.paint(canvas, size);
+
+    canvas.restore();
+
+    // More outer painting operations
+    canvas.drawCircle(Offset.zero, 20, Paint()..color = Colors.blue);
+    // ...
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+
+  @override
+  bool? hitTest(Offset position) {
+    print("Outer $position");
+    return super.hitTest(position);
+  }
+}
+
+class InnerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawCircle(Offset.zero, 20,
+        Paint()..color = Colors.green); // Example drawing in the outer painter
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+
+  @override
+  bool? hitTest(Offset position) {
+    print("Inner $position");
+    return super.hitTest(position);
+  }
+}
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print("Clicked");
+      },
+      child: CustomPaint(
+        painter: OuterPainter(InnerPainter()),
+      ),
+    );
+  }
 }
