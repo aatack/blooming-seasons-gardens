@@ -53,9 +53,10 @@ class PositionedImagePainter extends Painter {
   void paint(Canvas canvas) {
     if (image.image != null) {
       canvas.save();
+      canvas.translate(image.position.x.output, image.position.y.output);
       canvas.scale(image.scale.output);
 
-      canvas.drawImage(image.image!.image, image.position.offset, Paint());
+      canvas.drawImage(image.image!.image, Offset.zero, Paint());
 
       canvas.restore();
     }

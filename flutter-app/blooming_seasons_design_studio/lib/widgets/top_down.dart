@@ -8,6 +8,11 @@ class TopDownPosition {
   final double scale;
 
   const TopDownPosition(this.x, this.y, this.scale);
+
+  Offset worldPosition(Offset screenPosition) {
+    return Offset(
+        (screenPosition.dx - x) / scale, (screenPosition.dy - y) / scale);
+  }
 }
 
 class TopDown extends StatefulWidget {
@@ -36,13 +41,6 @@ class _TopDownState extends State<TopDown> {
       widthFactor: 1,
       heightFactor: 1,
       child: _wrapInControls(_transformedChildren()),
-    );
-  }
-
-  Offset _worldPosition(Offset screenPosition) {
-    return Offset(
-      (screenPosition.dx - widget.position.x) / widget.position.scale,
-      (screenPosition.dy - widget.position.y) / widget.position.scale,
     );
   }
 
@@ -77,7 +75,8 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onTapUp: (TapUpDetails details) {
-          print("Clicked ${_worldPosition(details.localPosition)}");
+          print(
+              "Clicked ${widget.position.worldPosition(details.localPosition)}");
         },
         child: child,
       ),
