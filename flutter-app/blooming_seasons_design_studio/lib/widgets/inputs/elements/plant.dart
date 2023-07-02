@@ -218,10 +218,9 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
-  TopDownPosition _position = TopDownPosition(0, 0, 1);
+  TopDownPosition _position = const TopDownPosition(0, 0, 1);
 
   late PositionedImage _image;
-  late Painter _painter;
 
   @override
   void initState() {
@@ -244,8 +243,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
           if (_image.image != null)
             ClipRect(
               child: SizedBox(
-                width: 300,
-                height: 300,
+                width: _PreviewPainter.size,
+                height: _PreviewPainter.size,
                 child: TopDown(
                   position: _position,
                   setPosition: (newPosition) {
@@ -253,7 +252,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                       _position = newPosition;
                     });
                   },
-                  child: _painter,
+                  child: _PreviewPainter(_image.image, _position),
                 ),
               ),
             ),
@@ -269,10 +268,35 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
   void _setImage(PositionedImage image) {
     _image = image;
-    _painter = PositionedImagePainter(PositionedImage(
-        image: image.image,
+  }
+}
+
+class _PreviewPainter extends Painter {
+  static const double size = 300; // Width and height of the preview
+
+  final CachedImage? image;
+  final TopDownPosition position;
+
+  late final Painter _imagePainter;
+
+  _PreviewPainter(this.image, this.position) {
+    _imagePainter = PositionedImagePainter(
+      PositionedImage(
+        image: image,
         position: Point.blank(),
-        scale: ValidatedDouble.initialise(1)));
+        scale: ValidatedDouble.initialise(1),
+      ),
+    );
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+
+  @override
+  void paint(Canvas canvas) {
+    _imagePainter.paint(canvas);
   }
 }
 
