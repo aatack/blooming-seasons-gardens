@@ -96,6 +96,7 @@ class PlantEditor extends StatelessWidget {
             if (imageSelected) {
               context.read<ModalsState>().add(
                     _PlantImageEditorModal(
+                      plant: plant,
                       image: plant.image,
                       setImage: (newImage) {
                         if (newImage.image != null &&
@@ -205,10 +206,12 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
 }
 
 class _PlantImageEditorModal extends StatefulWidget {
+  final Plant plant;
   final PositionedImage image;
   final void Function(PositionedImage) setImage;
 
-  const _PlantImageEditorModal({required this.image, required this.setImage});
+  const _PlantImageEditorModal(
+      {required this.plant, required this.image, required this.setImage});
 
   @override
   State<_PlantImageEditorModal> createState() => _PlantImageEditorModalState();
@@ -216,25 +219,53 @@ class _PlantImageEditorModal extends StatefulWidget {
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   late PositionedImage _image;
+  late PlantPainter _painter;
 
   @override
   void initState() {
     super.initState();
 
     _image = widget.image;
+    _painter = PlantPainter(widget.plant.withImage(_image));
   }
 
   @override
   Widget build(BuildContext context) {
     return _wrapInModal(
       context,
-      PositionedImageInput(
-          image: _image,
-          setImage: (newImage, _) {
-            setState(() {
-              _image = newImage;
-            });
-          }),
+      Column(
+        children: [
+          PositionedImageInput(
+              image: _image,
+              setImage: (newImage, _) {
+                setState(() {
+                  _image = newImage;
+                });
+              }),
+          if (_image.image != null)
+            SizedBox(
+              width: 300,
+              height: 300,
+              child: TopDown(
+                position: TopDownPosition(_image.position.x.output,
+                    _image.position.y.output, _image.scale.output),
+                setPosition: (newPosition) {
+                  setState(() {
+                    _image = PositionedImage(
+                        image: _image.image,
+                        position: Point(
+                            ValidatedDouble.initialise(newPosition.x),
+                            ValidatedDouble.initialise(newPosition.y)),
+                        scale: ValidatedDouble.initialise(newPosition.scale,
+                            minimum: _image.scale.minimum,
+                            maximum: _image.scale.maximum));
+                  });
+                },
+                child: _painter,
+              ),
+            ),
+        ],
+      ),
       () {
         widget.setImage(
           _image,
