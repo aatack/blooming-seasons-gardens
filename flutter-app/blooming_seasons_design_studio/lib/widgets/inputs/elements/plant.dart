@@ -96,7 +96,7 @@ class PlantEditor extends StatelessWidget {
             if (imageSelected) {
               context.read<ModalsState>().add(
                     _PlantImageEditorModal(
-                      plant: plant,
+                      diameter: plant.diameter,
                       image: plant.image,
                       setImage: (newImage) {
                         if (newImage.image != null &&
@@ -206,12 +206,12 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
 }
 
 class _PlantImageEditorModal extends StatefulWidget {
-  final Plant plant;
+  final ValidatedDouble diameter;
   final PositionedImage image;
   final void Function(PositionedImage) setImage;
 
   const _PlantImageEditorModal(
-      {required this.plant, required this.image, required this.setImage});
+      {required this.diameter, required this.image, required this.setImage});
 
   @override
   State<_PlantImageEditorModal> createState() => _PlantImageEditorModalState();
@@ -225,8 +225,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   void initState() {
     super.initState();
 
-    _image = widget.image;
-    _painter = PlantPainter(widget.plant.withImage(_image));
+    _setImage(widget.image);
   }
 
   @override
@@ -247,20 +246,23 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
               width: 300,
               height: 300,
               child: TopDown(
-                position: TopDownPosition(_image.position.x.output,
-                    _image.position.y.output, _image.scale.output),
+                position: TopDownPosition(
+                  _image.position.x.output,
+                  _image.position.y.output,
+                  _image.scale.output,
+                ),
                 setPosition: (newPosition) {
                   final newImage = PositionedImage(
-                      image: _image.image,
-                      position: Point(ValidatedDouble.initialise(newPosition.x),
-                          ValidatedDouble.initialise(newPosition.y)),
-                      scale: ValidatedDouble.initialise(newPosition.scale,
-                          minimum: _image.scale.minimum,
-                          maximum: _image.scale.maximum));
-                  setState(() {
-                    _image = newImage;
-                    _painter = PlantPainter(widget.plant.withImage(_image));
-                  });
+                    image: _image.image,
+                    position: Point(ValidatedDouble.initialise(newPosition.x),
+                        ValidatedDouble.initialise(newPosition.y)),
+                    scale: ValidatedDouble.initialise(
+                      newPosition.scale,
+                      minimum: _image.scale.minimum,
+                      maximum: _image.scale.maximum,
+                    ),
+                  );
+                  _setImage(newImage);
                 },
                 child: _painter,
               ),
@@ -273,6 +275,18 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
         );
       },
     );
+  }
+
+  void _setImage(PositionedImage image) {
+    setState(() {
+      _image = image;
+      _painter = PlantPainter(Plant(
+        diameter: widget.diameter,
+        type: PlantType.image,
+        fill: PlantFill.blank(),
+        image: _image,
+      ));
+    });
   }
 }
 
@@ -338,8 +352,7 @@ class PlantPainter extends Painter {
     }
 
     _clipPath = Path()
-      ..addOval(Rect.fromCircle(
-          center: plant.image.position.offset, radius: _radius));
+      ..addOval(Rect.fromCircle(center: Offset.zero, radius: _radius));
   }
 
   @override
@@ -347,12 +360,11 @@ class PlantPainter extends Painter {
     if (plant.type == PlantType.fill) {
       canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
       canvas.drawCircle(Offset.zero, _radius, _fillPaint);
-    } else if (_image != null) {
+    } else {
       canvas.save();
       canvas.clipPath(_clipPath);
-      canvas.scale(1 / plant.image.scale.output);
 
-      canvas.drawImage(_image!, Offset.zero, Paint());
+      plant.image.paint(canvas);
 
       canvas.restore();
     }
