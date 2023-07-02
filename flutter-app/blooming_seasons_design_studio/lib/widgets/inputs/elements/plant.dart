@@ -287,10 +287,10 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
               },
             ),
           ),
-          if (_image != null)
-            FormLayoutItem(
-              child: SizedBox(width: 300, child: _image!.image),
-            ),
+          // if (_image != null)
+          //   FormLayoutItem(
+          //     child: SizedBox(width: 300, child: _image!.image),
+          //   ),
         ],
       ),
       () {
@@ -359,8 +359,7 @@ class PlantPainter extends Painter {
     _radius = plant.diameter.output * 0.5;
 
     if (plant.type == PlantType.image && plant.image.image != null) {
-      final image = plant.image.image!;
-      stringToUIImage(image.string).then((value) => _image = value);
+      _image = plant.image.image!.image;
     }
   }
 

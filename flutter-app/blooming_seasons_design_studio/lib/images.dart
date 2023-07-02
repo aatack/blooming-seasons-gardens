@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' show Image, immutable;
+import 'package:flutter/material.dart' as material;
 
 Future<CachedImage?> uploadImage() async {
   final uploadInput = html.FileUploadInputElement();
@@ -21,18 +21,19 @@ Future<CachedImage?> uploadImage() async {
 
     final String encodedImage = (reader.result as String).split(",")[1];
 
-    return CachedImage(null, encodedImage, _stringToWidgetImage(encodedImage));
+    return CachedImage(
+        null, encodedImage, await _stringToUIImage(encodedImage));
   } else {
     return null;
   }
 }
 
-Image _stringToWidgetImage(String image) {
+material.Image _stringToMaterialImage(String image) {
   final bytes = Uint8List.fromList(base64.decode(image));
-  return Image.memory(bytes);
+  return material.Image.memory(bytes);
 }
 
-Future<ui.Image> stringToUIImage(String image) async {
+Future<ui.Image> _stringToUIImage(String image) async {
   final codec = await ui.instantiateImageCodec(
     Uint8List.fromList(base64.decode(image)),
   );
@@ -40,11 +41,11 @@ Future<ui.Image> stringToUIImage(String image) async {
   return frame.image;
 }
 
-@immutable
+@material.immutable
 class CachedImage {
   final int? id;
   final String string;
-  final Image image;
+  final ui.Image image;
 
   const CachedImage(this.id, this.string, this.image);
 
@@ -53,6 +54,6 @@ class CachedImage {
   }
 
   static Future<CachedImage> deserialise(int id, String image) async {
-    return CachedImage(id, image, _stringToWidgetImage(image));
+    return CachedImage(id, image, await _stringToUIImage(image));
   }
 }
