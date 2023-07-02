@@ -7,7 +7,14 @@ import '../../../models/garden/garden.dart';
 class Planner extends StatefulWidget {
   final Garden garden;
 
-  const Planner({super.key, required this.garden});
+  late final PainterGroup painter;
+
+  Planner({super.key, required this.garden}) {
+    painter = PainterGroup(
+      const Offset(0, 0),
+      garden.beds.map((bed) => BedPainter(bed)).toList(),
+    );
+  }
 
   @override
   State<Planner> createState() => _PlannerState();
@@ -25,8 +32,7 @@ class _PlannerState extends State<Planner> {
           _position = newPosition;
         });
       },
-      child: PainterGroup(Offset(0, 0),
-          widget.garden.beds.map((bed) => BedPainter(bed)).toList()),
+      child: widget.painter,
     );
   }
 }

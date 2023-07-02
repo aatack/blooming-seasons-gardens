@@ -62,7 +62,7 @@ class LabelEditor extends StatelessWidget {
 class LabelPainter extends Painter {
   final Label label;
 
-  LabelPainter(this.label);
+  LabelPainter(this.label) {}
 
   @override
   int? hitTest(Offset position) {
@@ -82,6 +82,6 @@ class LabelPainter extends Painter {
 
     textPainter.layout();
 
-    textPainter.paint(canvas, Offset(0, 0));
+    textPainter.paint(canvas, const Offset(0, 0));
   }
 }
