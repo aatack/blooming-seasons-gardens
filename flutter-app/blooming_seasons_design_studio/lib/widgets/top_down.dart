@@ -144,8 +144,9 @@ abstract class Painter {
 class PainterGroup extends Painter {
   final Offset offset;
   final List<Painter> children;
+  final void Function(Canvas)? paintBackground;
 
-  PainterGroup(this.offset, this.children);
+  PainterGroup(this.offset, this.children, {this.paintBackground});
 
   @override
   int? hitTest(Offset position) {
@@ -162,6 +163,10 @@ class PainterGroup extends Painter {
   void paint(Canvas canvas) {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
+
+    if (paintBackground != null) {
+      paintBackground!(canvas);
+    }
 
     for (final child in children) {
       child.paint(canvas);

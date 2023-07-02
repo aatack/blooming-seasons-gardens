@@ -11,9 +11,8 @@ class Planner extends StatefulWidget {
 
   Planner({super.key, required this.garden}) {
     painter = PainterGroup(
-      const Offset(0, 0),
-      garden.beds.map((bed) => BedPainter(bed)).toList(),
-    );
+        const Offset(0, 0), garden.beds.map((bed) => BedPainter(bed)).toList(),
+        paintBackground: (canvas) => garden.background.paint(canvas));
   }
 
   @override

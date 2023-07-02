@@ -36,4 +36,15 @@ class PositionedImage {
         position: Point.blank(),
         scale: ValidatedDouble.initialise(1, minimum: 0));
   }
+
+  void paint(Canvas canvas) {
+    if (image != null) {
+      canvas.save();
+      canvas.scale(scale.output);
+
+      canvas.drawImage(image!.image, position.offset, Paint());
+
+      canvas.restore();
+    }
+  }
 }
