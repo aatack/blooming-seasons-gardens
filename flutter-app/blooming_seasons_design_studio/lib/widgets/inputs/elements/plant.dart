@@ -291,10 +291,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
       reticle.  Note that both must be equal; from this set of equalities, the
       relationship between the two transforms can be calculated. */
 
-    final scale = (2 *
-            _PreviewPainter.reticleRadius *
-            position.scale.output *
-            position.image!.image.width) /
+    final scale = (2 * _PreviewPainter.reticleRadius * position.scale.output) /
         widget.diameter.output;
 
     final x = _PreviewPainter.reticleCentre.dx +
