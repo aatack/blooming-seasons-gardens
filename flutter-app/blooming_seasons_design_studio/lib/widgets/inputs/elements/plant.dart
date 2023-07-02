@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:blooming_seasons_design_studio/images.dart';
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
@@ -8,6 +11,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'dart:ui' as ui;
 
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';
@@ -340,6 +344,8 @@ class PlantPainter extends Painter {
 
   late final double _radius;
 
+  ui.Image? _image;
+
   PlantPainter(this.plant) {
     _outlinePaint = Paint()
       ..color = Colors.black
@@ -351,12 +357,28 @@ class PlantPainter extends Painter {
       ..style = PaintingStyle.fill;
 
     _radius = plant.diameter.output * 0.5;
+
+    if (plant.type == PlantType.image && plant.image.image != null) {
+      final image = plant.image.image!;
+      final codec = ui.instantiateImageCodec(
+        Uint8List.fromList(base64.decode(image.string)),
+        targetHeight: image.image.height?.toInt(),
+        targetWidth: image.image.width?.toInt(),
+      );
+      codec.then((value) => value.getNextFrame().then((value) {
+            _image = value.image;
+          }));
+    }
   }
 
   @override
   void paint(Canvas canvas) {
-    canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
-    canvas.drawCircle(Offset.zero, _radius, _fillPaint);
+    if (plant.type == PlantType.fill) {
+      canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
+      canvas.drawCircle(Offset.zero, _radius, _fillPaint);
+    } else if (_image != null) {
+      canvas.drawImage(_image!, Offset.zero, Paint());
+    }
   }
 
   @override
