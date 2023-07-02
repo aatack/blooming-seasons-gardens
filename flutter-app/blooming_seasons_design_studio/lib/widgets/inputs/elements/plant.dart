@@ -335,23 +335,28 @@ class PlantPainter extends Painter {
 
   final Plant plant;
 
-  PlantPainter(this.plant);
+  late final Paint _outlinePaint;
+  late final Paint _fillPaint;
 
-  @override
-  void paint(Canvas canvas) {
-    final outlinePaint = Paint()
+  late final double _radius;
+
+  PlantPainter(this.plant) {
+    _outlinePaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
-    final fillPaint = Paint()
-      ..color = Colors.blue
+    _fillPaint = Paint()
+      ..color = plant.fill.colour
       ..style = PaintingStyle.fill;
 
-    final radius = plant.diameter.output * 0.5;
+    _radius = plant.diameter.output * 0.5;
+  }
 
-    canvas.drawCircle(Offset.zero, radius, outlinePaint);
-    canvas.drawCircle(Offset.zero, radius, fillPaint);
+  @override
+  void paint(Canvas canvas) {
+    canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
+    canvas.drawCircle(Offset.zero, _radius, _fillPaint);
   }
 
   @override
