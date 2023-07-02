@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' show Image, immutable;
 
-Future<String?> uploadImage() async {
+Future<CachedImage?> uploadImage() async {
   final uploadInput = html.FileUploadInputElement();
   uploadInput.accept = "image/*";
   uploadInput.click();
@@ -19,9 +19,9 @@ Future<String?> uploadImage() async {
     reader.readAsDataUrl(file);
     await reader.onLoad.first;
 
-    final String encodedImage = reader.result as String;
+    final String encodedImage = (reader.result as String).split(",")[1];
 
-    return encodedImage.split(",")[1];
+    return CachedImage(null, encodedImage, _stringToWidgetImage(encodedImage));
   } else {
     return null;
   }
@@ -42,7 +42,7 @@ Future<ui.Image> stringToUIImage(String image) async {
 
 @immutable
 class CachedImage {
-  final int id;
+  final int? id;
   final String string;
   final Image image;
 

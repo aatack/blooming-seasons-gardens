@@ -21,7 +21,7 @@ import '../point.dart';
 class PlantEditor extends StatelessWidget {
   final Plant plant;
   final void Function(Plant Function(Plant, List<CachedImage>), bool,
-      {List<String>? images}) updateElement;
+      {List<CachedImage>? images}) updateElement;
 
   final Point position;
   final void Function(Point, bool) setPosition;
@@ -97,7 +97,7 @@ class PlantEditor extends StatelessWidget {
                     _PlantImageEditorModal(
                       image: plant.image,
                       setImage: (newImage) {
-                        if (newImage.image?.id == -1) {
+                        if (newImage.image?.id == null) {
                           // A new image has been added, and must be cached
                           return updateElement(
                             (element, cachedImages) => element.withImage(
@@ -108,7 +108,7 @@ class PlantEditor extends StatelessWidget {
                               ),
                             ),
                             false,
-                            images: [newImage.image!.string],
+                            images: [newImage.image!],
                           );
                         } else {
                           return updateElement(
@@ -248,9 +248,9 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                               /* At this point, the change has not yet been
                                 committed; so we don't want to cache the image
                                 in the garden yet.  Instead we save its ID as
-                                -1, to denote that a change in the image has
+                                null, to denote that a change in the image has
                                 occurred. */
-                              _image = CachedImage.deserialise(-1, image);
+                              _image = image;
                             });
                           }
                         },

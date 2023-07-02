@@ -82,7 +82,7 @@ class Garden {
   }
 
   Garden editBed(int id, Bed Function(Bed, List<CachedImage>) update,
-      {List<String>? images}) {
+      {List<CachedImage>? images}) {
     return withImages(
       images ?? [],
       (garden, cachedImages) => Garden(
@@ -144,7 +144,7 @@ class Garden {
 
   Garden editInstance(
       int id, Instance Function(Instance, List<CachedImage>) update,
-      {List<String>? images}) {
+      {List<CachedImage>? images}) {
     return editBed(
       instanceParent(id),
       (bed, cachedImages) => Bed(
@@ -182,7 +182,7 @@ class Garden {
   }
 
   /// Cache an image, then update the garden with the resulting image ID.
-  Garden withImages(List<String> newImages,
+  Garden withImages(List<CachedImage> newImages,
       Garden Function(Garden, List<CachedImage>) update) {
     final Map<int, CachedImage> cachedImageRepository = Map.from(images);
     final List<CachedImage> cachedImageArguments = [];
@@ -190,15 +190,15 @@ class Garden {
     overNewImages:
     for (final image in newImages) {
       for (final cachedImage in cachedImageRepository.values) {
-        if (cachedImage.string == image) {
+        if (cachedImage.string == image.string) {
           cachedImageArguments.add(cachedImage);
           continue overNewImages;
         }
       }
 
       final entry =
-          CachedImage.deserialise(cachedImageRepository.length, image);
-      cachedImageRepository[entry.id] = entry;
+          CachedImage(cachedImageRepository.length, image.string, image.image);
+      cachedImageRepository[entry.id!] = entry;
       cachedImageArguments.add(entry);
     }
 
