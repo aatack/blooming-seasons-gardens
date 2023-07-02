@@ -218,8 +218,10 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
+  TopDownPosition _position = TopDownPosition(0, 0, 1);
+
   late PositionedImage _image;
-  late PlantPainter _painter;
+  late Painter _painter;
 
   @override
   void initState() {
@@ -237,34 +239,22 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
           PositionedImageInput(
               image: _image,
               setImage: (newImage, _) {
-                setState(() {
-                  _image = newImage;
-                });
+                _setImage(newImage);
               }),
           if (_image.image != null)
-            SizedBox(
-              width: 300,
-              height: 300,
-              child: TopDown(
-                position: TopDownPosition(
-                  _image.position.x.output,
-                  _image.position.y.output,
-                  _image.scale.output,
+            ClipRect(
+              child: SizedBox(
+                width: 300,
+                height: 300,
+                child: TopDown(
+                  position: _position,
+                  setPosition: (newPosition) {
+                    setState(() {
+                      _position = newPosition;
+                    });
+                  },
+                  child: _painter,
                 ),
-                setPosition: (newPosition) {
-                  final newImage = PositionedImage(
-                    image: _image.image,
-                    position: Point(ValidatedDouble.initialise(newPosition.x),
-                        ValidatedDouble.initialise(newPosition.y)),
-                    scale: ValidatedDouble.initialise(
-                      newPosition.scale,
-                      minimum: _image.scale.minimum,
-                      maximum: _image.scale.maximum,
-                    ),
-                  );
-                  _setImage(newImage);
-                },
-                child: _painter,
               ),
             ),
         ],
@@ -278,15 +268,11 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   }
 
   void _setImage(PositionedImage image) {
-    setState(() {
-      _image = image;
-      _painter = PlantPainter(Plant(
-        diameter: widget.diameter,
-        type: PlantType.image,
-        fill: PlantFill.blank(),
-        image: _image,
-      ));
-    });
+    _image = image;
+    _painter = PositionedImagePainter(PositionedImage(
+        image: image.image,
+        position: Point.blank(),
+        scale: ValidatedDouble.initialise(1)));
   }
 }
 
