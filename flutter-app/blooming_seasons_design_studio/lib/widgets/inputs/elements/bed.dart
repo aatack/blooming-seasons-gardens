@@ -228,7 +228,7 @@ class BedPainter extends PainterGroup {
 
   BedPainter(this.bed)
       : super(
-          Offset(bed.origin.x.output, bed.origin.y.output),
+          bed.origin.offset,
           bed.instances
               .map(
                 (instance) => InstancePainter(instance),

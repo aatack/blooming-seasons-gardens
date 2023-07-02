@@ -224,7 +224,7 @@ class InstancePainter extends Painter {
   late final Painter _child;
 
   InstancePainter(this.instance) {
-    _offset = Offset(instance.position.x.output, instance.position.y.output);
+    _offset = instance.position.offset;
 
     if (instance.element is Plant) {
       _child = PlantPainter(instance.element as Plant);

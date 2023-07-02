@@ -23,4 +23,6 @@ class Point {
   static Point blank() {
     return Point(ValidatedDouble.initialise(0), ValidatedDouble.initialise(0));
   }
+
+  Offset get offset => Offset(x.output, y.output);
 }

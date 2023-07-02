@@ -63,7 +63,7 @@ class ArrowPainter extends Painter {
   late final Path _path;
 
   ArrowPainter(this.arrow) {
-    _source = Offset(arrow.source.x.output, arrow.source.y.output);
+    _source = arrow.source.offset;
 
     _paint = Paint()
       ..color = Colors.black
