@@ -140,3 +140,33 @@ abstract class Painter {
 
   int? hitTest(Offset position);
 }
+
+class PainterGroup extends Painter {
+  final Offset offset;
+  final List<Painter> children;
+
+  PainterGroup(this.offset, this.children);
+
+  @override
+  int? hitTest(Offset position) {
+    for (final child in children) {
+      final hitResult = child.hitTest(position - offset);
+      if (hitResult != null) {
+        return hitResult;
+      }
+    }
+    return null;
+  }
+
+  @override
+  void paint(Canvas canvas) {
+    canvas.save();
+    canvas.translate(offset.dx, offset.dy);
+
+    for (final child in children) {
+      child.paint(canvas);
+    }
+
+    canvas.restore();
+  }
+}

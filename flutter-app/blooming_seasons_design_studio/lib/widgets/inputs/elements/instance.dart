@@ -1,6 +1,7 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
+import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -213,5 +214,22 @@ class _InstanceEditorState extends State<InstanceEditor> {
     }
 
     return FormLayoutItem(child: content);
+  }
+}
+
+class InstancePainter extends Painter {
+  final Instance instance;
+
+  InstancePainter(this.instance);
+
+  @override
+  int? hitTest(Offset position) {
+    // TODO: implement hitTest
+    throw UnimplementedError();
+  }
+
+  @override
+  void paint(Canvas canvas) {
+    // TODO: implement paint
   }
 }

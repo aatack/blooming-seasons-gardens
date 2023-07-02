@@ -4,6 +4,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
+import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -220,4 +221,18 @@ class AddElementModal extends StatelessWidget {
       ),
     );
   }
+}
+
+class BedPainter extends PainterGroup {
+  final Bed bed;
+
+  BedPainter(this.bed)
+      : super(
+          Offset(bed.origin.x.value, bed.origin.y.value),
+          bed.instances
+              .map(
+                (instance) => InstancePainter(instance),
+              )
+              .toList(),
+        );
 }
