@@ -22,142 +22,51 @@ class _PlannerState extends State<Planner> {
           _position = newPosition;
         });
       },
-      children: [
-        OverflowBox(
-          minWidth: 0,
-          maxWidth: double.infinity,
-          minHeight: 0,
-          maxHeight: double.infinity,
-          alignment: Alignment.topLeft,
-          child: Transform.translate(
-            offset: const Offset(-50, -50),
-            child: GestureDetector(
-              onTap: () {
-                print("Clicked circle");
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.red,
-                  border: Border.all(color: Colors.black, width: 2),
-                ),
-              ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            print("Clicked");
-          },
-          child: CustomPaint(
-            painter: LinePainter(
-              startPoint: Offset(50, 50), // Starting position of the line
-              endPoint: Offset(200, 200), // Ending position of the line
-              color: Colors.black, // Color of the line
-              strokeWidth: 2.0, // Width of the line
-            ),
-          ),
-        ),
-        MyWidget(),
-      ],
+      child: PlantPainter(),
     );
   }
 }
 
-class LinePainter extends CustomPainter {
-  final Offset startPoint;
-  final Offset endPoint;
-  final Color color;
-  final double strokeWidth;
+class PlantPainter extends Painter {
+  @override
+  void paint(Canvas canvas) {
+    canvas.save();
+    canvas.translate(-100, -100);
+    canvas.scale(2);
 
-  LinePainter({
-    required this.startPoint,
-    required this.endPoint,
-    required this.color,
-    required this.strokeWidth,
-  });
+    canvas.drawCircle(Offset.zero, 20, Paint()..color = Colors.blue);
+
+    canvas.restore();
+  }
 
   @override
-  void paint(Canvas canvas, Size size) {
+  int? hitTest(Offset position) {
+    return null;
+  }
+}
+
+class ArrowPainter extends Painter {
+  final Offset start = Offset(50, 50);
+  final Offset end = Offset(200, 200);
+  final Color colour = Colors.black;
+  final double thickness = 2;
+
+  @override
+  void paint(Canvas canvas) {
     final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
+      ..color = colour
+      ..strokeWidth = thickness
       ..style = PaintingStyle.stroke;
 
     final path = Path()
-      ..moveTo(startPoint.dx, startPoint.dy)
-      ..lineTo(endPoint.dx, endPoint.dy);
+      ..moveTo(start.dx, start.dy)
+      ..lineTo(end.dx, end.dy);
 
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-
-  @override
-  bool? hitTest(Offset position) {
-    // TODO: implement hitTest
-    return super.hitTest(position);
-  }
-}
-
-class OuterPainter extends CustomPainter {
-  final CustomPainter inner;
-
-  const OuterPainter(this.inner);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Outer painting operations
-    // ...
-
-    // Nesting a child custom painter
-
-    canvas.save();
-    canvas.translate(-100, -100);
-    canvas.scale(2);
-
-    inner.paint(canvas, size);
-
-    canvas.restore();
-
-    // More outer painting operations
-    canvas.drawCircle(Offset.zero, 20, Paint()..color = Colors.blue);
-    // ...
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-
-  @override
-  bool? hitTest(Offset position) {
-    return super.hitTest(position);
-  }
-}
-
-class InnerPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(Offset.zero, 20,
-        Paint()..color = Colors.green); // Example drawing in the outer painter
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-
-  @override
-  bool? hitTest(Offset position) {
-    return super.hitTest(position);
-  }
-}
-
-class MyWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: OuterPainter(InnerPainter()),
-    );
+  int? hitTest(Offset position) {
+    return null;
   }
 }

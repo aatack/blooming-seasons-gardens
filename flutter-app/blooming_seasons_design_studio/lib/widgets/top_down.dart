@@ -14,13 +14,13 @@ class TopDown extends StatefulWidget {
   final TopDownPosition position;
   final void Function(TopDownPosition) setPosition;
 
-  final List<Widget> children;
+  final Painter child;
 
   const TopDown(
       {super.key,
       required this.position,
       required this.setPosition,
-      required this.children});
+      required this.child});
 
   @override
   State<TopDown> createState() => _TopDownState();
@@ -114,9 +114,29 @@ class _TopDownState extends State<TopDown> {
           alignment: Alignment.topLeft,
           scale: widget.position.scale,
           transformHitTests: true,
-          child: Stack(children: widget.children),
+          child: CustomPaint(painter: _TopDownPainter(widget.child)),
         ),
       ),
     );
   }
+}
+
+class _TopDownPainter extends CustomPainter {
+  final Painter child;
+
+  const _TopDownPainter(this.child);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    child.paint(canvas);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+abstract class Painter {
+  void paint(Canvas canvas);
+
+  int? hitTest(Offset position);
 }
