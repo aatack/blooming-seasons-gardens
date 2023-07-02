@@ -7,6 +7,7 @@ import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/positioned_image.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -214,86 +215,29 @@ class _PlantImageEditorModal extends StatefulWidget {
 }
 
 class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
-  late CachedImage? _image;
-
-  late Point _position;
-  late ValidatedDouble _scale;
+  late PositionedImage _image;
 
   @override
   void initState() {
     super.initState();
 
-    _image = widget.image.image;
-    _position = widget.image.position;
-    _scale = widget.image.scale;
+    _image = widget.image;
   }
 
   @override
   Widget build(BuildContext context) {
     return _wrapInModal(
       context,
-      FormLayout(
-        children: [
-          FormLayoutItem(
-            label: const Text("Image"),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _image == null
-                    ? Button(
-                        onClicked: () async {
-                          final image = await uploadImage();
-
-                          if (image != null) {
-                            setState(() {
-                              /* At this point, the change has not yet been
-                                committed; so we don't want to cache the image
-                                in the garden yet.  Instead we save its ID as
-                                null, to denote that a change in the image has
-                                occurred. */
-                              _image = image;
-                            });
-                          }
-                        },
-                        child: const Text("Upload image"),
-                      )
-                    : Button(
-                        onClicked: () {
-                          setState(() {
-                            _image = null;
-                          });
-                        },
-                        child: const Text("Reset image"),
-                      ),
-              ],
-            ),
-          ),
-          ...pointInput(
-            label: "Position",
-            point: _position,
-            setPoint: (newPosition, _) {
-              setState(() {
-                _position = newPosition;
-              });
-            },
-          ),
-          FormLayoutItem(
-            label: const Text("Scale"),
-            child: validatedTextInput(
-              _scale,
-              (newScale, transient) {
-                setState(() {
-                  _scale = newScale;
-                });
-              },
-            ),
-          ),
-          // TODO: include a preview of the plant
-        ],
-      ),
+      PositionedImageInput(
+          image: _image,
+          setImage: (newImage, _) {
+            setState(() {
+              _image = newImage;
+            });
+          }),
       () {
         widget.setImage(
-          PositionedImage(image: _image, position: _position, scale: _scale),
+          _image,
         );
       },
     );
