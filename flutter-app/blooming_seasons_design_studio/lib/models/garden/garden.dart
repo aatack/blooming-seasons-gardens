@@ -181,6 +181,10 @@ class Garden {
     throw Exception("Could not find instance with ID $instanceID");
   }
 
+  Garden withBackground(PositionedImage newBackground) {
+    return Garden(name, _beds, nursery, newBackground, availableID, _images);
+  }
+
   /// Cache an image, then update the garden with the resulting image ID.
   Garden withImages(List<CachedImage> newImages,
       Garden Function(Garden, List<CachedImage>) update) {

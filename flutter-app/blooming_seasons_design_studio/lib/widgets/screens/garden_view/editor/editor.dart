@@ -50,7 +50,8 @@ class _EditorState extends State<Editor> {
                 GardenTab(beds: widget.garden.beds),
               if (_tab == _EditorTab.nursery)
                 NurseryTab(nursery: widget.garden.nursery),
-              if (_tab == _EditorTab.background) const BackgroundTab(),
+              if (_tab == _EditorTab.background)
+                BackgroundTab(background: widget.garden.background),
             ],
           ),
         ),
