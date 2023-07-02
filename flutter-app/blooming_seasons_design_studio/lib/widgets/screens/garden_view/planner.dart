@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/bed.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,12 @@ class Planner extends StatefulWidget {
 
   Planner({super.key, required this.garden}) {
     painter = PainterGroup(
-        const Offset(0, 0), garden.beds.map((bed) => BedPainter(bed)).toList(),
-        paintBackground: (canvas) => garden.background.paint(canvas));
+      const Offset(0, 0),
+      [
+        PositionedImagePainter(garden.background),
+        ...garden.beds.map((bed) => BedPainter(bed)).toList()
+      ],
+    );
   }
 
   @override

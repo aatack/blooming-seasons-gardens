@@ -333,7 +333,7 @@ class PlantPainter extends Painter {
 
   late final double _radius;
 
-  ui.Image? _image;
+  late final PositionedImagePainter _imagePainter;
 
   PlantPainter(this.plant) {
     _outlinePaint = Paint()
@@ -347,9 +347,7 @@ class PlantPainter extends Painter {
 
     _radius = plant.diameter.output * 0.5;
 
-    if (plant.type == PlantType.image && plant.image.image != null) {
-      _image = plant.image.image!.image;
-    }
+    _imagePainter = PositionedImagePainter(plant.image);
 
     _clipPath = Path()
       ..addOval(Rect.fromCircle(center: Offset.zero, radius: _radius));
@@ -364,7 +362,7 @@ class PlantPainter extends Painter {
       canvas.save();
       canvas.clipPath(_clipPath);
 
-      plant.image.paint(canvas);
+      _imagePainter.paint(canvas);
 
       canvas.restore();
     }

@@ -1,5 +1,6 @@
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/structs/point.dart';
+import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
 
 import '../../images.dart';
@@ -36,13 +37,25 @@ class PositionedImage {
         position: Point.blank(),
         scale: ValidatedDouble.initialise(1, minimum: 0));
   }
+}
 
+class PositionedImagePainter extends Painter {
+  final PositionedImage image;
+
+  PositionedImagePainter(this.image);
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+
+  @override
   void paint(Canvas canvas) {
-    if (image != null) {
+    if (image.image != null) {
       canvas.save();
-      canvas.scale(scale.output);
+      canvas.scale(image.scale.output);
 
-      canvas.drawImage(image!.image, position.offset, Paint());
+      canvas.drawImage(image.image!.image, image.position.offset, Paint());
 
       canvas.restore();
     }
