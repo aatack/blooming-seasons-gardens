@@ -13,6 +13,10 @@ class TopDownPosition {
     return Offset(
         (screenPosition.dx - x) / scale, (screenPosition.dy - y) / scale);
   }
+
+  double worldDistance(double screenDistance) {
+    return screenDistance / scale;
+  }
 }
 
 class TopDown extends StatefulWidget {

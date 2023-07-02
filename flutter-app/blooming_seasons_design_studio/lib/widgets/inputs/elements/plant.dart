@@ -273,6 +273,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
 class _PreviewPainter extends Painter {
   static const double size = 300; // Width and height of the preview
+  static const Offset reticleCentre = Offset(size / 2, size / 2);
 
   final CachedImage? image;
   final TopDownPosition position;
@@ -297,6 +298,17 @@ class _PreviewPainter extends Painter {
   @override
   void paint(Canvas canvas) {
     _imagePainter.paint(canvas);
+
+    final outline = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = position.worldDistance(3);
+
+    canvas.drawCircle(
+      position.worldPosition(reticleCentre),
+      position.worldDistance(size / 3),
+      outline,
+    );
   }
 }
 
