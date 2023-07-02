@@ -229,15 +229,14 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
   @override
   Widget build(BuildContext context) {
-    final transformedPosition = TopDownPosition(
-        _PreviewPainter.reticleCentre.dx + (_image.position.x.output * 1),
-        _PreviewPainter.reticleCentre.dy + (_image.position.y.output * 1),
-        1);
+    final transformedPosition = _transform(_image);
 
     return _wrapInModal(
       context,
       Column(
         children: [
+          Text(
+              "x=${transformedPosition.x} y=${transformedPosition.y} scale=${transformedPosition.scale}"),
           PositionedImageInput(
             image: _image,
             setImage: (newImage, _) {
@@ -258,15 +257,15 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                     position: transformedPosition,
                     setPosition: (newPosition) {
                       setState(() {
-                        final reticleCentre = newPosition
-                            .worldPosition(_PreviewPainter.reticleCentre);
+                        // final reticleCentre = newPosition
+                        //     .worldPosition(_PreviewPainter.reticleCentre);
 
-                        _image = PositionedImage(
-                            image: _image.image,
-                            position: Point(
-                                ValidatedDouble.initialise(-reticleCentre.dx),
-                                ValidatedDouble.initialise(-reticleCentre.dy)),
-                            scale: ValidatedDouble.initialise(1));
+                        // _image = PositionedImage(
+                        //     image: _image.image,
+                        //     position: Point(
+                        //         ValidatedDouble.initialise(-reticleCentre.dx),
+                        //         ValidatedDouble.initialise(-reticleCentre.dy)),
+                        //     scale: ValidatedDouble.initialise(1));
                       });
                     },
                     child: _PreviewPainter(_image.image, transformedPosition),
@@ -282,6 +281,28 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
         );
       },
     );
+  }
+
+  TopDownPosition _transform(PositionedImage position) {
+    /* Converts the image's transform to a reticle transform.
+    
+      To derive this, consider the position and size in pixel space (ie. where
+      each pixel of the image is one unit) of both the clip path and the
+      reticle.  Note that both must be equal; from this set of equalities, the
+      relationship between the two transforms can be calculated. */
+
+    final scale = (2 *
+            _PreviewPainter.reticleRadius *
+            position.scale.output *
+            position.image!.image.width) /
+        widget.diameter.output;
+
+    final x = _PreviewPainter.reticleCentre.dx +
+        ((scale / position.scale.output) * position.position.x.output);
+    final y = _PreviewPainter.reticleCentre.dy +
+        ((scale / position.scale.output) * position.position.y.output);
+
+    return TopDownPosition(x, y, scale);
   }
 }
 
@@ -315,7 +336,7 @@ class _PreviewPainter extends Painter {
     _imagePainter.paint(canvas);
 
     final outline = Paint()
-      ..color = Colors.white
+      ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = position.worldDistance(3);
 
