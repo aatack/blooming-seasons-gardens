@@ -11,6 +11,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';
+import '../../top_down.dart';
 import '../point.dart';
 
 class PlantEditor extends StatelessWidget {
@@ -327,4 +328,26 @@ Widget _wrapInModal(
       ],
     ),
   );
+}
+
+class PlantPainter extends Painter {
+  final Plant plant;
+
+  PlantPainter(this.plant);
+
+  @override
+  void paint(Canvas canvas) {
+    canvas.save();
+    canvas.translate(-100, -100);
+    canvas.scale(2);
+
+    canvas.drawCircle(Offset.zero, 20, Paint()..color = Colors.blue);
+
+    canvas.restore();
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
 }

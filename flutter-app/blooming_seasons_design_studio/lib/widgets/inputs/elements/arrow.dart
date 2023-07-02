@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Element;
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/instance.dart';
 import '../../../models/structs/point.dart';
+import '../../top_down.dart';
 import '../point.dart';
 
 class ArrowEditor extends StatelessWidget {
@@ -54,6 +55,28 @@ class ArrowEditor extends StatelessWidget {
   }
 }
 
-// class ArrowPlanner extends StatelessWidget {
+class ArrowPainter extends Painter {
+  final Offset start = Offset(50, 50);
+  final Offset end = Offset(200, 200);
+  final Color colour = Colors.black;
+  final double thickness = 2;
 
-// }
+  @override
+  void paint(Canvas canvas) {
+    final paint = Paint()
+      ..color = colour
+      ..strokeWidth = thickness
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..moveTo(start.dx, start.dy)
+      ..lineTo(end.dx, end.dy);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+}

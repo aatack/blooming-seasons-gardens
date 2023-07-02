@@ -220,16 +220,31 @@ class _InstanceEditorState extends State<InstanceEditor> {
 class InstancePainter extends Painter {
   final Instance instance;
 
-  InstancePainter(this.instance);
+  late final Offset _offset;
+  late final Painter _child;
+
+  InstancePainter(this.instance) {
+    _offset = Offset(instance.position.x.value, instance.position.y.value);
+
+    if (instance.element is Plant) {
+      _child = PlantPainter(instance.element as Plant);
+    } else {
+      throw UnimplementedError();
+    }
+  }
 
   @override
   int? hitTest(Offset position) {
-    // TODO: implement hitTest
-    throw UnimplementedError();
+    return _child.hitTest(position - _offset);
   }
 
   @override
   void paint(Canvas canvas) {
-    // TODO: implement paint
+    canvas.save();
+    canvas.translate(_offset.dx, _offset.dy);
+
+    _child.paint(canvas);
+
+    canvas.restore();
   }
 }
