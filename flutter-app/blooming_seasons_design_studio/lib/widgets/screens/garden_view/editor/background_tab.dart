@@ -26,6 +26,8 @@ class BackgroundTab extends StatelessWidget {
                 PositionedImageInput(
                   image: background,
                   setImage: (newBackground, transient) {
+                    /* TODO: this code could be made a lot cleaner if the `withImages`
+                      method were modified to also take nulls in the list of images. */
                     if (newBackground.image != null &&
                         newBackground.image!.id == null) {
                       context.read<SessionState>().editGarden((garden) {
