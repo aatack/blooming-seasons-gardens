@@ -1,10 +1,13 @@
+import 'package:blooming_seasons_design_studio/widgets/inputs/elements/bed.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/garden/garden.dart';
+
 class Planner extends StatefulWidget {
-  const Planner({
-    super.key,
-  });
+  final Garden garden;
+
+  const Planner({super.key, required this.garden});
 
   @override
   State<Planner> createState() => _PlannerState();
@@ -22,7 +25,8 @@ class _PlannerState extends State<Planner> {
           _position = newPosition;
         });
       },
-      child: PlantPainter(),
+      child: PainterGroup(Offset(0, 0),
+          widget.garden.beds.map((bed) => BedPainter(bed)).toList()),
     );
   }
 }
