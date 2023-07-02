@@ -239,13 +239,15 @@ dynamic serialiseGarden(Garden garden) {
 ///
 /// The format of the passed object should mirror that of the return format
 /// of the `serialise` function.
-Garden deserialiseGarden(dynamic garden) {
-  final images = Map<int, CachedImage>.from(
-    garden["images"].map(
-      (id, image) => MapEntry(
-          int.parse(id), CachedImage.deserialise(int.parse(id), image)),
-    ),
-  );
+Future<Garden> deserialiseGarden(dynamic garden) async {
+  // Something to do with this being async prevents it from being written as
+  // a map; not quite sure what
+  final Map<int, CachedImage> images = {};
+  for (final MapEntry<String, dynamic> entry in garden["images"].entries) {
+    final id = int.parse(entry.key);
+    final image = await CachedImage.deserialise(id, entry.value);
+    images[id] = image;
+  }
 
   // Elements in the nursery should never themselves utilise the nursery
   final nursery = deserialiseBed(garden["nursery"], {}, images);

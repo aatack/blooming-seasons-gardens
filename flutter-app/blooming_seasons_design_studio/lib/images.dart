@@ -52,7 +52,7 @@ class CachedImage {
     return string;
   }
 
-  static CachedImage deserialise(int id, String image) {
+  static Future<CachedImage> deserialise(int id, String image) async {
     return CachedImage(id, image, _stringToWidgetImage(image));
   }
 }
