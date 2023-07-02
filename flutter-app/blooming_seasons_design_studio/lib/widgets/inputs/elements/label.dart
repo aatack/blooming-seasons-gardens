@@ -72,6 +72,8 @@ class LabelPainter extends Painter {
         color: Colors.black,
         fontSize: label.size.value,
         fontWeight: FontWeight.bold,
+        fontFamily: "Spectral",
+        fontFamilyFallback: const ["Arial"],
       ),
     );
 
