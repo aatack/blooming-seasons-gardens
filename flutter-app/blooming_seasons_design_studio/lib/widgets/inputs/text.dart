@@ -174,7 +174,7 @@ Widget
     child: Padding(
       padding: const EdgeInsets.only(left: 5, right: 3),
       child: ControlledTextInput(
-        value: value.string,
+        value: value.input,
         onChange: (newString, transient) {
           setValue(value.set(newString), transient);
         },

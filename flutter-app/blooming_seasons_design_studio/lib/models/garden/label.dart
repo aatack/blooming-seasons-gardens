@@ -14,7 +14,7 @@ class Label implements Element {
   dynamic serialise() {
     return {
       "elementType": "label",
-      "text": text.string,
+      "text": text.input,
       "size": size.serialise(),
     };
   }
