@@ -250,15 +250,16 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                 position: TopDownPosition(_image.position.x.output,
                     _image.position.y.output, _image.scale.output),
                 setPosition: (newPosition) {
+                  final newImage = PositionedImage(
+                      image: _image.image,
+                      position: Point(ValidatedDouble.initialise(newPosition.x),
+                          ValidatedDouble.initialise(newPosition.y)),
+                      scale: ValidatedDouble.initialise(newPosition.scale,
+                          minimum: _image.scale.minimum,
+                          maximum: _image.scale.maximum));
                   setState(() {
-                    _image = PositionedImage(
-                        image: _image.image,
-                        position: Point(
-                            ValidatedDouble.initialise(newPosition.x),
-                            ValidatedDouble.initialise(newPosition.y)),
-                        scale: ValidatedDouble.initialise(newPosition.scale,
-                            minimum: _image.scale.minimum,
-                            maximum: _image.scale.maximum));
+                    _image = newImage;
+                    _painter = PlantPainter(widget.plant.withImage(_image));
                   });
                 },
                 child: _painter,
