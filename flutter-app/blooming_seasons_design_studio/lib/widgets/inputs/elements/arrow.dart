@@ -59,26 +59,25 @@ class ArrowPainter extends Painter {
   final Arrow arrow;
 
   late final Offset _source;
-
-  final Color colour = Colors.black;
-  final double thickness = 2;
+  late final Paint _paint;
+  late final Path _path;
 
   ArrowPainter(this.arrow) {
     _source = Offset(arrow.source.x.output, arrow.source.y.output);
+
+    _paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = arrow.thickness.output
+      ..style = PaintingStyle.stroke;
+
+    _path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(_source.dx, _source.dy);
   }
 
   @override
   void paint(Canvas canvas) {
-    final paint = Paint()
-      ..color = colour
-      ..strokeWidth = thickness
-      ..style = PaintingStyle.stroke;
-
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(_source.dx, _source.dy);
-
-    canvas.drawPath(path, paint);
+    canvas.drawPath(_path, _paint);
   }
 
   @override
