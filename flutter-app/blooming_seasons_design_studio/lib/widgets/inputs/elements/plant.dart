@@ -338,6 +338,7 @@ class PlantPainter extends Painter {
 
   late final Paint _outlinePaint;
   late final Paint _fillPaint;
+  late final Path _clipPath;
 
   late final double _radius;
 
@@ -358,6 +359,10 @@ class PlantPainter extends Painter {
     if (plant.type == PlantType.image && plant.image.image != null) {
       _image = plant.image.image!.image;
     }
+
+    _clipPath = Path()
+      ..addOval(Rect.fromCircle(
+          center: plant.image.position.offset, radius: _radius));
   }
 
   @override
@@ -366,7 +371,13 @@ class PlantPainter extends Painter {
       canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
       canvas.drawCircle(Offset.zero, _radius, _fillPaint);
     } else if (_image != null) {
+      canvas.save();
+      canvas.clipPath(_clipPath);
+      canvas.scale(1 / plant.image.scale.output);
+
       canvas.drawImage(_image!, Offset.zero, Paint());
+
+      canvas.restore();
     }
   }
 
