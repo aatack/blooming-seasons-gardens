@@ -22,7 +22,7 @@ class Label implements Element {
   static Label blank() {
     return const Label(
       text: UnvalidatedString("Label"),
-      size: ValidatedDouble("0"),
+      size: ValidatedDouble("20"),
     );
   }
 }
