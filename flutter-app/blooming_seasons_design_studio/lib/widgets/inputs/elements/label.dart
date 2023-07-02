@@ -62,7 +62,22 @@ class LabelEditor extends StatelessWidget {
 class LabelPainter extends Painter {
   final Label label;
 
-  LabelPainter(this.label) {}
+  late final TextSpan _text;
+  late final TextPainter _painter;
+
+  LabelPainter(this.label) {
+    _text = TextSpan(
+      text: label.text.value,
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: label.size.value,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+
+    _painter = TextPainter(text: _text, textDirection: TextDirection.ltr);
+    _painter.layout();
+  }
 
   @override
   int? hitTest(Offset position) {
@@ -71,17 +86,6 @@ class LabelPainter extends Painter {
 
   @override
   void paint(Canvas canvas) {
-    final text = TextSpan(
-      text: "Hello world",
-      style: TextStyle(
-          color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-    );
-
-    final textPainter =
-        TextPainter(text: text, textDirection: TextDirection.ltr);
-
-    textPainter.layout();
-
-    textPainter.paint(canvas, const Offset(0, 0));
+    _painter.paint(canvas, const Offset(0, 0));
   }
 }
