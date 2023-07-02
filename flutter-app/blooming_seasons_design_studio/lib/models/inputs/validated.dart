@@ -98,7 +98,7 @@ class ValidatedDouble extends Validated<double, ValidatedDouble> {
 
   static ValidatedDouble deserialise(Map<String, dynamic> validated) {
     return ValidatedDouble(
-      validated["string"],
+      validated["input"],
       validated["output"],
       minimum: validated.containsKey("minimum") ? validated["minimum"] : null,
       maximum: validated.containsKey("maximum") ? validated["maximum"] : null,
