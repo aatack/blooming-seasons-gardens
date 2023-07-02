@@ -56,10 +56,16 @@ class ArrowEditor extends StatelessWidget {
 }
 
 class ArrowPainter extends Painter {
-  final Offset start = Offset(50, 50);
-  final Offset end = Offset(200, 200);
+  final Arrow arrow;
+
+  late final Offset _source;
+
   final Color colour = Colors.black;
   final double thickness = 2;
+
+  ArrowPainter(this.arrow) {
+    _source = Offset(arrow.source.x.value, arrow.source.y.value);
+  }
 
   @override
   void paint(Canvas canvas) {
@@ -69,8 +75,8 @@ class ArrowPainter extends Painter {
       ..style = PaintingStyle.stroke;
 
     final path = Path()
-      ..moveTo(start.dx, start.dy)
-      ..lineTo(end.dx, end.dy);
+      ..moveTo(0, 0)
+      ..lineTo(_source.dx, _source.dy);
 
     canvas.drawPath(path, paint);
   }

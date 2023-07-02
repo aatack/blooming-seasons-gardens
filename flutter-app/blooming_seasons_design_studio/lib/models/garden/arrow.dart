@@ -29,7 +29,9 @@ class Arrow implements Element {
   }
 
   static Arrow blank() {
-    return Arrow(source: Point.blank(), thickness: const ValidatedDouble("1"));
+    return const Arrow(
+        source: Point(ValidatedDouble("10"), ValidatedDouble("10")),
+        thickness: ValidatedDouble("1"));
   }
 }
 
