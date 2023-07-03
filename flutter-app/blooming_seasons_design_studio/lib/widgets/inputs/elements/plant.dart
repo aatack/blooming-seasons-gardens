@@ -234,44 +234,48 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
     final transformedPosition = _transform(_image);
 
     return wrapInModal(
-        context,
-        Column(
-          children: [
-            PositionedImageInput(
-              image: _image,
-              setImage: (newImage, _) {
-                setState(() {
-                  _image = newImage;
-                });
-                ;
-              },
-            ),
-            if (_image.image != null)
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ClipRect(
-                  child: SizedBox(
-                    width: _PreviewPainter.size,
-                    height: _PreviewPainter.size,
-                    child: TopDown(
-                      position: transformedPosition,
-                      setPosition: (newPosition) {
-                        setState(() {
-                          _image = _inverseTransform(newPosition, _image.image);
-                        });
-                      },
-                      child: _PreviewPainter(_image.image, transformedPosition),
-                    ),
+      context,
+      Column(
+        children: [
+          PositionedImageInput(
+            image: _image,
+            setImage: (newImage, _) {
+              setState(() {
+                _image = newImage;
+              });
+            },
+          ),
+          /* TODO: validate the scale as strictly greater than, instead of 
+            greater than or equal to. */
+          if (_image.image != null && _image.scale.output > 0)
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ClipRect(
+                child: SizedBox(
+                  width: _PreviewPainter.size,
+                  height: _PreviewPainter.size,
+                  child: TopDown(
+                    position: transformedPosition,
+                    setPosition: (newPosition) {
+                      setState(() {
+                        _image = _inverseTransform(newPosition, _image.image);
+                      });
+                    },
+                    child: _PreviewPainter(_image.image, transformedPosition),
                   ),
                 ),
               ),
-          ],
-        ), onConfirm: () {
-      closeModal(context);
-      widget.setImage(_image);
-    }, onCancel: () {
-      closeModal(context);
-    });
+            ),
+        ],
+      ),
+      onConfirm: () {
+        closeModal(context);
+        widget.setImage(_image);
+      },
+      onCancel: () {
+        closeModal(context);
+      },
+    );
   }
 
   TopDownPosition _transform(PositionedImage position) {
