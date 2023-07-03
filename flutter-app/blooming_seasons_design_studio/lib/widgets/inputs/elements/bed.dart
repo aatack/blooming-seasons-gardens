@@ -4,6 +4,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
+import 'package:blooming_seasons_design_studio/widgets/screens/garden_view/editor/nursery_tab.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -214,6 +215,22 @@ class AddElementModal extends StatelessWidget {
               context.read<ModalsState>().pop();
               context.read<SessionState>().editGarden(
                   (garden) => garden.addInstance(bed.id, Arrow.blank()));
+            },
+            child: const Text("Arrow"),
+          ),
+          const SizedBox(height: 8),
+          Button(
+            onClicked: () {
+              final modals = context.read<ModalsState>();
+              modals.add(NurseryModal(
+                onSelect: (instance) {
+                  modals.clear();
+                  // TODO: add a new instance to the current bed
+                },
+                onCancel: () {
+                  modals.pop();
+                },
+              ));
             },
             child: const Text("Arrow"),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/bed.dart';
+import '../../../../models/garden/instance.dart';
 import '../../../inputs/button.dart';
 import '../../../inputs/elements/bed.dart';
 import '../../../inputs/elements/instance.dart';
@@ -45,4 +46,19 @@ class NurseryTab extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class NurseryModal extends StatelessWidget {
+  final void Function(Instance) onSelect;
+  final void Function() onCancel;
+
+  const NurseryModal({required this.onSelect, required this.onCancel});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
 }
