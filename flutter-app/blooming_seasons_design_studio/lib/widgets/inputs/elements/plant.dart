@@ -241,7 +241,32 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
             image: _image,
             setImage: (newImage, _) {
               setState(() {
-                _image = newImage;
+                if (newImage.image == null) {
+                  _image = newImage;
+                } else {
+                  /* Reset the scales to sensible values, putting the reticle
+                    approximately in the middle of the image.
+                    
+                    NOTE: this isn't quite accurate, as the scale appears to
+                    be a little on the small side.  It's not quite clear
+                    exactly why this is.  Furthermore, setting the scale and
+                    position via the text boxes doesn't work as intended. */
+                  final approximateScale =
+                      widget.diameter.output / newImage.image!.image.width;
+
+                  _image = PositionedImage(
+                    image: newImage.image,
+                    position: Point(
+                      ValidatedDouble.initialise(-0.5 *
+                          newImage.image!.image.width *
+                          approximateScale),
+                      ValidatedDouble.initialise(-0.5 *
+                          newImage.image!.image.height *
+                          approximateScale),
+                    ),
+                    scale: newImage.scale,
+                  );
+                }
               });
             },
           ),
