@@ -1,4 +1,6 @@
+import 'package:blooming_seasons_design_studio/models/garden/garden.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/widgets/wrappers/modals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,17 +50,37 @@ class NurseryTab extends StatelessWidget {
   }
 }
 
-
 class NurseryModal extends StatelessWidget {
+  final Garden garden;
   final void Function(Instance) onSelect;
   final void Function() onCancel;
 
-  const NurseryModal({required this.onSelect, required this.onCancel});
+  const NurseryModal(
+      {super.key,
+      required this.onSelect,
+      required this.onCancel,
+      required this.garden});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return wrapInModal(
+      context,
+      Column(
+        children: [
+          ...garden.nursery.instances.map((instance) => InstanceEditor(
+                key: Key(instance.id.toString()),
+                instance: instance,
+                hidePosition: true,
+              )),
+          Button(
+              onClicked: () {
+                context
+                    .read<ModalsState>()
+                    .add(AddElementModal(bed: garden.nursery));
+              },
+              child: const Text("Add template")),
+        ],
+      ),
+    );
   }
-
 }

@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/bed.dart';
+import '../../../models/garden/garden.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';
@@ -19,8 +20,9 @@ import '../../wrappers/hoverable.dart';
 
 class BedEditor extends StatefulWidget {
   final Bed bed;
+  final Garden? garden;
 
-  const BedEditor({super.key, required this.bed});
+  const BedEditor({super.key, required this.bed, this.garden});
 
   @override
   State<BedEditor> createState() => _BedEditorState();
@@ -168,9 +170,8 @@ class _BedEditorState extends State<BedEditor> {
                 key: Key(instance.id.toString()), instance: instance)),
             Button(
                 onClicked: () {
-                  context
-                      .read<ModalsState>()
-                      .add(AddElementModal(bed: widget.bed));
+                  context.read<ModalsState>().add(
+                      AddElementModal(bed: widget.bed, garden: widget.garden));
                 },
                 child: const Text("Add element")),
           ],
@@ -182,8 +183,9 @@ class _BedEditorState extends State<BedEditor> {
 
 class AddElementModal extends StatelessWidget {
   final Bed bed;
+  final Garden? garden;
 
-  const AddElementModal({super.key, required this.bed});
+  const AddElementModal({super.key, required this.bed, this.garden});
 
   @override
   Widget build(BuildContext context) {
@@ -218,22 +220,24 @@ class AddElementModal extends StatelessWidget {
             },
             child: const Text("Arrow"),
           ),
-          const SizedBox(height: 8),
-          Button(
-            onClicked: () {
-              final modals = context.read<ModalsState>();
-              modals.add(NurseryModal(
-                onSelect: (instance) {
-                  modals.clear();
-                  // TODO: add a new instance to the current bed
-                },
-                onCancel: () {
-                  modals.pop();
-                },
-              ));
-            },
-            child: const Text("Arrow"),
-          ),
+          if (garden != null) const SizedBox(height: 8),
+          if (garden != null)
+            Button(
+              onClicked: () {
+                final modals = context.read<ModalsState>();
+                modals.add(NurseryModal(
+                  garden: garden!,
+                  onSelect: (instance) {
+                    modals.clear();
+                    // TODO: add a new instance to the current bed
+                  },
+                  onCancel: () {
+                    modals.pop();
+                  },
+                ));
+              },
+              child: const Text("Nursery"),
+            ),
         ],
       ),
     );
