@@ -67,20 +67,16 @@ class NurseryModal extends StatelessWidget {
       context,
       Column(
         children: [
-          ...garden.nursery.instances.map((instance) => InstanceEditor(
-                key: Key(instance.id.toString()),
-                instance: instance,
-                hidePosition: true,
-              )),
-          Button(
-              onClicked: () {
-                context
-                    .read<ModalsState>()
-                    .add(AddElementModal(bed: garden.nursery));
-              },
-              child: const Text("Add template")),
+          ...garden.nursery.instances.map(
+            (instance) => InstanceEditor(
+              key: Key(instance.id.toString()),
+              instance: instance,
+              hidePosition: true,
+            ),
+          ),
         ],
       ),
+      onCancel: onCancel,
     );
   }
 }
