@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/modals.dart';
+import '../inputs/button.dart';
 
 class ModalsWrapper extends StatelessWidget {
   final Widget child;
@@ -45,4 +46,46 @@ class ModalsWrapper extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget wrapInModal(
+  BuildContext context,
+  Widget modal, {
+  void Function()? onConfirm,
+  void Function()? onCancel,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(8),
+    width: 400,
+    color: Colors.grey[100],
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        modal,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (onCancel != null)
+              Button(
+                  onClicked: () {
+                    context.read<ModalsState>().pop();
+                  },
+                  child: const Text("Cancel")),
+            if (onConfirm != null) const SizedBox(width: 8),
+            if (onConfirm != null)
+              Button(
+                  onClicked: () {
+                    onConfirm();
+                    context.read<ModalsState>().pop();
+                  },
+                  child: const Text("Confirm")),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+void closeModal(BuildContext context) {
+  context.read<ModalsState>().pop();
 }

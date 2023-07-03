@@ -17,6 +17,7 @@ import 'dart:ui' as ui;
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';
 import '../../top_down.dart';
+import '../../wrappers/modals.dart';
 import '../point.dart';
 
 class PlantEditor extends StatelessWidget {
@@ -169,39 +170,40 @@ class _PlantFillEditorModalState extends State<_PlantFillEditorModal> {
 
   @override
   Widget build(BuildContext context) {
-    return _wrapInModal(
-      context,
-      FormLayout(
-        children: [
-          FormLayoutItem(
-            label: const Text("Thickness"),
-            child: validatedTextInput(
-              _thickness,
-              (newThickness, transient) {
-                setState(() {
-                  _thickness = newThickness;
-                });
-              },
+    return wrapInModal(
+        context,
+        FormLayout(
+          children: [
+            FormLayoutItem(
+              label: const Text("Thickness"),
+              child: validatedTextInput(
+                _thickness,
+                (newThickness, transient) {
+                  setState(() {
+                    _thickness = newThickness;
+                  });
+                },
+              ),
             ),
-          ),
-          FormLayoutItem(
-            label: const Text("Colour"),
-            child: ColorPicker(
-              pickerColor: _colour,
-              onColorChanged: (newColour) {
-                setState(() {
-                  _colour = newColour;
-                });
-              },
-              enableAlpha: false,
+            FormLayoutItem(
+              label: const Text("Colour"),
+              child: ColorPicker(
+                pickerColor: _colour,
+                onColorChanged: (newColour) {
+                  setState(() {
+                    _colour = newColour;
+                  });
+                },
+                enableAlpha: false,
+              ),
             ),
-          ),
-        ],
-      ),
-      () {
-        widget.setFill(PlantFill(thickness: _thickness, colour: _colour));
-      },
-    );
+          ],
+        ), onConfirm: () {
+      closeModal(context);
+      widget.setFill(PlantFill(thickness: _thickness, colour: _colour));
+    }, onCancel: () {
+      closeModal(context);
+    });
   }
 }
 
@@ -231,44 +233,45 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   Widget build(BuildContext context) {
     final transformedPosition = _transform(_image);
 
-    return _wrapInModal(
-      context,
-      Column(
-        children: [
-          PositionedImageInput(
-            image: _image,
-            setImage: (newImage, _) {
-              setState(() {
-                _image = newImage;
-              });
-              ;
-            },
-          ),
-          if (_image.image != null)
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ClipRect(
-                child: SizedBox(
-                  width: _PreviewPainter.size,
-                  height: _PreviewPainter.size,
-                  child: TopDown(
-                    position: transformedPosition,
-                    setPosition: (newPosition) {
-                      setState(() {
-                        _image = _inverseTransform(newPosition, _image.image);
-                      });
-                    },
-                    child: _PreviewPainter(_image.image, transformedPosition),
+    return wrapInModal(
+        context,
+        Column(
+          children: [
+            PositionedImageInput(
+              image: _image,
+              setImage: (newImage, _) {
+                setState(() {
+                  _image = newImage;
+                });
+                ;
+              },
+            ),
+            if (_image.image != null)
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ClipRect(
+                  child: SizedBox(
+                    width: _PreviewPainter.size,
+                    height: _PreviewPainter.size,
+                    child: TopDown(
+                      position: transformedPosition,
+                      setPosition: (newPosition) {
+                        setState(() {
+                          _image = _inverseTransform(newPosition, _image.image);
+                        });
+                      },
+                      child: _PreviewPainter(_image.image, transformedPosition),
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
-      ),
-      () {
-        widget.setImage(_image);
-      },
-    );
+          ],
+        ), onConfirm: () {
+      closeModal(context);
+      widget.setImage(_image);
+    }, onCancel: () {
+      closeModal(context);
+    });
   }
 
   TopDownPosition _transform(PositionedImage position) {
@@ -348,38 +351,6 @@ class _PreviewPainter extends Painter {
       outline,
     );
   }
-}
-
-Widget _wrapInModal(
-    BuildContext context, Widget modal, void Function() onConfirm) {
-  return Container(
-    padding: const EdgeInsets.all(8),
-    width: 400,
-    color: Colors.grey[100],
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        modal,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Button(
-                onClicked: () {
-                  context.read<ModalsState>().pop();
-                },
-                child: const Text("Cancel")),
-            const SizedBox(width: 8),
-            Button(
-                onClicked: () {
-                  onConfirm();
-                  context.read<ModalsState>().pop();
-                },
-                child: const Text("Confirm")),
-          ],
-        ),
-      ],
-    ),
-  );
 }
 
 class PlantPainter extends Painter {
