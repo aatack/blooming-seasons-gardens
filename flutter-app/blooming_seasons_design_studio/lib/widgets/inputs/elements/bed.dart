@@ -225,17 +225,7 @@ class AddElementModal extends StatelessWidget {
             Button(
               onClicked: () {
                 final modals = context.read<ModalsState>();
-                modals.add(NurseryModal(
-                  garden: garden!,
-                  onSelect: (instance) {
-                    context.read<SessionState>().editGarden((garden) =>
-                        garden.addInstance(bed.id, instance.element));
-                    modals.clear();
-                  },
-                  onCancel: () {
-                    modals.pop();
-                  },
-                ));
+                modals.add(NurseryModal(garden: garden!, bed: bed.id));
               },
               child: const Text("Nursery"),
             ),

@@ -53,14 +53,9 @@ class NurseryTab extends StatelessWidget {
 
 class NurseryModal extends StatelessWidget {
   final Garden garden;
-  final void Function(Instance) onSelect;
-  final void Function() onCancel;
+  final int bed;
 
-  const NurseryModal(
-      {super.key,
-      required this.onSelect,
-      required this.onCancel,
-      required this.garden});
+  const NurseryModal({super.key, required this.garden, required this.bed});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +73,9 @@ class NurseryModal extends StatelessWidget {
                     key: Key(instance.id.toString()),
                     instance: instance,
                     onClick: () {
-                      onSelect(instance);
+                      context.read<SessionState>().editGarden((garden) =>
+                          garden.addInstance(bed, instance.element));
+                      context.read<ModalsState>().clear();
                     },
                   ),
                 ),
@@ -87,7 +84,9 @@ class NurseryModal extends StatelessWidget {
           ),
         ),
       ),
-      onCancel: onCancel,
+      onCancel: () {
+        context.read<ModalsState>().pop();
+      },
     );
   }
 }
