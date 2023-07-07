@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/bed.dart';
 import '../../../../models/garden/instance.dart';
+import '../../../../models/session.dart';
 import '../../../inputs/button.dart';
 import '../../../inputs/elements/bed.dart';
 import '../../../inputs/elements/instance.dart';
@@ -76,7 +77,9 @@ class NurseryModal extends StatelessWidget {
                   (instance) => InstanceSelector(
                     key: Key(instance.id.toString()),
                     instance: instance,
-                    onClick: () {},
+                    onClick: () {
+                      onSelect(instance);
+                    },
                   ),
                 ),
               ],
