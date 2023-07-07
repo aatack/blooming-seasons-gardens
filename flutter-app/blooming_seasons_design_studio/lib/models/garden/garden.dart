@@ -111,7 +111,7 @@ class Garden {
     );
   }
 
-  Garden addInstance(int bedID, Element element) {
+  Garden addInstance(int bedID, Element element, {String? name}) {
     Bed update(Bed bed) {
       return bed.id == bedID
           ? Bed(
@@ -119,7 +119,8 @@ class Garden {
                 ...bed.instances,
                 Instance(
                   id: availableID,
-                  name: "${element.runtimeType.toString()} $availableID",
+                  name:
+                      name ?? "${element.runtimeType.toString()} $availableID",
                   position: Point.blank(),
                   element: element,
                   templateID: null,
@@ -133,7 +134,7 @@ class Garden {
     }
 
     return Garden(
-      name,
+      this.name,
       _beds.map((bed) => update(bed)).toList(),
       update(nursery),
       background,
