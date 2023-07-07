@@ -68,10 +68,10 @@ class NurseryModal extends StatelessWidget {
       Column(
         children: [
           ...garden.nursery.instances.map(
-            (instance) => InstanceEditor(
+            (instance) => InstanceSelector(
               key: Key(instance.id.toString()),
               instance: instance,
-              hidePosition: true,
+              onClick: () {},
             ),
           ),
         ],

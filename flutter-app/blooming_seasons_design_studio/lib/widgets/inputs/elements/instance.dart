@@ -252,3 +252,78 @@ class InstancePainter extends Painter {
     canvas.restore();
   }
 }
+
+class InstanceSelector extends StatelessWidget {
+  final Instance instance;
+  final void Function() onClick;
+  final bool divider;
+
+  const InstanceSelector(
+      {super.key,
+      required this.instance,
+      required this.onClick,
+      this.divider = true});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: factor out commonalities with the editor above
+    final colour = Colors.grey[100]!;
+    final hoverColour = darker(colour, amount: 10);
+    final clickColour = darker(colour, amount: 20);
+
+    return Hoverable(
+      onTap: onClick,
+      builder: (context, hovered, clicked) {
+        return Container(
+          color: clicked
+              ? clickColour
+              : hovered
+                  ? hoverColour
+                  : colour,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (divider) const Divider(height: 0),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: FormLayout(
+                  children: [
+                    _header(context, hovered),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  FormLayoutItem _header(BuildContext context, bool hovered) {
+    late final IconData icon;
+
+    if (instance.element is Plant) {
+      icon = Icons.energy_savings_leaf_outlined;
+    } else if (instance.element is Label) {
+      icon = Icons.label_outline_sharp;
+    } else if (instance.element is Arrow) {
+      icon = Icons.arrow_right_alt_sharp;
+    } else {
+      throw UnimplementedError();
+    }
+
+    return FormLayoutItem(
+      label: Icon(icon),
+      child: Stack(
+        children: [
+          ControlledTextInput(
+            value: instance.name,
+            onChange: (newValue, transient) {},
+            editing: false,
+            onEditingFinished: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
