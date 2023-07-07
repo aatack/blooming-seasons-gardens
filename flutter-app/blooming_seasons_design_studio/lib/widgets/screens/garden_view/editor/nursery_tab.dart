@@ -65,16 +65,24 @@ class NurseryModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return wrapInModal(
       context,
-      Column(
-        children: [
-          ...garden.nursery.instances.map(
-            (instance) => InstanceSelector(
-              key: Key(instance.id.toString()),
-              instance: instance,
-              onClick: () {},
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: SizedBox(
+          height: 250,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ...garden.nursery.instances.map(
+                  (instance) => InstanceSelector(
+                    key: Key(instance.id.toString()),
+                    instance: instance,
+                    onClick: () {},
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
       onCancel: onCancel,
     );
