@@ -111,7 +111,8 @@ class Garden {
     );
   }
 
-  Garden addInstance(int bedID, Element element, {String? name}) {
+  Garden addInstance(int bedID, Element element,
+      {String? name, int? templateID}) {
     Bed update(Bed bed) {
       return bed.id == bedID
           ? Bed(
@@ -123,7 +124,7 @@ class Garden {
                       name ?? "${element.runtimeType.toString()} $availableID",
                   position: Point.blank(),
                   element: element,
-                  templateID: null,
+                  templateID: templateID,
                 )
               ],
               id: bed.id,
@@ -150,8 +151,10 @@ class Garden {
 
     if (parent == nursery.id) {
       return withImages(images ?? [], (garden, newImages) {
-        final newInstance = garden.nursery.instances
-            .firstWhere((instance) => instance.id == id);
+        final newInstance = update(
+            garden.nursery.instances
+                .firstWhere((instance) => instance.id == id),
+            newImages);
 
         return Garden(
           garden.name,
@@ -161,8 +164,8 @@ class Garden {
                       ? instance.withElement(instance.element)
                       : instance))
               .toList(),
-          garden.nursery.updateInstances((instance) =>
-              instance.id == newInstance.id ? newInstance : instance),
+          garden.nursery.updateInstances(
+              (instance) => instance.id == id ? newInstance : instance),
           garden.background,
           garden.availableID,
           garden.images,
