@@ -67,7 +67,7 @@ dynamic serialiseInstance(Instance instance) {
   };
 
   if (instance.templateID != null) {
-    result["template"] = instance.templateID!;
+    result["templateID"] = instance.templateID!;
   } else {
     result["element"] = instance.element.serialise();
   }
@@ -80,8 +80,8 @@ Instance deserialiseInstance(
   Map<int, Element> templates,
   Map<int, CachedImage> images,
 ) {
-  int? template;
-  Element element;
+  late int? template;
+  late Element element;
 
   if (instance.containsKey("templateID")) {
     template = instance["templateID"];

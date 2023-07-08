@@ -161,7 +161,7 @@ class Garden {
           garden.beds
               .map((bed) => bed.updateInstances((instance) =>
                   instance.templateID == id
-                      ? instance.withElement(instance.element)
+                      ? instance.withElement(newInstance.element)
                       : instance))
               .toList(),
           garden.nursery.updateInstances(
