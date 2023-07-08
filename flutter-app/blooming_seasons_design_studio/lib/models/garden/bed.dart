@@ -24,6 +24,11 @@ class Bed {
   Bed rename(String newName) {
     return Bed(_instances, id: id, origin: origin, name: newName);
   }
+
+  Bed updateInstances(Instance Function(Instance) update) {
+    return Bed(_instances.map(update).toList(),
+        id: id, origin: origin, name: name);
+  }
 }
 
 dynamic serialiseBed(Bed bed) {

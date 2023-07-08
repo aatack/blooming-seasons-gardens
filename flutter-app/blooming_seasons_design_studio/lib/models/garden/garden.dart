@@ -146,19 +146,43 @@ class Garden {
   Garden editInstance(
       int id, Instance Function(Instance, List<CachedImage>) update,
       {List<CachedImage>? images}) {
-    return editBed(
-      instanceParent(id),
-      (bed, cachedImages) => Bed(
-        bed.instances
-            .map((instance) =>
-                instance.id == id ? update(instance, cachedImages) : instance)
-            .toList(),
-        id: bed.id,
-        origin: bed.origin,
-        name: bed.name,
-      ),
-      images: images,
-    );
+    final parent = instanceParent(id);
+
+    if (parent == nursery.id) {
+      return withImages(images ?? [], (garden, newImages) {
+        final newInstance = garden.nursery.instances
+            .firstWhere((instance) => instance.id == id);
+
+        return Garden(
+          garden.name,
+          garden.beds
+              .map((bed) => bed.updateInstances((instance) =>
+                  instance.templateID == id
+                      ? instance.withElement(instance.element)
+                      : instance))
+              .toList(),
+          garden.nursery.updateInstances((instance) =>
+              instance.id == newInstance.id ? newInstance : instance),
+          garden.background,
+          garden.availableID,
+          garden.images,
+        );
+      });
+    } else {
+      return editBed(
+        instanceParent(id),
+        (bed, cachedImages) => Bed(
+          bed.instances
+              .map((instance) =>
+                  instance.id == id ? update(instance, cachedImages) : instance)
+              .toList(),
+          id: bed.id,
+          origin: bed.origin,
+          name: bed.name,
+        ),
+        images: images,
+      );
+    }
   }
 
   Garden removeInstance(int id) {
