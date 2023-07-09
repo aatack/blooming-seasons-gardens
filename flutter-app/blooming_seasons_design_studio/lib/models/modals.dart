@@ -14,7 +14,9 @@ class ModalsState extends Cubit<List<Widget>> {
 
   void pop() {
     final List<Widget> updatedState = List.from(state);
-    updatedState.removeLast();
+    if (updatedState.isNotEmpty) {
+      updatedState.removeLast();
+    }
     emit(updatedState);
   }
 
