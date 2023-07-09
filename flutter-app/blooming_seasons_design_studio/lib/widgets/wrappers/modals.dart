@@ -22,24 +22,27 @@ class ModalsWrapper extends StatelessWidget {
             children: [
               child,
               if (state.isNotEmpty)
-                GestureDetector(
-                  onTap: () {
-                    context.read<ModalsState>().clear();
-                  },
-                  child: Scaffold(
-                    backgroundColor: Colors.grey[700]!.withOpacity(0.5),
-                    body: Center(
-                      child: GestureDetector(
-                        // Do not clear modals if the modal itself is tapped
-                        onTap: () {},
-                        child: Container(
-                          color: Colors.white,
-                          child: state.last,
+                ...state.asMap().entries.map(
+                      (entry) => GestureDetector(
+                        key: Key(entry.key.toString()),
+                        onTap: () {
+                          context.read<ModalsState>().clear();
+                        },
+                        child: Scaffold(
+                          backgroundColor: Colors.grey[700]!.withOpacity(0.5),
+                          body: Center(
+                            child: GestureDetector(
+                              // Do not clear modals if the modal itself is tapped
+                              onTap: () {},
+                              child: Container(
+                                color: Colors.white,
+                                child: entry.value,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
             ],
           );
         },
