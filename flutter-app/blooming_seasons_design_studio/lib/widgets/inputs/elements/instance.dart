@@ -1,7 +1,9 @@
+import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
+import 'package:blooming_seasons_design_studio/widgets/screens/garden_view/editor/nursery_tab.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -248,7 +250,16 @@ class _InstanceEditorState extends State<InstanceEditor> {
       child: Row(mainAxisSize: MainAxisSize.max, children: [
         _wrap(Button(
           onClicked: () {
-            // ;d Open instance selection modal for the nursery
+            context.read<ModalsState>().add(NurseryModal(
+                nursery: nursery,
+                onSelect: (newTemplate) {
+                  context.read<SessionState>().editGarden((garden) =>
+                      garden.editInstance(
+                          widget.instance.id,
+                          (instance, _) =>
+                              instance.withTemplate(newTemplate.id)));
+                  context.read<ModalsState>().clear();
+                }));
           },
           backgroundColour: Theme.of(context).colorScheme.surfaceVariant,
           child: Text("Template: ${template.name}"),

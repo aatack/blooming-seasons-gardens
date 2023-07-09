@@ -56,7 +56,7 @@ class Instance {
       name: name,
       position: position,
       element: newElement,
-      templateId: templateId,
+      templateId: null,
     );
   }
 
@@ -65,7 +65,7 @@ class Instance {
       id: id,
       name: name,
       position: position,
-      element: element,
+      element: null,
       templateId: newTemplateId,
     );
   }

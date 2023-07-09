@@ -178,12 +178,7 @@ class Garden {
                   (instance) => instance.id == id ? null : instance)
               : (bed.usedTemplates.contains(id)
                   ? bed.updateInstances((instance) => instance.templateId == id
-                      ? Instance(
-                          id: instance.id,
-                          name: instance.name,
-                          position: instance.position,
-                          element: nursery.instanceMap[id]!.element,
-                          templateId: null)
+                      ? instance.withElement(nursery.instanceMap[id]!.element)
                       : instance)
                   : bed))
           .toList(),

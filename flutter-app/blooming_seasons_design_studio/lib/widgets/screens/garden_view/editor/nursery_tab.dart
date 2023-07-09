@@ -52,14 +52,10 @@ class NurseryTab extends StatelessWidget {
 
 class NurseryModal extends StatelessWidget {
   final Bed nursery;
-  final int bed;
   final void Function(Instance) onSelect;
 
   const NurseryModal(
-      {super.key,
-      required this.nursery,
-      required this.bed,
-      required this.onSelect});
+      {super.key, required this.nursery, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
