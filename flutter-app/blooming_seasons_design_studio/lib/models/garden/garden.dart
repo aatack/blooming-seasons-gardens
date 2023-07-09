@@ -111,8 +111,8 @@ class Garden {
     );
   }
 
-  Garden addInstance(int bedID, Element element,
-      {String? name, int? templateID}) {
+  Garden addInstance(int bedID,
+      {Element? element, String? name, int? templateID}) {
     Bed update(Bed bed) {
       return bed.id == bedID
           ? Bed(
@@ -307,11 +307,8 @@ Future<Garden> deserialiseGarden(dynamic garden) async {
   // Elements in the nursery should never themselves utilise the nursery
   final nursery = deserialiseBed(garden["nursery"], {}, images);
 
-  final Map<int, Element> templates = Map.fromEntries(nursery.instances
-      .map((instance) => MapEntry(instance.id, instance.element)));
-
-  final beds = List<Bed>.from(
-      garden["beds"].map((bed) => deserialiseBed(bed, templates, images)));
+  final beds = List<Bed>.from(garden["beds"]
+      .map((bed) => deserialiseBed(bed, nursery.instanceMap, images)));
 
   final background = PositionedImage.deserialise(garden["background"], images);
 

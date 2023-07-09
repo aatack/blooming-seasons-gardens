@@ -197,8 +197,8 @@ class AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addInstance(bed.id, Plant.blank()));
+              context.read<SessionState>().editGarden((garden) =>
+                  garden.addInstance(bed.id, element: Plant.blank()));
             },
             child: const Text("Plant"),
           ),
@@ -206,8 +206,8 @@ class AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addInstance(bed.id, Label.blank()));
+              context.read<SessionState>().editGarden((garden) =>
+                  garden.addInstance(bed.id, element: Label.blank()));
             },
             child: const Text("Label"),
           ),
@@ -215,8 +215,8 @@ class AddElementModal extends StatelessWidget {
           Button(
             onClicked: () {
               context.read<ModalsState>().pop();
-              context.read<SessionState>().editGarden(
-                  (garden) => garden.addInstance(bed.id, Arrow.blank()));
+              context.read<SessionState>().editGarden((garden) =>
+                  garden.addInstance(bed.id, element: Arrow.blank()));
             },
             child: const Text("Arrow"),
           ),

@@ -60,7 +60,7 @@ dynamic serialiseBed(Bed bed) {
 
 Bed deserialiseBed(
   Map<String, dynamic> bed,
-  Map<int, Element> templates,
+  Map<int, Instance> templates,
   Map<int, CachedImage> images,
 ) {
   return Bed(

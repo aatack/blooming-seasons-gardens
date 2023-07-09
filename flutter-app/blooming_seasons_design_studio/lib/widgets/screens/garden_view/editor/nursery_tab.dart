@@ -74,8 +74,10 @@ class NurseryModal extends StatelessWidget {
                     instance: instance,
                     onClick: () {
                       context.read<SessionState>().editGarden((garden) =>
-                          garden.addInstance(bed, instance.element,
-                              templateID: instance.id, name: instance.name));
+                          garden.addInstance(bed,
+                              element: instance.element,
+                              templateID: instance.id,
+                              name: instance.name));
                       context.read<ModalsState>().clear();
                     },
                   ),

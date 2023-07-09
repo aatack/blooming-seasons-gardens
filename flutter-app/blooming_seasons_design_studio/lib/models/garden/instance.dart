@@ -17,16 +17,18 @@ class Instance {
   final int id;
   final String name;
   final Point position;
-  final Element element;
+  final Element? element;
   final int? templateID;
 
-  const Instance({
+  Instance({
     required this.id,
     required this.name,
     required this.position,
     required this.element,
     required this.templateID,
-  });
+  }) {
+    assert((element == null) != (templateID == null));
+  }
 
   Instance rename(String newName) {
     return Instance(
@@ -48,7 +50,7 @@ class Instance {
     );
   }
 
-  Instance withElement(Element newElement) {
+  Instance withElement(Element? newElement) {
     return Instance(
       id: id,
       name: name,
@@ -78,8 +80,8 @@ dynamic serialiseInstance(Instance instance) {
 
   if (instance.templateID != null) {
     result["templateID"] = instance.templateID!;
-  } else {
-    result["element"] = instance.element.serialise();
+  } else if (instance.element != null) {
+    result["element"] = instance.element!.serialise();
   }
 
   return result;
@@ -87,7 +89,7 @@ dynamic serialiseInstance(Instance instance) {
 
 Instance deserialiseInstance(
   Map<String, dynamic> instance,
-  Map<int, Element> templates,
+  Map<int, Instance> templates,
   Map<int, CachedImage> images,
 ) {
   late int? template;
@@ -95,7 +97,7 @@ Instance deserialiseInstance(
 
   if (instance.containsKey("templateID")) {
     template = instance["templateID"];
-    element = templates[template!]!;
+    element = templates[template!]!.element!;
   } else {
     template = null;
     element = deserialiseElement(instance["element"], images);
