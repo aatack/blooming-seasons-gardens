@@ -22,11 +22,16 @@ class InstanceEditor extends StatefulWidget {
   final Bed? nursery;
   final bool hidePosition;
 
-  const InstanceEditor(
+  late final Element element;
+
+  InstanceEditor(
       {super.key,
       required this.instance,
       this.nursery,
-      this.hidePosition = false});
+      this.hidePosition = false}) {
+    element = instance.element ??
+        nursery!.instanceMap[instance.templateId!]!.element!;
+  }
 
   @override
   State<InstanceEditor> createState() => _InstanceEditorState();
@@ -78,11 +83,11 @@ class _InstanceEditorState extends State<InstanceEditor> {
   FormLayoutItem _header(BuildContext context, bool hovered) {
     late final IconData icon;
 
-    if (widget.instance.element is Plant) {
+    if (widget.element is Plant) {
       icon = Icons.energy_savings_leaf_outlined;
-    } else if (widget.instance.element is Label) {
+    } else if (widget.element is Label) {
       icon = Icons.label_outline_sharp;
-    } else if (widget.instance.element is Arrow) {
+    } else if (widget.element is Arrow) {
       icon = Icons.arrow_right_alt_sharp;
     } else {
       throw UnimplementedError();
@@ -215,7 +220,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         hidePosition: widget.hidePosition,
       );
     } else {
-      throw UnimplementedError();
+      content = const Text(";d add template editor");
     }
 
     return FormLayoutItem(child: content);
