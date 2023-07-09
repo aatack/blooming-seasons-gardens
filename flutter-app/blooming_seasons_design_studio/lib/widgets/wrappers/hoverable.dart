@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../theme.dart';
-
 class Hoverable extends StatefulWidget {
   final Widget Function(BuildContext context, bool hovered, bool clicked)
       builder;

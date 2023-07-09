@@ -11,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/bed.dart';
-import '../../../models/garden/garden.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
 import '../../../models/session.dart';

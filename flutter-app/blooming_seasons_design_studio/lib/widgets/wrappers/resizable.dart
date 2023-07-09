@@ -70,6 +70,5 @@ class _ResizableState extends State<Resizable> {
         ],
       );
     });
-    ;
   }
 }

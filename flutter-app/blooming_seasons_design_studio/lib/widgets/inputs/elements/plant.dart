@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:blooming_seasons_design_studio/images.dart';
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
@@ -12,7 +9,6 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element, Image;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'dart:ui' as ui;
 
 import '../../../models/garden/plant.dart';
 import '../../../models/structs/point.dart';

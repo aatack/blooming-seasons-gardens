@@ -36,7 +36,7 @@ class LandingPage extends StatelessWidget {
 }
 
 class _NewGarden extends StatefulWidget {
-  const _NewGarden({super.key});
+  const _NewGarden();
 
   @override
   State<_NewGarden> createState() => _NewGardenState();
