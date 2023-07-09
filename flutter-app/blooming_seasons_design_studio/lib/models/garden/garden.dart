@@ -147,89 +147,49 @@ class Garden {
   Garden editInstance(
       int id, Instance Function(Instance, List<CachedImage>) update,
       {List<CachedImage>? images}) {
-    final parent = instanceParent(id);
+    return withImages(images ?? [], (garden, newImages) {
+      Instance updateInstance(Instance instance) {
+        return instance.id == id ? update(instance, newImages) : instance;
+      }
 
-    if (parent == nursery.id) {
-      return withImages(images ?? [], (garden, newImages) {
-        final newInstance = update(
-            garden.nursery.instances
-                .firstWhere((instance) => instance.id == id),
-            newImages);
+      Bed updateBed(Bed bed) {
+        return bed.instanceMap.containsKey(id)
+            ? bed.updateInstances(updateInstance)
+            : bed;
+      }
 
-        return Garden(
-          garden.name,
-          garden.beds
-              .map((bed) => bed.updateInstances((instance) =>
-                  instance.templateId == id
-                      ? instance.withElement(newInstance.element)
-                      : instance))
-              .toList(),
-          garden.nursery.updateInstances(
-              (instance) => instance.id == id ? newInstance : instance),
-          garden.background,
-          garden.availableId,
-          garden.images,
-        );
-      });
-    } else {
-      return editBed(
-        instanceParent(id),
-        (bed, cachedImages) => Bed(
-          bed.instances
-              .map((instance) =>
-                  instance.id == id ? update(instance, cachedImages) : instance)
-              .toList(),
-          id: bed.id,
-          origin: bed.origin,
-          name: bed.name,
-        ),
-        images: images,
+      return Garden(
+        garden.name,
+        garden.beds.map(updateBed).toList(),
+        updateBed(garden.nursery),
+        garden.background,
+        garden.availableId,
+        garden.images,
       );
-    }
+    });
   }
 
   Garden removeInstance(int id) {
-    final parent = instanceParent(id);
-
-    if (parent == nursery.id) {
-      return Garden(
-        name,
-        _beds
-            .map((bed) => bed.updateInstances((instance) =>
-                instance.templateId == id
-                    ? instance.withTemplate(null)
-                    : instance))
-            .toList(),
-        Bed(
-          nursery.instances.where((instance) => instance.id != id).toList(),
-          id: nursery.id,
-          origin: nursery.origin,
-          name: nursery.name,
-        ),
-        background,
-        availableId,
-        _images,
-      );
-    } else {
-      return editBed(
-        parent,
-        (bed, _) => Bed(
-          bed.instances.where((instance) => instance.id != id).toList(),
-          id: bed.id,
-          origin: bed.origin,
-          name: bed.name,
-        ),
-      );
-    }
-  }
-
-  int instanceParent(int instanceId) {
-    for (final bed in [...beds, nursery]) {
-      if (bed.instances.any((instance) => instance.id == instanceId)) {
-        return bed.id;
-      }
-    }
-    throw Exception("Could not find instance with ID $instanceId");
+    return Garden(
+      name,
+      _beds
+          .map((bed) => bed.instanceMap.containsKey(id)
+              ? bed.updateInstances(
+                  (instance) => instance.id == id ? null : instance)
+              : bed.usedTemplates.contains(id)
+                  ? bed.updateInstances((instance) => instance.templateId == id
+                      ? instance
+                          .withTemplate(null)
+                          .withElement(nursery.instanceMap[id]!.element)
+                      : instance)
+                  : bed)
+          .toList(),
+      nursery
+          .updateInstances((instance) => instance.id == id ? null : instance),
+      background,
+      availableId,
+      _images,
+    );
   }
 
   Garden withBackground(PositionedImage newBackground) {

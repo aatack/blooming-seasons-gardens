@@ -39,8 +39,8 @@ class Bed {
     return Bed(_instances, id: id, origin: origin, name: newName);
   }
 
-  Bed updateInstances(Instance Function(Instance) update) {
-    return Bed(_instances.map(update).toList(),
+  Bed updateInstances(Instance? Function(Instance) update) {
+    return Bed(_instances.map(update).whereType<Instance>().toList(),
         id: id, origin: origin, name: name);
   }
 }
