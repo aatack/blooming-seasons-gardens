@@ -14,18 +14,25 @@ class Bed {
   UnmodifiableListView<Instance> get instances =>
       UnmodifiableListView(_instances);
 
+  final Point origin;
+
+  final String name;
+
   late final Map<int, Instance> _instanceMap;
   UnmodifiableMapView<int, Instance> get instanceMap =>
       UnmodifiableMapView(_instanceMap);
 
-  final Point origin;
-
-  final String name;
+  late final Set<int> _usedTemplates;
+  UnmodifiableSetView<int> get usedTemplates =>
+      UnmodifiableSetView(_usedTemplates);
 
   Bed(this._instances,
       {required this.id, required this.origin, required this.name}) {
     _instanceMap = Map.fromEntries(
         instances.map((instance) => MapEntry(instance.id, instance)));
+    _usedTemplates = Set.from(instances
+        .map((instance) => instance.templateID)
+        .where((template) => template != null));
   }
 
   Bed rename(String newName) {
