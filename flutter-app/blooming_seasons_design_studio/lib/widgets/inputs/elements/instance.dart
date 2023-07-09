@@ -266,7 +266,11 @@ class _InstanceEditorState extends State<InstanceEditor> {
         )),
         _wrap(Button(
           onClicked: () {
-            // ;d Switch this instance from using a template to an element
+            context.read<SessionState>().editGarden((garden) =>
+                garden.editInstance(
+                    widget.instance.id,
+                    (instance, _) => instance.withElement(garden
+                        .nursery.instanceMap[instance.templateId]!.element)));
           },
           backgroundColour: null,
           child: const Text("Disassociate"),
