@@ -80,11 +80,11 @@ class Thunk<Data> {
   }) async {
     set(Thunk.loading());
 
-    // try {
-    final data = await get();
-    set(Thunk.data(data));
-    // } catch (error) {
-    //   set(Thunk.error(error));
-    // }
+    try {
+      final data = await get();
+      set(Thunk.data(data));
+    } catch (error) {
+      set(Thunk.error(error));
+    }
   }
 }
