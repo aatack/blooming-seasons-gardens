@@ -58,14 +58,10 @@ dynamic serialiseBed(Bed bed) {
   };
 }
 
-Bed deserialiseBed(
-  Map<String, dynamic> bed,
-  Map<int, Instance> templates,
-  Map<int, CachedImage> images,
-) {
+Bed deserialiseBed(Map<String, dynamic> bed, Map<int, CachedImage> images) {
   return Bed(
     (bed["instances"] as List<dynamic>)
-        .map((instance) => deserialiseInstance(instance, templates, images))
+        .map((instance) => deserialiseInstance(instance, images))
         .toList(),
     id: bed["id"],
     origin: Point.deserialise(bed["origin"]),

@@ -305,10 +305,10 @@ Future<Garden> deserialiseGarden(dynamic garden) async {
   }
 
   // Elements in the nursery should never themselves utilise the nursery
-  final nursery = deserialiseBed(garden["nursery"], {}, images);
+  final nursery = deserialiseBed(garden["nursery"], images);
 
-  final beds = List<Bed>.from(garden["beds"]
-      .map((bed) => deserialiseBed(bed, nursery.instanceMap, images)));
+  final beds =
+      List<Bed>.from(garden["beds"].map((bed) => deserialiseBed(bed, images)));
 
   final background = PositionedImage.deserialise(garden["background"], images);
 
