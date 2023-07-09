@@ -31,7 +31,7 @@ class Bed {
     _instanceMap = Map.fromEntries(
         instances.map((instance) => MapEntry(instance.id, instance)));
     _usedTemplates = Set.from(instances
-        .map((instance) => instance.templateID)
+        .map((instance) => instance.templateId)
         .where((template) => template != null));
   }
 

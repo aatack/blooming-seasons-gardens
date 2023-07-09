@@ -21,7 +21,7 @@ class Garden {
   final PositionedImage background;
 
   // The next available identifier for elements in the garden
-  final int availableID;
+  final int availableId;
 
   /* Images are stored in the backend as JSON strings, which is horribly
     inefficient but makes for an easier server overall.  A consequence of
@@ -42,7 +42,7 @@ class Garden {
     this._beds,
     this.nursery,
     this.background,
-    this.availableID,
+    this.availableId,
     this._images,
   );
 
@@ -69,14 +69,14 @@ class Garden {
         ...beds,
         Bed(
           const [],
-          id: availableID,
+          id: availableId,
           origin: Point.blank(),
-          name: "Bed $availableID",
+          name: "Bed $availableId",
         )
       ],
       nursery,
       background,
-      availableID + 1,
+      availableId + 1,
       images,
     );
   }
@@ -94,7 +94,7 @@ class Garden {
             ? update(garden.nursery, cachedImages)
             : garden.nursery,
         garden.background,
-        garden.availableID,
+        garden.availableId,
         garden.images,
       ),
     );
@@ -106,25 +106,25 @@ class Garden {
       _beds.where((bed) => bed.id != id).toList(),
       nursery,
       background,
-      availableID,
+      availableId,
       images,
     );
   }
 
-  Garden addInstance(int bedID,
-      {Element? element, String? name, int? templateID}) {
+  Garden addInstance(int bedId,
+      {Element? element, String? name, int? templateId}) {
     Bed update(Bed bed) {
-      return bed.id == bedID
+      return bed.id == bedId
           ? Bed(
               [
                 ...bed.instances,
                 Instance(
-                  id: availableID,
+                  id: availableId,
                   name:
-                      name ?? "${element.runtimeType.toString()} $availableID",
+                      name ?? "${element.runtimeType.toString()} $availableId",
                   position: Point.blank(),
                   element: element,
-                  templateID: templateID,
+                  templateId: templateId,
                 )
               ],
               id: bed.id,
@@ -139,7 +139,7 @@ class Garden {
       _beds.map((bed) => update(bed)).toList(),
       update(nursery),
       background,
-      availableID + 1,
+      availableId + 1,
       images,
     );
   }
@@ -160,14 +160,14 @@ class Garden {
           garden.name,
           garden.beds
               .map((bed) => bed.updateInstances((instance) =>
-                  instance.templateID == id
+                  instance.templateId == id
                       ? instance.withElement(newInstance.element)
                       : instance))
               .toList(),
           garden.nursery.updateInstances(
               (instance) => instance.id == id ? newInstance : instance),
           garden.background,
-          garden.availableID,
+          garden.availableId,
           garden.images,
         );
       });
@@ -196,7 +196,7 @@ class Garden {
         name,
         _beds
             .map((bed) => bed.updateInstances((instance) =>
-                instance.templateID == id
+                instance.templateId == id
                     ? instance.withTemplate(null)
                     : instance))
             .toList(),
@@ -207,7 +207,7 @@ class Garden {
           name: nursery.name,
         ),
         background,
-        availableID,
+        availableId,
         _images,
       );
     } else {
@@ -223,17 +223,17 @@ class Garden {
     }
   }
 
-  int instanceParent(int instanceID) {
+  int instanceParent(int instanceId) {
     for (final bed in [...beds, nursery]) {
-      if (bed.instances.any((instance) => instance.id == instanceID)) {
+      if (bed.instances.any((instance) => instance.id == instanceId)) {
         return bed.id;
       }
     }
-    throw Exception("Could not find instance with ID $instanceID");
+    throw Exception("Could not find instance with ID $instanceId");
   }
 
   Garden withBackground(PositionedImage newBackground) {
-    return Garden(name, _beds, nursery, newBackground, availableID, _images);
+    return Garden(name, _beds, nursery, newBackground, availableId, _images);
   }
 
   /// Cache an image, then update the garden with the resulting image ID.
@@ -263,7 +263,7 @@ class Garden {
         _beds,
         nursery,
         background,
-        availableID,
+        availableId,
         cachedImageRepository,
       ),
       cachedImageArguments,
@@ -284,7 +284,7 @@ dynamic serialiseGarden(Garden garden) {
     "beds": beds,
     "nursery": nursery,
     "background": background,
-    "availableID": garden.availableID,
+    "availableId": garden.availableId,
     "images": garden.images
         .map((id, image) => MapEntry(id.toString(), image.serialise())),
   };
@@ -313,5 +313,5 @@ Future<Garden> deserialiseGarden(dynamic garden) async {
   final background = PositionedImage.deserialise(garden["background"], images);
 
   return Garden(
-      garden["name"], beds, nursery, background, garden["availableID"], images);
+      garden["name"], beds, nursery, background, garden["availableId"], images);
 }

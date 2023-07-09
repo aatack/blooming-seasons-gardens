@@ -18,16 +18,16 @@ class Instance {
   final String name;
   final Point position;
   final Element? element;
-  final int? templateID;
+  final int? templateId;
 
   Instance({
     required this.id,
     required this.name,
     required this.position,
     required this.element,
-    required this.templateID,
+    required this.templateId,
   }) {
-    assert((element == null) != (templateID == null));
+    assert((element == null) != (templateId == null));
   }
 
   Instance rename(String newName) {
@@ -36,7 +36,7 @@ class Instance {
       name: newName,
       position: position,
       element: element,
-      templateID: templateID,
+      templateId: templateId,
     );
   }
 
@@ -46,7 +46,7 @@ class Instance {
       name: name,
       position: newPosition,
       element: element,
-      templateID: templateID,
+      templateId: templateId,
     );
   }
 
@@ -56,17 +56,17 @@ class Instance {
       name: name,
       position: position,
       element: newElement,
-      templateID: templateID,
+      templateId: templateId,
     );
   }
 
-  Instance withTemplate(int? newTemplateID) {
+  Instance withTemplate(int? newTemplateId) {
     return Instance(
       id: id,
       name: name,
       position: position,
       element: element,
-      templateID: newTemplateID,
+      templateId: newTemplateId,
     );
   }
 }
@@ -78,8 +78,8 @@ dynamic serialiseInstance(Instance instance) {
     "position": instance.position.serialise(),
   };
 
-  if (instance.templateID != null) {
-    result["templateID"] = instance.templateID!;
+  if (instance.templateId != null) {
+    result["templateId"] = instance.templateId!;
   } else if (instance.element != null) {
     result["element"] = instance.element!.serialise();
   }
@@ -92,8 +92,8 @@ Instance deserialiseInstance(
   late final int? template;
   late final Element? element;
 
-  if (instance.containsKey("templateID")) {
-    template = instance["templateID"];
+  if (instance.containsKey("templateId")) {
+    template = instance["templateId"];
     element = null;
   } else {
     template = null;
@@ -105,7 +105,7 @@ Instance deserialiseInstance(
     name: instance["name"],
     position: Point.deserialise(instance["position"]),
     element: element,
-    templateID: template,
+    templateId: template,
   );
 }
 

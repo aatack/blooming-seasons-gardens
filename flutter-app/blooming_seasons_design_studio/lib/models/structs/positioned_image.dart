@@ -16,7 +16,7 @@ class PositionedImage {
 
   Map<String, dynamic> serialise() {
     return {
-      "imageID": image?.id,
+      "imageId": image?.id,
       "position": position.serialise(),
       "scale": scale.serialise(),
     };
@@ -25,7 +25,7 @@ class PositionedImage {
   static PositionedImage deserialise(
       dynamic image, Map<int, CachedImage> images) {
     return PositionedImage(
-      image: image["imageID"] == null ? null : images[image["imageID"]]!,
+      image: image["imageId"] == null ? null : images[image["imageId"]]!,
       position: Point.deserialise(image["position"]),
       scale: ValidatedDouble.deserialise(image["scale"]),
     );
