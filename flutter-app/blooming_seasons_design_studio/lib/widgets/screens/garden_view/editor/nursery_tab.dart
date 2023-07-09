@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/bed.dart';
+import '../../../../models/garden/instance.dart';
 import '../../../../models/session.dart';
 import '../../../inputs/button.dart';
 import '../../../inputs/elements/bed.dart';
@@ -52,8 +53,13 @@ class NurseryTab extends StatelessWidget {
 class NurseryModal extends StatelessWidget {
   final Bed nursery;
   final int bed;
+  final void Function(Instance) onSelect;
 
-  const NurseryModal({super.key, required this.nursery, required this.bed});
+  const NurseryModal(
+      {super.key,
+      required this.nursery,
+      required this.bed,
+      required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +77,7 @@ class NurseryModal extends StatelessWidget {
                     key: Key(instance.id.toString()),
                     instance: instance,
                     onClick: () {
-                      context.read<SessionState>().editGarden((garden) =>
-                          garden.addInstance(bed,
-                              templateId: instance.id, name: instance.name));
-                      context.read<ModalsState>().clear();
+                      onSelect(instance);
                     },
                   ),
                 ),

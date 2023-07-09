@@ -226,7 +226,9 @@ class _InstanceEditorState extends State<InstanceEditor> {
         children: [
           FormLayout(
               children: pointInput(
-                  point: widget.instance.position, setPoint: setPosition)),
+                  label: "Position",
+                  point: widget.instance.position,
+                  setPoint: setPosition)),
           _templateSelection(
             context,
             widget.nursery!.instanceMap[widget.instance.templateId!]!,
