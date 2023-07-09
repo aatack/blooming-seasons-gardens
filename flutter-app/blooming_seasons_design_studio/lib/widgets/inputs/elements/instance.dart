@@ -1,5 +1,6 @@
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
+import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
@@ -14,6 +15,7 @@ import '../../../models/session.dart';
 import '../../../models/structs/point.dart';
 import '../../../theme.dart';
 import '../../wrappers/hoverable.dart';
+import '../button.dart';
 import 'arrow.dart';
 import 'plant.dart';
 
@@ -220,10 +222,53 @@ class _InstanceEditorState extends State<InstanceEditor> {
         hidePosition: widget.hidePosition,
       );
     } else {
-      content = const Text(";d add template editor");
+      content = Column(
+        children: [
+          FormLayout(
+              children: pointInput(
+                  point: widget.instance.position, setPoint: setPosition)),
+          _templateSelection(
+            context,
+            widget.nursery!.instanceMap[widget.instance.templateId!]!,
+            widget.nursery!,
+          )
+        ],
+      );
     }
 
     return FormLayoutItem(child: content);
+  }
+
+  Widget _templateSelection(
+      BuildContext context, Instance template, Bed nursery) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0, bottom: 0),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
+        _wrap(Button(
+          onClicked: () {
+            // ;d Open instance selection modal for the nursery
+          },
+          backgroundColour: Theme.of(context).colorScheme.surfaceVariant,
+          child: Text("Template: ${template.name}"),
+        )),
+        _wrap(Button(
+          onClicked: () {
+            // ;d Switch this instance from using a template to an element
+          },
+          backgroundColour: null,
+          child: const Text("Disassociate"),
+        )),
+      ]),
+    );
+  }
+
+  Widget _wrap(Widget widget) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        child: widget,
+      ),
+    );
   }
 }
 
