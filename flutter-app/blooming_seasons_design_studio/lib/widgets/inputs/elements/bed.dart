@@ -20,9 +20,11 @@ import '../../wrappers/hoverable.dart';
 
 class BedEditor extends StatefulWidget {
   final Bed bed;
-  final Garden? garden;
+  /* The nursery is passed when the editor being rendered is *not* the nursery,
+    and so the garden's nursery exists (and must be accessible for templates). */
+  final Bed? nursery;
 
-  const BedEditor({super.key, required this.bed, this.garden});
+  const BedEditor({super.key, required this.bed, this.nursery});
 
   @override
   State<BedEditor> createState() => _BedEditorState();
@@ -67,8 +69,8 @@ class _BedEditorState extends State<BedEditor> {
                     value: widget.bed.name,
                     onChange: (newValue, transient) {
                       context.read<SessionState>().editGarden(
-                          (garden) => garden.editBed(
-                              widget.bed.id, (bed, _) => bed.withName(newValue)),
+                          (garden) => garden.editBed(widget.bed.id,
+                              (bed, _) => bed.withName(newValue)),
                           transient: transient);
                     },
                     editing: _editingName,
@@ -167,11 +169,13 @@ class _BedEditorState extends State<BedEditor> {
             ),
             const SizedBox(height: 8),
             ...widget.bed.instances.map((instance) => InstanceEditor(
-                key: Key(instance.id.toString()), instance: instance)),
+                key: Key(instance.id.toString()),
+                instance: instance,
+                nursery: widget.nursery)),
             Button(
                 onClicked: () {
-                  context.read<ModalsState>().add(
-                      AddElementModal(bed: widget.bed, garden: widget.garden));
+                  context.read<ModalsState>().add(AddElementModal(
+                      bed: widget.bed, nursery: widget.nursery));
                 },
                 child: const Text("Add element")),
           ],
@@ -183,9 +187,9 @@ class _BedEditorState extends State<BedEditor> {
 
 class AddElementModal extends StatelessWidget {
   final Bed bed;
-  final Garden? garden;
+  final Bed? nursery;
 
-  const AddElementModal({super.key, required this.bed, this.garden});
+  const AddElementModal({super.key, required this.bed, this.nursery});
 
   @override
   Widget build(BuildContext context) {
@@ -220,12 +224,13 @@ class AddElementModal extends StatelessWidget {
             },
             child: const Text("Arrow"),
           ),
-          if (garden != null) const SizedBox(height: 8),
-          if (garden != null)
+          // Only show the nursery option if the garden is not null
+          if (nursery != null) const SizedBox(height: 8),
+          if (nursery != null)
             Button(
               onClicked: () {
                 final modals = context.read<ModalsState>();
-                modals.add(NurseryModal(garden: garden!, bed: bed.id));
+                modals.add(NurseryModal(nursery: nursery!, bed: bed.id));
               },
               child: const Text("Nursery"),
             ),

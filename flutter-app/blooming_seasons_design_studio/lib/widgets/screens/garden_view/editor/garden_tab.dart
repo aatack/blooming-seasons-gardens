@@ -23,7 +23,7 @@ class GardenTab extends StatelessWidget {
               ...garden.beds
                   .map((bed) => Column(
                         children: [
-                          BedEditor(bed: bed, garden: garden),
+                          BedEditor(bed: bed, nursery: garden.nursery),
                           const SizedBox(height: 8.0)
                         ],
                       ))

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart' hide Element;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
+import '../../../models/garden/bed.dart';
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
 import '../../../models/garden/plant.dart';
@@ -18,10 +19,14 @@ import 'plant.dart';
 
 class InstanceEditor extends StatefulWidget {
   final Instance instance;
+  final Bed? nursery;
   final bool hidePosition;
 
   const InstanceEditor(
-      {super.key, required this.instance, this.hidePosition = false});
+      {super.key,
+      required this.instance,
+      this.nursery,
+      this.hidePosition = false});
 
   @override
   State<InstanceEditor> createState() => _InstanceEditorState();

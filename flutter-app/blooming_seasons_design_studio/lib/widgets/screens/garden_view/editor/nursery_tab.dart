@@ -52,10 +52,10 @@ class NurseryTab extends StatelessWidget {
 }
 
 class NurseryModal extends StatelessWidget {
-  final Garden garden;
+  final Bed nursery;
   final int bed;
 
-  const NurseryModal({super.key, required this.garden, required this.bed});
+  const NurseryModal({super.key, required this.nursery, required this.bed});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class NurseryModal extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ...garden.nursery.instances.map(
+                ...nursery.instances.map(
                   (instance) => InstanceSelector(
                     key: Key(instance.id.toString()),
                     instance: instance,
