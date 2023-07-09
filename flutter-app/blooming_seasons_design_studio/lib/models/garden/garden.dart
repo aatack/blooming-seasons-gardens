@@ -46,7 +46,7 @@ class Garden {
     this._images,
   );
 
-  factory Garden.blank(String name) {
+  static Garden blank(String name) {
     return Garden(
       name,
       const [],

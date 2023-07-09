@@ -68,7 +68,7 @@ class _BedEditorState extends State<BedEditor> {
                     onChange: (newValue, transient) {
                       context.read<SessionState>().editGarden(
                           (garden) => garden.editBed(
-                              widget.bed.id, (bed, _) => bed.rename(newValue)),
+                              widget.bed.id, (bed, _) => bed.withName(newValue)),
                           transient: transient);
                     },
                     editing: _editingName,

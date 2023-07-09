@@ -30,7 +30,7 @@ class Instance {
     assert((element == null) != (templateId == null));
   }
 
-  Instance rename(String newName) {
+  Instance withName(String newName) {
     return Instance(
       id: id,
       name: newName,
@@ -40,7 +40,7 @@ class Instance {
     );
   }
 
-  Instance reposition(Point newPosition) {
+  Instance withPosition(Point newPosition) {
     return Instance(
       id: id,
       name: name,

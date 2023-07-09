@@ -54,7 +54,7 @@ class PlantEditor extends StatelessWidget {
                 plant.diameter,
                 (newDiameter, transient) {
                   updateElement(
-                      (element, _) => element.resize(newDiameter), transient);
+                      (element, _) => element.withDiameter(newDiameter), transient);
                 },
               ),
             ),

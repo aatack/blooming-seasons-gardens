@@ -40,7 +40,7 @@ class Plant implements Element {
     );
   }
 
-  Plant resize(ValidatedDouble newDiameter) {
+  Plant withDiameter(ValidatedDouble newDiameter) {
     return Plant(diameter: newDiameter, type: type, fill: fill, image: image);
   }
 

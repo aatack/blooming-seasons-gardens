@@ -35,7 +35,7 @@ class Bed {
         .where((template) => template != null));
   }
 
-  Bed rename(String newName) {
+  Bed withName(String newName) {
     return Bed(_instances, id: id, origin: origin, name: newName);
   }
 
