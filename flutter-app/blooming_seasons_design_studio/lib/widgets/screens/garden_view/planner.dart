@@ -15,7 +15,7 @@ class Planner extends StatefulWidget {
       const Offset(0, 0),
       [
         PositionedImagePainter(garden.background),
-        ...garden.beds.map((bed) => BedPainter(bed)).toList()
+        ...garden.beds.map((bed) => BedPainter(bed, garden.nursery)).toList()
       ],
     );
   }
@@ -40,4 +40,3 @@ class _PlannerState extends State<Planner> {
     );
   }
 }
-  

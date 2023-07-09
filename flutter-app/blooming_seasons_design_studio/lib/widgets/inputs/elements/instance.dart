@@ -229,21 +229,25 @@ class _InstanceEditorState extends State<InstanceEditor> {
 
 class InstancePainter extends Painter {
   final Instance instance;
+  final Bed nursery;
 
   late final Offset _offset;
   late final Painter _child;
+  late final Element _element;
 
-  InstancePainter(this.instance) {
+  InstancePainter(this.instance, this.nursery) {
     _offset = instance.position.offset;
+    _element =
+        instance.element ?? nursery.instanceMap[instance.templateId!]!.element!;
 
-    if (instance.element is Plant) {
-      _child = PlantPainter(instance.element as Plant);
-    } else if (instance.element is Arrow) {
-      _child = ArrowPainter(instance.element as Arrow);
-    } else if (instance.element is Label) {
-      _child = LabelPainter(instance.element as Label);
+    if (_element is Plant) {
+      _child = PlantPainter(_element as Plant);
+    } else if (_element is Arrow) {
+      _child = ArrowPainter(_element as Arrow);
+    } else if (_element is Label) {
+      _child = LabelPainter(_element as Label);
     } else {
-      throw UnimplementedError();
+      _child = PainterGroup(Offset.zero, []);
     }
   }
 
@@ -264,6 +268,7 @@ class InstancePainter extends Painter {
 }
 
 class InstanceSelector extends StatelessWidget {
+  // Assumes that the passed instance does *not* use a template
   final Instance instance;
   final void Function() onClick;
   final bool divider;
