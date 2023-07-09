@@ -14,12 +14,19 @@ class Bed {
   UnmodifiableListView<Instance> get instances =>
       UnmodifiableListView(_instances);
 
+  late final Map<int, Instance> _instanceMap;
+  UnmodifiableMapView<int, Instance> get instanceMap =>
+      UnmodifiableMapView(_instanceMap);
+
   final Point origin;
 
   final String name;
 
-  const Bed(this._instances,
-      {required this.id, required this.origin, required this.name});
+  Bed(this._instances,
+      {required this.id, required this.origin, required this.name}) {
+    _instanceMap = Map.fromEntries(
+        instances.map((instance) => MapEntry(instance.id, instance)));
+  }
 
   Bed rename(String newName) {
     return Bed(_instances, id: id, origin: origin, name: newName);
