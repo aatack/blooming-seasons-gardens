@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/garden/garden.dart';
@@ -6,8 +7,9 @@ import 'planner.dart';
 
 class GardenView extends StatelessWidget {
   final Garden garden;
+  final Selections selections;
 
-  const GardenView({super.key, required this.garden});
+  const GardenView({super.key, required this.garden, required this.selections});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class GardenView extends StatelessWidget {
           child: Stack(
             children: [
               Planner(garden: garden),
-              Editor(garden: garden),
+              Editor(garden: garden, selections: selections),
             ],
           ),
         ),

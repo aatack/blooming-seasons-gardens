@@ -18,7 +18,8 @@ class App extends StatelessWidget {
           return const LandingPage();
         } else {
           return session.garden.handle(
-            data: (data) => GardenView(garden: data.present),
+            data: (data) => GardenView(
+                garden: data.present, selections: session.selections),
             error: (error) => ErrorIndicator(message: error.toString()),
             loading: () => const Center(
               child: LoadingIndicator(message: "Loading garden"),
