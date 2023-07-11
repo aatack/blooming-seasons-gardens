@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/bed.dart';
 import '../../../../models/garden/instance.dart';
-import '../../../../models/session.dart';
 import '../../../inputs/button.dart';
 import '../../../inputs/elements/bed.dart';
 import '../../../inputs/elements/instance.dart';
@@ -33,11 +32,9 @@ class NurseryTab extends StatelessWidget {
             child: ListView(
               children: [
                 ...nursery.instances.map((instance) => InstanceEditor(
-                      key: Key(instance.id.toString()),
-                      instance: instance,
-                      selections: selections,
-                      hidePosition: true,
-                    )),
+                    key: Key(instance.id.toString()),
+                    instance: instance,
+                    selections: selections)),
                 Button(
                     onClicked: () {
                       context

@@ -143,6 +143,10 @@ class _BedEditorState extends State<BedEditor> {
   }
 
   Widget _content(BuildContext context) {
+    final bedContext = widget.nursery == null
+        ? null
+        : BedContext(widget.nursery!, widget.bed.id);
+
     return Card(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       color: Colors.grey[100],
@@ -178,7 +182,7 @@ class _BedEditorState extends State<BedEditor> {
                 key: Key(instance.id.toString()),
                 instance: instance,
                 selections: widget.selections,
-                nursery: widget.nursery)),
+                bedContext: bedContext)),
             Button(
                 onClicked: () {
                   context.read<ModalsState>().add(AddElementModal(

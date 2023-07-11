@@ -22,11 +22,22 @@ import '../button.dart';
 import 'arrow.dart';
 import 'plant.dart';
 
+/// Context provided to an instance editor if it is being rendered in the garden.
+///
+/// Instance editors being rendered as part of the nursery do not have the same
+/// context and so render less information.
+@immutable
+class BedContext {
+  final Bed nursery;
+  final int parentId;
+
+  const BedContext(this.nursery, this.parentId);
+}
+
 class InstanceEditor extends StatefulWidget {
   final Instance instance;
   final Selections selections;
-  final Bed? nursery;
-  final bool hidePosition;
+  BedContext? bedContext;
 
   late final Element element;
 
@@ -34,14 +45,13 @@ class InstanceEditor extends StatefulWidget {
       {super.key,
       required this.instance,
       required this.selections,
-      this.nursery,
-      this.hidePosition = false}) {
+      this.bedContext}) {
     element = instance.element ??
-        nursery!.instanceMap[instance.templateId!]!.element!;
+        bedContext!.nursery.instanceMap[instance.templateId!]!.element!;
   }
 
   bool get expanded =>
-      (nursery == null
+      (bedContext == null
           ? selections.selectedNursery
           : selections.selectedGarden) ==
       instance.id;
@@ -63,7 +73,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
       onTap: () {
         final id = widget.expanded ? null : widget.instance.id;
         context.read<SessionState>().updateSelections((selections) =>
-            widget.nursery == null
+            widget.bedContext == null
                 ? selections.withSelectedNursery(id)
                 : selections.withSelectedGarden(id));
       },
@@ -215,7 +225,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         },
         position: position,
         setPosition: setPosition,
-        hidePosition: widget.hidePosition,
+        hidePosition: widget.bedContext == null,
       );
     } else if (widget.instance.element is Label) {
       content = LabelEditor(
@@ -223,7 +233,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         setElement: setElement,
         position: position,
         setPosition: setPosition,
-        hidePosition: widget.hidePosition,
+        hidePosition: widget.bedContext == null,
       );
     } else if (widget.instance.element is Arrow) {
       content = ArrowEditor(
@@ -231,7 +241,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
         setElement: setElement,
         position: position,
         setPosition: setPosition,
-        hidePosition: widget.hidePosition,
+        hidePosition: widget.bedContext == null,
       );
     } else {
       content = Column(
@@ -243,8 +253,8 @@ class _InstanceEditorState extends State<InstanceEditor> {
                   setPoint: setPosition)),
           _templateSelection(
             context,
-            widget.nursery!.instanceMap[widget.instance.templateId!]!,
-            widget.nursery!,
+            widget.bedContext!.nursery.instanceMap[widget.instance.templateId!]!,
+            widget.bedContext!.nursery,
           )
         ],
       );
