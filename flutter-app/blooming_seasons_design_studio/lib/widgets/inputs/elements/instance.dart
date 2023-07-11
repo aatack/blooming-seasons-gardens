@@ -37,7 +37,7 @@ class BedContext {
 class InstanceEditor extends StatefulWidget {
   final Instance instance;
   final Selections selections;
-  BedContext? bedContext;
+  final BedContext? bedContext;
 
   late final Element element;
 
@@ -71,7 +71,8 @@ class _InstanceEditorState extends State<InstanceEditor> {
 
     return Hoverable(
       onTap: () {
-        final id = widget.expanded ? null : widget.instance.id;
+        final id =
+            widget.expanded ? widget.bedContext?.parentId : widget.instance.id;
         context.read<SessionState>().updateSelections((selections) =>
             widget.bedContext == null
                 ? selections.withSelectedNursery(id)
@@ -253,7 +254,8 @@ class _InstanceEditorState extends State<InstanceEditor> {
                   setPoint: setPosition)),
           _templateSelection(
             context,
-            widget.bedContext!.nursery.instanceMap[widget.instance.templateId!]!,
+            widget
+                .bedContext!.nursery.instanceMap[widget.instance.templateId!]!,
             widget.bedContext!.nursery,
           )
         ],
