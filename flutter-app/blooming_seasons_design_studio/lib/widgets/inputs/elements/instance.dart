@@ -51,7 +51,6 @@ class InstanceEditor extends StatefulWidget {
 }
 
 class _InstanceEditorState extends State<InstanceEditor> {
-  bool _collapsed = true;
   bool _editingName = false;
 
   @override
@@ -62,9 +61,11 @@ class _InstanceEditorState extends State<InstanceEditor> {
 
     return Hoverable(
       onTap: () {
-        setState(() {
-          _collapsed = !_collapsed;
-        });
+        final id = widget.expanded ? null : widget.instance.id;
+        context.read<SessionState>().updateSelections((selections) =>
+            widget.nursery == null
+                ? selections.withSelectedNursery(id)
+                : selections.withSelectedGarden(id));
       },
       builder: (context, hovered, clicked) {
         return Container(
@@ -82,7 +83,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
                 child: FormLayout(
                   children: [
                     _header(context, hovered),
-                    if (!_collapsed) _body(context)
+                    if (widget.expanded) _body(context)
                   ],
                 ),
               )
