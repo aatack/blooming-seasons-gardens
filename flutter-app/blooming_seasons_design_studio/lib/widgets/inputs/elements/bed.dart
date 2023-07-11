@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/button.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/instance.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
@@ -19,11 +20,17 @@ import '../../wrappers/hoverable.dart';
 
 class BedEditor extends StatefulWidget {
   final Bed bed;
+  final Selections selections;
   /* The nursery is passed when the editor being rendered is *not* the nursery,
     and so the garden's nursery exists (and must be accessible for templates). */
   final Bed? nursery;
 
-  const BedEditor({super.key, required this.bed, this.nursery});
+  const BedEditor(
+      {super.key, required this.bed, required this.selections, this.nursery});
+
+  bool get expanded =>
+      selections.selectedGarden == bed.id ||
+      bed.instanceMap.containsKey(selections.selectedGarden);
 
   @override
   State<BedEditor> createState() => _BedEditorState();
@@ -31,7 +38,6 @@ class BedEditor extends StatefulWidget {
 
 class _BedEditorState extends State<BedEditor> {
   bool _editingName = false;
-  bool _collapsed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class _BedEditorState extends State<BedEditor> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _header(context),
-        if (!_collapsed) _content(context),
+        if (widget.expanded) _content(context),
       ],
     );
   }
@@ -63,7 +69,9 @@ class _BedEditorState extends State<BedEditor> {
             children: [
               Row(
                 children: [
-                  Icon(_collapsed ? Icons.arrow_drop_down : Icons.arrow_right),
+                  Icon(widget.expanded
+                      ? Icons.arrow_drop_down
+                      : Icons.arrow_right),
                   ControlledTextInput(
                     value: widget.bed.name,
                     onChange: (newValue, transient) {
@@ -87,9 +95,8 @@ class _BedEditorState extends State<BedEditor> {
         ),
       ),
       onTap: () {
-        setState(() {
-          _collapsed = !_collapsed;
-        });
+        context.read<SessionState>().updateSelections((selections) => selections
+            .withSelectedGarden(widget.expanded ? null : widget.bed.id));
       },
     );
   }

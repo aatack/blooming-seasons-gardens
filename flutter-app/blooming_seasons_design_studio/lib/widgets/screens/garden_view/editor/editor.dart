@@ -45,7 +45,7 @@ class _EditorState extends State<Editor> {
                 },
               ),
               if (widget.selections.editorTab == EditorTab.garden)
-                GardenTab(garden: widget.garden),
+                GardenTab(garden: widget.garden, selections: widget.selections),
               if (widget.selections.editorTab == EditorTab.nursery)
                 NurseryTab(nursery: widget.garden.nursery),
               if (widget.selections.editorTab == EditorTab.background)

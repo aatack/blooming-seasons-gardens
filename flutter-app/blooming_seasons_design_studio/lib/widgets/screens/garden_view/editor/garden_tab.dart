@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/garden.dart';
+import '../../../../models/selections.dart';
 import '../../../inputs/elements/bed.dart';
 
 class GardenTab extends StatelessWidget {
   final Garden garden;
+  final Selections selections;
 
-  const GardenTab({super.key, required this.garden});
+  const GardenTab({super.key, required this.garden, required this.selections});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,10 @@ class GardenTab extends StatelessWidget {
               ...garden.beds
                   .map((bed) => Column(
                         children: [
-                          BedEditor(bed: bed, nursery: garden.nursery),
+                          BedEditor(
+                              bed: bed,
+                              nursery: garden.nursery,
+                              selections: selections),
                           const SizedBox(height: 8.0)
                         ],
                       ))

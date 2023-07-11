@@ -31,4 +31,40 @@ class Selections {
         selectedNursery: selectedNursery,
         hoveredNursery: hoveredNursery);
   }
+
+  Selections withSelectedGarden(int? newSelectedGarden) {
+    return Selections(
+        editorTab: editorTab,
+        selectedGarden: newSelectedGarden,
+        hoveredGarden: hoveredGarden,
+        selectedNursery: selectedNursery,
+        hoveredNursery: hoveredNursery);
+  }
+
+  Selections withHoveredGarden(int? newHoveredGarden) {
+    return Selections(
+        editorTab: editorTab,
+        selectedGarden: selectedGarden,
+        hoveredGarden: newHoveredGarden,
+        selectedNursery: selectedNursery,
+        hoveredNursery: hoveredNursery);
+  }
+
+  Selections withSelectedNursery(int? newSelectedNursery) {
+    return Selections(
+        editorTab: editorTab,
+        selectedGarden: selectedGarden,
+        hoveredGarden: hoveredGarden,
+        selectedNursery: newSelectedNursery,
+        hoveredNursery: hoveredNursery);
+  }
+
+  Selections withHoveredNursery(int? newHoveredNursery) {
+    return Selections(
+        editorTab: editorTab,
+        selectedGarden: selectedGarden,
+        hoveredGarden: hoveredGarden,
+        selectedNursery: selectedNursery,
+        hoveredNursery: newHoveredNursery);
+  }
 }
