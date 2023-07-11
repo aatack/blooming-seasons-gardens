@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:blooming_seasons_design_studio/models/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/garden/garden.dart';
 import '../../../../models/modals.dart';
+import '../../../../models/selections.dart';
 import '../../../inputs/button.dart';
 import '../../../wrappers/resizable.dart';
 import 'background_tab.dart';
@@ -13,20 +15,17 @@ import 'nursery_tab.dart';
 
 const bool _debug = false;
 
-enum _EditorTab { garden, nursery, background }
-
 class Editor extends StatefulWidget {
   final Garden garden;
+  final Selections selections;
 
-  const Editor({super.key, required this.garden});
+  const Editor({super.key, required this.garden, required this.selections});
 
   @override
   State<Editor> createState() => _EditorState();
 }
 
 class _EditorState extends State<Editor> {
-  _EditorTab _tab = _EditorTab.garden;
-
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -39,17 +38,17 @@ class _EditorState extends State<Editor> {
             children: [
               _TabButtons(
                 garden: widget.garden,
-                tab: _tab,
+                tab: widget.selections.editorTab,
                 setTab: (newTab) {
-                  setState(() {
-                    _tab = newTab;
-                  });
+                  context.read<SessionState>().updateSelections(
+                      (selections) => selections.withEditorTab(newTab));
                 },
               ),
-              if (_tab == _EditorTab.garden) GardenTab(garden: widget.garden),
-              if (_tab == _EditorTab.nursery)
+              if (widget.selections.editorTab == EditorTab.garden)
+                GardenTab(garden: widget.garden),
+              if (widget.selections.editorTab == EditorTab.nursery)
                 NurseryTab(nursery: widget.garden.nursery),
-              if (_tab == _EditorTab.background)
+              if (widget.selections.editorTab == EditorTab.background)
                 BackgroundTab(background: widget.garden.background),
             ],
           ),
@@ -61,8 +60,8 @@ class _EditorState extends State<Editor> {
 
 class _TabButtons extends StatelessWidget {
   final Garden garden;
-  final _EditorTab tab;
-  final void Function(_EditorTab) setTab;
+  final EditorTab tab;
+  final void Function(EditorTab) setTab;
 
   const _TabButtons(
       {required this.garden, required this.tab, required this.setTab});
@@ -73,9 +72,9 @@ class _TabButtons extends StatelessWidget {
       children: [
         Button(
           onClicked: () {
-            setTab(_EditorTab.garden);
+            setTab(EditorTab.garden);
           },
-          backgroundColour: tab == _EditorTab.garden
+          backgroundColour: tab == EditorTab.garden
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
           child: const Text(
@@ -86,9 +85,9 @@ class _TabButtons extends StatelessWidget {
         ),
         Button(
           onClicked: () {
-            setTab(_EditorTab.nursery);
+            setTab(EditorTab.nursery);
           },
-          backgroundColour: tab == _EditorTab.nursery
+          backgroundColour: tab == EditorTab.nursery
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
           child: const Text(
@@ -99,9 +98,9 @@ class _TabButtons extends StatelessWidget {
         ),
         Button(
           onClicked: () {
-            setTab(_EditorTab.background);
+            setTab(EditorTab.background);
           },
-          backgroundColour: tab == _EditorTab.background
+          backgroundColour: tab == EditorTab.background
               ? Theme.of(context).colorScheme.surfaceVariant
               : null,
           child: const Text(

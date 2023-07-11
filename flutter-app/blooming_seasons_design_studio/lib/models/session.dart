@@ -199,6 +199,10 @@ class SessionState extends Cubit<Session> {
           state.selections),
     );
   }
+
+  void updateSelections(Selections Function(Selections) update) {
+    emit(Session(state.gardens, state.garden, update(state.selections)));
+  }
 }
 
 @immutable

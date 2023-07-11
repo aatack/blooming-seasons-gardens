@@ -22,4 +22,13 @@ class Selections {
   static Selections blank() {
     return const Selections(editorTab: EditorTab.garden);
   }
+
+  Selections withEditorTab(EditorTab newTab) {
+    return Selections(
+        editorTab: newTab,
+        selectedGarden: selectedGarden,
+        hoveredGarden: hoveredGarden,
+        selectedNursery: selectedNursery,
+        hoveredNursery: hoveredNursery);
+  }
 }
