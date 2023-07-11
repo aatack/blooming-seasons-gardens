@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/widgets/wrappers/modals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +13,10 @@ import '../../../inputs/elements/instance.dart';
 
 class NurseryTab extends StatelessWidget {
   final Bed nursery;
+  final Selections selections;
 
-  const NurseryTab({super.key, required this.nursery});
+  const NurseryTab(
+      {super.key, required this.nursery, required this.selections});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,7 @@ class NurseryTab extends StatelessWidget {
                 ...nursery.instances.map((instance) => InstanceEditor(
                       key: Key(instance.id.toString()),
                       instance: instance,
+                      selections: selections,
                       hidePosition: true,
                     )),
                 Button(

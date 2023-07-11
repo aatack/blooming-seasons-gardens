@@ -1,4 +1,5 @@
 import 'package:blooming_seasons_design_studio/models/modals.dart';
+import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/point.dart';
@@ -23,6 +24,7 @@ import 'plant.dart';
 
 class InstanceEditor extends StatefulWidget {
   final Instance instance;
+  final Selections selections;
   final Bed? nursery;
   final bool hidePosition;
 
@@ -31,11 +33,18 @@ class InstanceEditor extends StatefulWidget {
   InstanceEditor(
       {super.key,
       required this.instance,
+      required this.selections,
       this.nursery,
       this.hidePosition = false}) {
     element = instance.element ??
         nursery!.instanceMap[instance.templateId!]!.element!;
   }
+
+  bool get expanded =>
+      (nursery == null
+          ? selections.selectedNursery
+          : selections.selectedGarden) ==
+      instance.id;
 
   @override
   State<InstanceEditor> createState() => _InstanceEditorState();

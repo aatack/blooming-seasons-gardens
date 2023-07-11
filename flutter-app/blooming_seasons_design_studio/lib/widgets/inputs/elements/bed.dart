@@ -177,6 +177,7 @@ class _BedEditorState extends State<BedEditor> {
             ...widget.bed.instances.map((instance) => InstanceEditor(
                 key: Key(instance.id.toString()),
                 instance: instance,
+                selections: widget.selections,
                 nursery: widget.nursery)),
             Button(
                 onClicked: () {

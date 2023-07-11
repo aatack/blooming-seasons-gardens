@@ -15,17 +15,12 @@ import 'nursery_tab.dart';
 
 const bool _debug = false;
 
-class Editor extends StatefulWidget {
+class Editor extends StatelessWidget {
   final Garden garden;
   final Selections selections;
 
   const Editor({super.key, required this.garden, required this.selections});
 
-  @override
-  State<Editor> createState() => _EditorState();
-}
-
-class _EditorState extends State<Editor> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -37,19 +32,22 @@ class _EditorState extends State<Editor> {
           child: Column(
             children: [
               _TabButtons(
-                garden: widget.garden,
-                tab: widget.selections.editorTab,
+                garden: garden,
+                tab: selections.editorTab,
                 setTab: (newTab) {
                   context.read<SessionState>().updateSelections(
                       (selections) => selections.withEditorTab(newTab));
                 },
               ),
-              if (widget.selections.editorTab == EditorTab.garden)
-                GardenTab(garden: widget.garden, selections: widget.selections),
-              if (widget.selections.editorTab == EditorTab.nursery)
-                NurseryTab(nursery: widget.garden.nursery),
-              if (widget.selections.editorTab == EditorTab.background)
-                BackgroundTab(background: widget.garden.background),
+              if (selections.editorTab == EditorTab.garden)
+                GardenTab(garden: garden, selections: selections),
+              if (selections.editorTab == EditorTab.nursery)
+                NurseryTab(
+                  nursery: garden.nursery,
+                  selections: selections,
+                ),
+              if (selections.editorTab == EditorTab.background)
+                BackgroundTab(background: garden.background),
             ],
           ),
         ),
