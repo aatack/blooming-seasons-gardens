@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/constants.dart';
 import 'package:blooming_seasons_design_studio/images.dart';
 import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
@@ -398,7 +399,11 @@ class PlantPainter extends Painter {
 
   PlantPainter(this.plant, {required this.hovered, required this.selected}) {
     _outlinePaint = Paint()
-      ..color = hovered || selected ? Colors.blue[600]! : Colors.black
+      ..color = hovered
+          ? hoveredColour
+          : selected
+              ? selectedColour
+              : Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = hovered || selected ? 6.0 : 2.0;
 
