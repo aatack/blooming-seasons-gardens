@@ -4,11 +4,18 @@ import 'package:flutter/services.dart';
 class Hoverable extends StatefulWidget {
   final Widget Function(BuildContext context, bool hovered, bool clicked)
       builder;
-  final void Function() onTap;
+  final void Function()? onTap;
+  final void Function()? onMouseEnter;
+  final void Function()? onMouseLeave;
   final SystemMouseCursor? cursor;
 
   const Hoverable(
-      {super.key, required this.builder, required this.onTap, this.cursor});
+      {super.key,
+      required this.builder,
+      this.onTap,
+      this.onMouseEnter,
+      this.onMouseLeave,
+      this.cursor});
 
   @override
   State<Hoverable> createState() => _HoverableState();
@@ -32,7 +39,9 @@ class _HoverableState extends State<Hoverable> {
         });
       },
       onTap: () {
-        widget.onTap();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
       },
       child: MouseRegion(
         cursor:
@@ -41,12 +50,18 @@ class _HoverableState extends State<Hoverable> {
           setState(() {
             _hovered = true;
           });
+          if (widget.onMouseEnter != null) {
+            widget.onMouseEnter!();
+          }
         },
         onExit: (_) {
           setState(() {
             _hovered = false;
             _clicked = false;
           });
+          if (widget.onMouseLeave != null) {
+            widget.onMouseLeave!();
+          }
         },
         child: widget.builder(context, _hovered, _clicked),
       ),
