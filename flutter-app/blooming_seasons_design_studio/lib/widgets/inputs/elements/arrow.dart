@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/constants.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:flutter/material.dart' hide Element;
@@ -71,8 +72,12 @@ class ArrowPainter extends Painter {
     _source = arrow.source.offset;
 
     _paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = arrow.thickness.output
+      ..color = hovered
+          ? hoveredColour
+          : selected
+              ? selectedColour
+              : Colors.black
+      ..strokeWidth = arrow.thickness.output * (hovered || selected ? 1.5 : 1)
       ..style = PaintingStyle.stroke;
 
     _path = Path()

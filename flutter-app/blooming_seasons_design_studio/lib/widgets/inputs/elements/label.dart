@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/constants.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
 
@@ -74,7 +75,11 @@ class LabelPainter extends Painter {
     _text = TextSpan(
       text: label.text.output,
       style: TextStyle(
-        color: Colors.black,
+        color: hovered
+            ? hoveredColour
+            : selected
+                ? selectedColour
+                : Colors.black,
         fontSize: label.size.output,
         fontWeight: FontWeight.bold,
         fontFamily: "Spectral",
