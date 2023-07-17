@@ -58,14 +58,16 @@ class ArrowEditor extends StatelessWidget {
 
 class ArrowPainter extends Painter {
   final Arrow arrow;
-  final Selections selections;
-  final int parentId;
+
+  // Whether the instance or its parent bed is hovered or selected
+  final bool hovered;
+  final bool selected;
 
   late final Offset _source;
   late final Paint _paint;
   late final Path _path;
 
-  ArrowPainter(this.arrow, this.selections, this.parentId) {
+  ArrowPainter(this.arrow, {required this.hovered, required this.selected}) {
     _source = arrow.source.offset;
 
     _paint = Paint()

@@ -51,7 +51,8 @@ class PlantEditor extends StatelessWidget {
                 plant.diameter,
                 (newDiameter, transient) {
                   updateElement(
-                      (element, _) => element.withDiameter(newDiameter), transient);
+                      (element, _) => element.withDiameter(newDiameter),
+                      transient);
                 },
               ),
             ),
@@ -383,8 +384,10 @@ class PlantPainter extends Painter {
   static const centre = Offset.zero;
 
   final Plant plant;
-  final Selections selections;
-  final int parentId;
+
+  // Whether the instance or its parent bed is hovered or selected
+  final bool hovered;
+  final bool selected;
 
   late final Paint _outlinePaint;
   late final Paint _fillPaint;
@@ -394,7 +397,7 @@ class PlantPainter extends Painter {
 
   late final PositionedImagePainter _imagePainter;
 
-  PlantPainter(this.plant, this.selections, this.parentId) {
+  PlantPainter(this.plant, {required this.hovered, required this.selected}) {
     _outlinePaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke

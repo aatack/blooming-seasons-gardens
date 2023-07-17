@@ -315,23 +315,43 @@ class InstancePainter extends Painter {
   final Instance instance;
   final Bed nursery;
   final Selections selections;
-  final int parentId;
+
+  // Whether or not the parent bed is hovered or selected
+  final bool hovered;
+  final bool selected;
 
   late final Offset _offset;
   late final Painter _child;
   late final Element _element;
 
-  InstancePainter(this.instance, this.nursery, this.selections, this.parentId) {
+  InstancePainter(this.instance, this.nursery, this.selections,
+      {required this.hovered, required this.selected}) {
     _offset = instance.position.offset;
     _element =
         instance.element ?? nursery.instanceMap[instance.templateId!]!.element!;
 
+    final instanceHovered = hovered ||
+        (selections.editorTab != EditorTab.nursery &&
+            selections.hoveredGarden == instance.id) ||
+        (selections.editorTab == EditorTab.nursery &&
+            instance.templateId != null &&
+            selections.hoveredNursery == instance.templateId);
+    final instanceSelected = selected ||
+        (selections.editorTab != EditorTab.nursery &&
+            selections.selectedGarden == instance.id) ||
+        (selections.editorTab == EditorTab.nursery &&
+            instance.templateId != null &&
+            selections.selectedNursery == instance.templateId);
+
     if (_element is Plant) {
-      _child = PlantPainter(_element as Plant, selections, parentId);
+      _child = PlantPainter(_element as Plant,
+          hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Arrow) {
-      _child = ArrowPainter(_element as Arrow, selections, parentId);
+      _child = ArrowPainter(_element as Arrow,
+          hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Label) {
-      _child = LabelPainter(_element as Label, selections, parentId);
+      _child = LabelPainter(_element as Label,
+          hovered: instanceHovered, selected: instanceSelected);
     } else {
       _child = PainterGroup(Offset.zero, []);
     }

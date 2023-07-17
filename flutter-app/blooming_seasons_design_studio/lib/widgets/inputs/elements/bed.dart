@@ -269,8 +269,9 @@ class BedPainter extends PainterGroup {
           bed.origin.offset,
           bed.instances
               .map(
-                (instance) =>
-                    InstancePainter(instance, nursery, selections, bed.id),
+                (instance) => InstancePainter(instance, nursery, selections,
+                    selected: selections.selectedGarden == bed.id,
+                    hovered: selections.hoveredGarden == bed.id),
               )
               .toList(),
         );
