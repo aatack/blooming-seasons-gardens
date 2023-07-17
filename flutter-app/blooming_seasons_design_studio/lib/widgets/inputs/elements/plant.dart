@@ -399,9 +399,9 @@ class PlantPainter extends Painter {
 
   PlantPainter(this.plant, {required this.hovered, required this.selected}) {
     _outlinePaint = Paint()
-      ..color = Colors.black
+      ..color = hovered || selected ? Colors.blue[600]! : Colors.black
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
+      ..strokeWidth = hovered || selected ? 6.0 : 2.0;
 
     _fillPaint = Paint()
       ..color = plant.fill.colour
@@ -425,6 +425,9 @@ class PlantPainter extends Painter {
       canvas.clipPath(_clipPath);
 
       _imagePainter.paint(canvas);
+      if (hovered || selected) {
+        canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
+      }
 
       canvas.restore();
     }
