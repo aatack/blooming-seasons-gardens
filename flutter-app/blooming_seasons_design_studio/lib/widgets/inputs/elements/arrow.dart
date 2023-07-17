@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide Element;
 
 import '../../../models/garden/arrow.dart';
 import '../../../models/garden/instance.dart';
+import '../../../models/selections.dart';
 import '../../../models/structs/point.dart';
 import '../../top_down.dart';
 import '../point.dart';
@@ -57,12 +58,14 @@ class ArrowEditor extends StatelessWidget {
 
 class ArrowPainter extends Painter {
   final Arrow arrow;
+  final Selections selections;
+  final int parentId;
 
   late final Offset _source;
   late final Paint _paint;
   late final Path _path;
 
-  ArrowPainter(this.arrow) {
+  ArrowPainter(this.arrow, this.selections, this.parentId) {
     _source = arrow.source.offset;
 
     _paint = Paint()

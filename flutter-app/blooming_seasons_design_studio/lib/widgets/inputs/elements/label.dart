@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide Element;
 
 import '../../../models/garden/instance.dart';
 import '../../../models/garden/label.dart';
+import '../../../models/selections.dart';
 import '../../../models/structs/point.dart';
 import '../form_layout.dart';
 import '../point.dart';
@@ -61,11 +62,13 @@ class LabelEditor extends StatelessWidget {
 
 class LabelPainter extends Painter {
   final Label label;
+  final Selections selections;
+  final int parentId;
 
   late final TextSpan _text;
   late final TextPainter _painter;
 
-  LabelPainter(this.label) {
+  LabelPainter(this.label, this.selections, this.parentId) {
     _text = TextSpan(
       text: label.text.output,
       style: TextStyle(

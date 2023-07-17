@@ -1,3 +1,4 @@
+import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/models/structs/positioned_image.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/bed.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
@@ -7,15 +8,16 @@ import '../../../models/garden/garden.dart';
 
 class Planner extends StatefulWidget {
   final Garden garden;
+  final Selections selections;
 
   late final PainterGroup painter;
 
-  Planner({super.key, required this.garden}) {
+  Planner({super.key, required this.garden, required this.selections}) {
     painter = PainterGroup(
       const Offset(0, 0),
       [
         PositionedImagePainter(garden.background),
-        ...garden.beds.map((bed) => BedPainter(bed, garden.nursery)).toList()
+        ...garden.beds.map((bed) => BedPainter(bed, garden.nursery, selections)).toList()
       ],
     );
   }

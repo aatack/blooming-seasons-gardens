@@ -20,7 +20,7 @@ class GardenView extends StatelessWidget {
         Expanded(
           child: Stack(
             children: [
-              Planner(garden: garden),
+              Planner(garden: garden, selections: selections),
               Editor(garden: garden, selections: selections),
             ],
           ),

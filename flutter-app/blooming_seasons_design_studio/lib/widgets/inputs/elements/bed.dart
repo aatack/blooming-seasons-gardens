@@ -262,13 +262,15 @@ class AddElementModal extends StatelessWidget {
 class BedPainter extends PainterGroup {
   final Bed bed;
   final Bed nursery;
+  final Selections selections;
 
-  BedPainter(this.bed, this.nursery)
+  BedPainter(this.bed, this.nursery, this.selections)
       : super(
           bed.origin.offset,
           bed.instances
               .map(
-                (instance) => InstancePainter(instance, nursery),
+                (instance) =>
+                    InstancePainter(instance, nursery, selections, bed.id),
               )
               .toList(),
         );

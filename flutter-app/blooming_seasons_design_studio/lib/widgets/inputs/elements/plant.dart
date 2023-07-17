@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../models/garden/plant.dart';
+import '../../../models/selections.dart';
 import '../../../models/structs/point.dart';
 import '../../top_down.dart';
 import '../../wrappers/modals.dart';
@@ -382,6 +383,8 @@ class PlantPainter extends Painter {
   static const centre = Offset.zero;
 
   final Plant plant;
+  final Selections selections;
+  final int parentId;
 
   late final Paint _outlinePaint;
   late final Paint _fillPaint;
@@ -391,7 +394,7 @@ class PlantPainter extends Painter {
 
   late final PositionedImagePainter _imagePainter;
 
-  PlantPainter(this.plant) {
+  PlantPainter(this.plant, this.selections, this.parentId) {
     _outlinePaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke

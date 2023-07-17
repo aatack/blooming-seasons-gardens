@@ -314,22 +314,24 @@ class _InstanceEditorState extends State<InstanceEditor> {
 class InstancePainter extends Painter {
   final Instance instance;
   final Bed nursery;
+  final Selections selections;
+  final int parentId;
 
   late final Offset _offset;
   late final Painter _child;
   late final Element _element;
 
-  InstancePainter(this.instance, this.nursery) {
+  InstancePainter(this.instance, this.nursery, this.selections, this.parentId) {
     _offset = instance.position.offset;
     _element =
         instance.element ?? nursery.instanceMap[instance.templateId!]!.element!;
 
     if (_element is Plant) {
-      _child = PlantPainter(_element as Plant);
+      _child = PlantPainter(_element as Plant, selections, parentId);
     } else if (_element is Arrow) {
-      _child = ArrowPainter(_element as Arrow);
+      _child = ArrowPainter(_element as Arrow, selections, parentId);
     } else if (_element is Label) {
-      _child = LabelPainter(_element as Label);
+      _child = LabelPainter(_element as Label, selections, parentId);
     } else {
       _child = PainterGroup(Offset.zero, []);
     }
