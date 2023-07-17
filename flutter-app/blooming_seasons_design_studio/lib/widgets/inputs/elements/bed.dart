@@ -29,8 +29,8 @@ class BedEditor extends StatefulWidget {
       {super.key, required this.bed, required this.selections, this.nursery});
 
   bool get expanded =>
-      selections.selectedGarden == bed.id ||
-      bed.instanceMap.containsKey(selections.selectedGarden);
+      selections.selected == bed.id ||
+      bed.instanceMap.containsKey(selections.selected);
 
   @override
   State<BedEditor> createState() => _BedEditorState();
@@ -95,8 +95,8 @@ class _BedEditorState extends State<BedEditor> {
         ),
       ),
       onTap: () {
-        context.read<SessionState>().updateSelections((selections) => selections
-            .withSelectedGarden(widget.expanded ? null : widget.bed.id));
+        context.read<SessionState>().updateSelections((selections) =>
+            selections.withSelected(widget.expanded ? null : widget.bed.id));
       },
     );
   }
@@ -270,8 +270,8 @@ class BedPainter extends PainterGroup {
           bed.instances
               .map(
                 (instance) => InstancePainter(instance, nursery, selections,
-                    selected: selections.selectedGarden == bed.id,
-                    hovered: selections.hoveredGarden == bed.id),
+                    selected: selections.selected == bed.id,
+                    hovered: selections.hovered == bed.id),
               )
               .toList(),
         );

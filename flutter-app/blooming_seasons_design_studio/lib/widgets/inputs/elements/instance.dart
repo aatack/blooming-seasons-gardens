@@ -50,11 +50,7 @@ class InstanceEditor extends StatefulWidget {
         bedContext!.nursery.instanceMap[instance.templateId!]!.element!;
   }
 
-  bool get expanded =>
-      (bedContext == null
-          ? selections.selectedNursery
-          : selections.selectedGarden) ==
-      instance.id;
+  bool get expanded => selections.selected == instance.id;
 
   @override
   State<InstanceEditor> createState() => _InstanceEditorState();
@@ -73,10 +69,9 @@ class _InstanceEditorState extends State<InstanceEditor> {
       onTap: () {
         final id =
             widget.expanded ? widget.bedContext?.parentId : widget.instance.id;
-        context.read<SessionState>().updateSelections((selections) =>
-            widget.bedContext == null
-                ? selections.withSelectedNursery(id)
-                : selections.withSelectedGarden(id));
+        context
+            .read<SessionState>()
+            .updateSelections((selections) => selections.withSelected(id));
       },
       builder: (context, hovered, clicked) {
         return Container(
@@ -331,17 +326,13 @@ class InstancePainter extends Painter {
         instance.element ?? nursery.instanceMap[instance.templateId!]!.element!;
 
     final instanceHovered = hovered ||
-        (selections.editorTab != EditorTab.nursery &&
-            selections.hoveredGarden == instance.id) ||
-        (selections.editorTab == EditorTab.nursery &&
-            instance.templateId != null &&
-            selections.hoveredNursery == instance.templateId);
+        (selections.hovered == instance.id) ||
+        (instance.templateId != null &&
+            selections.hovered == instance.templateId);
     final instanceSelected = selected ||
-        (selections.editorTab != EditorTab.nursery &&
-            selections.selectedGarden == instance.id) ||
-        (selections.editorTab == EditorTab.nursery &&
-            instance.templateId != null &&
-            selections.selectedNursery == instance.templateId);
+        (selections.selected == instance.id) ||
+        (instance.templateId != null &&
+            selections.selected == instance.templateId);
 
     if (_element is Plant) {
       _child = PlantPainter(_element as Plant,

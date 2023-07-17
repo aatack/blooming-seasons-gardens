@@ -6,65 +6,26 @@ enum EditorTab { garden, nursery, background }
 class Selections {
   final EditorTab editorTab;
 
-  final int? selectedGarden;
-  final int? hoveredGarden;
+  final int? selected;
+  final int? hovered;
 
-  final int? selectedNursery;
-  final int? hoveredNursery;
-
-  const Selections(
-      {required this.editorTab,
-      this.selectedGarden,
-      this.hoveredGarden,
-      this.selectedNursery,
-      this.hoveredNursery});
+  const Selections({required this.editorTab, this.selected, this.hovered});
 
   static Selections blank() {
     return const Selections(editorTab: EditorTab.garden);
   }
 
   Selections withEditorTab(EditorTab newTab) {
-    return Selections(
-        editorTab: newTab,
-        selectedGarden: selectedGarden,
-        hoveredGarden: hoveredGarden,
-        selectedNursery: selectedNursery,
-        hoveredNursery: hoveredNursery);
+    return Selections(editorTab: newTab, hovered: hovered, selected: selected);
   }
 
-  Selections withSelectedGarden(int? newSelectedGarden) {
+  Selections withSelected(int? newSelected) {
     return Selections(
-        editorTab: editorTab,
-        selectedGarden: newSelectedGarden,
-        hoveredGarden: hoveredGarden,
-        selectedNursery: selectedNursery,
-        hoveredNursery: hoveredNursery);
+        editorTab: editorTab, selected: newSelected, hovered: hovered);
   }
 
-  Selections withHoveredGarden(int? newHoveredGarden) {
+  Selections withHovered(int? newHovered) {
     return Selections(
-        editorTab: editorTab,
-        selectedGarden: selectedGarden,
-        hoveredGarden: newHoveredGarden,
-        selectedNursery: selectedNursery,
-        hoveredNursery: hoveredNursery);
-  }
-
-  Selections withSelectedNursery(int? newSelectedNursery) {
-    return Selections(
-        editorTab: editorTab,
-        selectedGarden: selectedGarden,
-        hoveredGarden: hoveredGarden,
-        selectedNursery: newSelectedNursery,
-        hoveredNursery: hoveredNursery);
-  }
-
-  Selections withHoveredNursery(int? newHoveredNursery) {
-    return Selections(
-        editorTab: editorTab,
-        selectedGarden: selectedGarden,
-        hoveredGarden: hoveredGarden,
-        selectedNursery: selectedNursery,
-        hoveredNursery: newHoveredNursery);
+        editorTab: editorTab, selected: selected, hovered: newHovered);
   }
 }
