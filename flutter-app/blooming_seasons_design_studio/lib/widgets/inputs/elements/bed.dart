@@ -63,46 +63,50 @@ class _BedEditorState extends State<BedEditor> {
             .read<SessionState>()
             .updateSelections((selections) => selections.withHovered(null));
       },
-      builder: (context, hovered, clicked) => Card(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        color: clicked
-            ? darker(darker(colourScheme.surfaceVariant))
-            : (hovered
-                ? darker(colourScheme.surfaceVariant)
-                : colourScheme.surfaceVariant),
-        margin: const EdgeInsets.all(0),
-        child: SizedBox(
-          height: 36,
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              Row(
-                children: [
-                  Icon(widget.expanded
-                      ? Icons.arrow_drop_down
-                      : Icons.arrow_right),
-                  ControlledTextInput(
-                    value: widget.bed.name,
-                    onChange: (newValue, transient) {
-                      context.read<SessionState>().editGarden(
-                          (garden) => garden.editBed(widget.bed.id,
-                              (bed, _) => bed.withName(newValue)),
-                          transient: transient);
-                    },
-                    editing: _editingName,
-                    onEditingFinished: () {
-                      setState(() {
-                        _editingName = false;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              if (hovered && !_editingName) _overlayedIcons(context),
-            ],
+      builder: (context, _, clicked) {
+        final hovered = widget.selections.hovered == widget.bed.id;
+
+        return Card(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          color: clicked
+              ? darker(darker(colourScheme.surfaceVariant))
+              : (hovered
+                  ? darker(colourScheme.surfaceVariant)
+                  : colourScheme.surfaceVariant),
+          margin: const EdgeInsets.all(0),
+          child: SizedBox(
+            height: 36,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Row(
+                  children: [
+                    Icon(widget.expanded
+                        ? Icons.arrow_drop_down
+                        : Icons.arrow_right),
+                    ControlledTextInput(
+                      value: widget.bed.name,
+                      onChange: (newValue, transient) {
+                        context.read<SessionState>().editGarden(
+                            (garden) => garden.editBed(widget.bed.id,
+                                (bed, _) => bed.withName(newValue)),
+                            transient: transient);
+                      },
+                      editing: _editingName,
+                      onEditingFinished: () {
+                        setState(() {
+                          _editingName = false;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                if (hovered && !_editingName) _overlayedIcons(context),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
       onTap: () {
         context.read<SessionState>().updateSelections((selections) =>
             selections.withSelected(widget.expanded ? null : widget.bed.id));
