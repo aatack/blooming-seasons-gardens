@@ -54,6 +54,15 @@ class _BedEditorState extends State<BedEditor> {
     final colourScheme = Theme.of(context).colorScheme;
 
     return Hoverable(
+      onMouseEnter: () {
+        context.read<SessionState>().updateSelections(
+            (selections) => selections.withHovered(widget.bed.id));
+      },
+      onMouseLeave: () {
+        context
+            .read<SessionState>()
+            .updateSelections((selections) => selections.withHovered(null));
+      },
       builder: (context, hovered, clicked) => Card(
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         color: clicked

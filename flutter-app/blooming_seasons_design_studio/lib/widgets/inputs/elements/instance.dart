@@ -73,6 +73,15 @@ class _InstanceEditorState extends State<InstanceEditor> {
             .read<SessionState>()
             .updateSelections((selections) => selections.withSelected(id));
       },
+      onMouseEnter: () {
+        context.read<SessionState>().updateSelections(
+            (selections) => selections.withHovered(widget.instance.id));
+      },
+      onMouseLeave: () {
+        context
+            .read<SessionState>()
+            .updateSelections((selections) => selections.withHovered(null));
+      },
       builder: (context, hovered, clicked) {
         return Container(
           color: clicked
