@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blooming_seasons_design_studio/constants.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/form_layout.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
@@ -69,7 +71,8 @@ class ArrowPainter extends Painter {
   late final Paint _paint;
   late final Path _path;
 
-  ArrowPainter(this.arrow, this.id, {required this.hovered, required this.selected}) {
+  ArrowPainter(this.arrow, this.id,
+      {required this.hovered, required this.selected}) {
     _source = arrow.source.offset;
 
     _paint = Paint()
@@ -93,6 +96,20 @@ class ArrowPainter extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    return null;
+    // Sort of lost track of how this works, but it does work
+    final numerator =
+        (_source.dx * position.dy - _source.dy * position.dx).abs();
+    final denominator = sqrt(
+        pow(_source.dy - position.dy, 2) + pow(_source.dx - position.dx, 2));
+
+    final normalDistance = numerator / denominator;
+    final tangentDistance = ((-position.dx) * (_source.dx - position.dx) +
+            (-position.dy) * (_source.dy - position.dy)) /
+        pow(denominator, 2) *
+        denominator;
+
+    return tangentDistance < 0 && normalDistance < arrow.thickness.output * 3
+        ? id
+        : null;
   }
 }
