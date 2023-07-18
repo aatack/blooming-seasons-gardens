@@ -96,25 +96,17 @@ class ArrowPainter extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    double x1 = 0;
-    double y1 = 0;
-    double x2 = _source.dx;
-    double y2 = _source.dy;
-    double x0 = position.dx;
-    double y0 = position.dy;
-
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-
-    double lineLength = sqrt(dx * dx + dy * dy);
-
-    double along = ((x0 - x1) * dx + (y0 - y1) * dy) / lineLength;
-    double normal = ((x0 - x1) * -dy + (y0 - y1) * dx) / lineLength;
+    final along =
+        ((position.dx - 0) * _source.dx + (position.dy - 0) * _source.dy) /
+            _source.distance;
+    final normal =
+        ((position.dx - 0) * -_source.dy + (position.dy - 0) * _source.dx) /
+            _source.distance;
 
     final leeway = arrow.thickness.output * 2;
 
     return (-leeway <= along) &&
-            (along <= lineLength + leeway) &&
+            (along <= _source.distance + leeway) &&
             (normal.abs() <= leeway)
         ? id
         : null;
