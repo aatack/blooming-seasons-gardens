@@ -72,7 +72,8 @@ class LabelPainter extends Painter {
   late final TextSpan _text;
   late final TextPainter _painter;
 
-  LabelPainter(this.label, this.id, {required this.hovered, required this.selected}) {
+  LabelPainter(this.label, this.id,
+      {required this.hovered, required this.selected}) {
     _text = TextSpan(
       text: label.text.output,
       style: TextStyle(
@@ -94,7 +95,12 @@ class LabelPainter extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    return null;
+    return position.dx >= 0 &&
+            position.dx < _painter.width &&
+            position.dy >= 0 &&
+            position.dy < _painter.height
+        ? id
+        : null;
   }
 
   @override
