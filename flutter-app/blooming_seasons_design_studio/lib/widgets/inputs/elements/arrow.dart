@@ -96,19 +96,26 @@ class ArrowPainter extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    // Sort of lost track of how this works, but it does work
-    final numerator =
-        (_source.dx * position.dy - _source.dy * position.dx).abs();
-    final denominator = sqrt(
-        pow(_source.dy - position.dy, 2) + pow(_source.dx - position.dx, 2));
+    double x1 = 0;
+    double y1 = 0;
+    double x2 = _source.dx;
+    double y2 = _source.dy;
+    double x0 = position.dx;
+    double y0 = position.dy;
 
-    final normalDistance = numerator / denominator;
-    final tangentDistance = ((-position.dx) * (_source.dx - position.dx) +
-            (-position.dy) * (_source.dy - position.dy)) /
-        pow(denominator, 2) *
-        denominator;
+    double dx = x2 - x1;
+    double dy = y2 - y1;
 
-    return tangentDistance < 0 && normalDistance < arrow.thickness.output * 3
+    double lineLength = sqrt(dx * dx + dy * dy);
+
+    double along = ((x0 - x1) * dx + (y0 - y1) * dy) / lineLength;
+    double normal = ((x0 - x1) * -dy + (y0 - y1) * dx) / lineLength;
+
+    final leeway = arrow.thickness.output * 2;
+
+    return (-leeway <= along) &&
+            (along <= lineLength + leeway) &&
+            (normal.abs() <= leeway)
         ? id
         : null;
   }
