@@ -48,9 +48,9 @@ class _PlannerState extends State<Planner> {
             .updateSelections((selections) => selections.withHovered(id));
       },
       onSelectedElementChanged: (id) {
-        context
-            .read<SessionState>()
-            .updateSelections((selections) => selections.withSelected(id));
+        context.read<SessionState>().updateSelections((selections) =>
+            // Deselect the element if it is already selected
+            selections.withSelected(selections.selected == id ? null : id));
       },
       child: widget.painter,
     );
