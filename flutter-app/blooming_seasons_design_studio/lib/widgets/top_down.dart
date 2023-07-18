@@ -22,6 +22,7 @@ class TopDownPosition {
 class TopDown extends StatefulWidget {
   final TopDownPosition position;
   final void Function(TopDownPosition) setPosition;
+  final void Function(int?)? onHoveredElementChanged;
 
   final Painter child;
 
@@ -29,6 +30,7 @@ class TopDown extends StatefulWidget {
       {super.key,
       required this.position,
       required this.setPosition,
+      this.onHoveredElementChanged,
       required this.child});
 
   @override
@@ -38,6 +40,7 @@ class TopDown extends StatefulWidget {
 class _TopDownState extends State<TopDown> {
   Offset? _dragOrigin;
   TopDownPosition? _positionOrigin;
+  int? _hoveredElement;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +59,15 @@ class _TopDownState extends State<TopDown> {
         }
       },
       onPointerHover: (event) {
-        final worldPosition =
-            widget.position.worldPosition(event.localPosition);
-        print(widget.child.hitTest(worldPosition));
+        final hovered = widget.child
+            .hitTest(widget.position.worldPosition(event.localPosition));
+        if (hovered != _hoveredElement &&
+            widget.onHoveredElementChanged != null) {
+          setState(() {
+            _hoveredElement = hovered;
+          });
+          widget.onHoveredElementChanged!(hovered);
+        }
       },
       child: GestureDetector(
         onPanStart: (details) {

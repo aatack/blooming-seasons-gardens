@@ -82,7 +82,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
             .read<SessionState>()
             .updateSelections((selections) => selections.withHovered(null));
       },
-      builder: (context, _, clicked) {
+      builder: (context, hoveredLocally, clicked) {
         final hovered = widget.selections.hovered == widget.instance.id;
 
         return Container(
@@ -99,7 +99,7 @@ class _InstanceEditorState extends State<InstanceEditor> {
                 padding: const EdgeInsets.all(5),
                 child: FormLayout(
                   children: [
-                    _header(context, hovered),
+                    _header(context, hoveredLocally),
                     if (widget.expanded) _body(context)
                   ],
                 ),

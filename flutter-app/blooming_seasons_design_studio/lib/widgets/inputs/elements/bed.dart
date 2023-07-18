@@ -63,8 +63,13 @@ class _BedEditorState extends State<BedEditor> {
             .read<SessionState>()
             .updateSelections((selections) => selections.withHovered(null));
       },
-      builder: (context, _, clicked) {
-        final hovered = widget.selections.hovered == widget.bed.id;
+      builder: (context, localHovered, clicked) {
+        // Don't highlight the bed, or show widgets, if one of its children is
+        // being highlighted while it's open
+        final hovered = ((widget.selections.hovered == widget.bed.id ||
+                widget.bed.instanceMap.containsKey(widget.selections.hovered) &&
+                    !widget.expanded) ||
+            localHovered);
 
         return Card(
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -101,7 +106,10 @@ class _BedEditorState extends State<BedEditor> {
                     ),
                   ],
                 ),
-                if (hovered && !_editingName) _overlayedIcons(context),
+                // Don't show the icons if the bed is hovered via a child
+                if ((widget.selections.hovered == widget.bed.id) &&
+                    !_editingName)
+                  _overlayedIcons(context),
               ],
             ),
           ),
