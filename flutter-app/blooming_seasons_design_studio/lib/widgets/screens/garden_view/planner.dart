@@ -47,6 +47,11 @@ class _PlannerState extends State<Planner> {
             .read<SessionState>()
             .updateSelections((selections) => selections.withHovered(id));
       },
+      onSelectedElementChanged: (id) {
+        context
+            .read<SessionState>()
+            .updateSelections((selections) => selections.withSelected(id));
+      },
       child: widget.painter,
     );
   }

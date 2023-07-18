@@ -23,6 +23,7 @@ class TopDown extends StatefulWidget {
   final TopDownPosition position;
   final void Function(TopDownPosition) setPosition;
   final void Function(int?)? onHoveredElementChanged;
+  final void Function(int?)? onSelectedElementChanged;
 
   final Painter child;
 
@@ -31,6 +32,7 @@ class TopDown extends StatefulWidget {
       required this.position,
       required this.setPosition,
       this.onHoveredElementChanged,
+      this.onSelectedElementChanged,
       required this.child});
 
   @override
@@ -90,8 +92,10 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onTapUp: (TapUpDetails details) {
-          print(
-              "Clicked ${widget.position.worldPosition(details.localPosition)}");
+          if (widget.onSelectedElementChanged != null) {
+            widget.onSelectedElementChanged!(widget.child
+                .hitTest(widget.position.worldPosition(details.localPosition)));
+          }
         },
         child: child,
       ),
