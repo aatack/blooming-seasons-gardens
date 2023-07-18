@@ -56,7 +56,9 @@ class _TopDownState extends State<TopDown> {
         }
       },
       onPointerHover: (event) {
-        // TODO: use `event.localPosition` to determine the hovered element
+        final worldPosition =
+            widget.position.worldPosition(event.localPosition);
+        print(widget.child.hitTest(worldPosition));
       },
       child: GestureDetector(
         onPanStart: (details) {
@@ -153,7 +155,9 @@ class PainterGroup extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    for (final child in children) {
+    // When checking for hits, iterate backwards through children such
+    // that the child that is rendered last gets hit first
+    for (final child in children.reversed) {
       final hitResult = child.hitTest(position - offset);
       if (hitResult != null) {
         return hitResult;

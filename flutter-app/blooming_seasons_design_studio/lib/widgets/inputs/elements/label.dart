@@ -63,6 +63,7 @@ class LabelEditor extends StatelessWidget {
 
 class LabelPainter extends Painter {
   final Label label;
+  final int id;
 
   // Whether the instance or its parent bed is hovered or selected
   final bool hovered;
@@ -71,7 +72,7 @@ class LabelPainter extends Painter {
   late final TextSpan _text;
   late final TextPainter _painter;
 
-  LabelPainter(this.label, {required this.hovered, required this.selected}) {
+  LabelPainter(this.label, this.id, {required this.hovered, required this.selected}) {
     _text = TextSpan(
       text: label.text.output,
       style: TextStyle(

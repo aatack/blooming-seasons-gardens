@@ -384,6 +384,7 @@ class PlantPainter extends Painter {
   static const centre = Offset.zero;
 
   final Plant plant;
+  final int id;
 
   // Whether the instance or its parent bed is hovered or selected
   final bool hovered;
@@ -397,7 +398,8 @@ class PlantPainter extends Painter {
 
   late final PositionedImagePainter _imagePainter;
 
-  PlantPainter(this.plant, {required this.hovered, required this.selected}) {
+  PlantPainter(this.plant, this.id,
+      {required this.hovered, required this.selected}) {
     _outlinePaint = Paint()
       ..color = hovered
           ? hoveredColour
@@ -439,6 +441,6 @@ class PlantPainter extends Painter {
 
   @override
   int? hitTest(Offset position) {
-    return null;
+    return position.distance < _radius ? id : null;
   }
 }

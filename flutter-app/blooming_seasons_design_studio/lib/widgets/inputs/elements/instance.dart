@@ -346,13 +346,13 @@ class InstancePainter extends Painter {
             selections.selected == instance.templateId);
 
     if (_element is Plant) {
-      _child = PlantPainter(_element as Plant,
+      _child = PlantPainter(_element as Plant, instance.id,
           hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Arrow) {
-      _child = ArrowPainter(_element as Arrow,
+      _child = ArrowPainter(_element as Arrow, instance.id,
           hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Label) {
-      _child = LabelPainter(_element as Label,
+      _child = LabelPainter(_element as Label, instance.id,
           hovered: instanceHovered, selected: instanceSelected);
     } else {
       _child = PainterGroup(Offset.zero, []);
