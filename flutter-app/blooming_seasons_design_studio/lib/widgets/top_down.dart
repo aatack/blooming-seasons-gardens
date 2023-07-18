@@ -97,7 +97,13 @@ class _TopDownState extends State<TopDown> {
                 .hitTest(widget.position.worldPosition(details.localPosition)));
           }
         },
-        child: child,
+        child: MouseRegion(
+            cursor: _hoveredElement == null
+                ? (_dragOrigin == null
+                    ? SystemMouseCursors.grab
+                    : SystemMouseCursors.grabbing)
+                : SystemMouseCursors.click,
+            child: child),
       ),
     );
   }
