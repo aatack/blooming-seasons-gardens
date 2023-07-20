@@ -31,7 +31,8 @@ class Planner extends StatefulWidget {
 }
 
 class _PlannerState extends State<Planner> {
-  TopDownPosition _position = const TopDownPosition(0, 0, 1);
+  Offset _position = const Offset(0, 0);
+  double _scale = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,15 @@ class _PlannerState extends State<Planner> {
         width: constraints.maxWidth,
         height: constraints.maxHeight,
         position: _position,
+        scale: _scale,
         setPosition: (newPosition) {
           setState(() {
             _position = newPosition;
+          });
+        },
+        setScale: (newScale) {
+          setState(() {
+            _scale = newScale;
           });
         },
         onHoveredElementChanged: (id) {

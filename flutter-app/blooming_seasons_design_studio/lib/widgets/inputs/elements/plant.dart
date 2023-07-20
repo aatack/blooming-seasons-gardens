@@ -342,11 +342,12 @@ class _PreviewPainter extends Painter {
   static const double reticleRadius = size / 3;
 
   final CachedImage? image;
-  final TopDownPosition position;
+  final Offset position;
+  final double scale;
 
   late final Painter _imagePainter;
 
-  _PreviewPainter(this.image, this.position) {
+  _PreviewPainter(this.image, this.position, this.scale) {
     _imagePainter = PositionedImagePainter(
       PositionedImage(
         image: image,
@@ -368,13 +369,9 @@ class _PreviewPainter extends Painter {
     final outline = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
-      ..strokeWidth = position.worldDistance(3);
+      ..strokeWidth = 3 * scale;
 
-    canvas.drawCircle(
-      position.worldPosition(reticleCentre),
-      position.worldDistance(reticleRadius),
-      outline,
-    );
+    canvas.drawCircle(position, reticleRadius * scale, outline);
   }
 }
 

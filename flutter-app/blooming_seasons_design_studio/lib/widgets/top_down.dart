@@ -116,9 +116,9 @@ class _TopDownState extends State<TopDown> {
       final double ratio = scrollAmount < 0 ? 1 * factor : 1 / factor;
 
       final x =
-          screenPosition.dx - ratio * (screenPosition.dx - widget.position.x);
+          screenPosition.dx - ratio * (screenPosition.dx - widget.position.dx);
       final y =
-          screenPosition.dy - ratio * (screenPosition.dy - widget.position.y);
+          screenPosition.dy - ratio * (screenPosition.dy - widget.position.dy);
 
       widget.setScale(widget.scale * ratio);
       widget.setPosition(Offset(x, y));
@@ -136,8 +136,8 @@ class _TopDownState extends State<TopDown> {
         transformHitTests: true,
         child: Transform.translate(
           offset: Offset(
-            widget.position.x, // / widget.position.scale,
-            widget.position.y, // / widget.position.scale,
+            widget.position.dx, // / widget.position.scale,
+            widget.position.dy, // / widget.position.scale,
           ),
           transformHitTests: true,
           child: CustomPaint(painter: _TopDownPainter(widget.child)),
