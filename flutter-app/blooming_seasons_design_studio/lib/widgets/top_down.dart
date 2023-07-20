@@ -20,7 +20,10 @@ class TopDownPosition {
 }
 
 class TopDown extends StatefulWidget {
+  final double width;
+  final double height;
   final TopDownPosition position;
+
   final void Function(TopDownPosition) setPosition;
   final void Function(int?)? onHoveredElementChanged;
   final void Function(int?)? onSelectedElementChanged;
@@ -29,6 +32,8 @@ class TopDown extends StatefulWidget {
 
   const TopDown(
       {super.key,
+      required this.width,
+      required this.height,
       required this.position,
       required this.setPosition,
       this.onHoveredElementChanged,
@@ -46,9 +51,9 @@ class _TopDownState extends State<TopDown> {
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 1,
-      heightFactor: 1,
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
       child: _wrapInControls(_transformedChildren()),
     );
   }

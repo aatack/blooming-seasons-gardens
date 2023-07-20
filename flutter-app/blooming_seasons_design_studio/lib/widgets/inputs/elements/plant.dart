@@ -274,18 +274,16 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: ClipRect(
-                child: SizedBox(
+                child: TopDown(
                   width: _PreviewPainter.size,
                   height: _PreviewPainter.size,
-                  child: TopDown(
-                    position: transformedPosition,
-                    setPosition: (newPosition) {
-                      setState(() {
-                        _image = _inverseTransform(newPosition, _image.image);
-                      });
-                    },
-                    child: _PreviewPainter(_image.image, transformedPosition),
-                  ),
+                  position: transformedPosition,
+                  setPosition: (newPosition) {
+                    setState(() {
+                      _image = _inverseTransform(newPosition, _image.image);
+                    });
+                  },
+                  child: _PreviewPainter(_image.image, transformedPosition),
                 ),
               ),
             ),

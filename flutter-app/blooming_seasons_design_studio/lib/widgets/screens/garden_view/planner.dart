@@ -35,24 +35,28 @@ class _PlannerState extends State<Planner> {
 
   @override
   Widget build(BuildContext context) {
-    return TopDown(
-      position: _position,
-      setPosition: (newPosition) {
-        setState(() {
-          _position = newPosition;
-        });
-      },
-      onHoveredElementChanged: (id) {
-        context
-            .read<SessionState>()
-            .updateSelections((selections) => selections.withHovered(id));
-      },
-      onSelectedElementChanged: (id) {
-        context.read<SessionState>().updateSelections((selections) =>
-            // Deselect the element if it is already selected
-            selections.withSelected(selections.selected == id ? null : id));
-      },
-      child: widget.painter,
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return TopDown(
+        width: constraints.maxWidth,
+        height: constraints.maxHeight,
+        position: _position,
+        setPosition: (newPosition) {
+          setState(() {
+            _position = newPosition;
+          });
+        },
+        onHoveredElementChanged: (id) {
+          context
+              .read<SessionState>()
+              .updateSelections((selections) => selections.withHovered(id));
+        },
+        onSelectedElementChanged: (id) {
+          context.read<SessionState>().updateSelections((selections) =>
+              // Deselect the element if it is already selected
+              selections.withSelected(selections.selected == id ? null : id));
+        },
+        child: widget.painter,
+      );
+    });
   }
 }
