@@ -1,30 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-@immutable
-class TopDownPosition {
-  final double x;
-  final double y;
-  final double scale;
-
-  const TopDownPosition(this.x, this.y, this.scale);
-
-  Offset worldPosition(Offset screenPosition) {
-    return Offset(
-        (screenPosition.dx - x) / scale, (screenPosition.dy - y) / scale);
-  }
-
-  double worldDistance(double screenDistance) {
-    return screenDistance / scale;
-  }
-}
-
 class TopDown extends StatefulWidget {
   final double width;
   final double height;
-  final TopDownPosition position;
+  final Offset position;
+  final double scale;
 
-  final void Function(TopDownPosition) setPosition;
+  final void Function(Offset) setPosition;
+  final void Function(double) setScale;
+
   final void Function(int?)? onHoveredElementChanged;
   final void Function(int?)? onSelectedElementChanged;
 
@@ -35,18 +20,27 @@ class TopDown extends StatefulWidget {
       required this.width,
       required this.height,
       required this.position,
+      required this.scale,
       required this.setPosition,
+      required this.setScale,
       this.onHoveredElementChanged,
       this.onSelectedElementChanged,
       required this.child});
 
   @override
   State<TopDown> createState() => _TopDownState();
+
+  Offset worldPosition(Offset screenPosition) => Offset(
+        position.dx - worldDistance((width / 2) - screenPosition.dx),
+        position.dy - worldDistance((height / 2) - screenPosition.dy),
+      );
+
+  double worldDistance(double screenDistance) => screenDistance * scale;
 }
 
 class _TopDownState extends State<TopDown> {
-  Offset? _dragOrigin;
-  TopDownPosition? _positionOrigin;
+  Offset? _dragOriginScreen;
+  Offset? _dragOriginWorld;
   int? _hoveredElement;
 
   @override
@@ -66,8 +60,8 @@ class _TopDownState extends State<TopDown> {
         }
       },
       onPointerHover: (event) {
-        final hovered = widget.child
-            .hitTest(widget.position.worldPosition(event.localPosition));
+        final hovered =
+            widget.child.hitTest(widget.worldPosition(event.localPosition));
         if (hovered != _hoveredElement &&
             widget.onHoveredElementChanged != null) {
           setState(() {
@@ -79,32 +73,33 @@ class _TopDownState extends State<TopDown> {
       child: GestureDetector(
         onPanStart: (details) {
           setState(() {
-            _dragOrigin = details.localPosition;
-            _positionOrigin = widget.position;
+            _dragOriginScreen = details.localPosition;
+            _dragOriginWorld = widget.position;
           });
         },
         onPanUpdate: (details) {
-          widget.setPosition(TopDownPosition(
-            _positionOrigin!.x - (_dragOrigin!.dx - details.localPosition.dx),
-            _positionOrigin!.y - (_dragOrigin!.dy - details.localPosition.dy),
-            widget.position.scale,
+          widget.setPosition(Offset(
+            _dragOriginWorld!.dx -
+                (_dragOriginScreen!.dx - details.localPosition.dx),
+            _dragOriginWorld!.dy -
+                (_dragOriginScreen!.dy - details.localPosition.dy),
           ));
         },
         onPanEnd: (_) {
           setState(() {
-            _dragOrigin = null;
-            _positionOrigin = null;
+            _dragOriginScreen = null;
+            _dragOriginWorld = null;
           });
         },
         onTapUp: (TapUpDetails details) {
           if (widget.onSelectedElementChanged != null) {
             widget.onSelectedElementChanged!(widget.child
-                .hitTest(widget.position.worldPosition(details.localPosition)));
+                .hitTest(widget.worldPosition(details.localPosition)));
           }
         },
         child: MouseRegion(
             cursor: _hoveredElement == null
-                ? (_dragOrigin == null
+                ? (_dragOriginScreen == null
                     ? SystemMouseCursors.grab
                     : SystemMouseCursors.grabbing)
                 : SystemMouseCursors.click,
@@ -114,7 +109,7 @@ class _TopDownState extends State<TopDown> {
   }
 
   void _doScroll(double scrollAmount, Offset screenPosition) {
-    if (_dragOrigin == null) {
+    if (_dragOriginScreen == null) {
       // A typical scroll amount is 100 units per scroll, so we zoom in or out
       // by 10% per roll of the scroll wheel
       final double factor = (1 + (0.001 * scrollAmount.abs()));
@@ -125,9 +120,8 @@ class _TopDownState extends State<TopDown> {
       final y =
           screenPosition.dy - ratio * (screenPosition.dy - widget.position.y);
 
-      widget.setPosition(
-        TopDownPosition(x, y, widget.position.scale * ratio),
-      );
+      widget.setScale(widget.scale * ratio);
+      widget.setPosition(Offset(x, y));
     }
   }
 
@@ -136,12 +130,15 @@ class _TopDownState extends State<TopDown> {
       width: double.maxFinite,
       height: double.maxFinite,
       color: Colors.white,
-      child: Transform.translate(
-        offset: Offset(widget.position.x, widget.position.y),
+      child: Transform.scale(
+        alignment: Alignment.center,
+        scale: 1, //widget.position.scale,
         transformHitTests: true,
-        child: Transform.scale(
-          alignment: Alignment.topLeft,
-          scale: widget.position.scale,
+        child: Transform.translate(
+          offset: Offset(
+            widget.position.x, // / widget.position.scale,
+            widget.position.y, // / widget.position.scale,
+          ),
           transformHitTests: true,
           child: CustomPaint(painter: _TopDownPainter(widget.child)),
         ),
