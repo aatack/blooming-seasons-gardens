@@ -117,13 +117,17 @@ class _TopDownState extends State<TopDown> {
       final double factor = (1 + (0.001 * scrollAmount.abs()));
       final double ratio = scrollAmount < 0 ? 1 * factor : 1 / factor;
 
-      final x =
-          screenPosition.dx - ratio * (screenPosition.dx - widget.position.dx);
-      final y =
-          screenPosition.dy - ratio * (screenPosition.dy - widget.position.dy);
+      /* Derive by setting the world position of the mouse after the change
+        to be equal to its position before the change. */
+      final x = widget.position.dx +
+          (((1 / widget.scale) - (1 / (ratio * widget.scale))) *
+              (screenPosition.dx - (widget.width / 2)));
+      final y = widget.position.dy +
+          (((1 / widget.scale) - (1 / (ratio * widget.scale))) *
+              (screenPosition.dy - (widget.height / 2)));
 
       widget.setScale(widget.scale * ratio);
-      // widget.setPosition(Offset(x, y));
+      widget.setPosition(Offset(x, y));
     }
   }
 
