@@ -230,8 +230,8 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   @override
   Widget build(BuildContext context) {
     // final transformedPosition = _transform(_image);
-    final transformedPosition = Offset.zero;
-    final transformedScale = 1.0;
+    final transformedPosition = _transform(_image);
+    final transformedScale = _image.scale.output;
 
     return wrapInModal(
       context,
@@ -282,11 +282,17 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                   position: transformedPosition,
                   scale: transformedScale,
                   setPosition: (newPosition) {
-                    // setState(() {
-                    //   _image = _inverseTransform(newPosition, _image.image);
-                    // });
+                    setState(() {
+                      _image = _inverseTransform(
+                          newPosition, transformedScale, _image.image);
+                    });
                   },
-                  setScale: (newScale) {},
+                  setScale: (newScale) {
+                    setState(() {
+                      _image = _inverseTransform(
+                          transformedPosition, newScale, _image.image);
+                    });
+                  },
                   child: _PreviewPainter(
                       _image.image, transformedPosition, transformedScale),
                 ),
@@ -304,41 +310,24 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
     );
   }
 
-  // TopDownPosition _transform(PositionedImage position) {
-  //   /* Converts the image's transform to a reticle transform.
+  Offset _transform(PositionedImage position) {
+    /* Converts the image's transform to a reticle transform.
 
-  //     To derive this, consider the position and size in pixel space (ie. where
-  //     each pixel of the image is one unit) of both the clip path and the
-  //     reticle.  Note that both must be equal; from this set of equalities, the
-  //     relationship between the two transforms can be calculated. */
+      To derive this, consider the position and size in pixel space (ie. where
+      each pixel of the image is one unit) of both the clip path and the
+      reticle.  Note that both must be equal; from this set of equalities, the
+      relationship between the two transforms can be calculated. */
+    return position.position.offset;
+  }
 
-  //   final scale = (2 * _PreviewPainter.reticleRadius * position.scale.output) /
-  //       widget.diameter.output;
-
-  //   final x = _PreviewPainter.reticleCentre.dx +
-  //       ((scale / position.scale.output) * position.position.x.output);
-  //   final y = _PreviewPainter.reticleCentre.dy +
-  //       ((scale / position.scale.output) * position.position.y.output);
-
-  //   return TopDownPosition(x, y, scale);
-  // }
-
-  // PositionedImage _inverseTransform(
-  //     TopDownPosition position, CachedImage? image) {
-  //   final scale = (position.scale * widget.diameter.output) /
-  //       (2 * _PreviewPainter.reticleRadius);
-
-  //   final x = (scale / position.scale) *
-  //       (position.x - _PreviewPainter.reticleCentre.dx);
-  //   final y = (scale / position.scale) *
-  //       (position.y - _PreviewPainter.reticleCentre.dy);
-
-  //   return PositionedImage(
-  //       image: image,
-  //       position:
-  //           Point(ValidatedDouble.initialise(x), ValidatedDouble.initialise(y)),
-  //       scale: ValidatedDouble.initialise(scale));
-  // }
+  PositionedImage _inverseTransform(
+      Offset position, double scale, CachedImage? image) {
+    return PositionedImage(
+        image: image,
+        position: Point(ValidatedDouble.initialise(position.dx),
+            ValidatedDouble.initialise(position.dy)),
+        scale: ValidatedDouble.initialise(scale));
+  }
 }
 
 class _PreviewPainter extends Painter {
@@ -374,9 +363,9 @@ class _PreviewPainter extends Painter {
     final outline = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3 * scale;
+      ..strokeWidth = 3 / scale;
 
-    canvas.drawCircle(position, reticleRadius * scale, outline);
+    canvas.drawCircle(position, reticleRadius / scale, outline);
   }
 }
 

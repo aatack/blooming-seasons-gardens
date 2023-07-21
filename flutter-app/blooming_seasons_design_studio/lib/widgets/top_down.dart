@@ -126,8 +126,8 @@ class _TopDownState extends State<TopDown> {
           (((1 / widget.scale) - (1 / (ratio * widget.scale))) *
               (screenPosition.dy - (widget.height / 2)));
 
-      widget.setScale(widget.scale * ratio);
       widget.setPosition(Offset(x, y));
+      widget.setScale(widget.scale * ratio);
     }
   }
 
