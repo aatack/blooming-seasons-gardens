@@ -31,11 +31,11 @@ class TopDown extends StatefulWidget {
   State<TopDown> createState() => _TopDownState();
 
   Offset worldPosition(Offset screenPosition) => Offset(
-        position.dx - worldDistance((width / 2) - screenPosition.dx),
-        position.dy - worldDistance((height / 2) - screenPosition.dy),
+        position.dx + worldDistance(screenPosition.dx - (width / 2)),
+        position.dy + worldDistance(screenPosition.dy - (height / 2)),
       );
 
-  double worldDistance(double screenDistance) => screenDistance * scale;
+  double worldDistance(double screenDistance) => screenDistance / scale;
 }
 
 class _TopDownState extends State<TopDown> {
@@ -132,10 +132,8 @@ class _TopDownState extends State<TopDown> {
       color: Colors.white,
       child: Transform.translate(
         offset: Offset(
-          (widget.position.dx * -1) +
-              (widget.width / 2), // / widget.position.scale,
-          (widget.position.dy * -1) +
-              (widget.height / 2), // / widget.position.scale,
+          (widget.position.dx * -widget.scale) + (widget.width / 2),
+          (widget.position.dy * -widget.scale) + (widget.height / 2),
         ),
         transformHitTests: true,
         child: Transform.scale(
