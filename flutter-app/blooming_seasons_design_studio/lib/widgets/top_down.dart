@@ -79,9 +79,9 @@ class _TopDownState extends State<TopDown> {
         },
         onPanUpdate: (details) {
           widget.setPosition(Offset(
-            _dragOriginWorld!.dx -
+            _dragOriginWorld!.dx +
                 (_dragOriginScreen!.dx - details.localPosition.dx),
-            _dragOriginWorld!.dy -
+            _dragOriginWorld!.dy +
                 (_dragOriginScreen!.dy - details.localPosition.dy),
           ));
         },
@@ -132,9 +132,9 @@ class _TopDownState extends State<TopDown> {
       color: Colors.white,
       child: Transform.translate(
         offset: Offset(
-          (widget.position.dx * 0) +
+          (widget.position.dx * -1) +
               (widget.width / 2), // / widget.position.scale,
-          (widget.position.dy * 0) +
+          (widget.position.dy * -1) +
               (widget.height / 2), // / widget.position.scale,
         ),
         transformHitTests: true,
