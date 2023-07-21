@@ -78,12 +78,14 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onPanUpdate: (details) {
-          widget.setPosition(Offset(
-            _dragOriginWorld!.dx +
-                (_dragOriginScreen!.dx - details.localPosition.dx),
-            _dragOriginWorld!.dy +
-                (_dragOriginScreen!.dy - details.localPosition.dy),
-          ));
+          // Assumes that the scale has not changed during dragging
+          final worldOffset = Offset(
+              widget.worldDistance(
+                  _dragOriginScreen!.dx - details.localPosition.dx),
+              widget.worldDistance(
+                  _dragOriginScreen!.dy - details.localPosition.dy));
+
+          widget.setPosition(_dragOriginWorld! + worldOffset);
         },
         onPanEnd: (_) {
           setState(() {
