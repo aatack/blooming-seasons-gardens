@@ -229,7 +229,9 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
   @override
   Widget build(BuildContext context) {
-    final transformedPosition = _transform(_image);
+    // final transformedPosition = _transform(_image);
+    final transformedPosition = Offset.zero;
+    final transformedScale = 1.0;
 
     return wrapInModal(
       context,
@@ -278,12 +280,15 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                   width: _PreviewPainter.size,
                   height: _PreviewPainter.size,
                   position: transformedPosition,
+                  scale: transformedScale,
                   setPosition: (newPosition) {
-                    setState(() {
-                      _image = _inverseTransform(newPosition, _image.image);
-                    });
+                    // setState(() {
+                    //   _image = _inverseTransform(newPosition, _image.image);
+                    // });
                   },
-                  child: _PreviewPainter(_image.image, transformedPosition),
+                  setScale: (newScale) {},
+                  child: _PreviewPainter(
+                      _image.image, transformedPosition, transformedScale),
                 ),
               ),
             ),
@@ -299,41 +304,41 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
     );
   }
 
-  TopDownPosition _transform(PositionedImage position) {
-    /* Converts the image's transform to a reticle transform.
-    
-      To derive this, consider the position and size in pixel space (ie. where
-      each pixel of the image is one unit) of both the clip path and the
-      reticle.  Note that both must be equal; from this set of equalities, the
-      relationship between the two transforms can be calculated. */
+  // TopDownPosition _transform(PositionedImage position) {
+  //   /* Converts the image's transform to a reticle transform.
 
-    final scale = (2 * _PreviewPainter.reticleRadius * position.scale.output) /
-        widget.diameter.output;
+  //     To derive this, consider the position and size in pixel space (ie. where
+  //     each pixel of the image is one unit) of both the clip path and the
+  //     reticle.  Note that both must be equal; from this set of equalities, the
+  //     relationship between the two transforms can be calculated. */
 
-    final x = _PreviewPainter.reticleCentre.dx +
-        ((scale / position.scale.output) * position.position.x.output);
-    final y = _PreviewPainter.reticleCentre.dy +
-        ((scale / position.scale.output) * position.position.y.output);
+  //   final scale = (2 * _PreviewPainter.reticleRadius * position.scale.output) /
+  //       widget.diameter.output;
 
-    return TopDownPosition(x, y, scale);
-  }
+  //   final x = _PreviewPainter.reticleCentre.dx +
+  //       ((scale / position.scale.output) * position.position.x.output);
+  //   final y = _PreviewPainter.reticleCentre.dy +
+  //       ((scale / position.scale.output) * position.position.y.output);
 
-  PositionedImage _inverseTransform(
-      TopDownPosition position, CachedImage? image) {
-    final scale = (position.scale * widget.diameter.output) /
-        (2 * _PreviewPainter.reticleRadius);
+  //   return TopDownPosition(x, y, scale);
+  // }
 
-    final x = (scale / position.scale) *
-        (position.x - _PreviewPainter.reticleCentre.dx);
-    final y = (scale / position.scale) *
-        (position.y - _PreviewPainter.reticleCentre.dy);
+  // PositionedImage _inverseTransform(
+  //     TopDownPosition position, CachedImage? image) {
+  //   final scale = (position.scale * widget.diameter.output) /
+  //       (2 * _PreviewPainter.reticleRadius);
 
-    return PositionedImage(
-        image: image,
-        position:
-            Point(ValidatedDouble.initialise(x), ValidatedDouble.initialise(y)),
-        scale: ValidatedDouble.initialise(scale));
-  }
+  //   final x = (scale / position.scale) *
+  //       (position.x - _PreviewPainter.reticleCentre.dx);
+  //   final y = (scale / position.scale) *
+  //       (position.y - _PreviewPainter.reticleCentre.dy);
+
+  //   return PositionedImage(
+  //       image: image,
+  //       position:
+  //           Point(ValidatedDouble.initialise(x), ValidatedDouble.initialise(y)),
+  //       scale: ValidatedDouble.initialise(scale));
+  // }
 }
 
 class _PreviewPainter extends Painter {
