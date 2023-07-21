@@ -7,8 +7,7 @@ class TopDown extends StatefulWidget {
   final Offset position;
   final double scale;
 
-  final void Function(Offset) setPosition;
-  final void Function(double) setScale;
+  final void Function(Offset, double) setPositionAndScale;
 
   final void Function(int?)? onHoveredElementChanged;
   final void Function(int?)? onSelectedElementChanged;
@@ -21,8 +20,7 @@ class TopDown extends StatefulWidget {
       required this.height,
       required this.position,
       required this.scale,
-      required this.setPosition,
-      required this.setScale,
+      required this.setPositionAndScale,
       this.onHoveredElementChanged,
       this.onSelectedElementChanged,
       required this.child});
@@ -85,7 +83,8 @@ class _TopDownState extends State<TopDown> {
               widget.worldDistance(
                   _dragOriginScreen!.dy - details.localPosition.dy));
 
-          widget.setPosition(_dragOriginWorld! + worldOffset);
+          widget.setPositionAndScale(
+              _dragOriginWorld! + worldOffset, widget.scale);
         },
         onPanEnd: (_) {
           setState(() {
@@ -126,8 +125,7 @@ class _TopDownState extends State<TopDown> {
           (((1 / widget.scale) - (1 / (ratio * widget.scale))) *
               (screenPosition.dy - (widget.height / 2)));
 
-      widget.setPosition(Offset(x, y));
-      widget.setScale(widget.scale * ratio);
+      widget.setPositionAndScale(Offset(x, y), widget.scale * ratio);
     }
   }
 

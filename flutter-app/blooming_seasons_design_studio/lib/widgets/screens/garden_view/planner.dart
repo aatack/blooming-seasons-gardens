@@ -42,13 +42,9 @@ class _PlannerState extends State<Planner> {
         height: constraints.maxHeight,
         position: _position,
         scale: _scale,
-        setPosition: (newPosition) {
+        setPositionAndScale: (newPosition, newScale) {
           setState(() {
             _position = newPosition;
-          });
-        },
-        setScale: (newScale) {
-          setState(() {
             _scale = newScale;
           });
         },

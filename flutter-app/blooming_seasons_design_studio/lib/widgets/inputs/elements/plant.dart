@@ -281,16 +281,10 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                   height: _PreviewPainter.size,
                   position: transformedPosition,
                   scale: transformedScale,
-                  setPosition: (newPosition) {
+                  setPositionAndScale: (newPosition, newScale) {
                     setState(() {
                       _image = _inverseTransform(
-                          newPosition, transformedScale, _image.image);
-                    });
-                  },
-                  setScale: (newScale) {
-                    setState(() {
-                      _image = _inverseTransform(
-                          transformedPosition, newScale, _image.image);
+                          newPosition, newScale, _image.image);
                     });
                   },
                   child: _PreviewPainter(
