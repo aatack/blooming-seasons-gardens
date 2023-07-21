@@ -121,7 +121,7 @@ class _TopDownState extends State<TopDown> {
           screenPosition.dy - ratio * (screenPosition.dy - widget.position.dy);
 
       widget.setScale(widget.scale * ratio);
-      widget.setPosition(Offset(x, y));
+      // widget.setPosition(Offset(x, y));
     }
   }
 
@@ -131,13 +131,13 @@ class _TopDownState extends State<TopDown> {
       height: double.maxFinite,
       color: Colors.white,
       child: Transform.scale(
-        alignment: Alignment.center,
-        scale: 1, //widget.position.scale,
+        alignment: Alignment.topLeft,
+        scale: widget.scale,
         transformHitTests: true,
         child: Transform.translate(
           offset: Offset(
-            widget.position.dx, // / widget.position.scale,
-            widget.position.dy, // / widget.position.scale,
+            widget.position.dx * 0, // / widget.position.scale,
+            widget.position.dy * 0, // / widget.position.scale,
           ),
           transformHitTests: true,
           child: CustomPaint(painter: _TopDownPainter(widget.child)),
