@@ -130,15 +130,17 @@ class _TopDownState extends State<TopDown> {
       width: double.maxFinite,
       height: double.maxFinite,
       color: Colors.white,
-      child: Transform.scale(
-        alignment: Alignment.topLeft,
-        scale: widget.scale,
+      child: Transform.translate(
+        offset: Offset(
+          (widget.position.dx * 0) +
+              (widget.width / 2), // / widget.position.scale,
+          (widget.position.dy * 0) +
+              (widget.height / 2), // / widget.position.scale,
+        ),
         transformHitTests: true,
-        child: Transform.translate(
-          offset: Offset(
-            widget.position.dx * 0, // / widget.position.scale,
-            widget.position.dy * 0, // / widget.position.scale,
-          ),
+        child: Transform.scale(
+          alignment: Alignment.topLeft,
+          scale: widget.scale,
           transformHitTests: true,
           child: CustomPaint(painter: _TopDownPainter(widget.child)),
         ),
