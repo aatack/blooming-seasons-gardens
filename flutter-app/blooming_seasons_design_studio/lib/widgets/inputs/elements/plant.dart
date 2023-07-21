@@ -230,7 +230,7 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
   @override
   Widget build(BuildContext context) {
     // final transformedPosition = _transform(_image);
-    final transformedPosition = _transform(_image);
+    final transformedPosition = _image.position.offset;
     final transformedScale = _image.scale.output;
 
     return wrapInModal(
@@ -283,8 +283,12 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
                   scale: transformedScale,
                   setPositionAndScale: (newPosition, newScale) {
                     setState(() {
-                      _image = _inverseTransform(
-                          newPosition, newScale, _image.image);
+                      _image = PositionedImage(
+                          image: _image.image,
+                          position: Point(
+                              ValidatedDouble.initialise(newPosition.dx),
+                              ValidatedDouble.initialise(newPosition.dy)),
+                          scale: ValidatedDouble.initialise(newScale));
                     });
                   },
                   child: _PreviewPainter(
@@ -302,25 +306,6 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
         closeModal(context);
       },
     );
-  }
-
-  Offset _transform(PositionedImage position) {
-    /* Converts the image's transform to a reticle transform.
-
-      To derive this, consider the position and size in pixel space (ie. where
-      each pixel of the image is one unit) of both the clip path and the
-      reticle.  Note that both must be equal; from this set of equalities, the
-      relationship between the two transforms can be calculated. */
-    return position.position.offset;
-  }
-
-  PositionedImage _inverseTransform(
-      Offset position, double scale, CachedImage? image) {
-    return PositionedImage(
-        image: image,
-        position: Point(ValidatedDouble.initialise(position.dx),
-            ValidatedDouble.initialise(position.dy)),
-        scale: ValidatedDouble.initialise(scale));
   }
 }
 
