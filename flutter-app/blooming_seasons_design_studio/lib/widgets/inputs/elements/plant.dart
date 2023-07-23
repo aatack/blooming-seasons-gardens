@@ -311,7 +311,6 @@ class _PlantImageEditorModalState extends State<_PlantImageEditorModal> {
 
 class _PreviewPainter extends Painter {
   static const double size = 300; // Width and height of the preview
-  static const Offset reticleCentre = Offset(size / 2, size / 2);
   static const double reticleRadius = size / 3;
 
   final CachedImage? image;
@@ -383,13 +382,17 @@ class PlantPainter extends Painter {
 
     _radius = plant.diameter.output * 0.5;
 
+    final imageScale =
+        _radius / (_PreviewPainter.reticleRadius / plant.image.scale.output);
     _imagePainter = PositionedImagePainter(PositionedImage(
         image: plant.image.image,
         position: Point(
-          ValidatedDouble.initialise(0),
-          ValidatedDouble.initialise(0),
+          ValidatedDouble.initialise(
+              -plant.image.position.x.output * imageScale),
+          ValidatedDouble.initialise(
+              -plant.image.position.y.output * imageScale),
         ),
-        scale: ValidatedDouble.initialise(1)));
+        scale: ValidatedDouble.initialise(imageScale)));
 
     _clipPath = Path()
       ..addOval(Rect.fromCircle(center: Offset.zero, radius: _radius));
