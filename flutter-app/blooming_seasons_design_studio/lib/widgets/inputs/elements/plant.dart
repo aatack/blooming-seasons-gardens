@@ -367,6 +367,10 @@ class PlantPainter extends Painter {
 
   PlantPainter(this.plant, this.id,
       {required this.hovered, required this.selected}) {
+    _fillPaint = Paint()
+      ..color = plant.fill.colour
+      ..style = PaintingStyle.fill;
+
     _outlinePaint = Paint()
       ..color = hovered
           ? hoveredColour
@@ -374,11 +378,7 @@ class PlantPainter extends Painter {
               ? selectedColour
               : Colors.black
       ..style = PaintingStyle.stroke
-      ..strokeWidth = hovered || selected ? 6.0 : 2.0;
-
-    _fillPaint = Paint()
-      ..color = plant.fill.colour
-      ..style = PaintingStyle.fill;
+      ..strokeWidth = hovered || selected ? 4.0 : 3.0;
 
     _radius = plant.diameter.output * 0.5;
 
@@ -401,15 +401,17 @@ class PlantPainter extends Painter {
   @override
   void paint(Canvas canvas) {
     if (plant.type == PlantType.fill) {
-      canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
       canvas.drawCircle(Offset.zero, _radius, _fillPaint);
+      canvas.drawCircle(Offset.zero, _radius - (_outlinePaint.strokeWidth / 2),
+          _outlinePaint);
     } else {
       canvas.save();
       canvas.clipPath(_clipPath);
 
       _imagePainter.paint(canvas);
       if (hovered || selected) {
-        canvas.drawCircle(Offset.zero, _radius, _outlinePaint);
+        canvas.drawCircle(Offset.zero,
+            _radius - (_outlinePaint.strokeWidth / 2), _outlinePaint);
       }
 
       canvas.restore();
