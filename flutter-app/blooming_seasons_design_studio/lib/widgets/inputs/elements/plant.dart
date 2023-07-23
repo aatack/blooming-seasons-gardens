@@ -383,7 +383,13 @@ class PlantPainter extends Painter {
 
     _radius = plant.diameter.output * 0.5;
 
-    _imagePainter = PositionedImagePainter(plant.image);
+    _imagePainter = PositionedImagePainter(PositionedImage(
+        image: plant.image.image,
+        position: Point(
+          ValidatedDouble.initialise(0),
+          ValidatedDouble.initialise(0),
+        ),
+        scale: ValidatedDouble.initialise(1)));
 
     _clipPath = Path()
       ..addOval(Rect.fromCircle(center: Offset.zero, radius: _radius));
