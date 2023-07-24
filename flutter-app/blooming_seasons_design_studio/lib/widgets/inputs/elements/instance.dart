@@ -1,5 +1,6 @@
 import 'dart:js';
 
+import 'package:blooming_seasons_design_studio/models/inputs/validated.dart';
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
@@ -401,6 +402,32 @@ class InstancePainter extends Painter {
       return true;
     } else {
       return false;
+    }
+  }
+
+  @override
+  void Function(BuildContext, Offset?)? handleDrag(
+      BuildContext _, Offset position) {
+    if (!contains(position) || selections.selected != instance.id) {
+      return null;
+    } else {
+      final initialPosition = instance.position.offset;
+      return (context, worldOffset) {
+        if (worldOffset != null) {
+          context.read<SessionState>().editGarden(
+              (garden) => garden.editInstance(
+                  instance.id,
+                  (template, _) => template.withPosition(Point(
+                      ValidatedDouble.initialise(
+                          initialPosition.dx - worldOffset.dx),
+                      ValidatedDouble.initialise(
+                          initialPosition.dy - worldOffset.dy)))),
+              transient: true);
+        } else {
+          // Save the garden with a non-transient update
+          context.read<SessionState>().editGarden((garden) => garden);
+        }
+      };
     }
   }
 

@@ -195,8 +195,8 @@ abstract class Painter {
       BuildContext context, Offset position) {
     // Should optionally return a function taking the new build context,
     // a drag offset (ie. the current mouse position relative to its position
-    // at the start of the drag) in the world coordinates, and a flag
-    // indicating whether or not this is the last call to the function
+    // at the start of the drag) in the world coordinates.  If the function
+    // is being called for the final time, the coordinates will be `null`
     return null;
   }
 
