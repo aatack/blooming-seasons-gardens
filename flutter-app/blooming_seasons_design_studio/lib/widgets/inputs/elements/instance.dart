@@ -419,9 +419,9 @@ class InstancePainter extends Painter {
                   instance.id,
                   (template, _) => template.withPosition(Point(
                       ValidatedDouble.initialise(
-                          initialPosition.dx - worldOffset.dx),
+                          initialPosition.dx - _round(worldOffset.dx)),
                       ValidatedDouble.initialise(
-                          initialPosition.dy - worldOffset.dy)))),
+                          initialPosition.dy - _round(worldOffset.dy))))),
               transient: true);
         } else {
           // Save the garden with a non-transient update
@@ -431,9 +431,19 @@ class InstancePainter extends Painter {
     }
   }
 
+  double _round(double value) {
+    // Round to two decimal places, which ends up being a tenth of a
+    // millimetre if the input value is in centimetres
+    return 0.01 * (100 * value).roundToDouble();
+  }
+
   @override
   SystemMouseCursor? cursor() {
-    return selections.hovered == instance.id ? SystemMouseCursors.click : null;
+    return selections.hovered == instance.id
+        ? (selections.selected == instance.id
+            ? SystemMouseCursors.move
+            : SystemMouseCursors.click)
+        : null;
   }
 }
 
