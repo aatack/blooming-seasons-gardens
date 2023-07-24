@@ -139,11 +139,9 @@ class _TopDownState extends State<TopDown> {
           (widget.position.dx * -widget.scale) + (widget.width / 2),
           (widget.position.dy * -widget.scale) + (widget.height / 2),
         ),
-        transformHitTests: true,
         child: Transform.scale(
           alignment: Alignment.topLeft,
           scale: widget.scale,
-          transformHitTests: true,
           child: CustomPaint(painter: _TopDownPainter(widget.child)),
         ),
       ),
