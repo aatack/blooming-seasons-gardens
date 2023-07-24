@@ -9,6 +9,7 @@ import 'package:blooming_seasons_design_studio/widgets/inputs/text.dart';
 import 'package:blooming_seasons_design_studio/widgets/screens/garden_view/editor/nursery_tab.dart';
 import 'package:blooming_seasons_design_studio/widgets/top_down.dart';
 import 'package:flutter/material.dart' hide Element;
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/garden/arrow.dart';
@@ -401,6 +402,11 @@ class InstancePainter extends Painter {
     } else {
       return false;
     }
+  }
+
+  @override
+  SystemMouseCursor? cursor() {
+    return selections.hovered == instance.id ? SystemMouseCursors.click : null;
   }
 }
 

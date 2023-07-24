@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TopDown extends StatefulWidget {
   final double width;
@@ -119,11 +120,10 @@ class _TopDownState extends State<TopDown> {
           }
         },
         child: MouseRegion(
-            cursor: _hoveredElement == null
-                ? (_dragOriginScreen == null
+            cursor: widget.child.cursor() ??
+                (_dragOriginScreen == null
                     ? SystemMouseCursors.grab
-                    : SystemMouseCursors.grabbing)
-                : SystemMouseCursors.click,
+                    : SystemMouseCursors.grabbing),
             child: child),
       ),
     );
@@ -206,6 +206,10 @@ abstract class Painter {
     // indicating whether or not this is the last call to the function
     return null;
   }
+
+  SystemMouseCursor? cursor() {
+    return null;
+  }
 }
 
 class PainterGroup extends Painter {
@@ -271,6 +275,17 @@ class PainterGroup extends Painter {
       final childHandler = child.handleDrag(context, position - offset);
       if (childHandler != null) {
         return childHandler;
+      }
+    }
+    return null;
+  }
+
+  @override
+  SystemMouseCursor? cursor() {
+    for (final child in children.reversed) {
+      final cursor = child.cursor();
+      if (cursor != null) {
+        return cursor;
       }
     }
     return null;
