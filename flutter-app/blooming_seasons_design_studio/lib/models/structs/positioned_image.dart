@@ -45,11 +45,6 @@ class PositionedImagePainter extends Painter {
   PositionedImagePainter(this.image);
 
   @override
-  int? hitTest(Offset position) {
-    return null;
-  }
-
-  @override
   void paint(Canvas canvas) {
     if (image.image != null) {
       canvas.save();
@@ -60,5 +55,15 @@ class PositionedImagePainter extends Painter {
 
       canvas.restore();
     }
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+
+  @override
+  bool handleClick(Offset position) {
+    return false;
   }
 }

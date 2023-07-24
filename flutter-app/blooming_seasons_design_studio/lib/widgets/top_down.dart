@@ -169,6 +169,8 @@ abstract class Painter {
   void paint(Canvas canvas);
 
   int? hitTest(Offset position);
+
+  bool handleClick(Offset position);
 }
 
 class PainterGroup extends Painter {
@@ -177,19 +179,6 @@ class PainterGroup extends Painter {
   final void Function(Canvas)? paintBackground;
 
   PainterGroup(this.offset, this.children, {this.paintBackground});
-
-  @override
-  int? hitTest(Offset position) {
-    // When checking for hits, iterate backwards through children such
-    // that the child that is rendered last gets hit first
-    for (final child in children.reversed) {
-      final hitResult = child.hitTest(position - offset);
-      if (hitResult != null) {
-        return hitResult;
-      }
-    }
-    return null;
-  }
 
   @override
   void paint(Canvas canvas) {
@@ -205,5 +194,29 @@ class PainterGroup extends Painter {
     }
 
     canvas.restore();
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    // When checking for hits, iterate backwards through children such
+    // that the child that is rendered last gets hit first
+    for (final child in children.reversed) {
+      final hitResult = child.hitTest(position - offset);
+      if (hitResult != null) {
+        return hitResult;
+      }
+    }
+    return null;
+  }
+
+  @override
+  bool handleClick(Offset position) {
+    for (final child in children.reversed) {
+      final handled = child.handleClick(position);
+      if (handled) {
+        return true;
+      }
+    }
+    return false;
   }
 }

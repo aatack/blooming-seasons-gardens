@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:blooming_seasons_design_studio/models/modals.dart';
 import 'package:blooming_seasons_design_studio/models/selections.dart';
 import 'package:blooming_seasons_design_studio/widgets/inputs/elements/label.dart';
@@ -360,11 +362,6 @@ class InstancePainter extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
-    return _child.hitTest(position - _offset);
-  }
-
-  @override
   void paint(Canvas canvas) {
     canvas.save();
     canvas.translate(_offset.dx, _offset.dy);
@@ -372,6 +369,22 @@ class InstancePainter extends Painter {
     _child.paint(canvas);
 
     canvas.restore();
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return _child.hitTest(position - _offset);
+  }
+
+  @override
+  bool handleClick(Offset position) {
+    if (_child.hitTest(position - _offset) != null) {
+      // TODO: update the selection state
+      print("Instance ${instance.id} clicked");
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

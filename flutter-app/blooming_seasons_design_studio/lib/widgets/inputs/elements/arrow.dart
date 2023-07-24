@@ -111,4 +111,9 @@ class ArrowPainter extends Painter {
         ? id
         : null;
   }
+
+  @override
+  bool handleClick(Offset position) {
+    return false;
+  }
 }

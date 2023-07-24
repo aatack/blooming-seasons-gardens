@@ -304,11 +304,6 @@ class _PreviewPainter extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
-    return null;
-  }
-
-  @override
   void paint(Canvas canvas) {
     _imagePainter.paint(canvas);
 
@@ -318,6 +313,16 @@ class _PreviewPainter extends Painter {
       ..strokeWidth = 3 / scale;
 
     canvas.drawCircle(position, reticleRadius / scale, outline);
+  }
+
+  @override
+  int? hitTest(Offset position) {
+    return null;
+  }
+
+  @override
+  bool handleClick(Offset position) {
+    return false;
   }
 }
 
@@ -395,5 +400,10 @@ class PlantPainter extends Painter {
   @override
   int? hitTest(Offset position) {
     return position.distance < _radius ? id : null;
+  }
+
+  @override
+  bool handleClick(Offset position) {
+    return false;
   }
 }
