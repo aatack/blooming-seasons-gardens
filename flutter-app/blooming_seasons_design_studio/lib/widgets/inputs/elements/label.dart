@@ -107,9 +107,4 @@ class LabelPainter extends Painter {
   void paint(Canvas canvas) {
     _painter.paint(canvas, const Offset(0, 0));
   }
-
-  @override
-  bool handleClick(BuildContext context, Offset position) {
-    return false;
-  }
 }

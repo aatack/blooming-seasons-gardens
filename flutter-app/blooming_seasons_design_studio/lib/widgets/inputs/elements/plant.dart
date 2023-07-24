@@ -319,11 +319,6 @@ class _PreviewPainter extends Painter {
   int? hitTest(Offset position) {
     return null;
   }
-
-  @override
-  bool handleClick(BuildContext context, Offset position) {
-    return false;
-  }
 }
 
 class PlantPainter extends Painter {
@@ -400,10 +395,5 @@ class PlantPainter extends Painter {
   @override
   int? hitTest(Offset position) {
     return position.distance < _radius ? id : null;
-  }
-
-  @override
-  bool handleClick(BuildContext context, Offset position) {
-    return false;
   }
 }

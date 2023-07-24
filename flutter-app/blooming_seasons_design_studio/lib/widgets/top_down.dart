@@ -171,9 +171,17 @@ class _TopDownPainter extends CustomPainter {
 abstract class Painter {
   void paint(Canvas canvas);
 
-  int? hitTest(Offset position);
+  int? hitTest(Offset position) {
+    return null;
+  }
 
-  bool handleClick(BuildContext context, Offset position);
+  bool handleClick(BuildContext context, Offset position) {
+    return false;
+  }
+
+  bool handleMove(BuildContext context, Offset position) {
+    return false;
+  }
 }
 
 class PainterGroup extends Painter {
@@ -215,8 +223,17 @@ class PainterGroup extends Painter {
   @override
   bool handleClick(BuildContext context, Offset position) {
     for (final child in children.reversed) {
-      final handled = child.handleClick(context, position - offset);
-      if (handled) {
+      if (child.handleClick(context, position - offset)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  bool handleMove(BuildContext context, Offset position) {
+    for (final child in children.reversed) {
+      if (child.handleMove(context, position - offset)) {
         return true;
       }
     }

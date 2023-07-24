@@ -61,9 +61,4 @@ class PositionedImagePainter extends Painter {
   int? hitTest(Offset position) {
     return null;
   }
-
-  @override
-  bool handleClick(BuildContext context, Offset position) {
-    return false;
-  }
 }
