@@ -388,6 +388,20 @@ class InstancePainter extends Painter {
       return false;
     }
   }
+
+  @override
+  bool handleMove(BuildContext context, Offset position) {
+    if (hitTest(position) != null) {
+      if (selections.hovered != instance.id) {
+        context.read<SessionState>().updateSelections((selections) =>
+            // Deselect the element if it is already selected
+            selections.withHovered(instance.id));
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class InstanceSelector extends StatelessWidget {

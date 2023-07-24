@@ -13,6 +13,7 @@ class TopDown extends StatefulWidget {
   final void Function(int?)? onSelectedElementChanged;
 
   final bool Function(BuildContext, Offset)? handleClick;
+  final bool Function(BuildContext, Offset)? handleMove;
 
   final Painter child;
 
@@ -26,6 +27,7 @@ class TopDown extends StatefulWidget {
       this.onHoveredElementChanged,
       this.onSelectedElementChanged,
       this.handleClick,
+      this.handleMove,
       required this.child});
 
   @override
@@ -61,14 +63,11 @@ class _TopDownState extends State<TopDown> {
         }
       },
       onPointerHover: (event) {
-        final hovered =
-            widget.child.hitTest(widget.worldPosition(event.localPosition));
-        if (hovered != _hoveredElement &&
-            widget.onHoveredElementChanged != null) {
-          setState(() {
-            _hoveredElement = hovered;
-          });
-          widget.onHoveredElementChanged!(hovered);
+        final position = widget.worldPosition(event.localPosition);
+        final handled = widget.child.handleMove(context, position);
+
+        if (!handled && widget.handleMove != null) {
+          widget.handleMove!(context, position);
         }
       },
       child: GestureDetector(
@@ -96,11 +95,11 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onTapUp: (TapUpDetails details) {
-          final handled = widget.child.handleClick(
-              context, widget.worldPosition(details.localPosition));
+          final position = widget.worldPosition(details.localPosition);
+          final handled = widget.child.handleClick(context, position);
 
           if (!handled && (widget.handleClick != null)) {
-            widget.handleClick!(context, details.localPosition);
+            widget.handleClick!(context, position);
           }
         },
         child: MouseRegion(

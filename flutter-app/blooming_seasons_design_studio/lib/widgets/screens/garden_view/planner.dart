@@ -64,6 +64,12 @@ class _PlannerState extends State<Planner> {
               .updateSelections((selections) => selections.withSelected(null));
           return true;
         },
+        handleMove: (_, __) {
+          context
+              .read<SessionState>()
+              .updateSelections((selections) => selections.withHovered(null));
+          return true;
+        },
         child: widget.painter,
       );
     });
