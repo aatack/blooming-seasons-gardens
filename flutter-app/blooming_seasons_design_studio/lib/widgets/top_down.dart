@@ -43,7 +43,8 @@ class TopDown extends StatefulWidget {
 
 class _TopDownState extends State<TopDown> {
   Offset? _dragOriginScreen;
-  Offset? _dragOriginWorld;
+  void Function(BuildContext, Offset?)? _dragHandler;
+
   int? _hoveredElement;
 
   @override
@@ -72,26 +73,41 @@ class _TopDownState extends State<TopDown> {
       },
       child: GestureDetector(
         onPanStart: (details) {
+          final dragHandler = widget.child
+              .handleDrag(context, widget.worldPosition(details.localPosition));
+          final worldOrigin = widget.position;
+
           setState(() {
             _dragOriginScreen = details.localPosition;
-            _dragOriginWorld = widget.position;
+            _dragHandler = dragHandler ??
+                (_, worldOffset) {
+                  if (worldOffset != null) {
+                    widget.setPositionAndScale(
+                        worldOrigin + worldOffset, widget.scale);
+                  }
+                };
           });
         },
         onPanUpdate: (details) {
-          // Assumes that the scale has not changed during dragging
-          final worldOffset = Offset(
-              widget.worldDistance(
-                  _dragOriginScreen!.dx - details.localPosition.dx),
-              widget.worldDistance(
-                  _dragOriginScreen!.dy - details.localPosition.dy));
+          if (_dragHandler != null) {
+            // Assumes that the scale has not changed during dragging
+            final worldOffset = Offset(
+                widget.worldDistance(
+                    _dragOriginScreen!.dx - details.localPosition.dx),
+                widget.worldDistance(
+                    _dragOriginScreen!.dy - details.localPosition.dy));
 
-          widget.setPositionAndScale(
-              _dragOriginWorld! + worldOffset, widget.scale);
+            _dragHandler!(context, worldOffset);
+          }
         },
-        onPanEnd: (_) {
+        onPanEnd: (details) {
+          if (_dragHandler != null) {
+            _dragHandler!(context, null);
+          }
+
           setState(() {
             _dragOriginScreen = null;
-            _dragOriginWorld = null;
+            _dragHandler = null;
           });
         },
         onTapUp: (TapUpDetails details) {
@@ -181,6 +197,15 @@ abstract class Painter {
   bool handleMove(BuildContext context, Offset position) {
     return false;
   }
+
+  void Function(BuildContext, Offset?)? handleDrag(
+      BuildContext context, Offset position) {
+    // Should optionally return a function taking the new build context,
+    // a drag offset (ie. the current mouse position relative to its position
+    // at the start of the drag) in the world coordinates, and a flag
+    // indicating whether or not this is the last call to the function
+    return null;
+  }
 }
 
 class PainterGroup extends Painter {
@@ -237,5 +262,17 @@ class PainterGroup extends Painter {
       }
     }
     return false;
+  }
+
+  @override
+  void Function(BuildContext, Offset?)? handleDrag(
+      BuildContext context, Offset position) {
+    for (final child in children.reversed) {
+      final childHandler = child.handleDrag(context, position - offset);
+      if (childHandler != null) {
+        return childHandler;
+      }
+    }
+    return null;
   }
 }
