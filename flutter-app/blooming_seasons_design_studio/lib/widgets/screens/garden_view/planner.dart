@@ -58,6 +58,12 @@ class _PlannerState extends State<Planner> {
               // Deselect the element if it is already selected
               selections.withSelected(selections.selected == id ? null : id));
         },
+        handleClick: (_, __) {
+          context
+              .read<SessionState>()
+              .updateSelections((selections) => selections.withSelected(null));
+          return true;
+        },
         child: widget.painter,
       );
     });

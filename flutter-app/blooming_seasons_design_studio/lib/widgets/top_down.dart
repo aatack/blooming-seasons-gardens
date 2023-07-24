@@ -12,6 +12,8 @@ class TopDown extends StatefulWidget {
   final void Function(int?)? onHoveredElementChanged;
   final void Function(int?)? onSelectedElementChanged;
 
+  final bool Function(BuildContext, Offset)? handleClick;
+
   final Painter child;
 
   const TopDown(
@@ -23,6 +25,7 @@ class TopDown extends StatefulWidget {
       required this.setPositionAndScale,
       this.onHoveredElementChanged,
       this.onSelectedElementChanged,
+      this.handleClick,
       required this.child});
 
   @override
@@ -93,8 +96,12 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onTapUp: (TapUpDetails details) {
-          widget.child.handleClick(
+          final handled = widget.child.handleClick(
               context, widget.worldPosition(details.localPosition));
+
+          if (!handled && (widget.handleClick != null)) {
+            widget.handleClick!(context, details.localPosition);
+          }
         },
         child: MouseRegion(
             cursor: _hoveredElement == null
