@@ -93,10 +93,8 @@ class _TopDownState extends State<TopDown> {
           });
         },
         onTapUp: (TapUpDetails details) {
-          if (widget.onSelectedElementChanged != null) {
-            widget.onSelectedElementChanged!(widget.child
-                .hitTest(widget.worldPosition(details.localPosition)));
-          }
+          widget.child.handleClick(
+              context, widget.worldPosition(details.localPosition));
         },
         child: MouseRegion(
             cursor: _hoveredElement == null
@@ -168,7 +166,7 @@ abstract class Painter {
 
   int? hitTest(Offset position);
 
-  bool handleClick(Offset position);
+  bool handleClick(BuildContext context, Offset position);
 }
 
 class PainterGroup extends Painter {
@@ -208,9 +206,9 @@ class PainterGroup extends Painter {
   }
 
   @override
-  bool handleClick(Offset position) {
+  bool handleClick(BuildContext context, Offset position) {
     for (final child in children.reversed) {
-      final handled = child.handleClick(position);
+      final handled = child.handleClick(context, position - offset);
       if (handled) {
         return true;
       }

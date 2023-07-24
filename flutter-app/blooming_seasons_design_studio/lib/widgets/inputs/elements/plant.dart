@@ -321,7 +321,7 @@ class _PreviewPainter extends Painter {
   }
 
   @override
-  bool handleClick(Offset position) {
+  bool handleClick(BuildContext context, Offset position) {
     return false;
   }
 }
@@ -403,7 +403,7 @@ class PlantPainter extends Painter {
   }
 
   @override
-  bool handleClick(Offset position) {
+  bool handleClick(BuildContext context, Offset position) {
     return false;
   }
 }

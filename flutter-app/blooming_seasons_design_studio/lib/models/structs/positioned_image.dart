@@ -63,7 +63,7 @@ class PositionedImagePainter extends Painter {
   }
 
   @override
-  bool handleClick(Offset position) {
+  bool handleClick(BuildContext context, Offset position) {
     return false;
   }
 }

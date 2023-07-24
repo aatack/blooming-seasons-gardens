@@ -377,10 +377,12 @@ class InstancePainter extends Painter {
   }
 
   @override
-  bool handleClick(Offset position) {
-    if (_child.hitTest(position - _offset) != null) {
-      // TODO: update the selection state
-      print("Instance ${instance.id} clicked");
+  bool handleClick(BuildContext context, Offset position) {
+    if (hitTest(position) != null) {
+      context.read<SessionState>().updateSelections((selections) =>
+          // Deselect the element if it is already selected
+          selections.withSelected(
+              selections.selected == instance.id ? null : instance.id));
       return true;
     } else {
       return false;
