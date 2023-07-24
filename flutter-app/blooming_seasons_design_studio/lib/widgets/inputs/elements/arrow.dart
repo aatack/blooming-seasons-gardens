@@ -61,7 +61,6 @@ class ArrowEditor extends StatelessWidget {
 
 class ArrowPainter extends Painter {
   final Arrow arrow;
-  final int id;
 
   // Whether the instance or its parent bed is hovered or selected
   final bool hovered;
@@ -71,7 +70,7 @@ class ArrowPainter extends Painter {
   late final Paint _paint;
   late final Path _path;
 
-  ArrowPainter(this.arrow, this.id,
+  ArrowPainter(this.arrow,
       {required this.hovered, required this.selected}) {
     _source = arrow.source.offset;
 
@@ -95,7 +94,7 @@ class ArrowPainter extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
+  bool contains(Offset position) {
     final along =
         ((position.dx - 0) * _source.dx + (position.dy - 0) * _source.dy) /
             _source.distance;
@@ -106,9 +105,7 @@ class ArrowPainter extends Painter {
     final leeway = arrow.thickness.output * 2;
 
     return (-leeway <= along) &&
-            (along <= _source.distance + leeway) &&
-            (normal.abs() <= leeway)
-        ? id
-        : null;
+        (along <= _source.distance + leeway) &&
+        (normal.abs() <= leeway);
   }
 }

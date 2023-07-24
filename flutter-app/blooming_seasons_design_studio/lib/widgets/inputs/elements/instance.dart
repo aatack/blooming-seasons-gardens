@@ -349,13 +349,13 @@ class InstancePainter extends Painter {
             selections.selected == instance.templateId);
 
     if (_element is Plant) {
-      _child = PlantPainter(_element as Plant, instance.id,
+      _child = PlantPainter(_element as Plant,
           hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Arrow) {
-      _child = ArrowPainter(_element as Arrow, instance.id,
+      _child = ArrowPainter(_element as Arrow,
           hovered: instanceHovered, selected: instanceSelected);
     } else if (_element is Label) {
-      _child = LabelPainter(_element as Label, instance.id,
+      _child = LabelPainter(_element as Label,
           hovered: instanceHovered, selected: instanceSelected);
     } else {
       _child = PainterGroup(Offset.zero, []);
@@ -373,13 +373,13 @@ class InstancePainter extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
-    return _child.hitTest(position - _offset);
+  bool contains(Offset position) {
+    return _child.contains(position - _offset);
   }
 
   @override
   bool handleClick(BuildContext context, Offset position) {
-    if (hitTest(position) != null) {
+    if (contains(position)) {
       context.read<SessionState>().updateSelections((selections) =>
           // Deselect the element if it is already selected
           selections.withSelected(
@@ -392,7 +392,7 @@ class InstancePainter extends Painter {
 
   @override
   bool handleMove(BuildContext context, Offset position) {
-    if (hitTest(position) != null) {
+    if (contains(position)) {
       if (selections.hovered != instance.id) {
         context.read<SessionState>().updateSelections((selections) =>
             // Deselect the element if it is already selected

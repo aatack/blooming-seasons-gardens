@@ -48,16 +48,6 @@ class _PlannerState extends State<Planner> {
             _scale = newScale;
           });
         },
-        onHoveredElementChanged: (id) {
-          context
-              .read<SessionState>()
-              .updateSelections((selections) => selections.withHovered(id));
-        },
-        onSelectedElementChanged: (id) {
-          context.read<SessionState>().updateSelections((selections) =>
-              // Deselect the element if it is already selected
-              selections.withSelected(selections.selected == id ? null : id));
-        },
         handleClick: (_, __) {
           context
               .read<SessionState>()

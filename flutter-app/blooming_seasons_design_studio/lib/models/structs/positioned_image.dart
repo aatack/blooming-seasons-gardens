@@ -56,9 +56,4 @@ class PositionedImagePainter extends Painter {
       canvas.restore();
     }
   }
-
-  @override
-  int? hitTest(Offset position) {
-    return null;
-  }
 }

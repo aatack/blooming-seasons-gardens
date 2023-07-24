@@ -10,9 +10,6 @@ class TopDown extends StatefulWidget {
 
   final void Function(Offset, double) setPositionAndScale;
 
-  final void Function(int?)? onHoveredElementChanged;
-  final void Function(int?)? onSelectedElementChanged;
-
   final bool Function(BuildContext, Offset)? handleClick;
   final bool Function(BuildContext, Offset)? handleMove;
 
@@ -25,8 +22,6 @@ class TopDown extends StatefulWidget {
       required this.position,
       required this.scale,
       required this.setPositionAndScale,
-      this.onHoveredElementChanged,
-      this.onSelectedElementChanged,
       this.handleClick,
       this.handleMove,
       required this.child});
@@ -45,8 +40,6 @@ class TopDown extends StatefulWidget {
 class _TopDownState extends State<TopDown> {
   Offset? _dragOriginScreen;
   void Function(BuildContext, Offset?)? _dragHandler;
-
-  int? _hoveredElement;
 
   @override
   Widget build(BuildContext context) {
@@ -186,8 +179,8 @@ class _TopDownPainter extends CustomPainter {
 abstract class Painter {
   void paint(Canvas canvas);
 
-  int? hitTest(Offset position) {
-    return null;
+  bool contains(Offset position) {
+    return false;
   }
 
   bool handleClick(BuildContext context, Offset position) {
@@ -236,16 +229,15 @@ class PainterGroup extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
+  bool contains(Offset position) {
     // When checking for hits, iterate backwards through children such
     // that the child that is rendered last gets hit first
     for (final child in children.reversed) {
-      final hitResult = child.hitTest(position - offset);
-      if (hitResult != null) {
-        return hitResult;
+      if (child.contains(position - offset)) {
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
   @override

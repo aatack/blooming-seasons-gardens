@@ -314,18 +314,12 @@ class _PreviewPainter extends Painter {
 
     canvas.drawCircle(position, reticleRadius / scale, outline);
   }
-
-  @override
-  int? hitTest(Offset position) {
-    return null;
-  }
 }
 
 class PlantPainter extends Painter {
   static const centre = Offset.zero;
 
   final Plant plant;
-  final int id;
 
   // Whether the instance or its parent bed is hovered or selected
   final bool hovered;
@@ -339,7 +333,7 @@ class PlantPainter extends Painter {
 
   late final PositionedImagePainter _imagePainter;
 
-  PlantPainter(this.plant, this.id,
+  PlantPainter(this.plant,
       {required this.hovered, required this.selected}) {
     _fillPaint = Paint()
       ..color = plant.fill.colour
@@ -393,7 +387,7 @@ class PlantPainter extends Painter {
   }
 
   @override
-  int? hitTest(Offset position) {
-    return position.distance < _radius ? id : null;
+  bool contains(Offset position) {
+    return position.distance < _radius;
   }
 }
