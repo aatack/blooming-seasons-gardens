@@ -86,7 +86,7 @@ class AppContainer extends StatelessWidget {
         );
       }),
       title: const Text(
-        "Blooming Seasons Design",
+        "Blooming Seasons Gardens",
         style: TextStyle(fontFamily: "Spectral", fontSize: 15),
       ),
       actions: [
