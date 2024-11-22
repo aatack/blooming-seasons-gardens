@@ -59,4 +59,4 @@
                          :access-control-allow-methods [:get :put :post :delete])))
 
 (defn -main []
-  (run-jetty handler {:port 3000}))
+  (run-jetty handler {:port 8080}))

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 Future<dynamic> queryBackend(String uri, {dynamic body}) async {
   final response = await http.post(
-    Uri.parse("http://localhost:3000$uri"),
+    Uri.parse("http://localhost:8080$uri"),
     body: jsonEncode(body),
   );
 
