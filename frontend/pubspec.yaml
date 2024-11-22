@@ -1,0 +1,30 @@
+name: blooming_seasons_gardens
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=2.19.6 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.2
+  image: ^4.0.15
+  http: ^0.13.3
+  flutter_colorpicker: ^1.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Monospace
+      fonts:
+        - asset: assets/fonts/Inconsolata-Regular.ttf
+    - family: Spectral
+      fonts:
+        - asset: assets/fonts/Spectral-Regular.ttf
