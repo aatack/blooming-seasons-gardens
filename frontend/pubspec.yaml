@@ -1,5 +1,5 @@
 name: blooming_seasons_gardens
-description: A new Flutter project.
+description: Flutter-based frontend for blooming seasons gardens; works with the Clojure backend.
 publish_to: "none"
 version: 0.1.0
 
